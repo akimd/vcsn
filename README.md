@@ -7,7 +7,7 @@ rational expressions.
 It consists of an efficient C++ generic library, shell tools, Python
 bindings, and a graphical interactive environment on top of IPython.
 
-Copyright (C) 2012-2016 The Vaucanson Group.
+Copyright (C) 2012-2017 The Vaucanson Group.
 
 Overview
 --------
@@ -69,7 +69,8 @@ command prompt:
     make install (as root)
 
 Do not hesitate to run `make -j3` if, for instance, your CPU features 4
-threads.
+threads.  To enable the generation of the Doxygen documentation, pass
+`--enable-doxygen` to configure.
 
 Note that an installation is specific to the compiler used to install
 it. Indeed, the call to `./configure` enables some workarounds and,
@@ -84,6 +85,8 @@ It run the test suite to check the whole platform. Beware that checking
 Vcsn is a very long process, also consider `-j3`.
 
 ### Build Requirements
+
+#### Packages needed
 
 Vcsn was tested with the [GNU Compiler Collection (GCC)](http://gcc.gnu.org)
 versions 5, 6 and [Clang](http://clang.llvm.org) 3.5, 3.6, 3.7, 3.8, 3.9.
@@ -124,6 +127,41 @@ documentation.
 [yaml-cpp](https://github.com/jbeder/yaml-cpp) is used to handle the
 configuration files.  Beware that version 0.5.2 is buggy and will not work
 properly.  Use 0.5.1, or 0.5.3 or more recent.
+
+#### Ubuntu/Debian packages
+
+Please, help us keep this list up-to-date!
+
+  ccache
+  dot2tex
+  g++
+  graphviz
+  imagemagick
+  ipython3-notebook
+  libboost-all-dev
+  libgmp-dev
+  libzmq3-dev
+  locales
+  pdf2svg
+  python3-colorama
+  python3-dev
+  python3-matplotlib
+  python3-pandas
+  python3-pip
+  python3-psutil
+  python3-regex
+  python3-setuptools
+  libyaml-cpp-dev
+
+Vcsn expects to be built and to run in an UTF-8 environment.  This requires
+the `locales` package, and that en_US.UTF-8 be supported:
+
+    sudo echo "en_US.UTF-8 UTF-8" >/etc/locale.gen
+    sudo locale-gen
+    export LANG=en_US.UTF-8   \
+           LANGUAGE=en_US:en  \
+           LC_ALL=en_US.UTF-8
+
 
 ### Libraries installed in non-standard directories
 
@@ -183,6 +221,12 @@ Before the configuration steps, run:
     ./bootstrap
 
 to set up the GNU Build system.
+
+### Ubuntu
+
+In addition of the packages above, you need:
+
+autoconf automake libtool flex bison
 
 License
 -------

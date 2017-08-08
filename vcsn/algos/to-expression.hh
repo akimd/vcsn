@@ -661,6 +661,7 @@ namespace vcsn
 
   namespace detail
   {
+    /// Case where labelset is an expressionset.
     template <typename ExpSet>
     auto letter_class_impl(const ExpSet&,
                            const letter_class_t&, bool,
@@ -670,6 +671,17 @@ namespace vcsn
       raise("letter_class: not implemented (is_expressionset)");
     }
 
+    /// Case where labelset is oneset.
+    template <typename ExpSet>
+    auto letter_class_impl(const ExpSet& rs,
+                           const letter_class_t&, bool,
+                           std::true_type, std::false_type)
+      -> typename ExpSet::value_t
+    {
+      return rs.one();
+    }
+
+    /// General case.
     template <typename ExpSet>
     auto letter_class_impl(const ExpSet& rs,
                            const letter_class_t& chars, bool accept,
@@ -691,15 +703,6 @@ namespace vcsn
           ccs.emplace(l1, l2);
         }
       return rs.letter_class(ccs, accept);
-    }
-
-    template <typename ExpSet>
-    auto letter_class_impl(const ExpSet& rs,
-                           const letter_class_t&, bool,
-                           std::true_type, std::false_type)
-      -> typename ExpSet::value_t
-    {
-      return rs.one();
     }
   }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <queue>
 
 #include <vcsn/algos/filter.hh>
@@ -40,10 +41,13 @@ namespace vcsn
     auto res = states_t<Aut>{aut->pre()};
 
     // States work list.
-    using worklist_t = std::queue<state_t>;
-    auto todo = worklist_t{};
+    auto todo = std::queue<state_t>{};
     todo.emplace(aut->pre());
 
+    auto credit
+      = getenv("VCSN_CREDIT")
+      ? std::stoul(getenv("VCSN_CREDIT"))
+      : std::numeric_limits<unsigned>::max();
     while (!todo.empty())
       {
         const state_t src = todo.front();
@@ -54,7 +58,7 @@ namespace vcsn
             {
               state_t dst = aut->dst_of(tr);
               // If we have not seen it already, explore its successors.
-              if (res.emplace(dst).second)
+              if (res.emplace(dst).second && credit--)
                 todo.emplace(dst);
             }
       }

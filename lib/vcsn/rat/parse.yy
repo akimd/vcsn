@@ -16,9 +16,9 @@
 {
   #include <iostream>
   #include <tuple>
-  #include "location.hh"
   #include <vcsn/core/rat/expression.hh>
   #include <vcsn/dyn/value.hh>
+  #include <vcsn/misc/location.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn
@@ -118,7 +118,7 @@
   @$ = driver_.location_;
 }
 
-%printer { yyo << '"' << $$ << '"'; } <std::string>;
+%printer { yyo << '"' << $$ << '"'; } <std::string> <symbol>;
 %printer
 {
   yyo << '[';
@@ -159,7 +159,6 @@
   DOT             "."
   END 0           "end"
   LBRACKET        "["
-  LPAREN          "("
   LT_PLUS         "<+"
   ONE             "\\e"
   PERCENT         "%"
@@ -176,6 +175,7 @@
 %token <irange_type> STAR "*";
 %token <std::string> LETTER "letter";
 %token <std::string> WEIGHT "weight";
+%token <symbol>      LPAREN "(";
 
 %type <braced_expression> exp input add tuple;
 %type <std::vector<vcsn::dyn::expression>> tuple.1;
@@ -206,15 +206,21 @@ input:
   {
     auto dim_exp = dyn::num_tapes(dyn::context_of($1.exp));
     auto dim_ctx = dyn::num_tapes(driver_.ctx_);
-    if (dim_exp != dim_ctx)
-      // num_tapes returns 0 on non lat.  In this case, 1 is clearer.
+    if (dim_exp == 0 && dim_ctx == 1)
+      // tuple never returns a tuple of rank 1 (see the case
+      // `$2.size() == 1`).  Time to make it for such contexts.
+      $$ = vcsn::dyn::tuple({$1.exp});
+    else if (dim_exp == dim_ctx)
+      // Provide a value for $$ only for sake of traces: shows the result.
+      $$ = $1;
+    else
       throw syntax_error(@$,
                          "not enough tapes: "
+                         // num_tapes returns 0 on non lat.  In this
+                         // case, 1 is clearer.
                          + std::to_string(std::max(size_t{1}, dim_exp))
                          + " expected "
-                         + std::to_string(std::max(size_t{1}, dim_ctx)));
-    // Provide a value for $$ only for sake of traces: shows the result.
-    $$ = $1;
+                         + std::to_string(dim_ctx));
     driver_.result_ = $$.exp;
     YYACCEPT;
   }
@@ -224,6 +230,7 @@ terminator.opt:
   %empty     {}
 | ","        { driver_.scanner_->putback(','); }
 | ")"        { driver_.scanner_->putback(')'); }
+| "]"        { driver_.scanner_->putback(']'); }
 ;
 
 add:
@@ -300,7 +307,13 @@ exp:
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
 | "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
-| "(" add ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
+| "(" add ")"
+  {
+    $$.exp = $2.exp;
+    $$.lparen = $$.rparen = true;
+    if (!$1.get().empty())
+      $$ = dyn::name($$.exp, $1.get());
+  }
 ;
 
 weights:

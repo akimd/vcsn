@@ -1,12 +1,8 @@
 #include <cctype>
-#include <map>
 
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/getargs.hh>
-#include <vcsn/misc/initializer_list.hh>
-#include <vcsn/misc/map.hh>
-#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {

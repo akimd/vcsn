@@ -16,18 +16,25 @@ EXTRA_PROGRAMS +=                               \
   %D%/compose                                   \
   %D%/operators                                 \
   %D%/prod-eval                                 \
-  %D%/property
+  %D%/property                                  \
+  %D%/sms2fr-static                             \
+  %D%/sms2fr-dyn
+
+EXTRA_DIST += %D%/sms2fr.py %D%/sms2fr-tests.py
 
 %C%_compose_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_operators_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_prod_eval_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_property_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_sms2fr_dyn_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_sms2fr_static_LDADD = $(all_libctx) $(unit_ldadd)
 
 %C%_TESTS =                                     \
   %D%/compose.chk                               \
   %D%/operators.chk                             \
   %D%/prod-eval.chk                             \
-  %D%/property.chk
+  %D%/property.chk                              \
+  %D%/sms2fr.chk
 
 dist_TESTS += $(%C%_TESTS)
 
@@ -38,6 +45,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/operators.log: %D%/operators
 %D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tools
 %D%/property.log: %D%/property
+%D%/sms2fr.log: %D%/sms2fr-static %D%/sms2fr-dyn %D%/sms2fr.py %D%/sms2fr-tests.py
 
 .PHONY: check-demo
 check-demo:

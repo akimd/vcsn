@@ -12,6 +12,10 @@ namespace vcsn
 
   CREATE_FUNCTION_TAG(normalize);
 
+  /*------------.
+  | Automata.   |
+  `------------*/
+
   /// Whether \a a is standard and co-standard.
   template <Automaton Aut>
   bool
@@ -20,7 +24,7 @@ namespace vcsn
     return is_standard(a) && is_costandard(a);
   }
 
-  /// Normalize \a a automaton.
+  /// Normalize automaton \a a.
   template <Automaton Aut>
   auto
   normalize(const Aut& a)

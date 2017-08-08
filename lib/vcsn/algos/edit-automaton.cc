@@ -1,11 +1,9 @@
 #include <cctype>
 #include <regex>
 
-#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/dyn/registries.hh>
 #include <vcsn/misc/builtins.hh>
 
 namespace vcsn

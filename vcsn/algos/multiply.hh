@@ -202,6 +202,7 @@ namespace vcsn
   ///
   /// \param aut  the automaton
   /// \param exp  the exponents
+  /// \param tag  tag for dispatch
   // The return type, via SFINAE on aut->null_state(), makes the
   // difference with another overload, `<ValueSet>(ValueSet, value,
   // value)`, which coincides in the case ValueSet = Z, hence value =

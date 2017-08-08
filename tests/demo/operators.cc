@@ -1,4 +1,4 @@
-// We really assert to do its job.
+// We really want assert to do its job.
 #undef NDEBUG
 #include <iostream>
 #include <stdexcept>
@@ -8,6 +8,12 @@
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/raise.hh>
+
+#define ASSERT(Pred)                            \
+  do {                                          \
+    std::cerr << "Checking... " #Pred "\n";     \
+    assert(Pred);                               \
+  } while (false)
 
 namespace
 {
@@ -25,23 +31,23 @@ namespace
     auto ctx = context_of(a1);
 
     // Evaluate it.
-    assert(evaluate(a1, make_word(ctx, "a"))
+    ASSERT(evaluate(a1, make_word(ctx, "a"))
            == make_weight(ctx, "1"));
-    assert(evaluate(a1, make_word(ctx, "b"))
+    ASSERT(evaluate(a1, make_word(ctx, "b"))
            == make_weight(ctx, "3"));
 
     // Concatenate to itself.
     auto a2 = a1 * a1;
-    assert(evaluate(a2, make_word(ctx, "ab"))
+    ASSERT(evaluate(a2, make_word(ctx, "ab"))
            == make_weight(ctx, "3"));
-    assert(evaluate(a2, make_word(ctx, "bb"))
+    ASSERT(evaluate(a2, make_word(ctx, "bb"))
            == make_weight(ctx, "9"));
 
     // Self-conjunction, aka "power 2".
     auto a3 = a1 & a1;
-    assert(evaluate(a3, make_word(ctx, "a"))
+    ASSERT(evaluate(a3, make_word(ctx, "a"))
            == make_weight(ctx, "1"));
-    assert(evaluate(a3, make_word(ctx, "b"))
+    ASSERT(evaluate(a3, make_word(ctx, "b"))
            == make_weight(ctx, "9"));
   }
   // automata: end
@@ -56,15 +62,15 @@ namespace
 
     // Create an expression, and pretty-print it.
     auto e1 = make_expression(ctx, "<2>a");
-    assert(format(e1) == "<2>a");
+    ASSERT(format(e1) == "<2>a");
     auto e2 = make_expression(ctx, "<3>b");
 
-    assert(format(e1 + e2) == "<2>a+<3>b");
-    assert(format(e1 * e2) == "<6>(ab)");
+    ASSERT(format(e1 + e2) == "<2>a+<3>b");
+    ASSERT(format(e1 * e2) == "<6>(ab)");
 
     // e * -1 denotes e to the -1, that is e*.
     auto e = ((e1 + e2) * -1) * e1 * (e1 + e2);
-    assert(format(e) == "<2>((<2>a+<3>b)*a(<2>a+<3>b))");
+    ASSERT(format(e) == "<2>((<2>a+<3>b)*a(<2>a+<3>b))");
   }
   // expressions: end
 
@@ -81,21 +87,21 @@ namespace
     auto abba = make_label(ctx, "abba");
 
     // Labels can be compared.
-    assert(a == a);
-    assert(a != b);
-    assert(a < b);
-    assert(a <= b);
-    assert(b > a);
-    assert(b >= a);
+    ASSERT(a == a);
+    ASSERT(a != b);
+    ASSERT(a < b);
+    ASSERT(a <= b);
+    ASSERT(b > a);
+    ASSERT(b >= a);
 
     // This is the lexicographical order.
-    assert(a < abba);
-    assert(abba < b);
+    ASSERT(a < abba);
+    ASSERT(abba < b);
 
     // They also support multiplication (i.e., concatenation) when
     // possible: concatenation of labels-are-letters does not work, of
     // course.  That's why the context here is using labels-are-words.
-    assert(a * b * b * a == abba);
+    ASSERT(a * b * b * a == abba);
   }
   // labels: end
 
@@ -113,22 +119,22 @@ namespace
     auto half = make_weight(ctx, "1/2");
 
     // Weights can be compared.
-    assert(one != two);
-    assert(one == one);
-    assert(one < two);
-    assert(one <= two);
-    assert(two > one);
-    assert(two >= one);
+    ASSERT(one != two);
+    ASSERT(one == one);
+    ASSERT(one < two);
+    ASSERT(one <= two);
+    ASSERT(two > one);
+    ASSERT(two >= one);
 
     // 1+1 = 2, etc.
-    assert(one + one == two);
-    assert(half + half == one);
+    ASSERT(one + one == two);
+    ASSERT(half + half == one);
 
     // 1/2 * 2 = 1.
-    assert(half * two == one);
+    ASSERT(half * two == one);
 
     // (1/2)* = 2.
-    assert(half * -1 == two);
+    ASSERT(half * -1 == two);
   }
   // weights: end
 }

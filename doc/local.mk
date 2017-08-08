@@ -27,7 +27,9 @@ CLEANFILES += %D%/vcsn.dox
 
 # We cannot simply use html_DATA here, since Automake does not
 # support installing directories.
+if ENABLE_DOXYGEN
 LAZY_html_DIR += %D%/vcsn.htmldir
+endif ENABLE_DOXYGEN
 
 
 ## ------------ ##

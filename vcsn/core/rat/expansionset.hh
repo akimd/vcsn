@@ -1,7 +1,9 @@
 #pragma once
 
-#include <vcsn/algos/project.hh> // project
+#include <vcsn/algos/project.hh>
 #include <vcsn/algos/split.hh> // expression_polynomialset_t
+#include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/map.hh>
 #include <vcsn/misc/static-if.hh>
 
@@ -43,7 +45,9 @@ namespace vcsn
       struct value_t
       {
         weight_t constant;
-        polys_t polynomials;
+        // Default value to silence the warnings from
+        // -Wmissing-field-initializers with `value_t{weight}`.
+        polys_t polynomials = {};
       };
 
       expansionset(const expressionset_t& rs)
@@ -105,7 +109,8 @@ namespace vcsn
       }
 
       /// Print this expansion.
-      std::ostream& print(const value_t& v, std::ostream& o,
+      std::ostream& print(const value_t& v,
+                          std::ostream& o = std::cout,
                           format fmt = {}) const
       {
         bool first = true;
@@ -139,9 +144,30 @@ namespace vcsn
         return o;
       }
 
-      /// Normalize: move the constant term to the label one.
+      /// Whether an expansion is normal.
+      bool is_normal(const value_t& x) const
+      {
+        return detail::static_if<context_t::has_one()>
+          ([this](const auto& ls, const value_t& x)
+           {
+             return !has(x.polynomials, ls.one());
+           },
+           [](const auto&, const value_t&)
+           {
+             return true;
+           })
+          (ls_, x);
+      }
+
+      /// Normalize: eliminate null polynomials and move the constant
+      /// term from the label one.
       value_t& normalize(value_t& res) const
       {
+        detail::erase_if(res.polynomials,
+                         [this](auto& p)
+                         {
+                           return ps_.is_zero(p.second);
+                         });
         auto has_one = bool_constant<context_t::has_one()>();
         return normalize_(res, has_one);
       }
@@ -162,7 +188,7 @@ namespace vcsn
               {
                 res.constant = ws_.add(res.constant, weight_of(*j));
                 i->second.erase(j);
-                if (i->second.empty())
+                if (ps_.is_zero(i->second))
                   res.polynomials.erase(i);
               }
           }
@@ -176,6 +202,12 @@ namespace vcsn
       }
 
       /// Move the constant to the polynomial associated to one.
+      ///
+      /// Note that this should be named `maybe_denormalize`, as if
+      /// the labelset has no one, the input argument is returned
+      /// unmodified.  In particular, be sure to use the constant term
+      /// of the result, even if in typically cases it is expected to
+      /// be zero.
       value_t& denormalize(value_t& res) const
       {
         auto has_one = bool_constant<context_t::has_one()>();
@@ -228,13 +260,13 @@ namespace vcsn
       /// The zero.
       value_t zero() const
       {
-        return {ws_.zero(), polys_t{}};
+        return {ws_.zero()};
       }
 
       /// The one.
       value_t one() const
       {
-        return {ws_.one(), polys_t{}};
+        return {ws_.one()};
       }
 
       /// A single label.
@@ -249,20 +281,19 @@ namespace vcsn
         lhs.constant = ws_.add(lhs.constant, rhs.constant);
         for (const auto& p: rhs.polynomials)
           ps_.add_here(lhs.polynomials[p.first], p.second);
+        normalize(lhs);
       }
 
       /// Addition.
-      value_t add(const value_t& lhs, const value_t& rhs) const
+      value_t add(value_t res, const value_t& rhs) const
       {
-        value_t res = lhs;
         add_here(res, rhs);
         return res;
       }
 
       /// Left-multiplication by \a w of \a rhs.
-      value_t lweight(const weight_t& w, const value_t& rhs) const
+      value_t lweight(const weight_t& w, value_t res) const
       {
-        value_t res = rhs;
         lweight_here(w, res);
         return res;
       }
@@ -270,26 +301,33 @@ namespace vcsn
       /// Inplace left-multiplication by \a w of \a res.
       value_t& lweight_here(const weight_t& w, value_t& res) const
       {
-        res.constant = ws_.mul(w, res.constant);
-        for (auto& p: res.polynomials)
-          p.second = ps_.lweight(w, p.second);
+        if (ws_.is_zero(w))
+          res = zero();
+        else
+          {
+            res.constant = ws_.mul(w, res.constant);
+            for (auto& p: res.polynomials)
+              p.second = ps_.lweight(w, p.second);
+          }
         return res;
       }
 
       /// Right-multiplication of \a lhs by \a w.
       value_t rweight(const value_t& lhs, const weight_t& w) const
       {
-        value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
-        for (auto& p: lhs.polynomials)
-          for (const auto& m: p.second)
-            ps_.add_here(res.polynomials[p.first],
-                         rs_.rweight(label_of(m), w), weight_of(m));
+        auto res = value_t{ws_.mul(lhs.constant, w)};
+        if (!ws_.is_zero(w))
+          for (auto& p: lhs.polynomials)
+            for (const auto& m: p.second)
+              ps_.add_here(res.polynomials[p.first],
+                           rs_.rweight(label_of(m), w), weight_of(m));
         return res;
       }
 
       /// In place right multiplication by an expression.
-      value_t& rweight_here(value_t& res, const expression_t& rhs) const
+      value_t& rmul_label_here(value_t& res, const expression_t& rhs) const
       {
+        assert(ws_.is_zero(res.constant));
         for (auto& p: res.polynomials)
           p.second = ps_.rmul_label(p.second, rhs);
         return res;
@@ -355,10 +393,9 @@ namespace vcsn
         -> std::enable_if_t<detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
-        value_t res = zero();
         denormalize(l);
         denormalize(r);
-        res.constant = ws_.mul(l.constant, r.constant);
+        auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& p: zip_maps(l.polynomials, r.polynomials))
           res.polynomials[p.first]
             = conjunction(std::get<0>(p.second), std::get<1>(p.second));
@@ -378,8 +415,7 @@ namespace vcsn
         -> std::enable_if_t<!detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
-        value_t res = zero();
-        res.constant = ws_.mul(lhs.constant, rhs.constant);
+        auto res = value_t{ws_.mul(lhs.constant, rhs.constant)};
         for (const auto& l: lhs.polynomials)
           for (const auto& r: rhs.polynomials)
             {
@@ -394,6 +430,7 @@ namespace vcsn
                                            ps_.lmul_label(right, r.second)));
                 }
             }
+        normalize(res);
         return res;
       }
 
@@ -414,7 +451,7 @@ namespace vcsn
           for (const auto& m: p.second)
             ps_.add_here(res.polynomials[p.first],
                          shuffle(lhs_xpr, label_of(m)), weight_of(m));
-
+        // FIXME: normalize?
         return res;
       }
 
@@ -436,8 +473,7 @@ namespace vcsn
       value_t shuffle(const value_t& de, const expression_t& e,
                       const value_t& df, const expression_t& f) const
       {
-        value_t res;
-        res.constant = ws_.mul(de.constant, df.constant);
+        auto res = value_t{ws_.mul(de.constant, df.constant)};
         return shuffle_(res,
                         de, e, df, f,
                         [this](const expression_t& l, const expression_t& r)
@@ -451,7 +487,7 @@ namespace vcsn
                          const value_t& df, const expression_t& f) const
       {
         // Conjunction part: de&:df.
-        value_t res =
+        auto res =
           conjunction_(de, df,
                        [this](const polynomial_t& l, const polynomial_t& r)
                        {
@@ -465,6 +501,7 @@ namespace vcsn
                  {
                    return rs_.infiltrate(l, r);
                  });
+        // FIXME: normalize?
         return res;
       }
 
@@ -495,8 +532,7 @@ namespace vcsn
       std::enable_if_t<IsLetterized, value_t>
       complement_(const value_t& v) const
       {
-        value_t res;
-        res.constant = ws_.is_zero(v.constant) ? ws_.one() : ws_.zero();
+        auto res = value_t{ws_.is_zero(v.constant) ? ws_.one() : ws_.zero()};
 
         detail::static_if<labelset_t::has_one()>
           ([this](const auto& v, const auto& ls)
@@ -530,7 +566,7 @@ namespace vcsn
       /// Transpose an expansion.  The firsts must be reduced to one.
       value_t transpose(const value_t& v) const
       {
-        value_t res = {ws_.transpose(v.constant), polys_t{}};
+        auto res = value_t{ws_.transpose(v.constant)};
         for (const auto& p: v.polynomials)
           {
             VCSN_REQUIRE(ls_.is_one(p.first),
@@ -543,9 +579,9 @@ namespace vcsn
 
       value_t ldivide(value_t lhs, value_t rhs) const
       {
-        value_t res = zero();
         denormalize(lhs);
         denormalize(rhs);
+        auto res = value_t{ws_.mul(lhs.constant, rhs.constant)};
         auto one = detail::label_one(ls_);
         auto& res_one = res.polynomials[one];
 
@@ -585,8 +621,7 @@ namespace vcsn
       value_t
       determinize(const value_t& v) const
       {
-        value_t res;
-        res.constant = v.constant;
+        auto res = value_t{v.constant};
         for (const auto& lp: v.polynomials)
           res.polynomials[lp.first] = {ps_.determinize(lp.second)};
         return res;
@@ -662,9 +697,9 @@ namespace vcsn
                                   eset_.ps_.tuple(ps.second...));
              },
              polys);
-        eset_.normalize(res);
-        return res;
-      }
+          eset_.normalize(res);
+          return res;
+        }
 
         const expansionset& eset_;
       };
@@ -675,8 +710,7 @@ namespace vcsn
       /// Another implementation is possible, based on the following
       /// two-tape example taking e0 and e1, two single-tape expansions:
       ///
-      /// auto res = zero();
-      /// res.constant = ws_.mul(e0.constant, e1.constant);
+      /// auto res = value_t{ws_.mul(e0.constant, e1.constant)};
       /// for (const auto& p0: e0.polynomials)
       ///     for (const auto& p1: e1.polynomials)
       ///       {
@@ -761,53 +795,142 @@ namespace vcsn
                         const value_t& l, const value_t& r,
                         std::true_type) const
       {
+        if (old_way_)
+          return compose_with_one_old_(res, l, r);
+        else
+          return compose_with_one_new_(res, l, r);
+      }
+
+      void
+      compose_with_one_old_(value_t& res,
+                            const value_t& l, const value_t& r) const
+      {
+        assert(ws_.is_zero(l.constant));
+        assert(ws_.is_zero(r.constant));
+        const auto& ls0 = ls_.template set<0>();
+        const auto& ls1 = ls_.template set<1>();
+
         // Handle lhs labels with one on the second tape.
-        {
-          for (const auto& lhs: l.polynomials)
-            if (ls_.template set<1>().is_one(std::get<1>(lhs.first)))
-              for (const auto& rhs: r.polynomials)
-                if (!ls_.template set<0>().is_one(std::get<0>(rhs.first)))
-                  // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
-                  ps_.add_here(res.polynomials[lhs.first],
-                               ps_.compose(lhs.second,
-                                           ps_.lmul_label(rs_.atom(rhs.first),
-                                                          rhs.second)));
-        }
+        for (const auto& lhs: l.polynomials)
+          if (ls1.is_one(std::get<1>(lhs.first)))
+            for (const auto& rhs: r.polynomials)
+              if (!ls0.is_one(std::get<0>(rhs.first)))
+                // a|\e . [P1] @ b|c . [P2] becomes a|\e . [P1 @ (b|c)P2]
+                ps_.add_here(res.polynomials[lhs.first],
+                             ps_.compose(lhs.second,
+                                         ps_.lmul_label(rs_.atom(rhs.first),
+                                                        rhs.second)));
         // Handle rhs labels with one on the first tape.
-        {
+        for (const auto& rhs: r.polynomials)
+          if (ls0.is_one(std::get<0>(rhs.first)))
+            for (const auto& lhs: l.polynomials)
+              if (!ls1.is_one(std::get<1>(lhs.first)))
+                // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
+                ps_.add_here(res.polynomials[rhs.first],
+                             ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
+                                                        lhs.second),
+                                         rhs.second));
+      }
+
+      void
+      compose_with_one_new_(value_t& res,
+                            const value_t& l, const value_t& r) const
+      {
+        const auto& ls0 = ls_.template set<0>();
+        const auto& ls1 = ls_.template set<1>();
+
+        // Handle lhs labels with one on the second tape.
+        for (const auto& lhs: l.polynomials)
+          if (ls1.is_one(std::get<1>(lhs.first)))
+            for (const auto& rhs: r.polynomials)
+              if (!ls0.is_one(std::get<0>(rhs.first)))
+                // a|\e . [P1] @ b|c . [P2] becomes a|c . [P1 @ (b|\e)P2]
+                {
+                  // a|c.
+                  auto l0 = ls_.tuple(ls_.template project<0>(lhs.first),
+                                      ls_.template project<1>(rhs.first));
+                  // b|\e.
+                  auto l1 = ls_.tuple(ls_.template project<0>(rhs.first),
+                                      ls_.template project<1>(lhs.first));
+                  ps_.add_here(res.polynomials[l0],
+                               ps_.compose(lhs.second,
+                                           ps_.lmul_label(rs_.atom(l1),
+                                                          rhs.second)));
+                }
+        // Left constant.
+        //
+        // `$|$ . [<k>1] @ \e|c . [P2]` => `$|c . [(\e|$)<k>1 @ P2]`
+        // `<k> @ \e|c . [P2]` => `\e|c . [<k>1 @ P2]`
+        if (!ws_.is_zero(l.constant))
           for (const auto& rhs: r.polynomials)
-            if (ls_.template set<0>().is_one(std::get<0>(rhs.first)))
-              for (const auto& lhs: l.polynomials)
-                if (!ls_.template set<1>().is_one(std::get<1>(lhs.first)))
-                  // a|b . [P1] @ \e|c . [P2] becomes \e|c . [(a|b)P1 @ P2]
-                  ps_.add_here(res.polynomials[rhs.first],
-                               ps_.compose(ps_.lmul_label(rs_.atom(lhs.first),
+            if (ls0.is_one(std::get<0>(rhs.first)))
+              ps_.add_here(res.polynomials[rhs.first],
+                           ps_.compose(ps_.lweight(l.constant, ps_.one()),
+                                       rhs.second));
+
+        // Handle rhs labels with one on the first tape.
+        for (const auto& rhs: r.polynomials)
+          if (ls0.is_one(std::get<0>(rhs.first)))
+            for (const auto& lhs: l.polynomials)
+              if (!ls1.is_one(std::get<1>(lhs.first)))
+                // a|b . [P1] @ \e|c . [P2] becomes a|c . [(\e|b)P1 @ P2]
+                {
+                  // a|c.
+                  auto l0 = ls_.tuple(ls_.template project<0>(lhs.first),
+                                      ls_.template project<1>(rhs.first));
+                  // \e|b.
+                  auto l1 = ls_.tuple(ls_.template project<0>(rhs.first),
+                                      ls_.template project<1>(lhs.first));
+                  ps_.add_here(res.polynomials[l0],
+                               ps_.compose(ps_.lmul_label(rs_.atom(l1),
                                                           lhs.second),
                                            rhs.second));
-        }
+                }
+
+        // Right constant.
+        //
+        // `a|\e . [P1] @ $|$ . [<k>1] ` => `a|$ . [P1 @ ($|\e)<k>1]`
+        // `a|\e . [P1] @ <k>` => `a|\e . [P1 @ <k>1]`.
+        if (!ws_.is_zero(r.constant))
+          for (const auto& lhs: l.polynomials)
+            if (ls0.is_one(std::get<1>(lhs.first)))
+              ps_.add_here(res.polynomials[lhs.first],
+                           ps_.compose(lhs.second,
+                                       ps_.lweight(r.constant, ps_.one())));
       }
+
 
       /// The composition of \a l and \a r.
       template <typename Ctx = context_t>
       auto compose(value_t l, value_t r) const
-        -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
+        -> std::enable_if_t<are_composable<Ctx, Ctx>()
+                            && number_of_tapes<Ctx>::value == 2,
+                            value_t>
       {
-        value_t res = zero();
-        denormalize(l);
-        denormalize(r);
-        res.constant = ws_.mul(l.constant, r.constant);
+        // Tape of the lhs on which we compose.
+        constexpr auto out = labelset_t::size() - 1;
+        // Tape of the rhs on which we compose.
+        constexpr auto in = 0;
+        if (denorm_)
+          {
+            denormalize(l);
+            denormalize(r);
+          }
+        auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& lm: l.polynomials)
           for (const auto& rm: r.polynomials)
-            if (ls_.template set<0>().equal(std::get<1>(label_of(lm)),
-                                            std::get<0>(label_of(rm))))
+            if (ls_.template set<out>().equal(std::get<out>(label_of(lm)),
+                                              std::get<in>(label_of(rm))))
               {
-                auto l = ls_.tuple(std::get<0>(label_of(lm)),
-                                   std::get<1>(label_of(rm)));
+                auto l = ls_.compose(ls_, label_of(lm),
+                                     ls_, label_of(rm));
                 ps_.add_here(res.polynomials[l],
                              ps_.compose(lm.second, rm.second));
               }
         auto has_one = bool_constant<context_t::has_one()>();
         compose_with_one_(res, l, r, has_one);
+        // Beware that we might have introduced some constant terms
+        // (e.g., \e|x @ x|\e), and some polynomials equal to 0 (\e|x @ y|\e).
         normalize(res);
         return res;
       }
@@ -822,6 +945,10 @@ namespace vcsn
       const weightset_t& ws_ = *rs_.weightset();
       /// The polynomialset for the polynomials.
       polynomialset_t ps_ = make_expression_polynomialset(rs_);
+      /// Whether to running the old composition code.
+      bool old_way_ = !!getenv("VCSN_OLDWAY");
+      /// Denormalize if requested explicitly, or if running the old way.
+      bool denorm_ = old_way_ || !!getenv("VCSN_DENORM");
     };
   }
 

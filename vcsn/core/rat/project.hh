@@ -101,6 +101,11 @@ namespace vcsn
         res_ = out_rs_.atom(std::get<Tape>(v.value()));
       }
 
+      VCSN_RAT_VISIT(name, v)
+      {
+        res_ = out_rs_.name(rec_(v.sub()), v.name_get());
+      }
+
       VCSN_RAT_VISIT(lweight, v)
       {
         res_ = out_rs_.lweight(v.weight(), rec_(v.sub()));

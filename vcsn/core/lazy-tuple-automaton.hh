@@ -9,7 +9,6 @@ namespace vcsn
 {
   namespace detail
   {
-
     /// Decorator implementing the laziness for an algorithm.
     ///
     /// The caller must inherit from lazy_tuple_automaton, and pass itself as
@@ -57,6 +56,11 @@ namespace vcsn
 
       using super_t::aut_;
 
+      // Clang 3.5 is wrong about ws_ being used before being defined.
+#if defined __clang__
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wuninitialized"
+#endif
       lazy_tuple_automaton(Aut aut, const Auts&... auts)
         : super_t{make_tuple_automaton(aut, auts...)}
         , transition_maps_{transition_map_t<Auts>{auts, ws_}...}
@@ -64,7 +68,9 @@ namespace vcsn
         if (Lazy)
           this->set_lazy(this->pre());
       }
-
+#if defined __clang__
+# pragma clang diagnostic pop
+#endif
       template <typename... T>
       static symbol sname_(const T&... t)
       {

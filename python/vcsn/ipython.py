@@ -1,12 +1,14 @@
 # pylint: disable=protected-access, too-many-instance-attributes
 from html import escape
 from threading import Thread, Event
+import re
 
 import ipywidgets as widgets
 from IPython.core.magic import (Magics, magics_class,
                                 line_magic, line_cell_magic)
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-from IPython.display import display
+import IPython.display
+
 import vcsn
 
 from vcsn import d3Widget
@@ -73,7 +75,7 @@ class AsyncUpdater:
             self.widget.update()
 
 class TextLatexWidget:
-    '''A class to eliminate redundancy over our widgets.
+    '''A text area with LaTeX display for feedback.
     Parameters:
         name: the name for the label.
         value: the default value of the text box.
@@ -120,6 +122,10 @@ class ContextText:
                 raise NameError(
                         '`{}` is not a valid variable name'.format(name))
             elif self.name in self.ipython.shell.user_ns:
+                if not isinstance(self.ipython.shell.user_ns[self.name],
+                                  vcsn.context):
+                    raise TypeError(
+                            '`{}` exists but is not a context'.format(name))
                 ctx = self.ipython.shell.user_ns[self.name]
                 text = ctx.format('sname')
             else:
@@ -170,6 +176,7 @@ class EditContext(Magics):
               help='The name of the context to edit')
     @line_cell_magic
     def context(self, line, cell=None):
+        '''A context editor.'''
         args = parse_argstring(self.context, line)
         if cell is None:
             ContextText(self, args.var)
@@ -179,14 +186,19 @@ ip.register_magics(EditContext)
 
 class AutomatonText:
 
-    def __init__(self, ipython, name, format, horizontal=True):
+    # pylint: disable=too-many-arguments
+    def __init__(self, ipython, name, format, layout='h', strip=False):
         '''A wrapper of widgets to edit an automaton interactively.
 
         Parameters:
           - ipython: a reference to the caller shell
           - name: the name of the variable to edit
           - format: the format in which we want to edit it
-          - horizontal (optional): layout the widgets horizontally, default: True
+          - layout: layout the widgets horizontally or vertically, default: h
+          - strip: whether the returned automaton should be stripped.
+                   Note that the interactive automaton is never stripped, as
+                   it would be very confusing that state name do not correspond
+                   between entered and displayed.
         '''
         if not name.isidentifier():
             raise NameError(
@@ -194,7 +206,12 @@ class AutomatonText:
         self.ipython = ipython
         self.name = name
         self.format = format
+        self.strip = strip
         if self.name in self.ipython.shell.user_ns:
+            if not isinstance(self.ipython.shell.user_ns[self.name],
+                              vcsn.automaton):
+                raise TypeError(
+                        '`{}` exists but is not an automaton'.format(name))
             # Strip the automaton, as we cannot preserve the state names
             # anyway.
             aut = self.ipython.shell.user_ns[self.name].strip()
@@ -223,7 +240,7 @@ class AutomatonText:
 
         dropdowns = widgets.HBox(children=[self.mode, self.engine])
         displayer = widgets.VBox(children=[dropdowns, self.out])
-        if horizontal:
+        if layout == 'h':
             interface = widgets.HBox(children=[self.text, displayer])
         else:
             interface = widgets.VBox(children=[self.text, displayer])
@@ -243,7 +260,8 @@ class AutomatonText:
         try:
             txt = self.text.value
             a = vcsn.automaton(txt, self.format, strip=False)
-            self.ipython.shell.user_ns[self.name] = a
+            self.ipython.shell.user_ns[self.name] = \
+                a.strip() if self.strip else a
             # There is currently no official documentation on this,
             # so please check out `ipywidgets.Output`'s docstring.
             with self.out:
@@ -256,18 +274,19 @@ class AutomatonText:
 class EditAutomaton(Magics):
 
     @magic_arguments()
-    @argument('-s', '--strip', action='store_true', default=False,
-              help='''Whether to strip the result (i.e., discard user names
-              and use the "real" state numbers).''')
     @argument('var', type=str, help='The name of the variable to edit.')
     @argument('format', type=str, nargs='?', default='auto',
               help='''The name of the format to edit the automaton in
               (auto, daut, dot, efsm, fado, grail).  Default: auto.''')
-    @argument('mode', type=str, nargs='?', default='h',
+    @argument('-l', '--layout', type=str, nargs='?', default='h',
               help='''The name of the visual mode to display the automaton
               (h for horizontal and v for vertical).  Default: h.''')
+    @argument('-s', '--strip', action='store_true', default=False,
+              help='''Whether to strip the result (i.e., discard user names
+              and use the "real" state numbers).''')
     @line_cell_magic
     def automaton(self, line, cell=None):
+        '''An automaton editor.'''
         args = parse_argstring(self.automaton, line)
         if not args.var.isidentifier():
             raise NameError(
@@ -280,7 +299,8 @@ class EditAutomaton(Magics):
                 a = d3Widget.VcsnD3DataFrame(self, args.var)
                 a.show()
             else:
-                AutomatonText(self, args.var, args.format, args.mode != 'v')
+                AutomatonText(self, args.var, args.format,
+                              layout=args.layout, strip=args.strip)
         else:
             # Cell magic.
             a = vcsn.automaton(cell, format=args.format, strip=args.strip)
@@ -291,9 +311,11 @@ ip.register_magics(EditAutomaton)
 
 
 class ExpressionText:
-    '''A widgets that allows us to edit an expression and its context, save it
-    under chosen identities, and render an automaton of it using a chosen
-    algorithm.'''
+    '''A widget to edit an expression and its context, save it under
+    chosen identities, and render an automaton of it using a chosen
+    algorithm.
+
+    '''
     # pylint: disable=too-many-locals
     def __init__(self, ipython, name):
         if not name.isidentifier():
@@ -302,10 +324,11 @@ class ExpressionText:
         self.ipython = ipython
         self.name = name
         if self.name in self.ipython.shell.user_ns:
+            if not isinstance(self.ipython.shell.user_ns[self.name],
+                              vcsn.expression):
+                raise TypeError(
+                        '`{}` exists but is not an expression'.format(name))
             exp = self.ipython.shell.user_ns[self.name]
-            if not isinstance(exp, vcsn.expression):
-                raise NameError(
-                        '`{}` is defined but is not an expression'.format(name))
             text = exp.format('utf8')
             identities = exp.identities()
             cont = exp.context().format('sname')
@@ -478,6 +501,11 @@ class DemoAutomaton(Magics):
 ip.register_magics(DemoAutomaton)
 
 
+def display(*args):
+    for a in args:
+        IPython.display.display(a)
+
+
 def interact_h(_interact_f, *args, **kwargs):
     '''Similar to IPython's interact function, but with widgets
     packed horizontally.'''
@@ -497,27 +525,66 @@ class table(list):
 
     def to_html(self, s):
         try:
-            return s.SVG()
+            return s._repr_html_()
         except AttributeError:
             pass
+        # Try LaTeX first: when printing a table with expressions, we
+        # don't want to display some SVG, but rather the LaTeX
+        # version.
         try:
             return s._repr_latex_()
         except AttributeError:
             pass
         try:
-            return s._repr_html_()
+            return s.SVG()
         except AttributeError:
             pass
-        return s
+        return str(s)
+
+    def to_latex_expression(self, e):
+        '''Turn an expression in a LaTex representation that uses
+        our conventions.'''
+        # FIXME: use vcsn.configs instead.
+        res = e if isinstance(e, str) else e.format('latex')
+        res = re.sub(r' *\\, *', '', res)
+        res = re.sub(r'\\left\\langle *(.*?) *\\right\\rangle', r'\\bra{\1}', res)
+        res = re.sub(r'\\left\( *(.*?) *\\right\)', r'\\paren{\1}', res)
+        res = res \
+            .replace(r'\left. ', '') \
+            .replace(r'\right. ', '') \
+            .replace(r'\middle|', r'\tuple') \
+            .replace(r'{*}', '*') \
+            .replace('varepsilon', 'eword') \
+            .replace('{*}', '*')
+        return res
+
+    def to_latex(self, s):
+        if isinstance(s, vcsn.expression):
+            return self.to_latex_expression(s)
+        try:
+            return s._repr_latex_()
+        except AttributeError:
+            pass
+        return str(s)
 
     def _repr_html_(self):
-        html = ["<table>"]
+        res = ["<table>"]
         for row in self:
-            html.append("<tr>")
+            res.append("<tr>")
 
-            for col in row:
-                html.append("<td>{0}</td>".format(self.to_html(col)))
+            for cell in row:
+                res.append("<td>{0}</td>".format(self.to_html(cell)))
 
-            html.append("</tr>")
-        html.append("</table>")
-        return ''.join(html)
+            res.append("</tr>")
+        res.append("</table>")
+        return '\n'.join(res)
+
+    def _repr_latex_(self):
+        ncol = len(self[0])
+        res = [r'\begin{array}{' + 'c' * ncol + '}']
+        for row in self:
+            res.append('  '
+                       + ' & '.join([self.to_latex(c) for c in row])
+                       + r' \\')
+        res.append(r'\end{array}')
+        return '\n'.join(res)

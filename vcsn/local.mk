@@ -26,6 +26,7 @@ algo_headers =                                  \
   %D%/algos/compose-expression.hh               \
   %D%/algos/compose.hh                          \
   %D%/algos/conjugate.hh                        \
+  %D%/algos/conjunction-expression.hh           \
   %D%/algos/conjunction.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/constant.hh                         \
@@ -35,6 +36,7 @@ algo_headers =                                  \
   %D%/algos/derivation.hh                       \
   %D%/algos/derived-term.hh                     \
   %D%/algos/detail/printer.hh                   \
+  %D%/algos/determinize-expansion.hh            \
   %D%/algos/determinize.hh                      \
   %D%/algos/dijkstra-node.hh                    \
   %D%/algos/dijkstra.hh                         \
@@ -56,12 +58,14 @@ algo_headers =                                  \
   %D%/algos/focus.hh                            \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
+  %D%/algos/guess-automaton-format.hh           \
   %D%/algos/has-bounded-lag.hh                  \
   %D%/algos/has-lightening-cycle.hh             \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities-of.hh                    \
   %D%/algos/implicit-path.hh                    \
   %D%/algos/inductive.hh                        \
+  %D%/algos/infiltrate-expression.hh            \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-acyclic.hh                       \
@@ -91,7 +95,10 @@ algo_headers =                                  \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
   %D%/algos/multiply.hh                         \
+  %D%/algos/name.hh                             \
+  %D%/algos/normalize-expansion.hh              \
   %D%/algos/normalize.hh                        \
+  %D%/algos/num-tapes.hh                        \
   %D%/algos/pair.hh                             \
   %D%/algos/partial-identity-expression.hh      \
   %D%/algos/partial-identity.hh                 \
@@ -113,6 +120,7 @@ algo_headers =                                  \
   %D%/algos/scc.hh                              \
   %D%/algos/shortest-path-tree.hh               \
   %D%/algos/shortest.hh                         \
+  %D%/algos/shuffle-expression.hh               \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \
@@ -126,6 +134,7 @@ algo_headers =                                  \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
   %D%/algos/to-expansion.hh                     \
+  %D%/algos/to-expression-expansion.hh          \
   %D%/algos/to-expression.hh                    \
   %D%/algos/to-spontaneous.hh                   \
   %D%/algos/transpose.hh                        \
@@ -173,7 +182,6 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/hash.hh                          \
   %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
-  %D%/core/rat/partial-identity.hh              \
   %D%/core/rat/printer.hh                       \
   %D%/core/rat/printer.hxx                      \
   %D%/core/rat/project.hh                       \
@@ -232,6 +240,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/bimap.hh                             \
   %D%/misc/builtins.hh                          \
   %D%/misc/cast.hh                              \
+  %D%/misc/configuration.hh                     \
   %D%/misc/crange.hh                            \
   %D%/misc/cross.hh                             \
   %D%/misc/debug-level.hh                       \
@@ -255,11 +264,13 @@ nobase_include_HEADERS =                        \
   %D%/misc/initializer_list.hh                  \
   %D%/misc/iostream.hh                          \
   %D%/misc/irange.hh                            \
+  %D%/misc/location.hh                          \
   %D%/misc/map.hh                               \
   %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/pair.hh                              \
+  %D%/misc/position.hh                          \
   %D%/misc/property-indexer.hh                  \
   %D%/misc/queue.hh                             \
   %D%/misc/raise.hh                             \
@@ -299,7 +310,6 @@ nobase_include_HEADERS =                        \
   %D%/weightset/r.hh                            \
   %D%/weightset/rmin.hh                         \
   %D%/weightset/weightset.hh                    \
-  %D%/misc/yaml.hh                              \
   %D%/weightset/z.hh                            \
   %D%/weightset/zmin.hh
 

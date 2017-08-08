@@ -8,12 +8,13 @@
 # FIXME: Remove comment once issues are fixed.
 # pylint: disable=unused-import,undefined-variable
 from vcsn_cxx import context, label, polynomial, expression, weight
-from vcsn.tools import _extend, _format, _is_equal
+from vcsn.tools import _extend, _format
 
 
 @_extend(context)
 class context:
-    __eq__ = _is_equal
+    __eq__ = lambda l, r: l.format('sname') == r.format('sname')
+    __matmul__ = context.compose
     __or__ = lambda l, r: context._tuple([l, r])
     __plus__ = context.join
     __repr__ = lambda self: self.format('text')

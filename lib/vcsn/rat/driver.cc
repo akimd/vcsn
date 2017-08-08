@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string/predicate.hpp> // boost::algorithm::contains
 
+#include <lib/vcsn/rat/caret.hh>
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
@@ -73,14 +74,15 @@ namespace vcsn
     {
       std::ostringstream er;
       er << l << ": " << m;
+      detail::print_caret(scanner_->yyinput_stream(), er, l);
       if (!!getenv("YYDEBUG"))
-        std::cerr << er.str() << std::endl;
+        std::cerr << "ERROR: " << er.str() << std::endl;
       errors += (errors.empty() ? "" : "\n") + er.str();
     }
 
     void driver::invalid(const location& l, const std::string& s)
     {
-      error(l, "invalid input: " + s);
+      throw parser::syntax_error(l, "invalid input: " + s);
     }
 
     /// The nesting limit for parser traces, as specified per
@@ -117,7 +119,8 @@ namespace vcsn
         result_ = nullptr;
       scanner_->scan_close_();
       --nesting;
-
+      if (!errors.empty())
+        raise(errors);
       return std::move(result_);
     }
 

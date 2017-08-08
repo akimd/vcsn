@@ -11,8 +11,4 @@
  Out[2]: 3</pre></li>
  <li><p>input/output support for FAdo's format for transducers, and improved compatibility with OpenFST.</p></li></ul>
  
-@@ -4745,4 +4747,3 @@
-  {{{120}a}u}x</pre>
- 
- LocalWords: Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt
 -

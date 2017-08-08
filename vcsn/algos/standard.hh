@@ -250,6 +250,11 @@ namespace vcsn
         res_->set_final(f);
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        super_t::visit(e);
+      }
+
       /// The current set of final states.
       using states_t = std::set<state_t>;
       states_t finals() const

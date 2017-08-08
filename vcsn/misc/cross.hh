@@ -15,6 +15,8 @@ namespace vcsn
   template <typename... Sequences>
   struct cross_sequences
   {
+    using self_t = cross_sequences;
+
     /// Type of the tuple of all the maps.
     using sequences_t = std::tuple<Sequences...>;
 
@@ -203,9 +205,18 @@ namespace vcsn
     /// Const iterator.
     using const_iterator = cross_iterator<const value_type, const_iterators_t>;
 
+    /// Whether to skip the first element.
+    self_t& skip_first(bool s = true)
+    {
+      skip_first_ = s;
+      return *this;
+    }
+
     const_iterator cbegin() const
     {
       auto res = cbegin_(indices_t{});
+      if (skip_first_)
+        ++res;
       return res;
     }
 
@@ -227,6 +238,8 @@ namespace vcsn
     iterator begin()
     {
       auto res = begin_(indices_t{});
+      if (skip_first_)
+        ++res;
       return res;
     }
 
@@ -280,6 +293,9 @@ namespace vcsn
 
     /// The sequences we iterate upon.
     sequences_t sequences_;
+
+    /// Whether to skip the initial element.
+    bool skip_first_ = false;
   };
 
   template <typename... Sequences>

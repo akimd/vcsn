@@ -227,7 +227,7 @@ namespace vcsn
             if (l == '\\')
               o << "\\backslash{}";
             else
-              str_escape(o, l, "#{}");
+              str_escape(o, l, "#{}$");
             break;
 
           case format::raw:

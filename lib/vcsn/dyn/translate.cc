@@ -17,13 +17,24 @@
 #include <lib/vcsn/misc/xltdl.hh>
 
 #include <vcsn/dyn/context.hh>
+#include <vcsn/misc/configuration.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
-#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/stream.hh>
-#include <vcsn/misc/yaml.hh>
+
+namespace
+{
+  /// Level of verbosity.
+  int verbose = []{
+    auto res = 0;
+    auto cp = getenv("VCSN_VERBOSE");
+    std::istringstream is{cp ? cp : "0"};
+    is >> res;
+    return res;
+  }();
+}
 
 namespace vcsn
 {
@@ -165,7 +176,7 @@ namespace vcsn
             if (std::regex_search(line, smatch, r1)
                 || std::regex_search(line, smatch, r2))
               assertions += std::string(smatch[1]) + '\n';
-          if (getenv("VCSN_VERBOSE"))
+          if (verbose)
             {
               cmd += "\n  compiler error messages:\n";
               cmd += get_file_contents(err);
@@ -285,10 +296,13 @@ namespace vcsn
               }
             else
               {
+                auto cmd
+                  = xgetenv("VCSN_COMPILE",
+                            xgetenv("VCSN", "vcsn") + " compile");
                 auto linkflags = printer_.linkflags();
                 if (!linkflags.empty())
                   linkflags = " LDFLAGS+='" + linkflags + "'";
-                cxx("vcsn compile -shared" + linkflags + " '" + base + ".cc'",
+                cxx(cmd + " -shared" + linkflags + " '" + base + ".cc'",
                     tmp);
               }
             auto d
@@ -305,7 +319,11 @@ namespace vcsn
                   std::cerr << d.count() << "ms: " << base << '\n';
               }
           }
-          vcsn::detail::xlt_openext(base + ".so", true);
+          vcsn::detail::xlt_advise()
+            .global(true)
+            .ext()
+            .verbose(1 < verbose)
+            .open(base + ".so");
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.

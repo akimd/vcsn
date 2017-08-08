@@ -90,24 +90,12 @@ namespace vcsn
     }
     */
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
     template <>
     inline dyn::automaton
-    convert<dyn::automaton>(const std::string& str, const dyn::context& ctx,
+    convert<dyn::automaton>(const std::string& str, const dyn::context&,
                             const std::string& format)
     {
-      std::istringstream stream{str};
-      return dyn::read_automaton(stream, format);
-    }
-
-    template <>
-    inline dyn::label
-    convert<dyn::label>(const std::string& str, const dyn::context& ctx,
-                        const std::string& format)
-    {
-      std::istringstream stream{str};
-      return dyn::read_label(ctx, stream);
+      return dyn::make_automaton(str, format);
     }
 
     template <>
@@ -115,40 +103,45 @@ namespace vcsn
     convert<dyn::expression>(const std::string& str, const dyn::context& ctx,
                              const std::string& format)
     {
-      std::istringstream stream{str};
-      return dyn::read_expression(ctx, dyn::identities::deflt, stream, format);
+      return dyn::make_expression(ctx, str, dyn::identities::deflt, format);
+    }
+
+    template <>
+    inline dyn::label
+    convert<dyn::label>(const std::string& str, const dyn::context& ctx,
+                        const std::string& format)
+    {
+      return dyn::make_label(ctx, str, format);
     }
 
     template <>
     inline dyn::polynomial
     convert<dyn::polynomial>(const std::string& str, const dyn::context& ctx,
-                             const std::string& format)
+                             const std::string&)
     {
-      std::istringstream stream{str};
-      return dyn::read_polynomial(ctx, stream);
+      return dyn::make_polynomial(ctx, str);
     }
 
     template <>
     inline dyn::weight
     convert<dyn::weight>(const std::string& str, const dyn::context& ctx,
-                         const std::string& format)
+                         const std::string&)
     {
-      std::istringstream stream{str};
-      return dyn::read_weight(ctx, stream);
+      return dyn::make_weight(ctx, str);
     }
 
     template <>
     inline std::string
-    convert<std::string>(const std::string& str, const dyn::context& ctx,
-                         const std::string& format)
+    convert<std::string>(const std::string& str, const dyn::context&,
+                         const std::string&)
     {
       return str;
     }
 
     template <>
     inline bool
-    convert<bool>(const std::string& str, const dyn::context& ctx,
-                  const std::string& format)
+    convert<bool>(const std::string& str, const dyn::context&,
+                  const std::string&)
     {
       std::istringstream stream{str};
       bool res;
@@ -158,8 +151,8 @@ namespace vcsn
 
     template <>
     inline int
-    convert<int>(const std::string& str, const dyn::context& ctx,
-                 const std::string& format)
+    convert<int>(const std::string& str, const dyn::context&,
+                 const std::string&)
     {
       std::istringstream stream{str};
       int res;
@@ -169,8 +162,8 @@ namespace vcsn
 
     template <>
     inline float
-    convert<float>(const std::string& str, const dyn::context& ctx,
-                   const std::string& format)
+    convert<float>(const std::string& str, const dyn::context&,
+                   const std::string&)
     {
       std::istringstream stream{str};
       float res;
@@ -180,8 +173,8 @@ namespace vcsn
 
     template <>
     inline unsigned
-    convert<unsigned>(const std::string& str, const dyn::context& ctx,
-                      const std::string& format)
+    convert<unsigned>(const std::string& str, const dyn::context&,
+                      const std::string&)
     {
       std::istringstream stream{str};
       unsigned res;
@@ -192,8 +185,8 @@ namespace vcsn
     template <>
     inline boost::optional<unsigned>
     convert<boost::optional<unsigned>>(const std::string& str,
-                                       const dyn::context& ctx,
-                                       const std::string& format)
+                                       const dyn::context&,
+                                       const std::string&)
     {
       std::istringstream stream{str};
       unsigned res;
@@ -203,8 +196,8 @@ namespace vcsn
 
     template <>
     inline dyn::identities
-    convert<dyn::identities>(const std::string& str, const dyn::context& ctx,
-                             const std::string& format)
+    convert<dyn::identities>(const std::string& str, const dyn::context&,
+                             const std::string&)
     {
       return str;
     }

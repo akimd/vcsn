@@ -1,4 +1,7 @@
-import inspect, os, sys, traceback
+import inspect
+import os
+import sys
+import traceback
 
 import vcsn.python3
 
@@ -70,6 +73,25 @@ def is_vcsn(tb):
     except AttributeError:
         return False
 
+def setenv(**vars):
+    '''Set/unset environment variables for Vcsn.  Pass a list
+    of assignments:
+
+    vcsn.setenv(FOO=0, BAR=1)
+
+    is equivalent to:
+
+    unsetenv('VCSN_FOO')
+    setenv('VCSN_BAR', '1')
+    '''
+    for k, v in vars.items():
+        k = 'VCSN_' + k
+        if not v:
+            if k in os.environ:
+                del os.environ[k]
+        else:
+            os.environ[k] = str(v)
+
 def vcsn_traceback_levels(tb):
     '''Returns the amount of frames deep into the traceback
     we have to go through before we reach vcsn.'''
@@ -97,6 +119,7 @@ try:
     mode = ip.InteractiveTB.mode
     offset = ip.InteractiveTB.tb_offset
     class vcsnTB(AutoFormattedTB):
+        # pylint: disable=arguments-differ
         def structured_traceback(self, type, value, tb, tb_offset=None,
                                  *args, **kwargs):
             # If an offset is given, use it, else use the default

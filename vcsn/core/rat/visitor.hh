@@ -55,6 +55,7 @@ namespace vcsn
       DEFINE(infiltrate);
       DEFINE(ldivide);
       DEFINE(lweight);
+      DEFINE(name);
       DEFINE(one);
       DEFINE(mul);
       DEFINE(rweight);

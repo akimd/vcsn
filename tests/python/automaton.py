@@ -9,21 +9,33 @@ from test import *
 ## -------------- ##
 
 # Check invalid input.
-def xfail(a):
-    XFAIL(lambda: vcsn.automaton(a))
+def xfail(a, *args):
+    XFAIL(lambda: vcsn.automaton(a), *args)
 
 # Syntax error: missing }.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char(a), b"
-''')
+''', r'''4.1: syntax error, unexpected end
+
+^
+  while reading automaton''')
 
 # Syntax error: string not closed.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char(a), b
 }
-''')
+''', r'''3.18-5.0: unexpected end of file in a string
+  vcsn_context = "lal_char(a), b
+                 ^^^^^^^^^^^^^^^
+3.18-5.0: invalid weightset name: b\n}
+  while reading context: lal_char(a), b
+}
+
+  vcsn_context = "lal_char(a), b
+                 ^^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
@@ -31,7 +43,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [attribute]
 }
-''')
+''', r'''4.15: syntax error, unexpected ], expecting =
+  a [attribute]
+              ^
+  while reading automaton''')
 
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
@@ -39,7 +54,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [attribute =]
 }
-''')
+''', r'''4.17: syntax error, unexpected ], expecting identifier
+  a [attribute =]
+                ^
+  while reading automaton''')
 
 # Syntax error: comma used after empty attribute.
 xfail(r'''digraph
@@ -47,7 +65,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [,a=a]
 }
-''')
+''', r'''4.6: syntax error, unexpected ",", expecting ] or identifier
+  a [,a=a]
+     ^
+  while reading automaton''')
 
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
@@ -55,7 +76,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [;a=a]
 }
-''')
+''', r'''4.6: syntax error, unexpected ;, expecting ] or identifier
+  a [;a=a]
+     ^
+  while reading automaton''')
 
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
@@ -63,7 +87,10 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a), b"
   a [a=a,;]
 }
-''')
+''', r'''4.10: syntax error, unexpected ;, expecting ] or identifier
+  a [a=a,;]
+         ^
+  while reading automaton''')
 
 # Invalid label: letter not in alphabet.
 xfail(r'''digraph
@@ -73,7 +100,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-20: invalid label: unexpected a
+  while reading: a
+  0 -> 1 [label = a]
+         ^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid label: aa is not valid in LAL.
 xfail(r'''digraph
@@ -83,7 +114,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-23: Poly[{a} -> B]: unexpected trailing characters: a
+  while reading: aa
+  0 -> 1 [label = "aa"]
+         ^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid label: missing '>'.
 xfail(r'''digraph
@@ -93,7 +128,11 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.10-23: missing  > after <2
+  while reading: <2
+  0 -> 1 [label = "<2"]
+         ^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # No context defined (see the typo in vcsn_context).
 xfail(r'''digraph
@@ -103,7 +142,10 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''')
+''', r'''4.3: no vcsn_context defined
+  0 -> 1 [label = a]
+  ^
+  while reading automaton''')
 
 # Invalid context.
 xfail(r'''digraph
@@ -113,7 +155,22 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
+''', r'''3.18-26: invalid labelset name: unknown
+  while reading context: unknown
+  vcsn_context = "unknown"
+                 ^^^^^^^^^
 ''')
+
+# Invalid context.
+xfail(r'''digraph
+{
+  vcsn_context = "lal, unknown"
+}
+''', r'''3.18-31: invalid weightset name: unknown
+  while reading context: lal, unknown
+  vcsn_context = "lal, unknown"
+                 ^^^^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid initial label.
 xfail(r'''digraph
@@ -123,7 +180,10 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0 [label = a]
 }
-''')
+''', r'''6.11-21: edit_automaton: invalid initial entry: a
+  I0 -> 0 [label = a]
+          ^^^^^^^^^^^
+  while reading automaton''')
 
 # Invalid final label.
 xfail(r'''digraph
@@ -133,7 +193,10 @@ xfail(r'''digraph
   1 -> F1 [label = a]
   I0 -> 0
 }
-''')
+''', r'''5.11-21: edit_automaton: invalid final entry: a
+  1 -> F1 [label = a]
+          ^^^^^^^^^^^
+  while reading automaton''')
 
 # There are spaces before 'digraph'.
 CHECK_EQ(vcsn.automaton(r'''digraph
@@ -503,25 +566,31 @@ CHECK_EQ(r'''digraph
 # Invalid transitions
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>
-0 -> $ <1/2>''', 'daut'), '''Q: invalid numerator: a
+0 -> $ <1/2>'''), '''2.1-10: Q: invalid numerator: a
   while reading: a
   while reading: <a>
-  while adding transitions: ($, <a>, 0)''')
+$ -> 0 <a>
+^^^^^^^^^^
+  while reading automaton''')
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
-0 -> $ <a>''', 'daut'), '''Q: invalid numerator: a
+0 -> $ <a>'''), '''3.1-10: Q: invalid numerator: a
   while reading: a
   while reading: <a>
-  while adding transitions: (0, <a>, $)''')
+0 -> $ <a>
+^^^^^^^^^^
+  while reading automaton''')
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
-1 -> $ <2>''', 'daut'), '''Q: invalid denominator: a
+1 -> $ <2>'''), '''3.1-13: Q: invalid denominator: a
   while reading: 2/a
   while reading: <2/a>a
-  while adding transitions: (0, <2/a>a, 1)''')
+0 -> 1 <2/a>a
+^^^^^^^^^^^^^
+  while reading automaton''')
 
 
 ## ----------- ##
@@ -618,23 +687,23 @@ CHECK_EQ(vcsn.automaton('''context = "law_char, z"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''', 'daut'),
+  1 -> $'''),
          vcsn.automaton('''context = "lal_char(abc), b"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+  1 -> $''').automaton(vcsn.context("law_char(abc), z")))
 
 # Convert an automaton to a smaller, valid, alphabet.
 CHECK_EQ(vcsn.automaton('''context = "law_char(abc), z"
-  0 -> 1 a, b''', 'daut'),
+  0 -> 1 a, b'''),
          vcsn.automaton('''context = "lal_char(a-z), b"
-  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(abc), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law_char(abc), z")))
 
 # Convert an automaton to a smaller, invalid, alphabet.
 XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), b"
-  0 -> 1 a, b''', 'daut').automaton(vcsn.context("law_char(xy), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law_char(xy), z")))
 
 # Convert to an invalid smaller weightset.
 XFAIL(lambda: vcsn.automaton('''context = "lal_char(abc), z"
-  0 -> 1 <3>a, b''', 'daut').automaton(vcsn.context("lal_char(xy), b")))
+  0 -> 1 <3>a, b''').automaton(vcsn.context("lal_char(xy), b")))

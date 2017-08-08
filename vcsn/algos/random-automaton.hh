@@ -5,6 +5,7 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
+#include <vcsn/misc/irange.hh>
 
 namespace vcsn
 {
@@ -64,21 +65,21 @@ namespace vcsn
 
     // Labels.
     const auto& ls = *ctx.labelset();
+    const auto& gens = ls.generators();
+    auto num_gens = boost::distance(gens) + ls.has_one();
+    require(num_gens,
+            "random_automaton: empty labelset: ", ls);
     if (max_labels)
       {
         require(0 < *max_labels,
                 "random_automaton: max number of labels cannot be null");
 
-        require(*max_labels <= boost::distance(ls.generators()) + ls.has_one(),
+        require(*max_labels <= num_gens,
                 "random_automaton: max number of labels cannot be greater "
                 "than the number of generators");
       }
     else
-      {
-        max_labels = (boost::distance(ls.generators()) + ls.has_one());
-        require(0 < *max_labels,
-                "random_automaton: empty labelset: ", ls);
-      }
+      max_labels = num_gens;
     auto num_labels = std::uniform_int_distribution<>(1, *max_labels);
 
     auto random_weight = [&weights, &ws]()

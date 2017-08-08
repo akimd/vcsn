@@ -1,3 +1,11 @@
+* Bison
+** Generation of position/location.hh
+We need to be able to specify the destination directory.  Actually,
+it could be useful to be able to generate just them.
+
+** Explicit default ctor
+This is troublesome: we can't just `location loc = {}` in formals.
+
 * Exercises
 ** subword, prefix, suffix, factor
 Provide the same routines for expressions.
@@ -489,6 +497,18 @@ here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
 is forbidden (this should be the empty polynomial).
 
 * Optimizations
+** Pregenerators/generators
+No longer makes sense without lan, simplify.  See synchronizing-word:
+
+    for (const auto& l : pair_->labelset()->generators())
+      {
+        // If we have a lat<lal, lal> and the automaton is free,
+        // we should not consider anything with one.
+        if (is_free(aut_) && has_one_(l))
+          continue;
+
+simplify with something that forbids \e in the labels.
+
 ** Simplify contexts
 Remove useless stacks of lat, etc.
 

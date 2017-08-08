@@ -5,7 +5,6 @@
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
-#include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/set.hh>
 #include <vcsn/misc/stream.hh>
@@ -100,7 +99,7 @@ namespace vcsn
       /// spaces.
       std::string parameters_()
       {
-        std::string res;
+        auto res = std::string{};
         res += eat_('<');
         auto nesting = 1;
         int c;
@@ -120,7 +119,7 @@ namespace vcsn
       /// Accept anything.
       std::shared_ptr<ast_node> any_()
       {
-        std::string w = word_();
+        auto w = word_();
         auto res = std::shared_ptr<ast_node>{};
         if (boost::ends_with(w, "_automaton"))
           res = automaton_(w);
@@ -394,7 +393,7 @@ namespace vcsn
       std::shared_ptr<tupleset> tupleset_()
       {
         eat_('<');
-        typename tupleset::value_t res;
+        auto res = typename tupleset::value_t{};
         res.emplace_back(labelset_or_weightset_());
         while (peek_() == ',')
         {

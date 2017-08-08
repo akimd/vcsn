@@ -12,7 +12,6 @@
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/q.hh>
-#include <vcsn/weightset/qmp.hh>
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/weightset/z.hh>
 
@@ -267,8 +266,6 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(b, r);
     VCSN_JOIN_SIMPLE(z, r);
     VCSN_JOIN_SIMPLE(q, r);
-    VCSN_JOIN_SIMPLE(qmp, r);
     VCSN_JOIN_SIMPLE(r, r);
   }
-
 }

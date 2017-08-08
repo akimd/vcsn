@@ -6,6 +6,7 @@
 
 #include <boost/container/flat_set.hpp>
 #include <boost/optional.hpp>
+#include <boost/range/iterator_range_core.hpp>
 #include <boost/version.hpp>
 
 #include <vcsn/misc/escape.hh>
@@ -111,7 +112,10 @@ namespace vcsn
       return res;
     }
 
-    set_alphabet() = default;
+    set_alphabet()
+    {
+      alphabet_.insert(L::one_letter());
+    }
     set_alphabet(const set_alphabet&) = default;
     set_alphabet(std::initializer_list<letter_t> l)
 #if 105700 <= BOOST_VERSION
@@ -119,7 +123,9 @@ namespace vcsn
 #else
       : alphabet_{l.begin(), l.end()}
 #endif
-    {}
+    {
+      alphabet_.insert(L::one_letter());
+    }
     set_alphabet(const letters_t& l)
       : alphabet_{l}
     {}
@@ -246,6 +252,16 @@ namespace vcsn
     using iterator = typename letters_t::const_iterator;
     using const_iterator = typename letters_t::const_iterator;
 
+    const_iterator cbegin() const
+    {
+      return alphabet_.begin() + 1;
+    }
+
+    const_iterator cend() const
+    {
+      return alphabet_.end();
+    }
+
     const_iterator begin() const
     {
       return cbegin();
@@ -256,20 +272,22 @@ namespace vcsn
       return cend();
     }
 
-    const_iterator cbegin() const
+    /// All the "pregenerators", including the empty word.
+    auto pregenerators() const
     {
-      return alphabet_.begin();
+      return alphabet_;
     }
 
-    const_iterator cend() const
+    /// All the generators.
+    auto generators() const
     {
-      return alphabet_.end();
+      return boost::make_iterator_range(cbegin(), cend());
     }
 
     /// Whether this alphabet has no letters.
     bool empty() const
     {
-      return alphabet_.empty();
+      return cbegin() == cend();
     }
 
     /// Number of letters.
@@ -292,7 +310,7 @@ namespace vcsn
           {
             o << "\\{";
             const char *sep = "";
-            for (letter_t l: alphabet_)
+            for (auto l: *this)
               {
                 o << sep;
                 if (! this->is_letter(l))
@@ -310,7 +328,7 @@ namespace vcsn
 
         case format::sname:
           o << sname() << '(';
-          for (letter_t l: alphabet_)
+          for (auto l: *this)
             this->print(l, o, format::sname);
           // FIXME: Don't display openness here, as our "make()"
           // parser is not ready for it.
@@ -320,7 +338,7 @@ namespace vcsn
         case format::text:
         case format::utf8:
           o << '{';
-          for (letter_t l: alphabet_)
+          for (auto l: *this)
             this->print(l, o, format::sname);
           if (open_)
             o << "...";

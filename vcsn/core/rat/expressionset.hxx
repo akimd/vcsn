@@ -145,7 +145,13 @@ namespace vcsn
       return std::make_shared<atom_t>(v);
   }
 
-  DEFINE::zero() const
+  DEFINE::name(const value_t& v, symbol name) const
+    -> value_t
+  {
+    return std::make_shared<name_t>(v, name);
+  }
+
+  DEFINE::zero()
     -> value_t
   {
     return std::make_shared<zero_t>();
@@ -176,7 +182,7 @@ namespace vcsn
   expressionset_impl<Context>::gather_(const value_t& l, const value_t& r) const
     -> values_t
   {
-    values_t res;
+    auto res = values_t{};
     if (ids_.is_associative())
       {
         gather_<Type>(res, l);
@@ -193,17 +199,14 @@ namespace vcsn
   DEFINE::add(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<add_t>(l, r);
+    auto res = value_t{};
 
     // 0+E => E.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = r;
 
     // E+0 => E.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = l;
 
     // E+E => <2>E.
@@ -306,7 +309,7 @@ namespace vcsn
   {
     assert(!is_zero(l));
     assert(!is_zero(r));
-    value_t res = nullptr;
+    auto res = value_t{};
     if (auto ls = std::dynamic_pointer_cast<const add_t>(l))
       {
         if (auto rs = std::dynamic_pointer_cast<const add_t>(r))
@@ -356,25 +359,22 @@ namespace vcsn
   DEFINE::mul(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<mul_t>(l, r);
+    auto res = value_t{};
 
     // 0.E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // E.0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
-    else if (type_ignoring_lweight_(r) == type_t::one)
+    else if (ids_.is_trivial() && type_ignoring_lweight_(r) == type_t::one)
       res = rweight(l, possibly_implicit_lweight_(r));
 
     // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
-    else if (type_ignoring_lweight_(l) == type_t::one)
+    else if (ids_.is_trivial() && type_ignoring_lweight_(l) == type_t::one)
       res = lweight(possibly_implicit_lweight_(l), r);
 
     // (<k>E)(<h>F) => <kh>(EF).
@@ -382,6 +382,7 @@ namespace vcsn
              && (l->type() == type_t::lweight
                  || r->type() == type_t::lweight))
       {
+        // FIXME: check that it can't shadow the following items.
         weight_t
           lw = possibly_implicit_lweight_(l),
           rw = possibly_implicit_lweight_(r);
@@ -418,25 +419,89 @@ namespace vcsn
   DEFINE::compose(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<compose_t>(l, r);
+    auto res = value_t{};
 
     // 0 @ E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // E @ 0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     // <k>1 @ <h>1 => <kh>1
-    else if (type_ignoring_lweight_(l) == type_t::one
+    else if (ids_.is_trivial()
+             && type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
       res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
                                      possibly_implicit_lweight_(r)),
                     one());
+
+    // a|\e @ 1 => a|\e, 1@\e|a => \e|a, a|x@x|b => a|x, a|x@y|b => 0.
+    else if (ids_.is_linear()
+             && are_composable<context_t>()
+             && context_t::has_one()
+             && number_of_tapes<context_t>::value == 2
+             && (type_ignoring_lweight_(l) == type_t::atom
+                 || type_ignoring_lweight_(l) == type_t::one)
+             && (type_ignoring_lweight_(r) == type_t::atom
+                 || type_ignoring_lweight_(r) == type_t::one))
+      // 1 behaves exactly like `\e|\e`.
+      //
+      // So we want the `out` label of l, and the `in` label of r.
+      // FIXME: this piece of code does not belong to here, it should
+      // be handled in the realm of labelsets.
+      detail::static_if<are_composable<context_t>()
+                        && context_t::has_one()
+                        && number_of_tapes<context_t>::value == 2>
+        ([this, &res](const auto& ls, const auto& l, const auto& r)
+         {
+           // Tape of the lhs on which we compose.  Cannot use just
+           // `ls.size()`, clang++ 3.9 and 4.0 do not accept it, which
+           // seems like a bug to me.
+           constexpr auto out
+             = std::remove_reference_t<decltype(ls)>::size() - 1;
+           // Tape of the rhs on which we compose.
+           constexpr auto in = 0;
+           // The common (single-tape) labelset.
+           const auto& ls0 = ls.template set<out>();
+           // FIXME: maybe_compose, or dynamic are_composable.
+           auto get_label = [&](const auto& e, auto tape)
+             {
+               if (e->type() == type_t::atom)
+                 return std::get<decltype(tape){}>
+                        (down_pointer_cast<const atom_t>(e)->value());
+               else
+                 return ls0.one();
+             };
+           auto lhs = unwrap_possible_lweight_(l);
+           auto rhs = unwrap_possible_lweight_(r);
+           auto lout = get_label(l, std::integral_constant<int, out>{});
+           auto lin = get_label(r, std::integral_constant<int, in>{});
+           // 1 @ x|b => x|b if x == \e, 0 otherwise.
+           if (lhs->type() == type_t::one && rhs->type() == type_t::atom)
+             res = ls0.is_one(lin) ? rhs : zero();
+           // a|x @ 1 => a|x if x == \e, 0 otherwise.
+           else if (lhs->type() == type_t::atom && rhs->type() == type_t::one)
+             res = ls0.is_one(lout) ? lhs : zero();
+           // a|x @ y|b => a|b if x == y, 0 otherwise.
+           else
+             res = (ls0.equal(lout, lin)
+                    ? atom(ls.compose
+                           (ls,
+                            down_pointer_cast<const atom_t>(lhs)->value(),
+                            ls,
+                            down_pointer_cast<const atom_t>(rhs)->value()))
+                    : zero());
+           res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
+                                          possibly_implicit_lweight_(r)),
+                         res);
+         },
+         [](const auto&, const auto&, const auto&)
+         {
+           BUILTIN_UNREACHABLE();
+         })
+          (*labelset(), l, r);
 
     // General case.
     else
@@ -447,36 +512,35 @@ namespace vcsn
   DEFINE::conjunction(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<conjunction_t>(l, r);
+    auto res = value_t{};
 
     // 0&E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // E&0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     // E&0{c} => E.
-    else if (is_universal(r))
+    else if (ids_.is_trivial() && is_universal(r))
       res = l;
 
     // 0{c}&E => E.
-    else if (is_universal(l))
+    else if (ids_.is_trivial() && is_universal(l))
       res = r;
 
     // <k>1&<h>1 => <kh>1.
-    else if (type_ignoring_lweight_(l) == type_t::one
+    else if (ids_.is_trivial()
+             && type_ignoring_lweight_(l) == type_t::one
              && type_ignoring_lweight_(r) == type_t::one)
       res = lweight(weightset()->mul(possibly_implicit_lweight_(l),
                                      possibly_implicit_lweight_(r)),
                     one());
 
     // <k>a&<h>a => <kh>a.  <k>a&<h>b => 0.
-    else if (type_ignoring_lweight_(l) == type_t::atom
+    else if (ids_.is_trivial()
+             && type_ignoring_lweight_(l) == type_t::atom
              && type_ignoring_lweight_(r) == type_t::atom)
       {
         auto lhs =
@@ -490,10 +554,11 @@ namespace vcsn
       }
 
     // <k>1&<h>a => 0, <k>a&<h>1 => 0.
-    else if ((type_ignoring_lweight_(l) == type_t::one
-              && type_ignoring_lweight_(r) == type_t::atom)
-             || (type_ignoring_lweight_(l) == type_t::atom
-                 && type_ignoring_lweight_(r) == type_t::one))
+    else if (ids_.is_trivial()
+             && ((type_ignoring_lweight_(l) == type_t::one
+                  && type_ignoring_lweight_(r) == type_t::atom)
+                 || (type_ignoring_lweight_(l) == type_t::atom
+                     && type_ignoring_lweight_(r) == type_t::one)))
       res = zero();
 
     // General case: E & F.
@@ -505,21 +570,18 @@ namespace vcsn
   DEFINE::ldivide(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<ldivide_t>(l, r);
+    auto res = value_t{};
 
     // 0\E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // 1\E => E.
-    else if (is_one(l))
+    else if (ids_.is_trivial() && is_one(l))
       res = r;
 
     // E\0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     else
@@ -541,25 +603,36 @@ namespace vcsn
   {
     auto ts = as_tupleset();
     auto t = ts.tuple(v...);
+
+    // \e | \e => \e.
+    //
+    // This is critical, it is not a identity, it is more important
+    // than that.  For instance, the tupling of expansions starts by
+    // denormalizing them and then normalizes the result.  So
+    // `<2>|<3>` becomes `\e.[<2>\e] | \e.[<3>\e]` which becomes
+    // `\e|\e.[<6>(\e|\e]` But if we don't recognize that `\e|\e` is
+    // really `\e`, the normalization fails to turn it into `<6>`.
+    if (ts.is_one(t))
+      return one();
+
     // \z | E => \z.
     //
     // FIXME: maybe we should introduce a short-circuiting version
     // that would not make useless invocation when a \z was found.
-    if (detail::apply(any{},
-                      detail::apply(([](const auto& rs, const auto& r)
-                                     { return rs.is_zero(r); }),
-                                    ts.sets(), t)))
+    else if (ids_.is_trivial()
+             && detail::apply(any{},
+                              detail::apply(([](const auto& rs, const auto& r)
+                                             { return rs.is_zero(r); }),
+                                            ts.sets(), t)))
       return zero();
-    // \e | \e => \e.
-    if (ts.is_one(t))
-      return one();
+
     // If this is a tuple of labels, make it a (multitape) label.
     // That allows algorithms such as standard, thompson, etc. to work
     // on lal x lal.
-    //
-    // Note that `\e|a` is turned into a (multitape) label on lal x lal.
-    else if (tuple_of_label<>{self()}.is_label(t))
+    else if (ids_.is_trivial() && tuple_of_label<>{self()}.is_label(t))
       return atom(tuple_of_label<>{self()}.as_label(t));
+
+    // General case.
     else
       return std::make_shared<tuple_t>(std::forward<Value>(v)...);
   }
@@ -567,25 +640,22 @@ namespace vcsn
   DEFINE::infiltrate(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<infiltrate_t>(l, r);
+    auto res = value_t{};
 
     // 0 &: E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // E &: 0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     // 1 &: E => E.
-    else if (is_one(l))
+    else if (ids_.is_trivial() && is_one(l))
       res = r;
 
     // E &: 1 => E.
-    else if (is_one(r))
+    else if (ids_.is_trivial() && is_one(r))
       res = l;
 
     else
@@ -597,25 +667,22 @@ namespace vcsn
   DEFINE::shuffle(const value_t& l, const value_t& r) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<shuffle_t>(l, r);
+    auto res = value_t{};
 
     // 0:E => 0.
-    else if (is_zero(l))
+    if (ids_.is_trivial() && is_zero(l))
       res = l;
 
     // E:0 => 0.
-    else if (is_zero(r))
+    else if (ids_.is_trivial() && is_zero(r))
       res = r;
 
     // 1:E => E.
-    else if (is_one(l))
+    else if (ids_.is_trivial() && is_one(l))
       res = r;
 
     // E:1 => E.
-    else if (is_one(r))
+    else if (ids_.is_trivial() && is_one(r))
       res = l;
 
     else
@@ -630,7 +697,7 @@ namespace vcsn
   DEFINE::power(const value_t& e, unsigned n) const
     -> value_t
   {
-    value_t res = nullptr;
+    auto res = value_t{};
     // Given E the expression s.t. E{n} = (<k>a){n}.
 
     // E{0} => 1.
@@ -642,11 +709,12 @@ namespace vcsn
       res = e;
 
     // \z{n} => \z.
-    else if (ids_ && is_zero(e))
+    else if (ids_.is_trivial() && is_zero(e))
       res = e;
 
     // Case: a == \e or a == <w>\e.
-    else if (ids_ && type_ignoring_lweight_(e) == type_t::one)
+    else if (ids_.is_trivial()
+             && type_ignoring_lweight_(e) == type_t::one)
       {
         weight_t w = possibly_implicit_lweight_(e);
         res = lweight(weightset()->power(w, n), one());
@@ -716,10 +784,10 @@ namespace vcsn
         && (r->type() == type_t::atom || r->type() == type_t::mul))
       {
         // Left-hand sides.
-        values_t ls;
+        auto ls = values_t{};
         gather_<type_t::mul>(ls, l);
         // Right-hand sides.
-        values_t rs;
+        auto rs = values_t{};
         gather_<type_t::mul>(rs, r);
 
         // FIXME: we should perform that "if" with the one above, and
@@ -729,11 +797,10 @@ namespace vcsn
             && rs.front()->type() == type_t::atom)
           {
             // Fetch atom of the last lhs.
-            auto lhs
-              = std::dynamic_pointer_cast<const atom_t>
+            auto lhs = down_pointer_cast<const atom_t>
               (unwrap_possible_lweight_(ls.back()));
             // Fetch atom of the first rhs.
-            auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
+            auto rhs = down_pointer_cast<const atom_t>(rs.front());
 
             auto product = atom(labelset()->mul(lhs->value(), rhs->value()));
 
@@ -761,10 +828,10 @@ namespace vcsn
   DEFINE::star(const value_t& e) const
     -> value_t
   {
-    value_t res = nullptr;
+    auto res = value_t{};
 
     // \z* => 1.
-    if (ids_ && is_zero(e))
+    if (ids_.is_trivial() && is_zero(e))
       res = one();
 
     // E** => E* if on B.
@@ -786,24 +853,28 @@ namespace vcsn
   DEFINE::complement(const value_t& e) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<complement_t>(e);
+    auto res = value_t{};
 
     // The following identities make derived-term (<2>a)*{c} terminate.
     // (<k>E){c} => E{c}.
-    else if (auto w = std::dynamic_pointer_cast<const lweight_t>(e))
-      res = complement(w->sub());
+    if (ids_.is_trivial() && e->type() == type_t::lweight)
+      {
+        auto w = down_pointer_cast<const lweight_t>(e);
+        res = complement(w->sub());
+      }
 
     // (E<k>){c} => E{c}.
-    else if (auto w = std::dynamic_pointer_cast<const rweight_t>(e))
-      res = complement(w->sub());
+    else if (ids_.is_trivial() && e->type() == type_t::rweight)
+      {
+        auto w = down_pointer_cast<const rweight_t>(e);
+        res = complement(w->sub());
+      }
 
     // E{c}{c} => E if on B or F2.
     //
     // Indeed, (<2>a)*{c}{c} is actually denoting a*, not (<2>a)*.
-    else if (e->type() == type_t::complement
+    else if (ids_.is_trivial()
+             && e->type() == type_t::complement
              && std::is_same<weight_t, bool>{})
       res = down_pointer_cast<const complement_t>(e)->sub();
 
@@ -816,26 +887,26 @@ namespace vcsn
   DEFINE::transposition(const value_t& e) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<transposition_t>(e);
+    auto res = value_t{};
 
     // E{T} => E{t} when agressive.
-    else if (ids_.is_agressive())
+    if (ids_.is_agressive())
       res = transpose(e);
 
     // 0{T} => 0.
-    else if (is_zero(e))
+    else if (ids_.is_trivial() && is_zero(e))
       res = e;
 
     // 1{T} => 1.
-    else if (is_one(e))
+    else if (ids_.is_trivial() && is_one(e))
       res = e;
 
     // a{T} => a, (abc){T} => cba.
-    else if (auto l = std::dynamic_pointer_cast<const atom_t>(e))
-      res = atom(labelset()->transpose(l->value()));
+    else if (ids_.is_trivial() && e->type() == type_t::atom)
+      {
+        auto l = down_pointer_cast<const atom_t>(e);
+        res = atom(labelset()->transpose(l->value()));
+      }
 
     // E{T}{T} => E, if agressive.
     else if (ids_.is_agressive()
@@ -854,22 +925,23 @@ namespace vcsn
   DEFINE::lweight(const weight_t& w, const value_t& e) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<lweight_t>(w, e);
+    auto res = value_t{};
 
     // <k>0 => 0, <1>E => E.
-    else if (is_zero(e) || weightset()->is_one(w))
+    if (ids_.is_trivial()
+        && (is_zero(e) || weightset()->is_one(w)))
       res = e;
 
     // <0>E => 0.
-    else if (weightset()->is_zero(w))
+    else if (ids_.is_trivial() && weightset()->is_zero(w))
       res = zero();
 
     // <k>(<h>E) => <kh>E.
-    else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      res = lweight(weightset()->mul(w, lw->weight()), lw->sub());
+    else if (ids_.is_trivial() && e->type() == type_t::lweight)
+      {
+        auto lw = down_pointer_cast<const lweight_t>(e);
+        res = lweight(weightset()->mul(w, lw->weight()), lw->sub());
+      }
 
     // Distributive: <k>(E+F) => <k>E + <k>F.
     else if (ids_.is_distributive() && e->type() == type_t::add)
@@ -877,7 +949,7 @@ namespace vcsn
         const auto& s = down_pointer_cast<const add_t>(e);
         // We can build the result faster by emplace_back'ing addends without
         // passing thru add; the order will be the same as in *ss.
-        values_t addends;
+        auto addends = values_t{};
         for (const auto& a: *s)
           addends.emplace_back(lweight(w, a));
         res = std::make_shared<add_t>(std::move(addends));
@@ -893,34 +965,37 @@ namespace vcsn
   DEFINE::rweight(const value_t& e, const weight_t& w) const
     -> value_t
   {
-    value_t res = nullptr;
-
-    if (!ids_)
-      res = std::make_shared<rweight_t>(w, e);
+    auto res = value_t{};
 
     // Linear identity: E<k> => <k>E.
-    else if (ids_.is_linear() && weightset()->is_commutative())
+    if (ids_.is_linear() && weightset()->is_commutative())
       res = lweight(w, e);
 
     // Trivial identity: E<0> => 0.
-    else if (weightset()->is_zero(w))
+    else if (ids_.is_trivial() && weightset()->is_zero(w))
       res = zero();
 
     // Trivial identity: E<1> => E.
-    else if (weightset()->is_one(w))
+    else if (ids_.is_trivial() && weightset()->is_one(w))
       res = e;
 
-    else if (e->is_leaf())
+    else if (ids_.is_trivial() && e->is_leaf())
       // Can only have left weights and lweight takes care of normalization.
       res = lweight(w, e);
 
     // Trivial identity: (<k>E)<h> => <k>(E<h>).
-    else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
-      res = lweight(lw->weight(), rweight(lw->sub(), w));
+    else if (ids_.is_trivial() && e->type() == type_t::lweight)
+      {
+        auto lw = down_pointer_cast<const lweight_t>(e);
+        res = lweight(lw->weight(), rweight(lw->sub(), w));
+      }
 
     // Trivial identity: (E<k>)<h> => E<kh>.
-    else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
-      res = rweight(rw->sub(), weightset()->mul(rw->weight(), w));
+    else if (ids_.is_trivial() && e->type() == type_t::rweight)
+      {
+        auto rw = down_pointer_cast<const rweight_t>(e);
+        res = rweight(rw->sub(), weightset()->mul(rw->weight(), w));
+      }
 
     // General case: E<k>.
     else
@@ -1096,9 +1171,9 @@ namespace vcsn
      std::false_type) const
     -> value_t
   {
-    value_t res = zero();
+    auto res = zero();
     const auto& ls = *labelset();
-    auto gens = ls.generators();
+    const auto gens = ls.generators();
     // FIXME: This piece of code screams for factoring.  Yet, I want
     // to avoid useless costs such as building a empty/full set of
     // letters for [^].

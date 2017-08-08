@@ -3,15 +3,15 @@
 set -e
 set -x
 
-inside_vcsn="/build/vcsn-copy"
-outside_vcsn="/build/vcsn"
-package_dir="$outside_vcsn/_package"
+vcsn_dir="/build/vcsn"
+package_dir="$vcsn_dir/_package"
+build_dir="$vcsn_dir/build/6p"
 
-cp -a "$outside_vcsn" "$inside_vcsn"
-
-cd "$inside_vcsn"
+cd "$vcsn_dir"
 ./bootstrap
-./configure CXXFLAGS='-O3' CPPFLAGS='-DNDEBUG'
+mkdir -p "$build_dir"
+cd "$build_dir"
+"$vcsn_dir/configure" CXXFLAGS='-O3' CPPFLAGS='-DNDEBUG'
 # Make sure the package is complete: run distcheck first.  Prefer
 # vcsn-distcheck which skips the build-check, but run the
 # install-check.

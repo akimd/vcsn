@@ -63,7 +63,7 @@ class polynomial:
                 raise RuntimeError(str(self.context())
                                    + ": cannot represent polynomial one")
             else:
-                raise e
+                raise RuntimeError(e)
 
     def __pow__(self, k):
         if k == 0:

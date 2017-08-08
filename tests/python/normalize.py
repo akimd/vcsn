@@ -3,8 +3,12 @@
 import vcsn
 from test import *
 
+## ---------- ##
+## Automata.  ##
+## ---------- ##
+
 # check EXPECT INPUT
-# ----------------------
+# ------------------
 # Check that is-normalized(INPUT) = EXPECT.
 def check(expect, i):
     CHECK_EQ(expect, i.is_normalized())
@@ -123,3 +127,19 @@ $ -> 0
 2 -> $''', 'daut')
 CHECK_EQ(False,
          a.transpose().determinize().transpose().is_normalized())
+
+## ------------ ##
+## Expansions.  ##
+## ------------ ##
+c = vcsn.context('lan, q')
+e = c.expression('a*')
+x = e.expansion()
+CHECK(x.is_normal())
+x = x.denormalize()
+CHECK(not x.is_normal())
+x = x.normalize()
+CHECK(x.is_normal())
+
+e = c.expression('(ab{\}ab +<-1>b*)')
+x = e.expansion()
+CHECK(not x.is_normal())

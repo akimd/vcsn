@@ -47,8 +47,12 @@ namespace vcsn
       return res;
     }
 
+    /// In place removal of entries matching the predicate.
+    ///
+    /// Similar to boost::remove_erase_if, but for associative
+    /// containers.
     template <typename Container, typename Predicate>
-    void erase_if(Container& c, const Predicate& p)
+    void erase_if(Container& c, Predicate p)
     {
       using std::begin;
       using std::end;
@@ -161,15 +165,27 @@ namespace vcsn
       auto i = std::begin(container);
       auto end = std::end(container);
       assert(i != end);
-      if (i != end)
-        {
-          auto res = *i;
-          for (++i; i != end; ++i)
-            if (res < *i)
-              res = *i;
-          return res;
-        }
-      abort();
+      auto res = *i;
+      for (++i; i != end; ++i)
+        if (res < *i)
+          res = *i;
+      return res;
+    }
+
+    /// Same as \c *std\::max_element, but works with an input iterator,
+    /// not just a forward iterator.
+    template <typename Container, typename Comp>
+    typename Container::value_type
+    min_forward(const Container& container, Comp comp)
+    {
+      auto i = std::begin(container);
+      auto end = std::end(container);
+      assert(i != end);
+      auto res = *i;
+      for (++i; i != end; ++i)
+        if (comp(*i, res))
+          res = *i;
+      return res;
     }
 
     // Boost 1.49 does not have boost/algorithm/cxx11/none_of.hpp and the like.

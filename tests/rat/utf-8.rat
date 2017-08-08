@@ -1,5 +1,3 @@
-# -*- mode:shell-script, coding:utf-8 -*-
-
 %context: q
 
 # Check that we also support UTF-8.  It's handy with copy-pasting from
@@ -17,3 +15,8 @@ a∗ == a*
 a⁰¹⁰²⁸ == a{1028}
 a⁰ == \e
 a¹ == a
+
+# Local Variables:
+# mode: shell-script
+# coding: utf-8
+# End:

@@ -30,34 +30,34 @@
 
 namespace vcsn
 {
-  // http://llvm.org/bugs/show_bug.cgi?id=18571
-#if defined __clang__
-# pragma clang diagnostic push
-# pragma clang diagnostic ignored "-Wunused-value"
-#endif
-  template <typename LabelSet>
-  auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t* l)
-    -> decltype(ls.is_zero(l), bool())
-  {
-    return ls.is_zero(*l);
-  }
-
-#if defined __clang__
-# pragma clang diagnostic pop
-#endif
-
-  template <typename LabelSet>
-  bool label_is_zero(const LabelSet&, ...)
-  ATTRIBUTE_CONST;
-
-  template <typename LabelSet>
-  bool label_is_zero(const LabelSet&, ...)
-  {
-    return false;
-  }
-
   namespace detail
   {
+    /*-----------------.
+    | label_is_zero.   |
+    `-----------------*/
+
+    /// The type of the LabelSet::zero() member function.
+    template <typename LabelSet>
+    using zero_mem_fn_t
+      = decltype(std::declval<LabelSet>().zero());
+
+    /// Whether LabelSet features a zero() member function.
+    template <typename LabelSet>
+    using has_zero_mem_fn = detail::detect<LabelSet, zero_mem_fn_t>;
+
+    template <typename LabelSet>
+    auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t& l)
+    {
+      return detail::static_if<has_zero_mem_fn<LabelSet>{}>
+        ([](const auto& ls, const auto& l){ return ls.is_zero(l);},
+         [](const auto&,    const auto&)  { return false; })
+        (ls, l);
+    }
+
+    /*--------------------.
+    | is_division_ring.   |
+    `--------------------*/
+
     template <typename WeightSet>
     struct is_division_ring
       : std::true_type
@@ -194,13 +194,11 @@ namespace vcsn
     value_t&
     add_here(value_t& v, const label_t& l, const weight_t k) const
     {
-      if (!label_is_zero(*labelset(), &l))
+      if (!label_is_zero(*labelset(), l))
         {
           auto i = v.find(l);
           if (i == v.end())
-            {
-              set_weight(v, l, k);
-            }
+            set_weight(v, l, k);
           else
             {
               // Do not use set_weight() because it would lookup l
@@ -265,9 +263,8 @@ namespace vcsn
     }
 
     /// The sum of polynomials \a l and \a r.
-    value_t add(const value_t& l, const value_t& r) const
+    value_t add(value_t res, const value_t& r) const
     {
-      value_t res = l;
       add_here(res, r);
       return res;
     }
@@ -281,7 +278,7 @@ namespace vcsn
     value_t&
     sub_here(value_t& v, const monomial_t& m) const
     {
-      if (!label_is_zero(*labelset(), &label_of(m)))
+      if (!label_is_zero(*labelset(), label_of(m)))
         {
           auto i = v.find(label_of(m));
           if (i == v.end())
@@ -307,7 +304,7 @@ namespace vcsn
     value_t
     sub(const value_t& l, const value_t& r) const
     {
-      value_t res = l;
+      auto res = l;
       for (const auto& rm: r)
         sub_here(res, rm);
       return res;
@@ -334,7 +331,7 @@ namespace vcsn
       -> std::enable_if_t<WetType != wet_kind_t::bitset,
                      value_t>
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -367,7 +364,7 @@ namespace vcsn
     mul(const value_t& p, const label_t& l, const weight_t w) const
       -> value_t
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: p)
         add_here(res,
                  labelset()->mul(label_of(m), l),
@@ -386,7 +383,7 @@ namespace vcsn
     std::enable_if_t<Ctx::is_lar, value_t>
     conjunction_impl_(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -401,7 +398,7 @@ namespace vcsn
     std::enable_if_t<!Ctx::is_lar, value_t>
     conjunction_impl_(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& p: zip_maps<vcsn::as_tuple>(l, r))
         add_here(res,
                  label_of(std::get<0>(p)),
@@ -421,7 +418,7 @@ namespace vcsn
     value_t
     infiltrate(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
           add_here(res,
@@ -473,7 +470,7 @@ namespace vcsn
     /// Map all weights to their absolute value.
     value_t abs(const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res, label_of(m), weightset()->abs(weight_of(m)));
       return res;
@@ -501,7 +498,7 @@ namespace vcsn
     value_t
     lweight(const weight_t w, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       if (weightset()->is_one(w))
         res = v;
       else if (!weightset()->is_zero(w))
@@ -514,7 +511,7 @@ namespace vcsn
     value_t
     lmul_label(const label_t& lhs, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res,
                  labelset()->mul(lhs, label_of(m)),
@@ -526,7 +523,7 @@ namespace vcsn
     value_t
     mul(const monomial_t& lhs, const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res,
                  labelset()->mul(label_of(lhs), label_of(m)),
@@ -550,7 +547,7 @@ namespace vcsn
     rweight(const value_t& v, const weight_t w) const
       -> value_t
     {
-      value_t res;
+      auto res = value_t{};
       if (weightset()->is_one(w))
         res = v;
       else if (!weightset()->is_zero(w))
@@ -579,7 +576,7 @@ namespace vcsn
     value_t
     rmul_label(const value_t& v, const label_t& rhs) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lhs: v)
         add_here(res,
                  labelset()->mul(label_of(lhs), rhs),
@@ -591,7 +588,7 @@ namespace vcsn
     value_t
     mul(const value_t& l, const monomial_t& rhs) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lhs: l)
         add_here(res,
                  labelset()->mul(label_of(lhs), label_of(rhs)),
@@ -618,7 +615,7 @@ namespace vcsn
     value_t
     ldivide(const monomial_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: r)
         add_here(res, ldivide(l, m));
       return res;
@@ -632,7 +629,16 @@ namespace vcsn
     {
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res, ldivide(lm, rm));
+          // Our implementation of the {\} operator in the expressions
+          // requires that we *multiply* the weights, which is not
+          // what the division of monomials does.  So don't use it.
+          // Don't change the division of monomials to use the
+          // multiplication though, or you would break simple things
+          // such as `poly('<2>\e') // poly('a+<2>b')` => `<1/2>a + b`.
+          // Actually, it would not even terminate.
+          add_here(res,
+                   {labelset()->ldivide(label_of(lm), label_of(rm)),
+                    weightset()->mul(weight_of(lm), weight_of(rm))});
       return res;
     }
 
@@ -646,7 +652,7 @@ namespace vcsn
         raise(*this, ": ldivide: division by zero");
       else
         {
-          value_t remainder = r;
+          auto remainder = r;
           while (!is_zero(remainder))
             {
               auto factor = ldivide(detail::front(l), detail::front(remainder));
@@ -665,7 +671,7 @@ namespace vcsn
     value_t
     ldivide(const value_t& l, const value_t& r) const
     {
-      value_t res;
+      auto res = value_t{};
       add_ldivide_here(res, l, r);
       return res;
     }
@@ -700,7 +706,7 @@ namespace vcsn
     {
       using std::begin;
       using std::end;
-      value_t res;
+      auto res = value_t{};
       // For each monomial, look for the matching GCD of the weight.
       auto i = begin(lhs), i_end = end(lhs);
       auto j = begin(rhs), j_end = end(rhs);
@@ -845,33 +851,47 @@ namespace vcsn
     | compose.   |
     `-----------*/
 
-    /// Detect whether the labelset features `compose`.
+    /// Detect whether the labelset features a binary `compose`.
     template <typename Ctx>
     using compose_t
-    = decltype(std::declval<labelset_t_of<Ctx>>()
-               .compose(std::declval<label_t_of<Ctx>>(),
-                        std::declval<label_t_of<Ctx>>()));
+      = decltype(std::declval<labelset_t_of<Ctx>>()
+                .compose(std::declval<label_t_of<Ctx>>(),
+                         std::declval<label_t_of<Ctx>>()));
 
-    /// Whether LabelSet features `compose`.
+    /// Whether LabelSet features `compose`.  This is actually meant
+    /// to detect the case of expressionset.
     template <typename Ctx>
     using has_compose_fn = detect<Ctx, compose_t>;
 
 
     /// The composition of polynomials \a l and \a r when the context is a
     /// composable tupleset.
-    template <typename Ctx = context_t>
+    template <typename Ctx1, typename Ctx2>
     auto
-    compose(const value_t& l, const value_t& r) const
-      -> std::enable_if_t<are_composable<Ctx, Ctx>{}, value_t>
+    compose(const polynomialset<Ctx1>& ps1,
+            const typename polynomialset<Ctx1>::value_t& p1,
+            const polynomialset<Ctx2>& ps2,
+            const typename polynomialset<Ctx2>::value_t& p2) const
+      -> std::enable_if_t<are_composable<Ctx1, Ctx2>{}, value_t>
     {
-      value_t res;
-      for (const auto& lm: l)
-        for (const auto& rm: r)
-          if (labelset()->template set<0>().equal(std::get<1>(label_of(lm)),
-                                                  std::get<0>(label_of(rm))))
-            add_here(res, labelset()->tuple(std::get<0>(label_of(lm)),
-                                            std::get<1>(label_of(rm))),
-                     weightset()->mul(weight_of(lm), weight_of(rm)));
+      const auto& ls = *labelset();
+      const auto& ls1 = *ps1.labelset();
+      const auto& ls2 = *ps2.labelset();
+      // Tape of the lhs on which we compose.
+      constexpr auto out = number_of_tapes<Ctx2>::value - 1;
+      // Tape of the rhs on which we compose.
+      constexpr auto in = 0;
+      // A labelset for the common tape type.
+      const auto& midls = ls1.template set<out>();
+      auto res = value_t{};
+      for (const auto& m1: p1)
+        for (const auto& m2: p2)
+          if (midls.equal(std::get<out>(label_of(m1)),
+                          std::get<in>(label_of(m2))))
+            add_here(res,
+                     ls.compose(ls1, label_of(m1),
+                                ls2, label_of(m2)),
+                     weightset()->mul(weight_of(m1), weight_of(m2)));
       return res;
     }
 
@@ -882,12 +902,12 @@ namespace vcsn
     compose(const value_t& l, const value_t& r) const
       -> std::enable_if_t<has_compose_fn<Ctx>{}, value_t>
     {
-      value_t res;
+      auto res = value_t{};
       for (const auto& lm: l)
         for (const auto& rm: r)
-          add_here(res, labelset()->compose(label_of(lm), label_of(rm)),
-                                            weightset()->mul(weight_of(lm),
-                                                             weight_of(rm)));
+          add_here(res,
+                   labelset()->compose(label_of(lm), label_of(rm)),
+                   weightset()->mul(weight_of(lm), weight_of(rm)));
       return res;
     }
 
@@ -969,14 +989,14 @@ namespace vcsn
     /// The unit polynomial.
     static const value_t& one()
     {
-      static value_t res{monomial_one()};
+      static auto res = value_t{monomial_one()};
       return res;
     }
 
     /// The unit monomial.
     static const monomial_t& monomial_one()
     {
-      static monomial_t res{labelset_t::one(), weightset_t::one()};
+      static auto res = monomial_t{labelset_t::one(), weightset_t::one()};
       return res;
     }
 
@@ -994,7 +1014,7 @@ namespace vcsn
     const value_t&
     zero() const
     {
-      static value_t res;
+      static auto res = value_t{};
       return res;
     }
 
@@ -1037,7 +1057,7 @@ namespace vcsn
       const typename C::weightset_t& sws = *sps.weightset();
       const labelset_t&  tls = *labelset();
       const weightset_t& tws = *weightset();
-      value_t res;
+      auto res = value_t{};
       for (const auto& m: v)
         add_here(res, tls.conv(sls, label_of(m)), tws.conv(sws, weight_of(m)));
       return res;
@@ -1137,7 +1157,7 @@ namespace vcsn
     value_t
     transpose(const value_t& v) const
     {
-      value_t res;
+      auto res = value_t{};
       auto label_transpose
         = static_if<context_t::is_lar>
         ([](const auto& ls, const auto& l) { return ls.transposition(l); },
@@ -1343,16 +1363,16 @@ namespace vcsn
 
     /// Read a polynomial from a stream.
     ///
-    /// Somewhat more general than a mere reversal of "format",
-    /// in particular "a+a" is properly understood as "<2>a" in
-    /// char_z.
+    /// Somewhat more general than a mere inverse of `print`,
+    /// in particular `a+a` is properly understood as `<2>a` in `lal,
+    /// z`.
     ///
     /// \param i    the stream to parse.
     /// \param sep  the separator between monomials.
     value_t
     conv(std::istream& i, const char sep = '+') const
     {
-      value_t res;
+      auto res = value_t{};
 #define SKIP_SPACES()                           \
       while (isspace(i.peek()))                 \
         i.ignore()
@@ -1393,7 +1413,7 @@ namespace vcsn
 
     /// Print a monomial.
     std::ostream&
-    print(const monomial_t& m, std::ostream& out,
+    print(const monomial_t& m, std::ostream& out = std::cout,
           format fmt = {}) const
     {
       static bool parens = getenv("VCSN_PARENS");
@@ -1413,7 +1433,7 @@ namespace vcsn
     /// \param fmt     the format: "text" or "latex"
     /// \param sep     the separator between monomials
     std::ostream&
-    print(const value_t& v, std::ostream& out,
+    print(const value_t& v, std::ostream& out = std::cout,
           format fmt = {},
           const std::string& sep = " + ") const
     {

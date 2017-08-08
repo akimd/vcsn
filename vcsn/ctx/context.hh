@@ -7,6 +7,7 @@
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/ctx/fwd.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/format.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/symbol.hh>
@@ -147,19 +148,23 @@ namespace vcsn
     return {ls, ws};
   }
 
+  template <typename LabelSet, typename WeightSet>
+  struct is_multitape<context<LabelSet, WeightSet>>
+    : is_multitape<LabelSet>
+  {};
+
+  template <typename LabelSet, typename WeightSet>
+  struct number_of_tapes<context<LabelSet, WeightSet>>
+    : number_of_tapes<LabelSet>
+  {};
 
 
-  /*-----------------.
-  | join_t, meet_t.  |
-  `-----------------*/
+  /*----------.
+  | meet_t.   |
+  `----------*/
 
   template <typename... ValueSets>
   using meet_t = decltype(meet(std::declval<ValueSets>()...));
-
-
-  /*-------------------------.
-  | Variadic join and meet.  |
-  `-------------------------*/
 
   /// The meet of a single valueset.
   /// Useful for variadic operator on a single argument.

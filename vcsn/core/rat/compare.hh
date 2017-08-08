@@ -85,6 +85,7 @@ namespace vcsn
       DEFINE(lweight);
       DEFINE(one);
       DEFINE(mul);
+      DEFINE(name);
       DEFINE(rweight);
       DEFINE(shuffle);
       DEFINE(star);
@@ -141,6 +142,14 @@ namespace vcsn
       int cmp_(const atom_t& lhs, const atom_t& rhs)
       {
         return labelset_t::compare(lhs.value(), rhs.value());
+      }
+
+      int cmp_(const name_t& lhs, const name_t& rhs)
+      {
+        if (auto res = (*this)(lhs.sub(), rhs.sub()))
+          return res;
+        else
+          return lhs.name_get().get().compare(rhs.name_get());
       }
 
       template <rat::exp::type_t Type>

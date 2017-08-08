@@ -7,9 +7,19 @@ import sys
 
 import vcsn
 
-count = 0
+ntest = 0
 npass = 0
 nfail = 0
+
+def num_fail():
+    return nfail
+
+def num_pass():
+    return npass
+
+def num_test():
+    return ntest
+
 
 # For build-checks, use our abs_srcdir from tests/bin/vcsn. For
 # install checks, since the latter is not run (it runs
@@ -115,16 +125,16 @@ def automaton(a):
 
 
 def FAIL(*msg, **kwargs):
-    global count, nfail # pylint: disable=global-statement
-    count += 1
+    global ntest, nfail # pylint: disable=global-statement
+    ntest += 1
     nfail += 1
     # Don't display multi-line failure messages, only the first line
     # will be reported anyway by the TAP driver.
     m = ' '.join(msg)
     if m.count("\n") == 0:
-        print('not ok', count, m)
+        print('not ok', ntest, m)
     else:
-        print('not ok', count)
+        print('not ok', ntest)
     loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] else here()
     print(loc + ": fail:", *msg)
     print()
@@ -132,10 +142,10 @@ def FAIL(*msg, **kwargs):
 
 
 def PASS(*msg, **kwargs):
-    global count, npass # pylint: disable=global-statement
-    count += 1
+    global ntest, npass # pylint: disable=global-statement
+    ntest += 1
     npass += 1
-    print('ok ', count, *msg)
+    print('ok ', ntest, *msg)
     loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] else here()
     print(loc + ": pass:", *msg)
     print()
@@ -306,7 +316,7 @@ def CHECK_IS_EPS_ACYCLIC(a):
 
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
-    print('1..' + str(count))
+    print('1..' + str(ntest))
     print('PASS:', npass)
     print('FAIL:', nfail)
 

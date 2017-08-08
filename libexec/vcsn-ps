@@ -23,18 +23,40 @@ def memory(proc):
     return res
 
 
+def print_proc(title, message, proc):
+    delta = datetime.now() - datetime.fromtimestamp(proc.create_time())
+    mem = memory(proc)
+    print('{}:{:0>2}: {:.1f}GB: {:<10} {}'
+          .format(int(delta.seconds / 60),
+                  delta.seconds % 60,
+                  mem / 2 ** 30,
+                  title + ':', message))
+
+
 def user_proc(proc):
-    for elt in proc.cmdline():
-        cmd = search(r'.*vcsn.compile.*\'.*?(/plugins/[^/]+/.*)\.cc\'.*$', elt)
-        if cmd:
-            title, message = pretty_plugin(cmd.group(1))
-            delta = datetime.now() - datetime.fromtimestamp(proc.create_time())
-            mem = memory(proc)
-            print('{}:{:0>2}: {:.1f}GB: {:<10} {}'
-                  .format(int(delta.seconds / 60),
-                          delta.seconds % 60,
-                          mem / 2 ** 30,
-                          title + ':', message))
+    cmd = ' '.join(proc.cmdline())
+    # Look for compilations.
+    #
+    # The cmdline is typically ['sh', '-c', 'vcsn compile...']
+    m = search(r'.*vcsn.compile.*\'.*?(/plugins/[^/]+/.*)\.cc\'.*$', cmd)
+    if m:
+        title, message = pretty_plugin(m.group(1))
+        print_proc(title, message, proc)
+    # Look for notebook checking.
+    #
+    # The cmdline is something like
+    # ['/opt/local/Library/Frameworks/Python.framework/Versions/3.5/'
+    # 'Resources/Python.app/Contents/MacOS/Python',
+    # '/Users/akim/src/lrde/2/tests/bin/ipynbdoctest.py', '--tap',
+    # '/Users/akim/src/lrde/2/doc/notebooks/Spell-checker.ipynb'].
+    # There are three lines for each notebook, the two others are the
+    # shell running tap-driver.sh.  So keep only the line without
+    # tap-driver.
+    m = search(r'ipynbdoctest.py --tap (?:.*?/)?([^/]*\.ipynb)', cmd)
+    if m and 'tap-driver.sh' not in cmd:
+        title, message = 'CHECK', m.group(1)
+        print_proc(title, message, proc)
+
 
 if has_psutil:
     for proc in psutil.process_iter():

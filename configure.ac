@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.69])
 
-AC_INIT([Vcsn], [2.4.dev],
+AC_INIT([Vcsn], [2.6],
         [vcsn-bugs@lrde.epita.fr], [],
         [http://vcsn.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
@@ -26,6 +26,26 @@ AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules
                   subdir-objects])
+# install-sh and GNU install support -C (aka --compare for the
+# latter).  Until we discover that we sometimes use other `install`
+# programs, let's keep our old time stamps when we can, so that
+# repeated `make install` keep `vcsn compile` lazy.
+#
+# If --preserve-timestamps is supported, use it: headers will be
+# installed with their build time, not their install time.  This is
+# quite critical for Vcsn: during build, we build for instance
+# liblal_b`, installed with `make install`.  But now the headers are
+# possibly younger than the libraries when installed, so `vcsn
+# compile` will fire a useless compilation of `liblal_b`, as if it
+# were obsolete.
+#
+# Unfortunately, --preserve-timestamps and --compare are mutually
+# exclusive in GNU install, not sure why.
+if ($INSTALL --preserve-timestamps --help) >/dev/null 2>&1; then
+  INSTALL="$INSTALL --preserve-timestamps"
+else
+  INSTALL="$INSTALL -C"
+fi
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AM_SILENT_RULES([yes])
 
@@ -185,7 +205,10 @@ AC_CACHE_CHECK([whether $CXX is clang], [vcsn_cv_cxx_is_clang],
 #endif
 ]])], [vcsn_cv_cxx_is_clang=yes],
       [vcsn_cv_cxx_is_clang=no])])
-if test "$vcsn_cv_cxx_is_clang" = no; then
+# GCC7 changed something, and now the linkage with Boost.Python3 fails
+# when we use visibility.  Let's make our lives simpler as a first
+# step.
+if false && test "$vcsn_cv_cxx_is_clang" = no; then
   AC_SUBST([VISIBILITY_CXXFLAGS])
   AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
     [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
@@ -219,8 +242,6 @@ esac
 LIBS=$save_LIBS
 AM_PATH_PYTHON([3.0])
 BOOST_PYTHON
-AC_DEFINE_UNQUOTED([PYTHON], ["$PYTHON"],
-                   [Define to a path to Python 3.])
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 VCSN_REGEX
@@ -239,6 +260,7 @@ AC_SUBST([pkgdatadir],    ['${datadir}/${PACKAGE}'])
 AC_SUBST([pkglibdir],     ['${libdir}/${PACKAGE}'])
 AC_SUBST([pkglibexecdir], ['${libexecdir}/${PACKAGE}'])
 
+AC_SUBST([BINDIR],     [`URBI_RESOLVE_DIR([$bindir])`])
 AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$pkgdatadir])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
@@ -249,26 +271,12 @@ AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
 AC_SUBST([CCACHE])
 AC_SUBST([VCSN_CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"])
 AC_SUBST([VCSN_CXX], [$(echo "$CXX" | sed -e "s/^ccache //;s,^$CCACHE ,,")])
-AC_SUBST([VCSN_LDFLAGS], ["$LDFLAGS -L$LIBDIR $RT_LIBS $BOOST_FLYWEIGHT_LIBS $BOOST_FILESYSTEM_LDFLAGS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LDFLAGS $BOOST_SYSTEM_LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"])
+AC_SUBST([VCSN_LDFLAGS], ["$LDFLAGS -L$LIBDIR -Wl,-rpath,$LIBDIR $RT_LIBS $BOOST_FLYWEIGHT_LIBS $BOOST_FILESYSTEM_LDFLAGS $BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LDFLAGS $BOOST_SYSTEM_LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"])
 
 # We compile C++ at runtime.
 VCSN_PROG_CCACHE
-AC_DEFINE_UNQUOTED([CCACHE], ["$CCACHE"],
-                   [Define to the ccache program name.])
-AC_DEFINE_UNQUOTED([CPPFLAGS], ["$VCSN_CPPFLAGS"],
-                   [Define to the preprocessor flags.])
-AC_DEFINE_UNQUOTED([CXX], ["$VCSN_CXX"],
-                   [Define to the C++ compiler (without ccache).])
-AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
-                   [Define to the C++ compiler flags.])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
                    [Define to the location of the data files.])
-AC_DEFINE_UNQUOTED([LDFLAGS], ["$VCSN_LDFLAGS"],
-                   [Define to the linker flags.])
-AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
-                   [Define to the location of the libraries.])
-AC_DEFINE_UNQUOTED([LIBEXECDIR], ["$LIBEXECDIR"],
-                   [Define to the location of the auxiliary executables.])
 
 
 ## ---------- ##

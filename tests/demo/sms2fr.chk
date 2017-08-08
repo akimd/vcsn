@@ -1,0 +1,26 @@
+#! /bin/sh
+
+demodir=tests/demo
+
+cat >sms.in <<\EOF
+slt
+bjr
+stp
+cmt c tro bi1
+difissil
+jpeu pa
+EOF
+
+cat >out.exp <<\EOF
+salut
+bonjour
+s\' il te plait
+comment c\' est trop bien
+difficile
+je peux pas
+EOF
+
+vcsn_env
+run 0 out.exp -vcsn python3 $srcdir/$demodir/sms2fr-tests.py < sms.in
+run 0 out.exp $demodir/sms2fr-dyn --no-prompt < sms.in
+run 0 out.exp $demodir/sms2fr-static --no-prompt < sms.in

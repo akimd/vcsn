@@ -18,7 +18,7 @@
 
 #define SHOWV(S) SHOW(V(S))
 
-#define __HERE__ __FILE__ ": " << __LINE__
+#define __HERE__ __FILE__ ":" << __LINE__
 
 #define SHOWH(S) SHOW(__HERE__ << ": " << S)
 

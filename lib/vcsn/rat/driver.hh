@@ -1,13 +1,13 @@
 #pragma once
 
 #include <lib/vcsn/rat/fwd.hh>
-#include <lib/vcsn/rat/location.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <vcsn/core/rat/fwd.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
 #include <vcsn/misc/export.hh>
+#include <vcsn/misc/location.hh>
 
 namespace vcsn
 {
@@ -48,6 +48,7 @@ namespace vcsn
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
       /// The string \a s is invalid at \a l.
+      ATTRIBUTE_NORETURN
       void invalid(const location& l, const std::string& s);
 
       /// The error messages.

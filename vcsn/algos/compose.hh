@@ -23,6 +23,10 @@ namespace vcsn
 
   namespace detail
   {
+    /// Get a type from a possibly insplit automaton.
+    ///
+    /// FIXME: replace with a traits to extract the base type of a
+    /// possibly inplit automaton.
 #define DEFINE(Type)                                                      \
     template <Automaton Aut>                                              \
     struct Type ## _of_impl                                               \
@@ -42,7 +46,6 @@ namespace vcsn
     DEFINE(res_labelset_t);
     DEFINE(res_label_t);
     DEFINE(full_context_t);
-
 #undef DEFINE
 
     /// Build the (accessible part of the) composition.
@@ -68,6 +71,7 @@ namespace vcsn
       using res_label_t = typename labelset_t::value_t;
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
 
+      /// The automaton type for the composition of Lhs with Rhs.
       using out_t = mutable_automaton<context_t>;
     };
 

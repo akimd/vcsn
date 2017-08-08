@@ -15,6 +15,7 @@
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/r.hh>
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/weightset/z.hh>
 
@@ -272,5 +273,9 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(z, qmp);
     VCSN_JOIN_SIMPLE(q, qmp);
     VCSN_JOIN_SIMPLE(qmp, qmp);
+
+    // We don't want to force the inclusion of qmp.hh in r.hh, as it
+    // means that qmp.hh become a hard requirement.
+    VCSN_JOIN_SIMPLE(qmp, r);
   }
 }

@@ -1,13 +1,10 @@
 #include <lib/vcsn/dyn/context-printer.hh>
 
-#include <map>
-
 #include <boost/algorithm/string/predicate.hpp>
 
 #include <lib/vcsn/dyn/type-ast.hh>
 #include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/indent.hh>
-#include <vcsn/misc/raise.hh>
 
 
 namespace vcsn
@@ -33,7 +30,6 @@ namespace vcsn
 
     std::ostream& context_printer::print(std::ostream& o)
     {
-      //o << "// " << is.str() << "\n";
       o <<
         "#define BUILD_LIBVCSN 1\n"
         "#define VCSN_INSTANTIATION 1\n"
@@ -44,7 +40,7 @@ namespace vcsn
       o << '\n';
       for (const auto& h: headers_late_)
         o << "#include <" << h << ">\n";
-      o << "\n"
+      o << '\n'
         << os_.str();
       return o;
     }

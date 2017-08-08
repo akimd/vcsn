@@ -15,14 +15,14 @@ namespace vcsn
 {
   /// Lightest path dispatch between algorithms with tags.
   template <Automaton Aut, typename Tag = auto_tag>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   lightest_path(const Aut& aut, Tag tag = {})
   {
     return lightest_path(aut, aut->pre(), aut->post(), tag);
   }
 
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
                 auto_tag = {})
   {
@@ -36,7 +36,7 @@ namespace vcsn
   {
     /// Tag-based dispatch on implementation.
     template <Automaton Aut, typename Tag>
-    std::vector<transition_t_of<Aut>>
+    predecessors_t_of<Aut>
     lightest_path_tag(const Aut& aut,
                       state_t_of<Aut> src, state_t_of<Aut> dst)
     {
@@ -46,12 +46,12 @@ namespace vcsn
 
   /// Lightest path dispatch between algorithms with string.
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   lightest_path(const Aut& aut, state_t_of<Aut> src, state_t_of<Aut> dst,
                 const std::string& algo)
   {
     using state_t = state_t_of<Aut>;
-    using path_t = std::vector<transition_t_of<Aut>>;
+    using path_t = predecessors_t_of<Aut>;
     static const auto map
       = getarg<std::function<path_t(const Aut&, state_t, state_t)>>
     {
@@ -74,7 +74,7 @@ namespace vcsn
   template <Automaton Aut>
   auto
   path_monomial(const Aut& aut,
-                const std::vector<transition_t_of<Aut>>& path,
+                const predecessors_t_of<Aut>& path,
                 state_t_of<Aut> src = Aut::element_type::pre(),
                 state_t_of<Aut> dst = Aut::element_type::post())
     -> boost::optional<typename detail::word_polynomialset_t<context_t_of<Aut>>::monomial_t>

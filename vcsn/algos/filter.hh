@@ -74,15 +74,31 @@ namespace vcsn
       using super_t::src_of;
       using super_t::dst_of;
 
+      /// Build a filtered view of an automaton.
+      ///
+      /// \param input  automaton whose states/transitions to filter.
+      /// \param ss     set of states to reveal.  If {}, hide none.
+      /// \param ts     set of transitions to reveal.  If {}, hide none.
       filter_automaton_impl(const automaton_t& input,
                             const boost::optional<states_t>& ss = {},
                             const boost::optional<transitions_t>& ts = {})
         : super_t(input)
+          // FIXME: wasting space allocating the transition vector,
+          // even if we don't use it.
         , optional_container_t(ts ? *ts : transitions_t(transitions_size(input)))
         , ss_(ss ? *ss : states_t(states_size(input)))
       {
-        ss_.set(input->pre());
-        ss_.set(input->post());
+        if (ss)
+          {
+            ss_.set(input->pre());
+            ss_.set(input->post());
+          }
+        else
+          unhide_all_states();
+        static_if<Trans>([&ts](auto& self) {
+            if (!ts)
+              self.unhide_all_transitions();
+          })(*this);
         properties_.update(filter_ftag{});
       }
 
@@ -262,14 +278,14 @@ namespace vcsn
 
       template <bool U = Trans>
       std::enable_if_t<U, void>
-      unhide_all_transition()
+      unhide_all_transitions()
       {
         optional_container_t::cont_.set();
       }
 
       template <bool U = Trans>
       std::enable_if_t<U, void>
-      hide_all_transition()
+      hide_all_transitions()
       {
         optional_container_t::cont_.reset();
       }
@@ -310,7 +326,11 @@ namespace vcsn
   using filter_automaton =
     std::shared_ptr<detail::filter_automaton_impl<Aut, Trans>>;
 
-  /// Get an automaton who is a part state set \a ss of \a aut.
+  /// Build a filtered view of an automaton.
+  ///
+  /// \param aut  automaton whose states/transitions to filter.
+  /// \param ss   set of states to reveal.  If {}, hide none.
+  /// \param ts   set of transitions to reveal.  If {}, hide none.
   template <Automaton Aut, bool Trans = false>
   filter_automaton<Aut, Trans>
   filter(const Aut& aut,
@@ -320,6 +340,10 @@ namespace vcsn
     return make_shared_ptr<filter_automaton<Aut, Trans>>(aut, ss, ts);
   }
 
+  /// Build a filtered view of an automaton.
+  ///
+  /// \param aut  automaton whose states/transitions to filter.
+  /// \param ss   set of states to reveal.
   template <Automaton Aut>
   filter_automaton<Aut>
   filter(const Aut& aut, const std::unordered_set<state_t_of<Aut>>& ss)

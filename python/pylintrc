@@ -14,6 +14,8 @@ disable=
 # many conventions are incompatible with the coding style
         invalid-name,misplaced-comparison-constant,missing-docstring,
         bad-whitespace,bad-continuation,
+# I strongly disagree with this one.
+        no-else-return,
 # disable info when we disable checkers in-file
         I,
 # mixin members of vcsn_cxx are not detected
@@ -28,9 +30,9 @@ disable=
         function-redefined,too-few-public-methods,too-many-public-methods,
         redefined-builtin,no-self-use,pointless-statement,wildcard-import,
         no-method-argument,fixme,cyclic-import,duplicate-code,
-        super-init-not-called,redefined-outer-name,too-many-branches,
+        redefined-outer-name,too-many-branches,
         too-many-nested-blocks,multiple-imports,too-many-statements,
-        unused-wildcard-import,bad-indentation
+        unused-wildcard-import
 
 
 [REPORTS]
@@ -57,7 +59,7 @@ ignore-mixin-members=yes
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=vcsn_cxx,gdb,vcsn_tools,IPython,ipywidgets
+ignored-modules=vcsn_cxx,gdb,IPython,ipywidgets
 
 
 [VARIABLES]

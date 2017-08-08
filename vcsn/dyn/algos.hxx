@@ -3,7 +3,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/misc/yaml.hh>
+#include <vcsn/misc/configuration.hh>
 
 namespace vcsn
 {
@@ -53,7 +53,7 @@ namespace vcsn
                              const std::string& format,
                              bool strip)
     {
-      std::istringstream is{data};
+      auto&& is = std::istringstream{data};
       try
         {
           auto res = vcsn::dyn::read_automaton(is, format, strip);
@@ -63,21 +63,19 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          if (std::count(data.begin(), data.end(), '\n') < 30)
-            vcsn::raise(e, "  while reading automaton: ", data);
-          else
-            vcsn::raise(e, "  while reading automaton");
+          vcsn::raise(e, "  while reading automaton");
         }
     }
 
     inline
     expression make_expression(const context& ctx,
-                               const std::string& s, identities ids)
+                               const std::string& s, identities ids,
+                               const std::string& format)
     {
       std::istringstream is{s};
       try
         {
-          auto res = vcsn::dyn::read_expression(ctx, ids, is);
+          auto res = vcsn::dyn::read_expression(ctx, ids, is, format);
           vcsn::require(is.peek() == EOF,
                         "unexpected trailing characters: ", is);
           return res;
@@ -89,12 +87,13 @@ namespace vcsn
     }
 
     inline
-    label make_label(const context& ctx, const std::string& s)
+    label make_label(const context& ctx, const std::string& s,
+                     const std::string& format)
     {
-      std::istringstream is{s};
+      auto&& is = std::istringstream{s};
       try
         {
-          auto res = read_label(ctx, is);
+          auto res = read_label(ctx, is, format);
           vcsn::require(is.peek() == EOF,
                         "unexpected trailing characters: ", is);
           return res;
@@ -108,7 +107,7 @@ namespace vcsn
     inline
     polynomial make_polynomial(const context& ctx, const std::string& s)
     {
-      std::istringstream is{s};
+      auto&& is = std::istringstream{s};
       try
         {
           auto res = vcsn::dyn::read_polynomial(ctx, is);
@@ -125,7 +124,7 @@ namespace vcsn
     inline
     weight make_weight(const context& ctx, const std::string& s)
     {
-      std::istringstream is(s);
+      auto&& is = std::istringstream{s};
       try
         {
           auto res = vcsn::dyn::read_weight(ctx, is);
@@ -140,9 +139,10 @@ namespace vcsn
     }
 
     inline
-    label make_word(const context& ctx, const std::string& s)
+    label make_word(const context& ctx, const std::string& s,
+                    const std::string& format)
     {
-      return make_label(make_word_context(ctx), s);
+      return make_label(make_word_context(ctx), s, format);
     }
 
 

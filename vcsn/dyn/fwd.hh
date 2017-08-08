@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcsn/core/rat/fwd.hh>
+#include <vcsn/misc/fwd.hh>
 
 namespace vcsn
 {
@@ -31,5 +32,7 @@ namespace vcsn
     using label = value_impl<detail::label_tag>;
     using polynomial = value_impl<detail::polynomial_tag>;
     using weight = value_impl<detail::weight_tag>;
+
+    using location = vcsn::rat::location;
   }
 }

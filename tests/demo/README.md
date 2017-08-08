@@ -32,27 +32,3 @@ The algorithm will choose the path with the lightest weight (in the tropical
 weightset Rmin), here: 'beau'.
   - The characters '#', '[' and ']' are considered special characters by the
 trained automata and not accepted in the original text.
-
-PYTHON
-------
-
-If you want to see an example of the python implementation:
-  - with an installed version of vcsn, run the command: `make run-python`,
-  - otherwise: `make run-python VCSN=path/to/vcsn`.
-This implementation does not support ponctuation.
-
-STATIC
-------
-
-If you want to see an example of the static implementation:
-  - with an installed version of vcsn, run the command: `make run-static`,
-  - otherwise: `make run-static VCSN=path/to/vcsn`.
-This implementation does support ponctuation.
-
-DYN
----
-
-If you want to see an example of the static implementation:
-  - with an installed version of vcsn, run the command: `make run-dyn`,
-  - otherwise: `make run-dyn VCSN=path/to/vcsn`.
-This implementation does not support ponctuation yet.

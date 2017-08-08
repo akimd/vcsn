@@ -18,8 +18,8 @@
   #include <iostream>
   #include <string>
 
+  #include <vcsn/misc/location.hh>
   #include <vcsn/misc/symbol.hh>
-  #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
   namespace vcsn
@@ -161,10 +161,10 @@
   COLON    ":"
   COMMA    ","
   SEMI     ";"
-  END      0
+  END      0 "end"
 ;
 
-%token <string_t> ID;
+%token <string_t> ID "identifier";
 %type <string_t> id.opt;
 
 // A single state.
@@ -200,6 +200,7 @@ stmt:
 | attr_stmt   {}
 | attr_assign {}
 | subgraph    { std::swap($$, $1); }
+| error       {}
 ;
 
 attr_stmt:
@@ -225,11 +226,11 @@ attr_list.opt:
 attr_assign:
   ID[var] "=" ID[val]
   {
-    static const string_t label{"label"};
-    static const string_t vcsn_context{"vcsn_context"};
+    static const auto label = string_t{"label"};
+    static const auto ctx = string_t{"vcsn_context"};
     if ($var == label)
       std::swap($$, $val);
-    else if ($var == vcsn_context)
+    else if ($var == ctx)
       driver_.setup_(@val, $val);
     else
       // Beware of the default "$$ = $1;" action.
@@ -256,6 +257,7 @@ semi.opt:
 // Zero or more attributes.
 a_list.0:
   %empty       {}
+| error        {}
 | a_list.1     { std::swap($$, $1); }
 ;
 
@@ -299,8 +301,9 @@ path:
 edge_stmt:
   path attr_list.opt[label]
   {
-    for (auto t: $path.transitions)
-      TRY(@2, driver_.edit_->add_entry(t.first, t.second, $label));
+    if (driver_.has_edit_(@1))
+      for (auto t: $path.transitions)
+        TRY(@2, driver_.edit_->add_entry(t.first, t.second, $label));
   }
 ;
 
@@ -314,17 +317,18 @@ node_stmt:
 node_id:
   ID port.opt
   {
-    // We need the editor to exist.
-    require(bool(driver_.edit_), @$, ": no vcsn_context");
     std::swap($$, $1);
-    if ($$.get()[0] == 'I')
-      TRY(@1, driver_.edit_->add_pre($$));
-    else if ($$.get()[0] == 'F')
-      TRY(@1, driver_.edit_->add_post($$));
-    else
-      // This is not needed, but it ensures that the states will be
-      // numbered by their order of appearance in the file.
-      TRY(@1, driver_.edit_->add_state($$));
+    if (driver_.has_edit_(@1))
+      {
+        if ($$.get()[0] == 'I')
+          TRY(@1, driver_.edit_->add_pre($$));
+        else if ($$.get()[0] == 'F')
+          TRY(@1, driver_.edit_->add_post($$));
+        else
+          // This is not needed, but it ensures that the states will be
+          // numbered by their order of appearance in the file.
+          TRY(@1, driver_.edit_->add_state($$));
+      }
   }
 ;
 

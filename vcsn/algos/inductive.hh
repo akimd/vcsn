@@ -1,9 +1,11 @@
 #pragma once
 
+#include <vcsn/algos/num-tapes.hh>
 #include <vcsn/core/automatonset.hh>
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -17,7 +19,7 @@ namespace vcsn
   | inductive(expression).   |
   `-------------------------*/
 
-  /// Build a inductive automaton from an expression.
+  /// Build an automaton by induction from an expression.
   ///
   /// \tparam Aut      the type of the generated automaton.
   /// \tparam ExpSet   the expressionset.
@@ -79,8 +81,15 @@ namespace vcsn
     private:
       automaton_t recurse(const expression_t& v)
       {
-        v->accept(*this);
-        return std::move(res_);
+        try
+          {
+            v->accept(*this);
+            return std::move(res_);
+          }
+        catch (const std::runtime_error& e)
+          {
+            raise(e, "  while computing inductive of: ", to_string(rs_, v));
+          }
       }
 
       using tuple_t = typename super_t::tuple_t;
@@ -145,6 +154,11 @@ namespace vcsn
         res_ = as_.atom(e.value());
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        super_t::visit(e);
+      }
+
       /// The type of the AutSet::compose() member function.
       template <Automaton AutSet>
       using compose_mem_fn_t =
@@ -159,7 +173,8 @@ namespace vcsn
 
       VCSN_RAT_VISIT(compose, e)
       {
-        detail::static_if<has_compose_mem_fn<automatonset_t>{}>
+        detail::static_if<has_compose_mem_fn<automatonset_t>()
+                          && num_tapes<context_t>() == 2>
           ([this](const auto& e)
            {
              auto res = recurse(e.head());
@@ -171,7 +186,7 @@ namespace vcsn
            {
              raise("compose: context is not composable");
            })
-            (e);
+          (e);
       }
 
       VCSN_RAT_VISIT(conjunction, e)

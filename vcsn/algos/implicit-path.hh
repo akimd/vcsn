@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vcsn/core/automaton.hh>
 #include <vcsn/algos/shortest-path-tree.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/ctx/traits.hh>
+#include <vcsn/misc/algorithm.hh>
 
 namespace vcsn
 {
@@ -23,6 +24,7 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
+      using path_t = path<automaton_t>;
 
     public:
       static constexpr int null_parent_path = -1;
@@ -43,12 +45,12 @@ namespace vcsn
       /// transitions from sidetrack_ to the destination using \a
       /// tree.  In case of initial path, use \a src as the prefix
       /// path.
-      path<automaton_t>
-      explicit_path(const std::vector<path<automaton_t>>& ksp,
+      path_t
+      explicit_path(const std::vector<path_t>& ksp,
                     shortest_path_tree<automaton_t>& tree,
                     state_t src)
       {
-        auto res = path<automaton_t>(aut_);
+        auto res = path_t(aut_);
 
         if (parent_path_ != null_parent_path)
           {
@@ -56,21 +58,19 @@ namespace vcsn
             const auto& path = explicit_pref_path.get_path();
 
             // The index of the last transition of the path before the
-            // sidetrack.
-            int last_transition_index = -1;
-            for (int i = path.size() - 1; 0 <= i; i--)
-              {
-                auto curr = path[i];
-                if (aut_->dst_of(curr) == aut_->src_of(sidetrack_))
-                  {
-                    last_transition_index = i;
-                    break;
-                  }
-              }
-
-            for (unsigned i = 0; i <= last_transition_index; i++)
-              res.emplace_back(aut_->weight_of(path[i]), path[i]);
-
+            // sidetrack. Using the last occurence of the sidetrack is necessary
+            // to avoid computing the same path each time in the case of loops.
+            // If the sidetrack appears twice and we rebuild our path after the
+            // first one then we lost the previous path.
+            auto i = std::find_if(path.rbegin(), path.rend(), [&] (auto curr) {
+                return aut_->dst_of(curr) == aut_->src_of(sidetrack_);
+              });
+            assert(i != path.rend());
+            // Make it forward iterator, but one iteration further (in
+            // the forward direction).
+            auto last = i.base();
+            for (auto i = path.begin(); i != last; ++i)
+              res.emplace_back(aut_->weight_of(*i), *i);
             res.emplace_back(aut_->weight_of(sidetrack_), sidetrack_);
           }
 
@@ -82,7 +82,7 @@ namespace vcsn
           {
             auto next = tree.get_parent_of(s);
             if (s == aut_->null_state() || next == aut_->null_state())
-              return path<automaton_t>(aut_);
+              return path_t(aut_);
             auto weight = ws.rdivide(tree[s].get_weight(),
                                      tree[next].get_weight());
             auto t = find_transition(s, next);
@@ -98,13 +98,17 @@ namespace vcsn
       transition_t
       find_transition(state_t src, state_t dst) const
       {
-        auto min_tr = aut_->null_transition();
-        for (auto tr : detail::outin(aut_, src, dst))
-          if (min_tr == aut_->null_transition()
-              || aut_->weightset()->less(aut_->weight_of(tr),
-                                         aut_->weight_of(min_tr)))
-            min_tr = tr;
-        return min_tr;
+        // GCC 5 and 6 do not capture as const references
+        // (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66735).  So
+        // instead of `[&aut = *aut_, &ws = *aut_->weightset()]`
+        // we capture this.
+        return min_forward(detail::outin(aut_, src, dst),
+                           [this] (auto t1, auto t2)
+                           {
+                             return aut_->weightset()->less
+                               (aut_->weight_of(t1),
+                                aut_->weight_of(t2));
+                           });
       }
 
       bool operator<(const implicit_path& other) const
@@ -125,8 +129,8 @@ namespace vcsn
     private:
       const automaton_t& aut_;
       transition_t sidetrack_;
-      /// Parent path indexes in the results array. -1 if the path has no parent,
-      /// superior to 0 otherwise.
+      /// Parent path indexes in the results array. `null_parent_path`
+      /// if the path has no parent.
       int parent_path_;
       weight_t weight_;
     };

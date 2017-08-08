@@ -27,33 +27,53 @@ namespace vcsn
     // See O(log N) implementation of integer sequence
     // <http://stackoverflow.com/questions/17424477>
 
-    template <std::size_t...> struct index_sequence
-    { using type = index_sequence; };
+    /// A static list of size_t.
+    template <std::size_t...>
+    struct index_sequence
+    {
+      using type = index_sequence;
+    };
 
-    template <typename S1, typename S2> struct concat;
+    /*-----------------------.
+    | make_index_sequence.   |
+    `-----------------------*/
+
+    /// Concat two sequences of size_t, adding the size of the first.
+    /// E.g., `<0, 1, 2>, <0, 1, 2, 3> -> <0, 1, 2, 3, 4, 5, 6>`.
+    template <typename S1, typename S2>
+    struct concat;
 
     template <std::size_t... I1, std::size_t... I2>
     struct concat<index_sequence<I1...>, index_sequence<I2...>>
-      : index_sequence<I1..., (sizeof...(I1)+I2)...>{};
+      : index_sequence<I1..., (sizeof...(I1)+I2)...>
+    {};
 
     template <typename S1, typename S2>
-    using Concat = typename concat<S1, S2>::type;
+    using concat_t = typename concat<S1, S2>::type;
 
-    template <std::size_t N> struct make_index_sequence;
-    template <std::size_t N> using GenSeq =
-      typename make_index_sequence<N>::type;
+    /// Build the static sequence of size_t [0, N[.
+    template <std::size_t N>
+    struct make_index_sequence;
+    template <std::size_t N>
+    using make_index_sequence_t = typename make_index_sequence<N>::type;
 
     template <std::size_t N>
-    struct make_index_sequence : Concat<GenSeq<N/2>, GenSeq<N - N/2>>{};
+    struct make_index_sequence
+      : concat_t<make_index_sequence_t<N/2>,
+                 make_index_sequence_t<N - N/2>>
+    {};
 
     template <> struct make_index_sequence<0> : index_sequence<>{};
     template <> struct make_index_sequence<1> : index_sequence<0>{};
 
-    template <std::size_t off, typename S2> struct int_range;
+    template <std::size_t off, typename S2>
+    struct int_range;
 
     template <std::size_t off, std::size_t... I>
     struct int_range<off, index_sequence<I...>>
-      : index_sequence<I + off...>{};
+      : index_sequence<I + off...>
+    {};
+
 
 
     /*--------------------.
@@ -66,7 +86,7 @@ namespace vcsn
     /// \tparam L  length of the sequence.
     template <std::size_t S, std::size_t L>
     struct make_index_range_impl
-      : int_range<S, typename make_index_sequence<L>::type>
+      : int_range<S, make_index_sequence_t<L>>
     {};
 
 
@@ -88,7 +108,11 @@ namespace vcsn
     using make_index_range_t = typename make_index_range<S, E>::type;
 
 
+    /*-------------------.
+    | concat_sequence.   |
+    `-------------------*/
 
+    /// Concatenate two static sequences of size_t.
     template <typename S1, typename S2>
     struct concat_index_sequence;
 
@@ -106,20 +130,28 @@ namespace vcsn
     //template <typename... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
-    /**
-     * Get the list containing all the elements of I1 (contiguous sequence from
-     * 0 to N) not present in I2 (arbitrary sequence, sorted).
-     */
+
+    /*-----------------------.
+    | sequence_difference.   |
+    `-----------------------*/
+
+    /// The list containing all the elements of I1 (contiguous
+    /// sequence from 0 to N) not present in I2 (arbitrary sequence,
+    /// sorted).
     template <typename S1, typename S2>
     struct index_sequence_difference;
+
+    template <typename S1, typename S2>
+    using sequence_difference
+      = typename index_sequence_difference<typename S1::type,
+                                           typename S2::type>::type;
 
     template <std::size_t I1_1, std::size_t... I1, std::size_t... I2>
     struct index_sequence_difference<index_sequence<I1_1, I1...>,
                                      index_sequence<I1_1, I2...>>
     {
-      using type =
-       typename index_sequence_difference<index_sequence<I1...>,
-                                          index_sequence<I2...>>::type;
+      using type = sequence_difference<index_sequence<I1...>,
+                                       index_sequence<I2...>>;
     };
 
     template <std::size_t I1_1, std::size_t I2_1,
@@ -128,18 +160,19 @@ namespace vcsn
                                      index_sequence<I2_1, I2...>>
     {
       using type =
-        typename concat_index_sequence<index_sequence<I1_1>,
-                typename index_sequence_difference<index_sequence<I1...>,
-                                          index_sequence<I2_1, I2...>>::type>::type;
+        concat_sequence<index_sequence<I1_1>,
+                        sequence_difference<index_sequence<I1...>,
+                                            index_sequence<I2_1, I2...>>>;
     };
 
     template <std::size_t I1_1, std::size_t... I1>
-    struct index_sequence_difference<index_sequence<I1_1, I1...>, index_sequence<>>
+    struct index_sequence_difference<index_sequence<I1_1, I1...>,
+                                     index_sequence<>>
     {
       using type =
-        typename concat_index_sequence<index_sequence<I1_1>,
-                typename index_sequence_difference<index_sequence<I1...>,
-                                          index_sequence<>>::type>::type;
+        concat_sequence<index_sequence<I1_1>,
+                        sequence_difference<index_sequence<I1...>,
+                                            index_sequence<>>>;
     };
 
     template <>
@@ -148,11 +181,24 @@ namespace vcsn
       using type = typename index_sequence<>::type;
     };
 
-    template <typename S1, typename S2>
-    using sequence_difference
-      = typename index_sequence_difference<typename S1::type,
-                                           typename S2::type>::type;
 
+    /*--------------------.
+    | punched_sequence.   |
+    `--------------------*/
+
+    /// An index sequence with a gap.
+    template <std::size_t N, std::size_t Gap>
+    using punched_sequence
+      = concat_sequence<make_index_range_t<0, Gap>,
+                        make_index_range_t<Gap + 1, N>>;
+
+
+    /*--------.
+    | for_.   |
+    `--------*/
+
+
+    /// Run function \a f on each member of \a ts.
     template <typename Fun, typename... Ts>
     void
     for_(const std::tuple<Ts...>& ts, Fun f)

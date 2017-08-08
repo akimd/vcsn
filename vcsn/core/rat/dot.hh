@@ -157,16 +157,16 @@ namespace vcsn
 
     private:
       /// A type to label the node.
-      using name_t = unsigned;
+      using id_t = unsigned;
 
       /// Easy recursion: print an expression and return its ID.
-      name_t print_(const value_t& v)
+      id_t print_(const value_t& v)
       {
         return print_(*v);
       }
 
       /// Easy recursion: print an expression and return its ID.
-      name_t print_(const node_t& v)
+      id_t print_(const node_t& v)
       {
         v.accept(*this);
         return last_name_;
@@ -181,6 +181,7 @@ namespace vcsn
       VCSN_RAT_VISIT(ldivide, v)       { print_(v, ldivide_); }
       VCSN_RAT_VISIT(lweight, v)       { print_(v); }
       VCSN_RAT_VISIT(mul, v)           { print_(v, mul_); }
+      VCSN_RAT_VISIT(name, v)          { print_(v); }
       VCSN_RAT_VISIT(one, v)           { print_(v, one_); }
       VCSN_RAT_VISIT(rweight, v)       { print_(v); }
       VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
@@ -233,7 +234,7 @@ namespace vcsn
         }
         self_t& self_;
         /// The name of the tuple node.
-        name_t name_ = {};
+        id_t name_ = {};
       };
 
       void visit(const tuple_t& v, std::true_type) override
@@ -246,7 +247,7 @@ namespace vcsn
       /// The identifier for this node, and a Boolean stating whether
       /// we should traverse (again) this node.
       template <typename Node>
-      std::pair<name_t, bool> name_(const Node& n)
+      std::pair<id_t, bool> name_(const Node& n)
       {
         if (physical_)
           {
@@ -259,17 +260,29 @@ namespace vcsn
           return {(*count_)++, true};
       }
 
+      /// Print a name node.
+      void print_(const name_t& n)
+      {
+        auto name = name_(n);
+        if (name.second)
+          {
+            auto sub = print_(n.sub());
+            out_ << vcsn::iendl
+                 << name.first << " [label=\"name=" << n.name_get() << "\"]"
+                 << vcsn::iendl
+                 << name.first << " -> " << sub;
+          }
+        last_name_ = name.first;
+      }
+
       /// Print a nullary node.
       template <rat::exp::type_t Type>
       void print_(const constant_t<Type>& n, const char* op)
       {
         auto name = name_(n);
         if (name.second)
-          {
-            out_ << vcsn::iendl;
-            out_ << name.first
-                 << " [label=\"" << op << "\"]";
-          }
+          out_ << vcsn::iendl
+               << name.first << " [label=\"" << op << "\"]";
         last_name_ = name.first;
       }
 
@@ -312,7 +325,7 @@ namespace vcsn
       }
 
       /// Print a weight.
-      name_t print_(const weight_t& w)
+      id_t print_(const weight_t& w)
       {
         auto res = name_(w).first;
         out_ << vcsn::iendl
@@ -382,7 +395,7 @@ namespace vcsn
       bool physical_ = false;
 
       /// If physical_ is enabled, register the identifiers of the nodes.
-      using names_t = std::unordered_map<const void*, name_t>;
+      using names_t = std::unordered_map<const void*, id_t>;
       /// A shared_ptr, to support tuples.
       std::shared_ptr<names_t> names_ = std::make_shared<names_t>();
 
@@ -390,7 +403,7 @@ namespace vcsn
       /// A shared_ptr, to support tuples.
       std::shared_ptr<unsigned> count_ = std::make_shared<unsigned>(0);
       /// The name of the last visited node.
-      name_t last_name_;
+      id_t last_name_;
 
       /// External product.
       const char* lweight_ = nullptr;

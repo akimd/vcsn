@@ -75,6 +75,21 @@ namespace vcsn
       return this->genset()->open(o);
     }
 
+    static constexpr bool is_free()
+    {
+      return true;
+    }
+
+    auto generators() const
+    {
+      return super_t::generators();
+    }
+
+    auto pregenerators() const
+    {
+      return super_t::generators();
+    }
+
     /// Value constructor.
     template <typename... Args>
     value_t value(Args&&... args) const

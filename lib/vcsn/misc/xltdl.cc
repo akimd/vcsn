@@ -59,6 +59,13 @@ namespace vcsn
       return *this;
     }
 
+    xlt_advise&
+    xlt_advise::verbose(int v)
+    {
+      verbose_ = v;
+      return *this;
+    }
+
     const file_library&
     xlt_advise::path() const noexcept
     {
@@ -81,7 +88,17 @@ namespace vcsn
     lt_dlhandle
     xlt_advise::dlopen_(const file_library::path& s) const
     {
-      return lt_dlopenadvise(s.c_str(), advise_);
+      if (verbose_)
+        std::cerr << "xltdl: dlopen(" << s << ")... ";
+      auto res = lt_dlopenadvise(s.c_str(), advise_);
+      if (verbose_)
+        {
+          if (res)
+            std::cerr << "success\n";
+          else
+            std::cerr << "fail: " << lt_dlerror() << '\n';
+        }
+      return res;
     }
 
     xlt_handle

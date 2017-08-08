@@ -440,16 +440,16 @@ namespace vcsn
       states_fs_.emplace_back(s);
     }
 
-    void
+    transition_t
     set_initial(state_t s, weight_t w)
     {
-      set_transition(pre(), s, prepost_label_, w);
+      return set_transition(pre(), s, prepost_label_, w);
     }
 
-    void
+    transition_t
     set_initial(state_t s)
     {
-      set_initial(s, weightset()->one());
+      return set_initial(s, weightset()->one());
     }
 
     void
@@ -488,16 +488,16 @@ namespace vcsn
       set_initial(s, weightset()->zero());
     }
 
-    void
+    transition_t
     set_final(state_t s, weight_t w)
     {
-      set_transition(s, post(), prepost_label_, w);
+      return set_transition(s, post(), prepost_label_, w);
     }
 
-    void
+    transition_t
     set_final(state_t s)
     {
-      set_final(s, weightset()->one());
+      return set_final(s, weightset()->one());
     }
 
     transition_t

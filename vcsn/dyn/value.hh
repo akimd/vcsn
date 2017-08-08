@@ -3,8 +3,10 @@
 #include <memory>
 #include <string>
 
+#include <vcsn/ctx/traits.hh> // is_multitape.
 #include <vcsn/dyn/cast.hh>
 #include <vcsn/misc/export.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -145,7 +147,7 @@ namespace vcsn
       auto rs = join(l.valueset(), r.valueset());
       auto lr = rs.conv(l.valueset(), l.value());
       auto rr = rs.conv(r.valueset(), r.value());
-      return std::make_tuple(rs, lr, rr);
+      return std::make_tuple(rs, lr , rr);
     }
 
     // A class representing an expansion/expansionset.

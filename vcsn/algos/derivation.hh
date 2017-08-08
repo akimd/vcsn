@@ -97,6 +97,11 @@ namespace vcsn
           res_ = ps_.zero();
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        super_t::visit(e);
+      }
+
       VCSN_RAT_VISIT(add, e)
       {
         polynomial_t res = ps_.zero();

@@ -40,7 +40,7 @@ namespace vcsn LIBVCSN_API
           /// Linear plus distribution.  Used for series identities.
           distributive,
 
-          /// Linear plus optimizations.
+          /// Distributive plus optimizations.
           agressive,
 
           /// The default value.
@@ -65,25 +65,31 @@ namespace vcsn LIBVCSN_API
       /// Whether agressive optimizations are on.
       bool is_agressive() const
       {
-        return ids_ == agressive;
+        return agressive <= ids_;
       }
 
-      /// Whether associative.
+      /// Whether associative identities are on.
       bool is_associative() const
       {
         return associative <= ids_;
       }
 
-      /// Whether distributive.
+      /// Whether distributive identities are on.
       bool is_distributive() const
       {
         return ids_ == distributive;
       }
 
-      /// Whether linear.
+      /// Whether linear identities are on.
       bool is_linear() const
       {
         return linear <= ids_;
+      }
+
+      /// Whether trivial identities are on.
+      bool is_trivial() const
+      {
+        return trivial <= ids_;
       }
 
       /// Whether not none.
@@ -120,12 +126,13 @@ namespace vcsn LIBVCSN_API
     /// Output in string form.
     std::ostream& operator<<(std::ostream& os, identities i);
 
+    /// More restricted of these identities (min).
     identities meet(identities i1, identities i2);
-
   } // namespace rat
 
   namespace detail
   {
+    /// More general of these identities (max).
     template <>
     struct join_impl<rat::identities, rat::identities>
     {

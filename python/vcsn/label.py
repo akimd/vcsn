@@ -8,6 +8,7 @@ from vcsn.tools import _extend, _format
 @_extend(label)
 class label:
     __floordiv__ = label.ldivide
+    __matmul__ = label.compose
     __mul__ = label.multiply
     __pow__ = label.multiply
     __repr__ = lambda self: self.format('text')

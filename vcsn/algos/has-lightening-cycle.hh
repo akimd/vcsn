@@ -21,7 +21,7 @@ namespace vcsn
 
   template <Automaton Aut>
   std::enable_if_t<!weightset_t_of<Aut>::has_lightening_weights(), bool>
-  has_lightening_cycle(const Aut& aut)
+  has_lightening_cycle(const Aut&)
   {
     return false;
   }

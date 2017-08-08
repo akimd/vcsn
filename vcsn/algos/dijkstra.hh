@@ -73,9 +73,13 @@ namespace vcsn
 
       using heap_t = vcsn::min_fibonacci_heap<profile>;
 
-      std::vector<transition_t>
+      predecessors_t_of<automaton_t>
       operator()(state_t source, state_t dest)
       {
+        // FIXME: this will not work if the automaton is lazy.  We
+        // must _never_ depend on states_size.  We really need
+        // something like state_map_t that is able to grow on demand
+        // with lazy automata.
         auto size = states_size(aut_);
         auto handles = std::vector<typename heap_t::handle_type>(size);
         auto todo = heap_t();
@@ -117,7 +121,7 @@ namespace vcsn
     public:
       const automaton_t& aut_;
       /// For each state, its predecessor.
-      std::vector<transition_t> res_;
+      predecessors_t_of<automaton_t> res_;
       distance_t dist_;
       const ValueSet& vs_;
       Mul mul_;
@@ -132,7 +136,7 @@ namespace vcsn
   }
 
   template <Automaton Aut>
-  std::vector<transition_t_of<Aut>>
+  predecessors_t_of<Aut>
   lightest_path(const Aut& aut, state_t_of<Aut> source, state_t_of<Aut> dest,
                 dijkstra_tag)
   {
@@ -141,6 +145,6 @@ namespace vcsn
                        return aut->weightset()->mul(lhs, aut->weight_of(t));
                      };
     auto algo = detail::make_dijkstra_impl(aut, *aut->weightset(), get_value);
-    return std::move(algo(source, dest));
+    return algo(source, dest);
   }
 }

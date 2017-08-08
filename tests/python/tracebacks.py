@@ -12,11 +12,12 @@ def canonical(s):
     lines here). Also remove the escape sequence trying to set the window
     title.
     '''
-    s = re.sub('\033]0;[^\a]*\a', '', s)
+    res = re.sub('\033]0;[^\a]*\a', '', s)
     def place(m):
         line = "??" if 'vcsn' in m.group(1) else m.group(2)
         return '"{}", line {}'.format(m.group(1), line)
-    return re.sub('".*?([^/\n]+/[^/\n]+)", line (\d+)', place, s)
+    res = re.sub('".*?([^/\n]+/[^/\n]+)", line (\d+)', place, res)
+    return res
 
 tests = ['non-verbose', 'verbose']
 
@@ -51,13 +52,13 @@ ipython = None
 if 'missing' in config('configuration.ipython'):
     SKIP('missing IPython')
 else:
-    try: # Check that ipython is running Python 3
+    try: # Check that ipython is running Python 3.
         subprocess.check_output([config('configuration.ipython'), '-c',
             'import sys; assert sys.version_info.major >= 3'])
     except Exception as e:
         SKIP(config('configuration.ipython'), 'runs Python < 3', e)
     else:
-        # Check that IPython is at least IPython 3
+        # Check that IPython is at least IPython 3.
         try:
             res = subprocess.check_output([config('configuration.ipython'), '-c',
                 'import IPython; assert IPython.version_info[0] >= 3'])
@@ -77,11 +78,11 @@ if ipython:
         output = subprocess.check_output([ipython, mefile(t, 'ipy')],
                                          stderr=subprocess.DEVNULL)
         output = output.decode('utf-8')
-        ## Clean up absolute paths
-        output = re.sub('/.*?([^/\n]+/[^/\n]+) in', r'\1 in', output)
-        ## Clean up line numbers
+        ## Clean up absolute paths (possibly ~/src/...).
+        output = re.sub('~?/.*?([^/\n]+/[^/\n]+) in', r'\1 in', output)
+        ## Clean up line numbers.
         output = re.sub(r' \d+', ' ??', output)
-        ## Remove window title escape sequence
+        ## Remove window title escape sequence.
         output = re.sub('\033]0;[^\a]*\a', '', output)
         with open(mefile(t, 'ipy.out')) as f:
             CHECK_EQ(f.read(), output)

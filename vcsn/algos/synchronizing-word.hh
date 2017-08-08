@@ -295,7 +295,7 @@ namespace vcsn
       template<typename LabelSet = labelset_t_of<pair_automaton_t>>
       auto
       has_one_(const label_t& l)
-        -> std::enable_if_t<detail::is_multitape<LabelSet>{}, bool>
+        -> std::enable_if_t<is_multitape<LabelSet>{}, bool>
       {
         return pair_->labelset()->show_one(l);
       }
@@ -303,7 +303,7 @@ namespace vcsn
       template<typename LabelSet = labelset_t_of<pair_automaton_t>>
       auto
       has_one_(const label_t& l)
-        -> std::enable_if_t<!detail::is_multitape<LabelSet>{}, bool>
+        -> std::enable_if_t<!is_multitape<LabelSet>{}, bool>
       {
         return pair_->labelset()->is_one(l);
       }

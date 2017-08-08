@@ -52,11 +52,11 @@ $(addprefix $(srcdir)/, $(SOURCES_%C%_SCAN_LL)):  %D%/scan.stamp
 ## ------------ ##
 
 SOURCES_%C%_PARSE_YY =                          \
-  %D%/stack.hh                                  \
-  %D%/position.hh                               \
-  %D%/location.hh                               \
+  vcsn/misc/location.hh                         \
+  vcsn/misc/position.hh                         \
+  %D%/parse.cc                                  \
   %D%/parse.hh                                  \
-  %D%/parse.cc
+  %D%/stack.hh
 BUILT_SOURCES += $(SOURCES_%C%_PARSE_YY)
 MAINTAINERCLEANFILES +=                                 \
   $(addprefix $(srcdir)/,$(SOURCES_%C%_PARSE_YY))       \
@@ -80,8 +80,10 @@ EXTRA_DIST +=                                   \
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(MAKE) $(BISONXX)
-	$(AM_V_at)$(BISONXX) $(BISONXXFLAGS) --	\
-	  $< $(srcdir)/%D%/parse.cc	\
+	$(AM_V_at)$(BISONXX) $(BISONXXFLAGS)	\
+	  --location-dir=$(srcdir)/vcsn/misc	\
+	  --location-prefix=vcsn/misc --	\
+	  $< $(srcdir)/%D%/parse.cc		\
 	  $(AM_BISONFLAGS) $(BISONFLAGS)
 	$(AM_V_at)mv -f $@.tmp $@
 
@@ -105,6 +107,8 @@ lib_libvcsn_la_SOURCES +=			\
   $(SOURCES_%C%_SCAN_LL)			\
   %D%/driver.hh %D%/driver.cc			\
   %D%/fwd.hh					\
+  %D%/caret.cc                                  \
+  %D%/caret.hh                                  \
   %D%/identities.cc                             \
   %D%/read.hh %D%/read.cc			\
   %D%/scan.hh

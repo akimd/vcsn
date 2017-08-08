@@ -12,6 +12,7 @@
 #include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/star-status.hh>
+#include <vcsn/misc/symbol.hh>
 #include <vcsn/weightset/b.hh>
 #include <vcsn/weightset/nmin.hh>
 #include <vcsn/weightset/q.hh>
@@ -74,6 +75,7 @@ namespace vcsn
     DEFINE(ldivide);
     DEFINE(leaf);
     DEFINE(lweight);
+    DEFINE(name);
     DEFINE(node);
     DEFINE(one);
     DEFINE(mul);
@@ -244,8 +246,11 @@ namespace vcsn
     /// Build a label.
     static auto atom(const label_t& v) -> value_t;
 
+    /// Build a named expression.
+    auto name(const value_t& v, symbol name) const -> value_t;
+
     // Concrete type implementation.
-    auto zero() const -> value_t;
+    static auto zero() -> value_t;
     static auto one() -> value_t;
     auto add(const value_t& l, const value_t& r) const -> value_t;
     auto mul(const value_t& l, const value_t& r) const -> value_t;
@@ -601,6 +606,12 @@ namespace vcsn
   {
     return {rs.context(), ids};
   }
+
+  /// Number of tapes of an expressionset.
+  template <typename Context>
+  struct is_multitape<expressionset<Context>>
+    : is_multitape<Context>
+  {};
 
   /// The meet of two expressionsets.
   template <typename Ctx1, typename Ctx2>

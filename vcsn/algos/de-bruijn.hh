@@ -1,8 +1,5 @@
 #pragma once
 
-#include <iterator> // std::distance
-#include <stdexcept>
-
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/context.hh>
@@ -49,36 +46,38 @@ namespace vcsn
     }
   };
 
-  // (a+b)*a(a+b)^n.
+  /// Build a automaton for `(a+b)*a(a+b){n}`.
   template <typename Context>
   mutable_automaton<Context>
   de_bruijn(const Context& ctx, unsigned n)
   {
     const auto& ls = *ctx.labelset();
     const auto& gens = ls.generators();
-    size_t sz = boost::distance(gens);
-    require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
-    using context_t = Context;
-    using automaton_t = mutable_automaton<context_t>;
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
-    auto init = res->new_state();
+    require(2 <= boost::distance(gens),
+            "de_bruijn: ", ctx, ": the alphabet needs at least 2 letters");
+
+    auto res = make_mutable_automaton(ctx);
+
+    auto new_universal_transition =
+      [&res, &gens, &ls](const auto src, const auto dst)
+      {
+        for (auto l: gens)
+          res->new_transition(src, dst, ls.value(l));
+        return dst;
+      };
+
+    const auto init = res->new_state();
     res->set_initial(init);
-    for (auto l: gens)
-      res->new_transition(init, init, ls.value(l));
+    new_universal_transition(init, init);
 
-    auto prev = res->new_state();
-    res->new_transition(init, prev, ls.value(detail::front(gens)));
+    auto last = res->new_state();
+    res->new_transition(init, last, ls.value(detail::front(gens)));
 
     while (n--)
-      {
-        auto next = res->new_state();
-        for (auto l: gens)
-          res->new_transition(prev, next, ls.value(l));
-        prev = next;
-      }
-    res->set_final(prev);
-    res->properties().update(de_bruijn_ftag{});
+      last = new_universal_transition(last, res->new_state());
+
+    res->set_final(last);
     return res;
   }
 
@@ -100,5 +99,4 @@ namespace vcsn
       }
     }
   }
-
 }

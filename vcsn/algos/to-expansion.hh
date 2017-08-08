@@ -125,7 +125,8 @@ namespace vcsn
       }
 
       /// Print an expansion.
-      std::ostream& print_(const expansion_t& v, std::ostream& o) const
+      std::ostream&
+      print_(const expansion_t& v, std::ostream& o = std::cerr) const
       {
         xs_.print(v, o);
         if (transposed_)
@@ -133,7 +134,32 @@ namespace vcsn
         return o;
       }
 
-    private:
+      /// Find if an expression is named.
+      expression_t me(expression_t res) const
+      {
+        while (true)
+          {
+            auto i = names_.find(res);
+            if (i == end(names_))
+              break;
+            else
+              res = i->second;
+          }
+         return res;
+      }
+
+
+      /// When we find that an expression is named, record `named ->
+      /// naming`, so that when we need `named`, we actually use
+      /// `naming`.  That's what the function `me` does.
+      VCSN_RAT_VISIT(name, e)
+      {
+        // Record that e.sub has a name.
+        auto i = names_.emplace(e.sub(), e.shared_from_this()).first;
+        super_t::visit(e);
+        names_.erase(i);
+      }
+
       VCSN_RAT_VISIT(zero,)
       {
         res_ = xs_.zero();
@@ -160,22 +186,31 @@ namespace vcsn
 
       VCSN_RAT_VISIT(mul, e)
       {
+        if (getenv("VCSN_NAIVE_MUL"))
+          {
+            assert(!transposed_);
+            res_ = to_expansion(e[0]);
+            xs_.denormalize(res_);
+            xs_.rmul_label_here(res_,
+                                prod_(std::next(e.begin()), std::end(e)));
+          }
+        else
+          {
         res_ = xs_.one();
         for (size_t i = 0, size = e.size(); i < size; ++i)
           {
             auto r = e[transposed_ ? size-1 - i : i];
-            expansion_t rhs = to_expansion(r);
+            auto rhs = to_expansion(r);
             if (transposed_)
               r = rs_.transposition(r);
 
             // Instead of performing successive binary
             // multiplications, we immediately multiply the current
             // expansion by all the remaining operands on its right
-            // hand side.  This will also allow us to break the
-            // iterations as soon as an expansion has a null constant
-            // term.
+            // hand side.  This also allows to break the iterations as
+            // soon as an expansion has a null constant term.
             //
-            // In essence, it allows us to treat the product as if it
+            // In essence, it allows to treat the product as if it
             // were right-associative: in `E.(FG)`, if `c(E) != 0`, we
             // don't need to traverse `FG`, just append it to
             // `d_p(E)`.
@@ -185,12 +220,23 @@ namespace vcsn
             // have already been applied.  Large performance impact.
             //
             // The gain is very effective.
-            expression_t rhss
-              = transposed_
-              ? rs_.transposition(prod_(e.begin(),
-                                        std::next(e.begin(), size-(i+1))))
-              : prod_(std::next(e.begin(), i + 1), std::end(e));
-            xs_.rweight_here(rhs, rhss);
+            //
+            // Do it only if there is really something left though, so
+            // that we don't need any particular identity.
+            if (i + 1 < size)
+              {
+                expression_t rhss
+                  = transposed_
+                  ? rs_.transposition(prod_(e.begin(),
+                                            std::next(e.begin(), size-(i+1))))
+                  : prod_(std::next(e.begin(), i + 1), std::end(e));
+                // rmul_label_here requires a null constant term,
+                // please it.
+                auto w = std::move(rhs.constant);
+                rhs.constant = ws_.zero();
+                xs_.rmul_label_here(rhs, rhss);
+                rhs.constant = std::move(w);
+              }
 
             for (const auto& p: rhs.polynomials)
               ps_.add_here(res_.polynomials[p.first],
@@ -199,6 +245,7 @@ namespace vcsn
             // Nothing else will be added.
             if (ws_.is_zero(res_.constant))
               break;
+          }
           }
       }
 
@@ -211,9 +258,8 @@ namespace vcsn
             typename mul_t::iterator end) const
       {
         using expressions_t = typename mul_t::values_t;
-        if (begin == end)
-          return rs_.one();
-        else if (std::next(begin, 1) == end)
+        assert(begin != end);
+        if (std::next(begin, 1) == end)
           return *begin;
         else
           return std::make_shared<mul_t>(expressions_t{begin, end});
@@ -224,8 +270,8 @@ namespace vcsn
         assert(e.size() == 2);
         bool transposed = transposed_;
         transposed_ = false;
-        expansion_t lhs = to_expansion(e[0]);
-        expansion_t rhs = to_expansion(e[1]);
+        auto lhs = to_expansion(e[0]);
+        auto rhs = to_expansion(e[1]);
         res_ = xs_.ldivide(lhs, rhs);
         if (transposed)
           res_ = xs_.transpose(res_);
@@ -291,21 +337,35 @@ namespace vcsn
         transposed_ = !transposed_;
       }
 
+      /// If E is normal, d(E*) = <c(E)*> + <c(E)*> dp(E) E*.
+      /// otherwise       d(E*) = 1 + d(E) E*.
       VCSN_RAT_VISIT(star, e)
       {
-        expansion_t res = to_expansion(e.sub());
-        res_.constant = ws_.star(res.constant);
-        auto f = e.shared_from_this();
+        // F = E*.
+        auto f = me(e.shared_from_this());
+        // d(E).
+        auto x = to_expansion(e.sub());
+        if (xs_.is_normal(x) && !getenv("VCSN_NAIVE_STAR"))
+          res_.constant = ws_.star(x.constant);
+        else
+          {
+            // Do not leave any constant-term.
+            xs_.denormalize(x);
+            res_.constant = ws_.one();
+          }
         if (transposed_)
           {
+            // FIXME: check the case of named expression.
             res_.constant = ws_.transpose(res_.constant);
             f = rs_.transposition(f);
           }
 
-        for (const auto& p: res.polynomials)
+        for (const auto& p: x.polynomials)
           res_.polynomials[label_of(p)]
             = ps_.lweight(res_.constant,
-                       ps_.rmul_label(weight_of(p), f));
+                          ps_.rmul_label(weight_of(p), f));
+        if (getenv("VCSN_DENORMALIZE_STAR"))
+          xs_.denormalize(res_);
       }
 
       VCSN_RAT_VISIT(lweight, e)
@@ -405,6 +465,8 @@ namespace vcsn
       bool transposed_ = false;
       /// The result.
       expansion_t res_ = xs_.zero();
+      /// A table from the expression to the naming expression.
+      std::map<expression_t, expression_t> names_;
     };
   } // rat::
 

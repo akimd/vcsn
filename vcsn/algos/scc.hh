@@ -59,12 +59,16 @@ namespace vcsn
       reverse_postorder_impl(const Aut& aut)
         : aut_{aut}
       {
+        // FIXME: wrong!  Should be states_size.  Or better yet: a
+        // dedicated state-map type.
         rvp_.reserve(aut->num_all_states());
         for (auto s : aut->states())
           if (!has(marked_, s))
             dfs(s);
       }
 
+      // FIXME: Wrong.  Should be const, or by value, and use
+      // std::move.
       std::vector<state_t>& reverse_post()
       {
         return rvp_;
@@ -97,7 +101,7 @@ namespace vcsn
   std::vector<state_t_of<Aut>>
   reverse_postorder(const Aut& aut)
   {
-    detail::reverse_postorder_impl<Aut> dv(aut);
+    auto dv = detail::reverse_postorder_impl<Aut>(aut);
     return dv.reverse_post();
   }
 

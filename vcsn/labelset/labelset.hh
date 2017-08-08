@@ -2,7 +2,6 @@
 
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/find.hpp>
-#include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/algorithm_ext/is_sorted.hpp>
 
@@ -200,7 +199,7 @@ namespace vcsn
            it != letters_end; ++it)
         {
           auto end = std::mismatch(it, letters_end,
-                                   boost::range::find(alphabet, *it),
+                                   boost::find(alphabet, *it),
                                    alphabet.end()).first;
           ls.print(*it, out, fmt);
           // No range for two letters or less.
@@ -312,18 +311,21 @@ namespace vcsn
                 letter_t l2 = ls.get_letter(i);
                 // Skip prev, which was already processed.
                 auto gens = ls.generators();
-                auto i = std::find(std::begin(gens), std::end(gens), *prev);
+                // boost::find is ambiguous between Boost.Range and
+                // Boost.Algorithms.
+                auto i = boost::range::find(gens, *prev);
                 // FIXME: Cannot use std::next here, in the case of tuples.
                 if (i != std::end(gens))
                   ++i;
                 for (;
-                     i != std::end(gens) && *i < l2;
+                     i != std::end(gens) && ls.less(*i, l2);
                      ++i)
                   fun(*i);
-                // The last letter.  Do not do this in the loop,
-                // we might overflow the capacity of char.
-                // Check validity, so that 'z-a' is empty.
-                if (*prev < l2)
+
+                // The last letter.  Do not do this in the loop, we
+                // might overflow the capacity of char.  Check
+                // validity, so that 'z-a' is empty.
+                if (ls.less(*prev, l2))
                   fun(l2);
 
                 prev = boost::none;
@@ -345,7 +347,7 @@ namespace vcsn
       using letter_t = typename LabelSet::letter_t;
       using letters_t = typename LabelSet::letters_t;
 
-      letters_t res;
+      auto res = letters_t{};
       conv_label_class_(ls, i, [&res](letter_t l){ res.insert(l); });
       return res;
     }

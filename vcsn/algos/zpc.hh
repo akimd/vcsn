@@ -109,6 +109,11 @@ namespace vcsn
         res_->set_final(initial_);
       }
 
+      VCSN_RAT_VISIT(name, e)
+      {
+        super_t::visit(e);
+      }
+
       VCSN_RAT_VISIT(atom, e)
       {
         initial_ = res_->new_state();

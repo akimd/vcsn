@@ -108,6 +108,11 @@ namespace vcsn
                                                      v.value()));
       }
 
+      VCSN_RAT_VISIT(name, v)
+      {
+        res_ = out_rs_.name(rec_(v.sub()), v.name_get());
+      }
+
       VCSN_RAT_VISIT(lweight, v)
       {
         res_ = out_rs_.lweight(out_rs_.weightset()->conv(*in_rs_.weightset(),

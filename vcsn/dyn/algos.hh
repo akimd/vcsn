@@ -156,11 +156,17 @@ namespace vcsn
     automaton compose(const automaton& lhs, const automaton& rhs,
                       bool lazy = false);
 
+    /// The composition of two contexts.
+    context compose(const context& lhs, const context& rhs);
+
     /// The composition of two expansions.
     expansion compose(const expansion& lhs, const expansion& rhs);
 
     /// The composition of two expressions.
     expression compose(const expression& lhs, const expression& rhs);
+
+    /// The composition of two labels.
+    label compose(const label& lhs, const label& rhs);
 
     /// The composition of two polynomials.
     polynomial compose(const polynomial& lhs, const polynomial& rhs);
@@ -259,6 +265,9 @@ namespace vcsn
     /// The automaton with the delay of each state.
     automaton delay_automaton(const automaton& a);
 
+    /// Denormalize expansion \a x.
+    expansion denormalize(const expansion& x);
+
     /// Derive \a exp with respect to \a s.
     ///
     /// \param exp       the input expression
@@ -291,6 +300,9 @@ namespace vcsn
     /// \pre  the labelset of \a aut must be free.
     automaton determinize(const automaton& aut,
                           const std::string& algo = "auto");
+
+    /// The determinized expansion.
+    expansion determinize(const expansion& x);
 
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
@@ -373,6 +385,9 @@ namespace vcsn
     /// Performs the join of their type.
     expression infiltrate(const expression& lhs, const expression& rhs);
 
+    /// The infiltration product of polynomial \a lhs and \a rhs.
+    polynomial infiltrate(const polynomial& lhs, const polynomial& rhs);
+
     /// Output various facts about an automaton.
     ///
     /// \param aut  the automaton under study
@@ -450,6 +465,9 @@ namespace vcsn
     ///
     /// \pre \a aut is a transducer.
     bool is_partial_identity(const automaton& aut);
+
+    /// Whether has no polynomial for the empty word.
+    bool is_normal(const expansion& x);
 
     /// Whether is normalized (in the Thompson sense), i.e., standard
     /// and co-standard.
@@ -601,10 +619,12 @@ namespace vcsn
     /// \param s       the input string.
     /// \param ids     the identities to apply.
     expression make_expression(const context& ctx,
-                               const std::string& s, identities ids = {});
+                               const std::string& s, identities ids = {},
+                               const std::string& format = "default");
 
     /// Build a label from a string.
-    label make_label(const context& ctx, const std::string& s);
+    label make_label(const context& ctx, const std::string& s,
+                     const std::string& format = "default");
 
     /// Build a polynomial from a string.
     polynomial make_polynomial(const context& ctx, const std::string& s);
@@ -616,7 +636,8 @@ namespace vcsn
     context make_word_context(const context& ctx);
 
     /// Build a word from a string.
-    label make_word(const context& ctx, const std::string& s);
+    label make_word(const context& ctx, const std::string& s,
+                    const std::string& format = "default");
 
     /// Multiply (concatenate) two automata.
     ///
@@ -694,8 +715,14 @@ namespace vcsn
     automaton minimize(const automaton& aut,
                        const std::string& algo = "auto");
 
+    /// Name an expression.
+    expression name(const expression& exp, const std::string& name);
+
     /// Normalize automaton \a aut.
     automaton normalize(const automaton& aut);
+
+    /// Normalize expansion \a x.
+    expansion normalize(const expansion& x);
 
     /// The number of strongly connected components.
     std::size_t num_components(const automaton& aut);
@@ -889,12 +916,16 @@ namespace vcsn
 
     /// Read an automaton from a stream.
     /// \param is      the input stream.
-    /// \param format  its format.
+    /// \param format  its format ("auto", "daut", "default", "dot",
+    ///                "efsm", "fado", "grail").  "default" means
+    ///                "auto": try to guess the format.
     /// \param strip   whether to return a stripped automaton,
     ///                or a named automaton.
+    /// \param loc     the location before the first character in \a is
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default",
-                             bool strip = true);
+                             bool strip = true,
+                             const location& loc = location{});
 
     /// Read an expression from a stream.
     ///
@@ -902,9 +933,11 @@ namespace vcsn
     /// \param ids     the identities to apply.
     /// \param is      the input stream.
     /// \param format  the expression's format.
+    /// \param loc     the location before the first character in \a is
     expression read_expression(const context& ctx, identities ids,
                                std::istream& is,
-                               const std::string& format = "default");
+                               const std::string& format = "default",
+                               const location& loc = location{});
 
     /// Read a label from a stream.
     ///
@@ -988,6 +1021,9 @@ namespace vcsn
     /// The shuffle product of expressions \a lhs and \a rhs.
     /// Performs the join of their type.
     expression shuffle(const expression& lhs, const expression& rhs);
+
+    /// The shuffle product of polynomial \a lhs and \a rhs.
+    polynomial shuffle(const polynomial& lhs, const polynomial& rhs);
 
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
@@ -1078,6 +1114,9 @@ namespace vcsn
     expression to_expression(const automaton& aut,
                              identities ids = {},
                              const std::string& algo = "auto");
+
+    /// Projection as a expression.
+    expression to_expression(const expansion& exp);
 
     /// An expression denoting the label of \a l.
     expression to_expression(const context& ctx, identities ids,

@@ -6,9 +6,9 @@ from test import *
 ctx = vcsn.context('lal_char(abc), q')
 expr = ctx.expression
 
-# check(OUTPUT, RAT_EXP)
-# ----------------------
-# Check that RAT-EXP's validity is OUTPUT ("true" or "false").
+# check(OUTPUT, EXP)
+# ------------------
+# Check that EXP's validity is OUTPUT ("true" or "false").
 # Also check is-valid on its Thompson.
 #
 # Use a context with expression weights to check the order of products.
@@ -35,7 +35,7 @@ XFAIL(lambda: e.is_valid(),
       r'''is_valid: operator ldivide not supported: a{\}a
   while computing constant-term of: a{\}a''')
 
-e = vcsn.context('lat<lal, lal>, q').expression(r'a|\e @ \e|a')
+e = vcsn.context('lat<lal, lal>, q').expression(r'ab|\e @ \e|cd')
 XFAIL(lambda: e.is_valid(),
-      r'''is_valid: operator compose not supported: a|\e@\e|a
-  while computing constant-term of: a|\e@\e|a''')
+      r'''is_valid: operator compose not supported: ab|\e@\e|cd
+  while computing constant-term of: ab|\e@\e|cd''')

@@ -24,10 +24,11 @@ dist_notebooks_DATA =                           \
   %D%/Glossary.ipynb                            \
   %D%/Hacking.ipynb                             \
   %D%/ICTAC-2016.ipynb                          \
-  %D%/LATA-2017.ipynb                           \
+  %D%/ICTAC-2017.ipynb                          \
   %D%/Nullableset_removal.ipynb                 \
   %D%/Properties.ipynb                          \
   %D%/References.ipynb                          \
+  %D%/SACS-2017.ipynb                           \
   %D%/Sms2fr.ipynb                              \
   %D%/Spell-checker.ipynb                       \
   %D%/Stackoverflow.ipynb                       \
@@ -201,6 +202,8 @@ nodist_notebooks_DATA = $(dist_notebooks_DATA:.ipynb=.html) %D%/index.html
 DISTCLEANFILES += $(nodist_notebooks_DATA)
 endif
 
+# Files generated when running the notebooks.
+DISTCLEANFILES += abc.gv fr2en en2es words
 
 ## ------- ##
 ## check.  ##

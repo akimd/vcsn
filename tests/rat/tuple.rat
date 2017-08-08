@@ -13,8 +13,27 @@ a|e   @ a|e   => a|e@a|e
 
 a|e @ a|e + a|e == (a|e @ a|e) + a|e
 
-%context: lat<lal_char(abcd0-9), lal_char(efgh0-9), lal_char(ijkl0-9)>, q
+0 + a|e  => 0|0+a|e
+(0+12*)(a|e)(3+4*5)  => (0|0+(1|1)(2|2)*)(a|e)(3|3+(4|4)*(5|5))
 
+%identities: linear
+a|0  @  0|e  => a|e
+a|0  @  1|e  => \z
+a|\e @ \e|e  => a|e
+a|\e @  0|e  => \z
+a|0  @ \e|e  => \z
+
+\e|0  @ 0|\e  => \e
+\e|0  @ \e    => \z
+\e|\e @ \e|\e => \e
+0|\e  @ \e    => 0|\e
+\e    @ \e|0  => \e|0
+\e    @ 0|\e  => \z
+
+
+%context: lat<lal(abcd0-9), lal(efgh0-9), lal(ijkl0-9)>, q
+
+%identities: associative
 \z|\z|\z => \z
 \z|e|i   => \z
 a|\z|i   => \z
@@ -34,11 +53,18 @@ a|e|i+b|f|j          => a|e|i+b|f|j
 [abcd]|[efgh]|[ijkl] => [a-d]|[e-h]|[i-l]
 abcd|efgh|ijkl       => abcd|efgh|ijkl
 
-a|e|i|z ! 1.6: too many tapes\n!   while reading expression: a|e|i|z
-a|e ! 1.1-3: not enough tapes: 2 expected 3\n!   while reading expression: a|e
-a ! 1.1: not enough tapes: 1 expected 3\n!   while reading expression: a
+a|e|i|z ! 1.6: too many tapes\n! a|e|i|z\n!      ^\n!   while reading expression: a|e|i|z
+a|e     ! 1.1-3: not enough tapes: 2 expected 3\n! a|e\n! ^^^\n!   while reading expression: a|e
+a       ! 1.1: not enough tapes: 1 expected 3\n! a\n! ^\n!   while reading expression: a
+
+a|e + a|e|i ! 1.1-3: not enough tapes: 2 expected 3\n! a|e + a|e|i\n! ^^^\n!   while reading expression: a|e + a|e|i
 
 %identities: linear
 b|f|j+a|e|i          => a|e|i+b|f|j
 (b+a)|(f+e)|(j+i)    => (a+b)|(e+f)|(i+j)
 abcd|efgh|ijkl       => abcd|efgh|ijkl
+
+# Local Variables:
+# mode: shell-script
+# coding: utf-8
+# End:

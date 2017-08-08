@@ -8,6 +8,7 @@
 #include <vcsn/algos/compare-automaton.hh>
 #include <vcsn/algos/compare.hh>
 #include <vcsn/algos/complete.hh>
+#include <vcsn/algos/conjunction-expression.hh>
 #include <vcsn/algos/conjunction.hh>
 #include <vcsn/algos/constant-term.hh>
 #include <vcsn/algos/constant.hh>
@@ -24,6 +25,7 @@
 #include <vcsn/algos/expand.hh>
 #include <vcsn/algos/identities-of.hh>
 #include <vcsn/algos/inductive.hh>
+#include <vcsn/algos/infiltrate-expression.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-ambiguous.hh>
@@ -37,11 +39,13 @@
 #include <vcsn/algos/minimize.hh>
 #include <vcsn/algos/multiply.hh>
 #include <vcsn/algos/normalize.hh>
+#include <vcsn/algos/num-tapes.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/proper.hh>
 #include <vcsn/algos/push-weights.hh>
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/shortest.hh>
+#include <vcsn/algos/shuffle-expression.hh>
 #include <vcsn/algos/sort.hh>
 #include <vcsn/algos/split.hh>
 #include <vcsn/algos/standard.hh>
@@ -285,6 +289,7 @@ namespace vcsn
       bool
       register_functions_is_letterized(std::true_type)
       {
+#if 2 <= VCSN_INSTANTIATION
         using ctx_t = Ctx;
         using rs_t = expressionset<ctx_t>;
 
@@ -303,6 +308,7 @@ namespace vcsn
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(multiply_polynomial, wps_t, wps_t);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
+#endif
 
         return true;
       }
@@ -318,10 +324,12 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_one)
       {
+#if 2 <= VCSN_INSTANTIATION
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
 
         REGISTER(eliminate_state, aut_t, int);
+#endif
 
         return true;
       }
@@ -361,30 +369,34 @@ namespace vcsn
 
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;
-        // expression polynomialset.
-        using rps_t = rat::expression_polynomialset_t<rs_t>;
-        // expansionset.
-        using es_t = rat::expansionset<rs_t>;
 
         register_automaton_functions<aut_t>();
         register_context_functions<ctx_t>();
         register_expression_functions<rs_t>();
 
-        REGISTER(add_weight, ws_t, ws_t);
-        REGISTER(list_polynomial, rps_t, std::ostream);
-        REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(num_tapes, ctx_t);
         REGISTER(print_context, ctx_t, std::ostream, const std::string);
-        REGISTER(print_expansion, es_t, std::ostream, const std::string);
-        REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
-        REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(read_label, ctx_t, std::istream, bool);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(to_expression_class, ctx_t, rat::identities, const letter_class_t, bool);
         REGISTER(to_expression_label, ctx_t, rat::identities, ls_t);
+
+#if 2 <= VCSN_INSTANTIATION
+        // expression polynomialset.
+        using rps_t = rat::expression_polynomialset_t<rs_t>;
+        // expansionset.
+        using es_t = rat::expansionset<rs_t>;
+
+        REGISTER(add_weight, ws_t, ws_t);
+        REGISTER(list_polynomial, rps_t, std::ostream);
+        REGISTER(multiply_weight, ws_t, ws_t);
+        REGISTER(print_expansion, es_t, std::ostream, const std::string);
+        REGISTER(print_label, ls_t, std::ostream, const std::string);
+        REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
+#endif
 
         using is_letterized_t = bool_constant<ctx_t::labelset_t::is_letterized()>;
         register_functions_is_letterized<ctx_t>(is_letterized_t());
@@ -417,5 +429,4 @@ namespace vcsn
 #ifndef MAYBE_EXTERN
 # define MAYBE_EXTERN extern
 #endif
-
 }

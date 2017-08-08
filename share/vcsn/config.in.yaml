@@ -1,6 +1,7 @@
 configuration:
   # Package version.
   version: @PACKAGE_VERSION@
+  url: @PACKAGE_URL@
 
   # Running Python.
   python: @PYTHON@
@@ -19,6 +20,10 @@ configuration:
   libdir: @LIBDIR@
   pyexecdir: @PYEXECDIR@
 
+  # The vcsn libraries and precompiled contexts.
+  libs: -llal_char_b -llal_char_q -llal_char_z -lvcsn
+
+  # Verbosity level of debug messages.
   verbose: 0
 
 dot:

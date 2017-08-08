@@ -1,16 +1,62 @@
 #! /usr/bin/env python
 
 import re
+import sys
 import vcsn
+
 from test import *
 
 def check(a1, a2, exp):
-    res = a1.compose(a2)
-    CHECK_EQ(exp, res)
+    # @ is only supported since Python 3.5.
+    CHECK_EQ(exp, a1.compose(a2))
 
-#################
-## Composition ##
-#################
+## ---------- ##
+## Contexts.  ##
+## ---------- ##
+
+make = vcsn.context
+c1 = make('lat<lan(abc), lan(efg), lan(xyz)>, b')
+c2 = make('lat<lan(xyz), lan(EFG), lal(ABC)>, q')
+c3 = make('lat<lan(abc), lan(efg), lan(EFG), lal(ABC)>, q')
+check(c1, c2, c3)
+
+## -------- ##
+## Labels.  ##
+## -------- ##
+
+check(c1.label('a|e|x'),
+      c2.label('x|E|A'),
+      c3.label('a|e|E|A'))
+
+
+## ------------- ##
+## Polynomials.  ##
+## ------------- ##
+
+check(c1.polynomial('a|e|x'),
+      c2.polynomial('x|E|A'),
+      c3.polynomial('a|e|E|A'))
+
+check(c1.polynomial('a|e|x'),
+      c2.polynomial('y|E|A'),
+      c3.polynomial(r'\z'))
+
+check(c1.polynomial('a|e|x + b|f|y + c|g|z'),
+      c2.polynomial('x|E|A'),
+      c3.polynomial('a|e|E|A'))
+
+check(c1.polynomial('a|e|x + b|f|y + c|g|z'),
+      c2.polynomial('y|F|B'),
+      c3.polynomial('b|f|F|B'))
+
+check(c1.polynomial('a|e|x + a|e|y + a|e|\e'),
+      c2.polynomial('x|E|A + y|E|A + \e|E|A'),
+      c3.polynomial('<3>a|e|E|A'))
+
+
+## ---------- ##
+## Automata.  ##
+## ---------- ##
 
 c1 = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, b")
 c2 = vcsn.context("lat<lal_char(xyz),lal_char(def)>, b")
@@ -88,9 +134,9 @@ b = r'''digraph
 }'''
 check(aut, aut, b)
 
-###############################
+## ------------------------- ##
 ## Spontaneous transitions.  ##
-###############################
+## ------------------------- ##
 
 t1 = c1.expression("(a|x)*").thompson()
 t2 = c2.expression("(x|d)*").thompson()
@@ -117,9 +163,9 @@ check(c1.expression("(a|x)*").standard(),
   0 -> F0
 }''')
 
-############################
-## Heterogeneous contexts ##
-############################
+## ------------------------ ##
+## Heterogeneous contexts.  ##
+## ------------------------ ##
 
 c_ratb = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, expressionset<lal_char(mno), b>")
 c_q = vcsn.context("lat<lal_char(xyz),lal_char(def)>, q")
@@ -145,9 +191,9 @@ check(c_ratb.expression("<o>(a|x)").standard(),
   1 -> F1
 }''')
 
-###############################################
-## Check mixed epsilon and letters going out ##
-###############################################
+## ------------------------------------------- ##
+## Check mixed epsilon and letters going out.  ##
+## ------------------------------------------- ##
 
 
 a1 = vcsn.automaton(r'''digraph
@@ -222,17 +268,17 @@ check(c_r.expression("<3.1>(a|x)").standard(),
   1 -> F1
 }''')
 
-##########################
-## Fibonacci normalizer ##
-##########################
+## ---------------------- ##
+## Fibonacci normalizer.  ##
+## ---------------------- ##
 
 check(meaut('left.gv'),
       meaut('right.gv'),
       metext('result.gv'))
 
-######################
-## Lazy composition ##
-######################
+## ------------------ ##
+## Lazy composition.  ##
+## ------------------ ##
 
 CHECK_EQ(metext('result.gv'),
          meaut('left.gv').compose(meaut('right.gv'), lazy=True).accessible())

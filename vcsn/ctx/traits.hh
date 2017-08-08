@@ -94,14 +94,38 @@ namespace vcsn
   struct are_labelsets_composable : std::false_type
   {};
 
-  template <typename LS1, typename LS2, typename LS3>
-  struct are_labelsets_composable<tupleset<LS1, LS2>, tupleset<LS2, LS3>>
-    : std::true_type
+  /// Currently we support only composing on the last tape with the
+  /// first one.  Eventually, we should support two tape numbers.
+  template <typename... LS1, typename... LS2>
+  struct are_labelsets_composable<tupleset<LS1...>, tupleset<LS2...>>
+    : std::is_same<typename tupleset<LS1...>::template valueset_t<sizeof...(LS1) - 1>,
+                   typename tupleset<LS2...>::template valueset_t<0>>
   {};
 
   /// Whether two contexts are composable.
-  template <typename Ctx1, typename Ctx2>
+  template <typename Ctx1, typename Ctx2 = Ctx1>
   struct are_composable
     : are_labelsets_composable<labelset_t_of<Ctx1>, labelset_t_of<Ctx2>>
   {};
+
+  /*----------------.
+  | is_multitape.   |
+  `----------------*/
+
+  /// Whether a ValueSet, or a context, is multitape.
+  template <typename ValueSet>
+  struct is_multitape
+    : std::false_type
+  {};
+
+
+  /*-------------------.
+  | Number of tapes.   |
+  `-------------------*/
+
+  template <typename LabelSet>
+  struct number_of_tapes
+  {
+    constexpr static auto value = 0;
+  };
 }

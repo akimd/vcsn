@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/range/irange.hpp>
 
 namespace vcsn

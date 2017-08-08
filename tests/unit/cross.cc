@@ -29,6 +29,11 @@ int main()
     os << i << '\n';
   os << "\n\n";
 
+  os << "cross(ints)\n";
+  for (auto i: cross(ints))
+    os << i << '\n';
+  os << "\n\n";
+
   os << "cross(cross(ints), cross(floats, strings))\n";
   for (auto i: cross(cross(ints), cross(floats, strings)))
     os << i << '\n';

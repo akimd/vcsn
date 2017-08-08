@@ -1,15 +1,15 @@
 #pragma once
 
-#include <array>
 #include <iosfwd>
 #include <istream>
 #include <set>
 #include <tuple>
 
-#include <boost/range/join.hpp>
 #include <boost/optional.hpp>
+#include <boost/range/join.hpp>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+#include <vcsn/ctx/traits.hh>
 //#include <vcsn/core/rat/expressionset.hh> needed, but breaks everythying...
 #include <vcsn/labelset/fwd.hh>
 #include <vcsn/labelset/labelset.hh>
@@ -111,7 +111,10 @@ namespace vcsn
     {}
 
     tupleset_impl(ValueSets... ls)
-      : sets_(ls...)
+      : sets_(std::move(ls)...)
+    {}
+
+    ~tupleset_impl()
     {}
 
     static symbol sname()
@@ -211,17 +214,48 @@ namespace vcsn
       return value_t{args...};
     }
 
+    /// Compose, aka `join` in the world of databases.
+    /// Beware that we don't even check that the common tapes match.
+    template <typename... LS1, typename... LS2>
+    auto compose(const tupleset<LS1...>& ls1,
+                 const typename tupleset<LS1...>::value_t& l1,
+                 const tupleset<LS2...>& ls2,
+                 const typename tupleset<LS2...>::value_t& l2) const
+      -> std::enable_if_t<are_labelsets_composable<tupleset<LS1...>,
+                                                   tupleset<LS2...>>{},
+                          value_t>
+    {
+      // Tape of the lhs on which we compose.
+      constexpr auto out = tupleset<LS1...>::size() - 1;
+      // Tape of the rhs on which we compose.
+      constexpr auto in = 0;
+      using indices1_t = punched_sequence<tupleset<LS1...>::size(), out>;
+      using indices2_t = punched_sequence<tupleset<LS2...>::size(), in>;
+      return compose_(ls1, l1, ls2, l2,
+                      indices1_t{}, indices2_t{});
+    }
+
     genset_ptr
     genset() const
     {
       return this->genset_(indices);
     }
 
+    /// The pregenerators.  Meaningful for labelsets only.
+    auto
+    pregenerators() const
+    {
+      return this->pregenerators_(indices);
+    }
+
     /// The generators.  Meaningful for labelsets only.
     auto
     generators() const
     {
-      return this->generators_(indices);
+      if (has_one())
+        return pregenerators().skip_first();
+      else
+        return pregenerators();
     }
 
     /// Convert to a word.
@@ -231,6 +265,14 @@ namespace vcsn
       -> word_t
     {
       return this->word_(v, indices);
+    }
+
+    /// Run a function per set, and return the tuple of results.
+    template <typename Fun>
+    auto
+    map(Fun&& fun) const
+    {
+      return map_impl_(std::forward<Fun>(fun), indices);
     }
 
     /// Whether \a l equals \a r.
@@ -275,12 +317,6 @@ namespace vcsn
     is_special(const value_t& l)
     {
       return is_special_(l, indices);
-    }
-
-    value_t
-    zero() const
-    {
-      return this->zero_(indices);
     }
 
     bool
@@ -540,6 +576,14 @@ namespace vcsn
       return this->conv_(vs, v, indices);
     }
 
+    /// Convert a single tape expression to multitape.
+    template <typename VS>
+    value_t
+    conv(const VS& vs, const typename VS::value_t& v) const
+    {
+      return tuple(set<0>().conv(vs, v), set<1>().conv(vs, v));
+    }
+
     /// Read one label from i, return the corresponding value.
     value_t
     conv(std::istream& i, bool quoted = true) const
@@ -556,7 +600,9 @@ namespace vcsn
       eat(i, '[');
       conv_label_class_(*this, i,
                         [this,fun](const letter_t& l)
-                        { fun(this->value(l)); });
+                        {
+                          fun(this->value(l));
+                        });
       eat(i, ']');
     }
 
@@ -662,6 +708,17 @@ namespace vcsn
       return value_t{set<I>().value(std::get<I>(args))...};
     }
 
+    template <typename... LS1, typename... LS2,
+              std::size_t... I1, std::size_t... I2>
+    value_t compose_(const tupleset<LS1...>&,
+                     const typename tupleset<LS1...>::value_t& l1,
+                     const tupleset<LS2...>&,
+                     const typename tupleset<LS2...>::value_t& l2,
+                     seq<I1...>, seq<I2...>) const
+    {
+      return tuple(std::get<I1>(l1)..., std::get<I2>(l2)...);
+    }
+
     template <std::size_t... I>
     genset_ptr
     genset_(seq<I...>) const
@@ -669,35 +726,11 @@ namespace vcsn
       return genset_ptr{set<I>().genset()...};
     }
 
-    template <std::size_t I>
-    decltype(auto) generators_() const
-    {
-      return static_if<valueset_t<I>::is_letterized()
-                       && valueset_t<I>::has_one()>
-        ([](const auto& ls)
-         {
-           using label_t = typename valueset_t<I>::value_t;
-           static const auto one = std::array<label_t, 1>{{ls.one()}};
-           return boost::range::join(one, ls.generators());
-         },
-         [](const auto& ls)
-         {
-           return ls.generators();
-         })(set<I>());
-    }
-
     template <std::size_t... I>
-    decltype(auto)
-    generators_(seq<I...>) const
+    auto
+    pregenerators_(seq<I...>) const
     {
-      // Need value(), since we might have to convert from letter_t to
-      // value_t.
-      auto p = [this](const auto& g)
-        { return !this->is_one(this->value(g)); };
-      return filter(vcsn::cross(generators_<I>()...),
-                    // Need std::ref so that we can copy-assignment
-                    // (filtered) iterators, which is needed with lat<lat<>>.
-                    std::ref(p));
+      return vcsn::cross(set<I>().pregenerators()...);
     }
 
     template <typename... Args, std::size_t... I>
@@ -762,12 +795,24 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    value_t
-    zero_(seq<I...>) const
+    static auto zero_(seq<I...>)
+      -> decltype(value_t{valueset_t<I>::zero()...})
     {
-      return value_t{set<I>().zero()...};
+      return value_t{valueset_t<I>::zero()...};
     }
 
+  public:
+    /// A tuple of zeros.
+    ///
+    /// Template + decltype so that this is not defined when not all
+    /// the valuesets support zero().
+    template <typename Indices = indices_t>
+    static auto zero() -> decltype(zero_(Indices{}))
+    {
+      return zero_(Indices{});
+    }
+
+  private:
     template <std::size_t... I>
     bool
     is_zero_(const value_t& l, seq<I...>) const
@@ -831,6 +876,14 @@ namespace vcsn
     show_one_(const value_t& v, seq<I...>)
     {
       return any{}(valueset_t<I>::is_one(std::get<I>(v))...);
+    }
+
+    /// Run a nullary function pointwise, and return the tuple of results.
+    template <typename Fun, std::size_t... I>
+    auto
+    map_impl_(Fun&& fun, seq<I...>) const
+    {
+      return std::make_tuple(fun(set<I>())...);
     }
 
     /// Apply a unary function pointwise, and return the tuple of results.
@@ -1161,29 +1214,6 @@ namespace vcsn
   | is_multitape.   |
   `----------------*/
 
-  /// Whether a ValueSet, or a context, is multitape.
-  template <typename ValueSet>
-  struct is_multitape
-    : std::false_type
-  {};
-
-  template <typename... ValueSet>
-  struct is_multitape<tupleset<ValueSet...>>
-    : std::true_type
-  {};
-
-  template <typename LabelSet, typename WeightSet>
-  struct is_multitape<context<LabelSet, WeightSet>>
-    : is_multitape<LabelSet>
-  {};
-
-  template <typename Context>
-  struct is_multitape<expressionset<Context>>
-    : is_multitape<Context>
-  {};
-
-
-
   template <typename T1, typename T2>
   struct concat_tupleset;
 
@@ -1284,10 +1314,24 @@ namespace vcsn
   template <typename... VS1, typename VS2>
   struct join_impl<tupleset<VS1...>, VS2>
   {
-    // Cannot just leave "false" as condition: the assertion is then
-    // always checked, even if the template is not instantiated.
-    static_assert(is_multitape<VS2>{},
-                  "join: cannot mix tuplesets and non tuplesets");
+    using vs1_t = tupleset<VS1...>;
+    using vs2_t = VS2;
+    /// The resulting type.
+    using type = tupleset<join_t<VS1, VS2>...>;
+
+    template <std::size_t... I>
+    static type join(const vs1_t& lhs, const vs2_t& rhs,
+                     index_sequence<I...>)
+    {
+      return {::vcsn::join(lhs.template set<I>(), rhs)...};
+    }
+
+    /// The resulting valueset.
+    static type join(const vs1_t& lhs, const vs2_t& rhs)
+    {
+      return join(lhs, rhs,
+                  make_index_sequence<sizeof...(VS1)>{});
+    }
   };
 
 
@@ -1334,6 +1378,17 @@ namespace vcsn
 
   }// detail::
 
+  template <typename... ValueSet>
+  struct is_multitape<tupleset<ValueSet...>>
+    : std::true_type
+  {};
+
+  template <typename... ValueSets>
+  struct number_of_tapes<tupleset<ValueSets...>>
+  {
+    constexpr static auto value = sizeof...(ValueSets);
+  };
+
 
   /*----------------.
   | random_label.   |
@@ -1363,6 +1418,4 @@ namespace vcsn
     // each sub-labelset.
     return ls.tuple(random_label(ls.template set<I>(), gen)...);
   }
-
-
 }// vcsn::

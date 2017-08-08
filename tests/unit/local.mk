@@ -82,25 +82,25 @@ EXTRA_DIST +=                                   \
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-%D%/aut_lal_char_z.log:      %D%/aut_lal_char_z
-%D%/aut_lao_z.log:           %D%/aut_lao_z
-%D%/aut_law_char_z.log:      %D%/aut_law_char_z
-%D%/concat.log:              %D%/concat
-%D%/cross.log:               %D%/cross
-%D%/function_property.log:   %D%/function_property
-%D%/distance.log:            %D%/distance
-%D%/dyn.log:                 %D%/dyn
-%D%/ipython.log:             $(vcsn_python_PYTHON)
-%D%/label.log:               %D%/label
-%D%/polynomialset.log:       %D%/polynomialset
-%D%/proper.log:              %D%/proper
-%D%/pylint.log:              $(vcsn_python_PYTHON) $(dist_pkglibexec_SCRIPTS) $(vcsn_python_pylint) $(dist_noinst_python)
-%D%/score-compare.log:       $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
-%D%/score.log:               $(VCSN_PYTHON_DEPS) $(top_srcdir)/libexec/vcsn-score
-%D%/transpose.log:           %D%/transpose
-%D%/weight.log:              %D%/weight
-%D%/zip-maps.log:            %D%/zip-maps
-%D%/zip.log:                 %D%/zip
+%D%/aut_lal_char_z.log:    %D%/aut_lal_char_z
+%D%/aut_lao_z.log:         %D%/aut_lao_z
+%D%/aut_law_char_z.log:    %D%/aut_law_char_z
+%D%/concat.log:            %D%/concat
+%D%/cross.log:             %D%/cross
+%D%/distance.log:          %D%/distance
+%D%/dyn.log:               %D%/dyn
+%D%/function_property.log: %D%/function_property
+%D%/ipython.log:           $(vcsn_python)
+%D%/label.log:             %D%/label
+%D%/polynomialset.log:     %D%/polynomialset
+%D%/proper.log:            %D%/proper
+%D%/pylint.log:            $(vcsn_python) $(vcsn_python_pylint)
+%D%/score-compare.log:     $(wildcard $(srcdir)/%D%/score-compare.dir/*) $(top_srcdir)/libexec/vcsn-score-compare
+%D%/score.log:             $(VCSN_PYTHON_DEPS) $(top_srcdir)/libexec/vcsn-score
+%D%/transpose.log:         %D%/transpose
+%D%/weight.log:            %D%/weight
+%D%/zip-maps.log:          %D%/zip-maps
+%D%/zip.log:               %D%/zip
 
 .PHONY: check-unit
 check-unit:

@@ -23,6 +23,7 @@ namespace vcsn
           CASE(infiltrate);
           CASE(ldivide);
           CASE(lweight);
+          CASE(name);
           CASE(one);
           CASE(mul);
           CASE(rweight);
@@ -52,16 +53,15 @@ namespace vcsn
     DEFINE::print_(const node_t& v)
       -> std::ostream&
     {
-      static bool print = !! getenv("VCSN_PRINT");
-      if (print)
+      if (tagged_)
         out_ << '<' << v.type() << "@0x" << address(v) << '>' << vcsn::incendl;
-      if (debug_ && fmt_ == format::latex)
+      if (parens_ && fmt_ == format::latex)
         out_ << (rs_.identities().is_distributive()
                  ? "{\\color{red}{" : "{\\color{blue}{");
       v.accept(*this);
-      if (debug_ && fmt_ == format::latex)
+      if (parens_ && fmt_ == format::latex)
         out_ << "}}";
-      if (print)
+      if (tagged_)
         out_ << vcsn::decendl << "</" << v.type() << '>';
       return out_;
     }
@@ -179,6 +179,7 @@ namespace vcsn
             CASE(infiltrate);
             CASE(ldivide);
             CASE(lweight);
+            CASE(name);
             CASE(one);
             CASE(mul);
             CASE(rweight);
@@ -278,13 +279,20 @@ namespace vcsn
         }
     }
 
+    VISIT(name)
+    {
+      if (fmt_ == format::latex)
+        out_ << "\\mathsf{" << v.name_get() << "}";
+      else
+        out_ << v.name_get();
+    }
+
     DEFINE::print_child(const node_t& child, precedence_t parent)
       -> void
     {
-      static bool force = !! getenv("VCSN_PARENS");
       bool parent_has_precedence = precedence_(child) <= parent;
       bool needs_parens =
-        (force
+        (parens_
          || (parent_has_precedence
              && ! (parent == precedence_t::unary && child.is_unary())
              && ! is_braced_(child)));

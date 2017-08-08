@@ -1,8 +1,9 @@
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <unistd.h>
+
+#include <boost/range/algorithm/sort.hpp>
+#include <boost/range/algorithm/transform.hpp>
 
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh> // get_file_contents().
@@ -29,6 +30,7 @@ namespace
     return {begin, end};
   }
 
+  /// All the parameters of a command.
   struct options
   {
     std::vector<parsed_arg> args;
@@ -46,8 +48,7 @@ namespace
     auto res = options{};
     auto t = type::unknown;
 
-    // Not part of the options, as it may be set several times on the
-    // command line.
+    /// The input format of the next argument.
     std::string input_format = "default";
 
     const char optstring[] =
@@ -58,11 +59,11 @@ namespace
       "ABDEFLNPSWchf:e:C:O:o:qI:";
 
     while (true)
-      switch (char opt = getopt(argc, argv, optstring))
-      {
+      switch (auto opt = getopt(argc, argv, optstring))
+        {
         case 'f':
           {
-            auto in = optarg == std::string("-")
+            auto in = std::string{optarg} == "-"
               ? read_stdin()
               : get_file_contents(optarg);
             res.args.emplace_back(in, t, input_format);
@@ -72,15 +73,14 @@ namespace
           break;
 
         case 'O':
-         res.output_format = optarg;
-         break;
+          res.output_format = optarg;
+          break;
 
         case 'I':
-         if (input_format != "default")
-           raise("too many input formats for one argument");
-         else
-           input_format = optarg;
-         break;
+          require(input_format == "default",
+                  "too many input formats for one argument");
+          input_format = optarg;
+          break;
 
         case 'o':
           res.output_file = optarg;
@@ -93,7 +93,7 @@ namespace
         case -1:
           if (optind == argc)
             return res;
-          else if (!strcmp(argv[optind], "-")) // We need to read stdin.
+          else if (std::string{argv[optind]} == "-")
             {
               res.args.emplace_back(read_stdin(), t, input_format);
               t = type::unknown;
@@ -105,7 +105,7 @@ namespace
               t = type::unknown;
               input_format = "default";
             }
-          optind++;
+          ++optind;
           break;
 
         case 'e':
@@ -128,12 +128,11 @@ namespace
         case 'P':
         case 'S':
         case 'W':
-          // This cast is safe as long as the
-          // case list is properly maintened.
-          if (t == type::unknown)
-            t = static_cast<type>(opt);
-          else
-            raise("too many type qualifiers for one argument");
+          // This cast is safe as long as the case list is properly
+          // maintained.
+          require(t == type::unknown,
+                  "too many type qualifiers for one argument");
+          t = static_cast<type>(opt);
           break;
 
         case 'c':
@@ -145,9 +144,8 @@ namespace
           exit(0);
 
         case '?':
-          //ERROR
           raise("unknown option: ", optarg);
-      }
+        }
   }
 
   bool is_match(const algo& a, const std::vector<parsed_arg>& args)
@@ -164,8 +162,7 @@ namespace
   }
 
   const algo* match(const std::string& algo_name,
-                    std::vector<parsed_arg>& args,
-                    const dyn::context& context)
+                    std::vector<parsed_arg>& args)
   {
     const algo* a = nullptr;
     auto range = vcsn::tools::algos.equal_range(algo_name);
@@ -196,16 +193,19 @@ namespace
                       std::vector<parsed_arg>& args,
                       const dyn::context& context)
   {
-    auto a = match(algo_name, args, context);
+    auto a = match(algo_name, args);
     if (!a && !used_stdin)
       {
         // Let's try with stdin as an input.
         args.insert(args.begin(), {"", type::unknown, "default"});
-        a = match(algo_name, args, context);
-        if (a) // We found an algo, time to read stdin
+        a = match(algo_name, args);
+        if (a)
+          // We found an algo, read stdin.
           args[0].arg = read_stdin();
       }
-    if (!a)
+    if (a)
+      a->exec(args, context);
+    else
       {
         std::ostringstream ss;
         ss << algo_name << ": no matching algorithm\n"
@@ -216,8 +216,6 @@ namespace
         ss << "Try 'vcsn " << algo_name << " --help' for more information.";
         raise(ss.str());
       }
-    else
-      a->exec(args, context);
   }
 
   int
@@ -259,13 +257,13 @@ namespace
       std::cout << "Available versions:\n";
       auto range = vcsn::tools::algos_doc.equal_range(algo_name);
       auto v = std::vector<algo_doc>(algos_doc.count(algo_name));
-      std::transform(range.first, range.second, v.begin(),
-                     [](auto e){ return e.second; });
-      std::sort(v.begin(), v.end(),
-                [](const algo_doc& l, const algo_doc& r)
-                {
-                  return l.declaration < r.declaration;
-                });
+      boost::transform(range, v.begin(),
+                       [](auto e){ return e.second; });
+      boost::sort(v,
+                  [](const algo_doc& l, const algo_doc& r)
+                  {
+                    return l.declaration < r.declaration;
+                  });
       for (const auto& a : v)
         std::cout << a.declaration << '\n'
                   << "  " << a.doc << "\n\n";
@@ -341,7 +339,7 @@ try
   if (argc < 2)
     return print_usage();
 
-  auto algo = std::string(argv[1]);
+  const auto algo = std::string(argv[1]);
   if (algo == "--commands" || algo == "commands" || algo == "-c")
     return list_commands();
   if (algo == "-h" || algo == "--help")
