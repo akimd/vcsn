@@ -1,7 +1,7 @@
-FROM debian:sid
+FROM debian:stable
 MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 
-COPY sources.list /etc/apt/sources.list
+#COPY sources.list /etc/apt/sources.list
 
 # pandas is used in some notebooks (e.g., Expressions.ipynb).
 # psutil is used by vcsn ps.
@@ -10,8 +10,10 @@ RUN apt-get update                              \
    && RUNLEVEL=1 DEBIAN_FRONTEND=noninteractive \
      apt-get install -y --no-install-recommends \
         ccache                                  \
+        curl                                    \
         dot2tex                                 \
         g++                                     \
+        gnupg                                   \
         graphviz                                \
         imagemagick                             \
         libboost-all-dev                        \
@@ -59,15 +61,16 @@ RUN echo 'deb http://www.lrde.epita.fr/repo/debian/ unstable/'                  
            >/etc/apt/sources.list.d/lrde.list                                   \
     && echo 'deb http://www.lrde.epita.fr/repo/debian/ stable/'                 \
              >>/etc/apt/sources.list.d/lrde.list                                \
+    && curl -fsSL https://www.lrde.epita.fr/repo/debian.gpg | apt-key add -     \
     && apt-get update                                                           \
-    && apt-get install --no-install-recommends -y --allow-unauthenticated       \
+    && apt-get install --no-install-recommends -y                               \
             libfst-dev                                                          \
             libfst-tools                                                        \
             libfst3                                                             \
             libfst3-plugins-base
 
 # Install vcsn.
-RUN apt-get install --no-install-recommends -y --allow-unauthenticated       \
+RUN apt-get install --no-install-recommends -y                               \
             vcsn                                                             \
     && jupyter nbextension enable --py --sys-prefix widgetsnbextension       \
     && useradd -d /vcsn -m -r vcsn
