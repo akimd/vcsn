@@ -20,7 +20,7 @@ def check_aut(e):
 ## ----- ##
 ## Add.  ##
 ## ----- ##
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('lan, q')
 def check(r1, r2, exp):
     e1 = expr(r1)
     e2 = expr(r2)
@@ -63,7 +63,7 @@ check('a*')
 check('(<1/2>a)*')
 
 # Also check with lal, b.
-lalb = vcsn.context('lal, b')
+lal = vcsn.context('lal, b')
 check(lal.expression('abc'))
 check(lal.expression(r'\z'))
 

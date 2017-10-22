@@ -81,7 +81,7 @@ check('0', r'(<2>\e)|(<3>x)',  'derivation')
 check('6', r'(<2>\e)|(<3>\e)', 'derivation')
 
 # compose
-e = ctx.expression(r'\e|a @ a|\e')
+e = ctx.expression(r'\e|a @ a|\e', 'none')
 XFAIL(lambda: e.constant_term(),
       r'''operator compose not supported: \e|a@a|\e
   while computing constant-term of: \e|a@a|\e''')

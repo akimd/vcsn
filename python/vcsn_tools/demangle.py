@@ -240,7 +240,7 @@ def demangle(s: str, color: str="auto") -> str:
     s = sub(r'(?:vcsn::)?wordset<(?:vcsn::)?set_alphabet<(?:vcsn::)?(\w+)_letters> >',
             r'law_\1',
             s)
-    s = sub(r'vcsn::tupleset<({param})>',
+    s = sub(r'vcsn::(tupleset)<({param})>',
             r'\1<\2>',
             s)
 

@@ -45,18 +45,8 @@ def check(r, exp=None, file=None):
     CHECK(a.is_standard(),
           'automaton for {} is not standard: {}'.format(r, a))
 
-    # Check that we are equivalent to derived-term.  However,
-    # derived-term sometimes needs a neutral to compute ldivide/rdivide.
-    if r.info('ldivide'):
-        # FIXME: Not very elegant...  We need means to derive contexts
-        # from others.  Unless we get rid of lal.
-        nctx = vcsn.context(re.sub('(.*?), *(.*)', r'nullableset<\1>, \2',
-                                   r.context().format('sname')))
-    nr = r.expression(nctx)
-        a_dt = nr.automaton('expansion')
-    else:
-        a_dt = r.automaton('expansion')
-    CHECK_EQUIV(a, a_dt)
+    # Check that we are equivalent to derived-term.
+    CHECK_EQUIV(a, r.automaton('expansion'))
 
     if r.is_extended():
         XFAIL(lambda: r.standard())

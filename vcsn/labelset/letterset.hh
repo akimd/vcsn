@@ -80,14 +80,16 @@ namespace vcsn
       return true;
     }
 
+    /// All the generators: letters.
     auto generators() const
     {
       return super_t::generators();
     }
 
+    /// All the pregenerators: letters and empty word.
     auto pregenerators() const
     {
-      return super_t::generators();
+      return super_t::pregenerators();
     }
 
     /// Value constructor.

@@ -44,14 +44,13 @@ read_automaton(const std::string& f)
 struct sms2fr_impl
 {
   using letterset_t = vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
-  using null_letterset_t = vcsn::nullableset<letterset_t>;
-  using labelset_t = vcsn::tupleset<null_letterset_t, null_letterset_t>;
+  using labelset_t = vcsn::tupleset<letterset_t, letterset_t>;
   using context_t = vcsn::context<labelset_t, vcsn::rmin>;
   using automaton_t = vcsn::mutable_automaton<context_t>;
   using state_t = vcsn::state_t_of<automaton_t>;
 
   // Context of the syntactical automaton. lan_char, rmin
-  using snd_context_t = vcsn::context<null_letterset_t, vcsn::rmin>;
+  using snd_context_t = vcsn::context<letterset_t, vcsn::rmin>;
   using snd_automaton_t = vcsn::mutable_automaton<snd_context_t>;
 
   sms2fr_impl(const std::string& graphemic_file,
