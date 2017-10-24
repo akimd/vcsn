@@ -245,42 +245,45 @@ check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char
              r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
-check_format('law_char(abc), q',
+check_format('law(abc), q',
              '(abc)a(bc)',
              '(abc)a(bc)',
              '(abc)a(bc)',
              r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Exponents.
-check_format('lal_char, q',
-             'a{2}',
-             'aa', 'aa', r'a \, a')
-check_format('lal_char, q',
-             'a{3}',
-             'aaa', 'a³', r'{a}^{3}')
-check_format('lal_char, q',
-             'a{4}',
-             'aaaa', 'a⁴', r'{a}^{4}')
-check_format('lal_char, q',
-             'a{5}',
-             'a{5}', 'a⁵', r'{a}^{5}')
-check_format('lal_char, q',
-             'a{10}',
-             'a{10}', 'a¹⁰', r'{a}^{10}')
-check_format('lal_char, q',
-             'a{100}',
-             'a{100}', 'a¹⁰⁰', r'{a}^{100}')
-check_format('lal_char, q',
-             'a{987}',
-             'a{987}', 'a⁹⁸⁷', r'{a}^{987}')
+for ctx in ['lal, q', 'lan, q', 'law, q']:
+    # In wordset, for LaTeX, we use \mathit.
+    A = '\mathit{a}' if ctx == 'law, q' else 'a'
+    check_format(ctx,
+                 'a{2}',
+                 'aa', 'aa', r'a \, a'.replace('a', A))
+    check_format(ctx,
+                 'a{3}',
+                 'aaa', 'a³', r'{a}^{3}'.replace('a', A))
+    check_format(ctx,
+                 'a{4}',
+                 'aaaa', 'a⁴', r'{a}^{4}'.replace('a', A))
+    check_format(ctx,
+                 'a{5}',
+                 'a{5}', 'a⁵', r'{a}^{5}'.replace('a', A))
+    check_format(ctx,
+                 'a{10}',
+                 'a{10}', 'a¹⁰', r'{a}^{10}'.replace('a', A))
+    check_format(ctx,
+                 'a{100}',
+                 'a{100}', 'a¹⁰⁰', r'{a}^{100}'.replace('a', A))
+    check_format(ctx,
+                 'a{987}',
+                 'a{987}', 'a⁹⁸⁷', r'{a}^{987}'.replace('a', A))
 
 # Check that we do support digits as letters.
-check_format('lal_char(0123), b',
+check_format('lal(0123), b',
              '0123',
              '0123',
              '0123',
              '0 \\, 1 \\, 2 \\, 3')
-check_format('lal_char(0123), q',
+check_format('lal(0123), q',
              '<0123>0123',
              '<123>(0123)',
              '⟨123⟩(0123)',

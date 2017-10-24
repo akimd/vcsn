@@ -80,8 +80,8 @@ a(c+b)(f+e) => abe+abf+ace+acf
 <2>(ab+<3>ab+<2>aa)<5> => <20>(aa)+<40>(ab)
 
 %labels: words
+(<2>a)(<2>a) => <4>(aa)
 # Be sure that we get a product of two labels, not a single word,
-(<2>a)(<2>a) => <4>(a{2})
 (<2>a)(<2>a) == <4>((a)(a))
 <3>abcd == <3>(abcd)
 <3>(abcd) => <3>(abcd)

@@ -33,7 +33,7 @@ check('a', 'a', 'a.[<2>\e]')
 
 check('ab', 'cd', 'a.[b] + c.[d]')
 check('a', 'bcd', 'a.[\e] + b.[cd]')
-check('abab', 'bbbb', 'a.[bab] + b.[b{3}]')
+check('abab', 'bbbb', 'a.[bab] + b.[bbb]')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', '<2> + a.[<1/2>(<1/2>a)* + <1/2>(<1/2>a)*(<1/3>b)*] + b.[<1/3>(<1/3>b)*]')
 check('a', r'\e', '<1> + a.[\e]')
 check('a', r'\z', 'a.[\e]')

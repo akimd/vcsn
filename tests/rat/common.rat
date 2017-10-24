@@ -1,5 +1,5 @@
 #                                                -*- shell-script -*-
-# Test cases independant of both the weightset and the atom kind.
+# Test cases independant of both the weightset and the label kind.
 
 # Base cases.
 %identities: trivial
@@ -31,6 +31,14 @@ a+(b+c) => a+(b+c)
 (a+b)+c => a+b+c
 a+(b+c) => a+b+c
 (a+b)+(c+d) => [a-d]
+
+# Not checking with `aaaa`, as in law that's a single word.
+a{2} => aa
+a{3} => aaa
+a{4} => aaaa
+a{5} => a{5}
+a{6} => a{6}
+[ab][ab] => (a+b){2}
 
 # Trivial identities, called T in Tools's documentation.
 \z*  => \e

@@ -369,6 +369,8 @@ namespace vcsn
       /// The constants.
       const char* zero_ = nullptr;
       const char* one_ = nullptr;
+      /// Number of consecutive identical letters that we decide to
+      /// write using exponents.
       unsigned int exponent_threshold_ = 0;
     };
 
