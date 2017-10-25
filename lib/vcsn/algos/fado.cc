@@ -40,7 +40,6 @@ namespace vcsn
     automaton
     read_fado(std::istream& is, const location&)
     {
-      std::string file = "file.fado";
       using string_t = symbol;
 
       // The header (the first line) looks like:
@@ -74,7 +73,7 @@ namespace vcsn
               is_transducer = state == "@Transducer";
               is_dfa = state == "@DFA";
               if (!is_transducer && !is_dfa && state != "@NFA")
-                raise(file, ": bad automaton kind in first line: ", state);
+                raise("fado: bad automaton kind in first line: ", state);
 
               while (!(state = read_id(ss)).empty())
                 {
@@ -82,9 +81,9 @@ namespace vcsn
                     break;
                   else if (state == "*")
                     {
-                      require(!is_dfa, "fado: invalid '*' for DFA"
+                      require(!is_dfa, "fado: invalid \"*\" for DFA"
                               " in first line");
-                      require(!init, "fado: multiple '*' in first line");
+                      require(!init, "fado: multiple \"*\" in first line");
                       init = true;
                     }
                   else if (init)
@@ -109,7 +108,7 @@ namespace vcsn
                 }
               if (l1 == "@epsilon")
                 {
-                  require(!is_dfa, "fado: unexpected '@epsilon' in DFA, in: ",
+                  require(!is_dfa, "fado: unexpected \"@epsilon\" in DFA, in: ",
                           s1, ' ', l1, ' ',
                           l2, s2.get().empty() ? "" : " ",
                           s2);

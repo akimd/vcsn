@@ -659,27 +659,32 @@ for fn in glob.glob(os.path.join(medir, '*.fado')):
 # Invalid kind
 XFAIL(lambda: vcsn.automaton('''@GFA 0 1 * 2 3
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: bad automaton kind in first line: @GFA')
 
 # Invalid initial states in DFA
 XFAIL(lambda: vcsn.automaton('''@DFA 0 1 * 2 3
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: invalid "*" for DFA in first line')
 
 # Multiple '*' in NFA
 XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3 * 5 2
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: multiple "*" in first line')
 
 # Trailing characters in acceptor
 XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3
   2 a 0
-  3 b 1 c''', 'fado'), 'unexpected trailing characters after: 3 b 1')
+  3 b 1 c''', 'fado'),
+      'fado: unexpected trailing characters after: 3 b 1')
 
 # Epsilon in DFA
 XFAIL(lambda: vcsn.automaton('''@DFA 0 1
   2 @epsilon 0
-  3 b 1''', 'fado'), "unexpected '@epsilon' in DFA, in: 2 @epsilon 0")
+  3 b 1''', 'fado'),
+      'fado: unexpected "@epsilon" in DFA, in: 2 @epsilon 0')
 
 
 ## --------------- ##
