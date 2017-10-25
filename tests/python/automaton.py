@@ -101,7 +101,7 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''', r'''4.10-20: invalid label: unexpected a
-  while reading: a
+  while reading: "a"
   0 -> 1 [label = a]
          ^^^^^^^^^^^
   while reading automaton''')
@@ -115,7 +115,7 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''', r'''4.10-24: {a}: cannot represent \e
-  while reading: \\e
+  while reading: "\\e"
   0 -> 1 [label = "\\e"]
          ^^^^^^^^^^^^^^^
   while reading automaton''')
@@ -129,7 +129,7 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''', r'''4.10-23: Poly[{a} -> B]: unexpected trailing characters: a
-  while reading: aa
+  while reading: "aa"
   0 -> 1 [label = "aa"]
          ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -142,8 +142,8 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''4.10-23: missing  > after <2
-  while reading: <2
+''', r'''4.10-23: missing ">" after "<2"
+  while reading: "<2"
   0 -> 1 [label = "<2"]
          ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -596,8 +596,8 @@ CHECK_EQ(r'''digraph
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>
 0 -> $ <1/2>'''), '''2.1-10: Q: invalid numerator: a
-  while reading: a
-  while reading: <a>
+  while reading: "a"
+  while reading: "<a>"
 $ -> 0 <a>
 ^^^^^^^^^^
   while reading automaton''')
@@ -605,8 +605,8 @@ $ -> 0 <a>
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> $ <a>'''), '''3.1-10: Q: invalid numerator: a
-  while reading: a
-  while reading: <a>
+  while reading: "a"
+  while reading: "<a>"
 0 -> $ <a>
 ^^^^^^^^^^
   while reading automaton''')
@@ -615,8 +615,8 @@ XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
 1 -> $ <2>'''), '''3.1-13: Q: invalid denominator: a
-  while reading: 2/a
-  while reading: <2/a>a
+  while reading: "2/a"
+  while reading: "<2/a>a"
 0 -> 1 <2/a>a
 ^^^^^^^^^^^^^
   while reading automaton''')

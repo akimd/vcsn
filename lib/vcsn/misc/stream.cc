@@ -30,8 +30,8 @@ namespace vcsn
           return o.str();
         o << char(c);
       }
-    raise("missing  ", str_escape(rbracket), " after ",
-          str_escape(lbracket), o.str());
+    raise("missing ", str_quote(rbracket), " after ",
+          str_quote(lbracket + o.str()));
   }
 
 
@@ -134,8 +134,10 @@ namespace vcsn
         is.ignore();
         return c;
       }
+    else if (is.peek() == EOF)
+      fail_reading(is, "unexpected end-of-file: expected ", str_quote(c));
     else
-      fail_reading(is, "expected ", str_escape(c), ", got");
+      fail_reading(is, "expected ", str_quote(c), ", got");
   }
 
   const std::string& eat(std::istream& is, const std::string& expect)
@@ -149,8 +151,8 @@ namespace vcsn
         --cnt;
       }
     VCSN_REQUIRE(s == expect,
-                 "unexpected: ", str_escape(s),
-                 ": expected ", str_escape(expect));
+                 "unexpected: ", str_quote(s),
+                 ": expected ", str_quote(expect));
     return expect;
   }
 
