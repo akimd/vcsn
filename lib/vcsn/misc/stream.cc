@@ -74,6 +74,21 @@ namespace vcsn
     return res;
   }
 
+  namespace
+  {
+    /// The next line in this stream.
+    std::string
+    get_line(std::istream& is)
+    {
+      auto res = std::string{};
+      std::getline(is, res, '\n');
+      if (!is.good())
+        // This shouldn't happen; however it's best to fail cleanly.
+        is.clear();
+      return res;
+    }
+  }
+
   char get_char(std::istream& i)
   {
     int res = i.get();
@@ -116,9 +131,11 @@ namespace vcsn
           // Other escapes, e.g., \\, \", \', etc.  \(, \) and \-
           // are used in setalpha::make, e.g., char_letters(\(\-\)).
         default:
-          require(!std::isalnum(c),
-                  "get_char: invalid escape: \\", char(c), " in \\",
-                  char(c), i);
+          VCSN_REQUIRE(!std::isalnum(c),
+                       "get_char: invalid escape: ",
+                       str_quote('\\', char(c)),
+                       " in ",
+                       str_quote('\\', char(c), get_line(i)));
           res = c;
           break;
         }

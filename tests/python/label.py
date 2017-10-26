@@ -25,7 +25,7 @@ check('lal, b', '{',   '{', r'\{')
 check('lal, b', '$',   '$', r'\$')
 # This is not a label, it's a word.
 XFAIL(lambda: vcsn.context('lal, b').label('ab'),
-      '''unexpected trailing characters: b
+      '''unexpected trailing characters: "b"
   while reading label: ab''')
 CHECK_EQ(vcsn.context('law, b').label('ab'),
          vcsn.context('law, b').word('ab'))

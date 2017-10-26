@@ -3,7 +3,7 @@
 
 # Check the alphabets.
 <<<2>x>i>a => <<<2>x>i>a
-<<<l>x>i>a ! 1.1-9: 1.1-6: 1.1-3: Q: invalid numerator: l\n! <l>x\n! ^^^\n! <<l>x>i\n! ^^^^^^\n! <<<l>x>i>a\n! ^^^^^^^^^\n!   while reading expression: <<<l>x>i>a
+<<<l>x>i>a ! 1.1-9: 1.1-6: 1.1-3: Q: invalid numerator: "l"\n! <l>x\n! ^^^\n! <<l>x>i\n! ^^^^^^\n! <<<l>x>i>a\n! ^^^^^^^^^\n!   while reading expression: <<<l>x>i>a
 <<<3>l>i>a ! 1.1-9: 1.1-6: 1.4: {wxyz}: invalid letter: l\n! <3>l\n!    ^\n! <<3>l>i\n! ^^^^^^\n! <<<3>l>i>a\n! ^^^^^^^^^\n!   while reading expression: <<<3>l>i>a
 <<<4>x>L>a ! 1.1-9: 1.7: {ijklmn}: invalid letter: L\n! <<4>x>L\n!       ^\n! <<<4>x>L>a\n! ^^^^^^^^^\n!   while reading expression: <<<4>x>L>a
 <<<5>x>i>l ! 1.10: {abcdefgh}: invalid letter: l\n! <<<5>x>i>l\n!          ^\n!   while reading expression: <<<5>x>i>l

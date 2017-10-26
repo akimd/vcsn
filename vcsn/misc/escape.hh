@@ -45,12 +45,16 @@ namespace vcsn LIBVCSN_API
   }
 
   /// Convert to a string, in quotes.
-  template <typename T>
-  std::string str_quote(T&& s)
+  template <typename... Args>
+  std::string str_quote(Args&&... args)
   {
     std::ostringstream o;
     o << '"';
-    str_escape(o, std::forward<T>(s), "\"");
+    using swallow = int[];
+    (void) swallow
+      {
+        (str_escape(o, std::forward<Args>(args), "\""), 0)...
+      };
     o << '"';
     return o.str();
   }
