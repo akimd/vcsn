@@ -29,10 +29,8 @@ xfail(r'''digraph
 ''', r'''3.18-5.0: unexpected end of file in a string
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
-3.18-5.0: invalid weightset name: b\n}
-  while reading context: lal_char(a), b
-}
-
+3.18-5.0: invalid weightset name: "b\n}"
+  while reading context: "lal_char(a), b\n}\n"
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
   while reading automaton''')
@@ -169,19 +167,22 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''3.18-26: invalid labelset name: unknown
-  while reading context: unknown
+''', r'''3.18-26: invalid labelset name: "unknown"
+  while reading context: "unknown"
   vcsn_context = "unknown"
                  ^^^^^^^^^
-''')
+4.3: no vcsn_context defined
+  0 -> 1 [label = a]
+  ^
+  while reading automaton''')
 
 # Invalid context.
 xfail(r'''digraph
 {
   vcsn_context = "lal, unknown"
 }
-''', r'''3.18-31: invalid weightset name: unknown
-  while reading context: lal, unknown
+''', r'''3.18-31: invalid weightset name: "unknown"
+  while reading context: "lal, unknown"
   vcsn_context = "lal, unknown"
                  ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -219,7 +220,7 @@ xfail(r'''digraph
   0 -> 1 [label = "\\e"]
 }
 ''', r'''3.18-35: get_char: invalid escape: "\\e" in "\\e)>, b>"
-  while reading context: context<letterset<char_letters(\e)>, b>
+  while reading context: "context<letterset<char_letters(\\e)>, b>"
   vcsn_context = "lal_char(\\e), b"
                  ^^^^^^^^^^^^^^^^^^
 4.3: no vcsn_context defined

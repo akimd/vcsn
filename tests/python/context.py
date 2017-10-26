@@ -17,7 +17,8 @@ XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"),
 
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal_char(a), b_z"),
-      'invalid weightset name: b_z')
+      '''invalid weightset name: "b_z"
+  while reading context: "lal_char(a), b_z"''')
 
 # Invalid context: missing comma.
 XFAIL(lambda: vcsn.context("lal"),

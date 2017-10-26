@@ -1,4 +1,4 @@
-# Check that we detect invalid weight values.
+# Check th! 1.1-5: B: invalid value: 123\n! <123>a\n! ^^^^^\n!   while reading expression: "<123>a"t we detect inv! 1.1-5: B: invalid value: 123\n! <123>a\n! ^^^^^\n!   while reading expression: "<123>a"lid weight v! 1.1-5: B: invalid value: 123\n! <123>a\n! ^^^^^\n!   while reading expression: "<123>a"lues.
 
 %context: b
-<123>a == <01>a
+<123>! 1.1-5: B: invalid value: 123\n! <123>a\n! ^^^^^\n!   while reading expression: "<123>a" == <01>! 1.1-5: B: invalid value: 123\n! <123>a\n! ^^^^^\n!   while reading expression: "<123>a"
