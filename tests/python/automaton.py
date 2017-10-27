@@ -593,6 +593,30 @@ CHECK_EQ(r'''digraph
          vcsn.automaton('''$ -> "foo"
          "foo" -> $''', strip=False))
 
+# Check that "->" behaves as a keyword.
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "letterset<char_letters(a)>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0-0", shape = box]
+    1 [label = "1-1", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  1 -> F1
+}''',
+         vcsn.automaton('''$-> 0-0
+0-0->1-1 a // Make sure this is not seen as a state "0-0->1-1".
+1-1 ->$''', strip=False))
+
 # Invalid transitions
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>

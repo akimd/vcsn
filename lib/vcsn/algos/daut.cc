@@ -68,7 +68,7 @@ namespace vcsn
           return c == '#';
       }
 
-      /// Read a state or possibly an arrow ("->")
+      /// Read a state ([a-zA-Z0-9_.$-]+) or an arrow ("->")
       string_t read_state(std::istream& is)
       {
         auto res = std::string{};
@@ -82,11 +82,28 @@ namespace vcsn
                 res += c;
               continue;
             }
-            if (c == '"')
+            else if (c == '"')
               return read_quotes(is);
-            if (isspace(c) || is_comment(is, c))
-              break;
-            res += c;
+            // `->` is a keyword: "a->b" stands for "a -> b".
+            else if (c == '-' && is.peek() == '>')
+              {
+                if (res.empty())
+                  {
+                    is.ignore();
+                    res = "->";
+                  }
+                else
+                  is.unget();
+                break;
+              }
+            else if (std::isalnum(c)
+                     || c == '_' || c == '-' || c == '.' || c == '$')
+              res += c;
+            else
+              {
+                is.unget();
+                break;
+              }
           }
         boost::algorithm::trim_right(res);
         return string_t{res};
