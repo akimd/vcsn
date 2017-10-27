@@ -560,12 +560,12 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     print('Checking:', fn)
     a = vcsn.automaton(filename=fn)
 
-    # Check output.
+    # Check daut output.
     daut = a.format('daut')
     ref = open(fn.replace('.in.gv', '.daut')).read().strip()
     CHECK_EQ(ref, daut)
 
-    # Check input: make sure we can read it.
+    # Check daut input: make sure we can read it.
     CHECK_EQ(a, vcsn.automaton(ref, 'daut'))
     CHECK_EQ(a, vcsn.automaton(ref, 'auto'))
     CHECK_EQ(a, vcsn.automaton(ref))
@@ -596,7 +596,8 @@ CHECK_EQ(r'''digraph
 # Invalid transitions
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>
-0 -> $ <1/2>'''), '''2.1-10: Q: invalid numerator: "a"
+0 -> $ <1/2>'''),
+      '''2.1-10: Q: invalid numerator: "a"
   while reading: "a"
   while reading: "<a>"
 $ -> 0 <a>
@@ -605,7 +606,8 @@ $ -> 0 <a>
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
-0 -> $ <a>'''), '''3.1-10: Q: invalid numerator: "a"
+0 -> $ <a>'''),
+      '''3.1-10: Q: invalid numerator: "a"
   while reading: "a"
   while reading: "<a>"
 0 -> $ <a>
@@ -615,7 +617,8 @@ $ -> 0 <1/2>
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
-1 -> $ <2>'''), '''3.1-13: Q: invalid denominator: "a"
+1 -> $ <2>'''),
+      '''3.1-13: Q: invalid denominator: "a"
   while reading: "2/a"
   while reading: "<2/a>a"
 0 -> 1 <2/a>a
