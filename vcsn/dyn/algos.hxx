@@ -32,7 +32,7 @@ namespace vcsn
                        const std::string& format = "default")
     {
       std::ostringstream os;
-      vcsn::dyn::print(v, os, format);
+      print(v, os, format);
       return os.str();
     }
 
@@ -56,14 +56,14 @@ namespace vcsn
       auto&& is = std::istringstream{data};
       try
         {
-          auto res = vcsn::dyn::read_automaton(is, format, strip);
-          vcsn::require(is.peek() == EOF,
-                        "unexpected trailing characters: ", is);
+          auto res = read_automaton(is, format, strip);
+          require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
           return res;
         }
       catch (const std::runtime_error& e)
         {
-          vcsn::raise(e, "  while reading automaton");
+          raise(e, "  while reading automaton");
         }
     }
 
@@ -75,14 +75,14 @@ namespace vcsn
       std::istringstream is{s};
       try
         {
-          auto res = vcsn::dyn::read_expression(ctx, ids, is, format);
-          vcsn::require(is.peek() == EOF,
-                        "unexpected trailing characters: ", is);
+          auto res = read_expression(ctx, ids, is, format);
+          require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
           return res;
         }
       catch (const std::runtime_error& e)
         {
-          vcsn::raise(e, "  while reading expression: ", s);
+          raise(e, "  while reading expression: ", str_quote(s));
         }
     }
 
@@ -94,13 +94,13 @@ namespace vcsn
       try
         {
           auto res = read_label(ctx, is, format);
-          vcsn::require(is.peek() == EOF,
-                        "unexpected trailing characters: ", is);
+          require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
           return res;
         }
       catch (const std::runtime_error& e)
         {
-          vcsn::raise(e, "  while reading label: ", s);
+          raise(e, "  while reading label: ", str_quote(s));
         }
     }
 
@@ -110,14 +110,14 @@ namespace vcsn
       auto&& is = std::istringstream{s};
       try
         {
-          auto res = vcsn::dyn::read_polynomial(ctx, is);
-          vcsn::require(is.peek() == EOF,
-                        "unexpected trailing characters: ", is);
+          auto res = read_polynomial(ctx, is);
+          require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
           return res;
         }
       catch (const std::runtime_error& e)
         {
-          vcsn::raise(e, "  while reading polynomial: ", s);
+          raise(e, "  while reading polynomial: ", str_quote(s));
         }
     }
 
@@ -127,14 +127,14 @@ namespace vcsn
       auto&& is = std::istringstream{s};
       try
         {
-          auto res = vcsn::dyn::read_weight(ctx, is);
-          vcsn::require(is.peek() == EOF,
-                        "unexpected trailing characters: ", is);
+          auto res = read_weight(ctx, is);
+          require(is.peek() == EOF,
+                  "unexpected trailing characters: ", is);
           return res;
         }
       catch (const std::runtime_error& e)
         {
-          vcsn::raise(e, "  while reading weight: ", s);
+          raise(e, "  while reading weight: ", str_quote(s));
         }
     }
 

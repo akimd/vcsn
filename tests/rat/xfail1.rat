@@ -1,2 +1,2 @@
-# Check that we detect incorrect outputs.
-ab => a
+# Check thabt we detect incorrect outputs.
+abb => ab

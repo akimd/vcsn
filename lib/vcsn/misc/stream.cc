@@ -30,8 +30,8 @@ namespace vcsn
           return o.str();
         o << char(c);
       }
-    raise("missing  ", str_escape(rbracket), " after ",
-          str_escape(lbracket), o.str());
+    raise("missing ", str_quote(rbracket), " after ",
+          str_quote(lbracket + o.str()));
   }
 
 
@@ -72,6 +72,21 @@ namespace vcsn
           res.replace(0, 1, xgetenv("VCSN_TMPDIR", "/tmp"));
       }
     return res;
+  }
+
+  namespace
+  {
+    /// The next line in this stream.
+    std::string
+    get_line(std::istream& is)
+    {
+      auto res = std::string{};
+      std::getline(is, res, '\n');
+      if (!is.good())
+        // This shouldn't happen; however it's best to fail cleanly.
+        is.clear();
+      return res;
+    }
   }
 
   char get_char(std::istream& i)
@@ -116,9 +131,11 @@ namespace vcsn
           // Other escapes, e.g., \\, \", \', etc.  \(, \) and \-
           // are used in setalpha::make, e.g., char_letters(\(\-\)).
         default:
-          require(!std::isalnum(c),
-                  "get_char: invalid escape: \\", char(c), " in \\",
-                  char(c), i);
+          VCSN_REQUIRE(!std::isalnum(c),
+                       "get_char: invalid escape: ",
+                       str_quote('\\', char(c)),
+                       " in ",
+                       str_quote('\\', char(c), get_line(i)));
           res = c;
           break;
         }
@@ -134,8 +151,10 @@ namespace vcsn
         is.ignore();
         return c;
       }
+    else if (is.peek() == EOF)
+      fail_reading(is, "unexpected end-of-file: expected ", str_quote(c));
     else
-      fail_reading(is, "expected ", str_escape(c), ", got");
+      fail_reading(is, "expected ", str_quote(c), ", got");
   }
 
   const std::string& eat(std::istream& is, const std::string& expect)
@@ -149,8 +168,8 @@ namespace vcsn
         --cnt;
       }
     VCSN_REQUIRE(s == expect,
-                 "unexpected: ", str_escape(s),
-                 ": expected ", str_escape(expect));
+                 "unexpected: ", str_quote(s),
+                 ": expected ", str_quote(expect));
     return expect;
   }
 

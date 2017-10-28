@@ -256,7 +256,7 @@ namespace vcsn
         else if (ls == "expressionset" || ls == "seriesset")
           return expressionset_(ls);
         else
-          raise("invalid labelset name: ", str_escape(ls));
+          raise("invalid labelset name: ", str_quote(ls));
       }
 
       /// `<WeightSet>`.
@@ -277,7 +277,7 @@ namespace vcsn
         else if (ws == "lat")
           return tupleset_();
         else
-          raise("invalid weightset name: ", str_escape(ws));
+          raise("invalid weightset name: ", str_quote(ws));
       }
 
       /// `<Automaton> "<" <Context> ">"`.
@@ -370,7 +370,7 @@ namespace vcsn
             eat_('>');
           }
         else
-          raise("invalid automaton name: ", str_escape(prefix));
+          raise("invalid automaton name: ", str_quote(prefix));
         return res;
       }
 
@@ -468,7 +468,7 @@ namespace vcsn
         else if (has(weightsets_, w))
           return weightset_(w);
         else
-          raise("invalid weightset or labelset name: " + w);
+          raise("invalid weightset or labelset name: ", str_quote(w));
       }
 
       /// The stream we are parsing.
@@ -515,7 +515,7 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          raise(e, "  while reading context: ", ctx);
+          raise(e, "  while reading context: ", str_quote(ctx));
         }
     }
 
@@ -529,7 +529,7 @@ namespace vcsn
         }
       catch (const std::runtime_error& e)
         {
-          raise(e, "  while reading type: ", type);
+          raise(e, "  while reading type: ", str_quote(type));
         }
     }
   }

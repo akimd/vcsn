@@ -29,10 +29,8 @@ xfail(r'''digraph
 ''', r'''3.18-5.0: unexpected end of file in a string
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
-3.18-5.0: invalid weightset name: b\n}
-  while reading context: lal_char(a), b
-}
-
+3.18-5.0: invalid weightset name: "b\n}"
+  while reading context: "lal_char(a), b\n}\n"
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
   while reading automaton''')
@@ -101,7 +99,7 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''', r'''4.10-20: invalid label: unexpected a
-  while reading: a
+  while reading: "a"
   0 -> 1 [label = a]
          ^^^^^^^^^^^
   while reading automaton''')
@@ -114,8 +112,8 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''4.10-23: Poly[{a}? -> B]: unexpected trailing characters: a
-  while reading: aa
+''', r'''4.10-23: Poly[{a}? -> B]: unexpected trailing characters: "a"
+  while reading: "aa"
   0 -> 1 [label = "aa"]
          ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -128,8 +126,8 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''4.10-23: missing  > after <2
-  while reading: <2
+''', r'''4.10-23: missing ">" after "<2"
+  while reading: "<2"
   0 -> 1 [label = "<2"]
          ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -155,19 +153,22 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''3.18-26: invalid labelset name: unknown
-  while reading context: unknown
+''', r'''3.18-26: invalid labelset name: "unknown"
+  while reading context: "unknown"
   vcsn_context = "unknown"
                  ^^^^^^^^^
-''')
+4.3: no vcsn_context defined
+  0 -> 1 [label = a]
+  ^
+  while reading automaton''')
 
 # Invalid context.
 xfail(r'''digraph
 {
   vcsn_context = "lal, unknown"
 }
-''', r'''3.18-31: invalid weightset name: unknown
-  while reading context: lal, unknown
+''', r'''3.18-31: invalid weightset name: "unknown"
+  while reading context: "lal, unknown"
   vcsn_context = "lal, unknown"
                  ^^^^^^^^^^^^^^
   while reading automaton''')
@@ -530,12 +531,12 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     print('Checking:', fn)
     a = vcsn.automaton(filename=fn)
 
-    # Check output.
+    # Check daut output.
     daut = a.format('daut')
     ref = open(fn.replace('.in.gv', '.daut')).read().strip()
     CHECK_EQ(ref, daut)
 
-    # Check input: make sure we can read it.
+    # Check daut input: make sure we can read it.
     CHECK_EQ(a, vcsn.automaton(ref, 'daut'))
     CHECK_EQ(a, vcsn.automaton(ref, 'auto'))
     CHECK_EQ(a, vcsn.automaton(ref))
@@ -563,21 +564,47 @@ CHECK_EQ(r'''digraph
          vcsn.automaton('''$ -> "foo"
          "foo" -> $''', strip=False))
 
+# Check that "->" behaves as a keyword.
+CHECK_EQ(r'''digraph
+{
+  vcsn_context = "letterset<char_letters(a)>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0-0", shape = box]
+    1 [label = "1-1", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  1 -> F1
+}''',
+         vcsn.automaton('''$-> 0-0
+0-0->1-1 a // Make sure this is not seen as a state "0-0->1-1".
+1-1 ->$''', strip=False))
+
 # Invalid transitions
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <a>
-0 -> $ <1/2>'''), '''2.1-10: Q: invalid numerator: a
-  while reading: a
-  while reading: <a>
+0 -> $ <1/2>'''),
+      '''2.1-10: Q: invalid numerator: "a"
+  while reading: "a"
+  while reading: "<a>"
 $ -> 0 <a>
 ^^^^^^^^^^
   while reading automaton''')
 
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
-0 -> $ <a>'''), '''3.1-10: Q: invalid numerator: a
-  while reading: a
-  while reading: <a>
+0 -> $ <a>'''),
+      '''3.1-10: Q: invalid numerator: "a"
+  while reading: "a"
+  while reading: "<a>"
 0 -> $ <a>
 ^^^^^^^^^^
   while reading automaton''')
@@ -585,9 +612,10 @@ $ -> 0 <1/2>
 XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
-1 -> $ <2>'''), '''3.1-13: Q: invalid denominator: a
-  while reading: 2/a
-  while reading: <2/a>a
+1 -> $ <2>'''),
+      '''3.1-13: Q: invalid denominator: "a"
+  while reading: "2/a"
+  while reading: "<2/a>a"
 0 -> 1 <2/a>a
 ^^^^^^^^^^^^^
   while reading automaton''')
@@ -630,27 +658,32 @@ for fn in glob.glob(os.path.join(medir, '*.fado')):
 # Invalid kind
 XFAIL(lambda: vcsn.automaton('''@GFA 0 1 * 2 3
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: bad automaton kind in first line: @GFA')
 
 # Invalid initial states in DFA
 XFAIL(lambda: vcsn.automaton('''@DFA 0 1 * 2 3
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: invalid "*" for DFA in first line')
 
 # Multiple '*' in NFA
 XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3 * 5 2
   2 a 0
-  3 b 1''', 'fado'))
+  3 b 1''', 'fado'),
+      'fado: multiple "*" in first line')
 
 # Trailing characters in acceptor
 XFAIL(lambda: vcsn.automaton('''@NFA 0 1 * 2 3
   2 a 0
-  3 b 1 c''', 'fado'), 'unexpected trailing characters after: 3 b 1')
+  3 b 1 c''', 'fado'),
+      'fado: unexpected trailing characters after: 3 b 1')
 
 # Epsilon in DFA
 XFAIL(lambda: vcsn.automaton('''@DFA 0 1
   2 @epsilon 0
-  3 b 1''', 'fado'), "unexpected '@epsilon' in DFA, in: 2 @epsilon 0")
+  3 b 1''', 'fado'),
+      'fado: unexpected "@epsilon" in DFA, in: 2 @epsilon 0')
 
 
 ## --------------- ##

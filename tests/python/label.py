@@ -25,8 +25,8 @@ check('lal, b', '{',   '{', r'\{')
 check('lal, b', '$',   '$', r'\$')
 # This is not a label, it's a word.
 XFAIL(lambda: vcsn.context('lal, b').label('ab'),
-      '''unexpected trailing characters: b
-  while reading label: ab''')
+      '''unexpected trailing characters: "b"
+  while reading label: "ab"''')
 CHECK_EQ(vcsn.context('law, b').label('ab'),
          vcsn.context('law, b').word('ab'))
 
@@ -38,7 +38,7 @@ check('law, b', '[#]{}', '\[#\]{}', r'\mathit{[\#]\{\}}')
 # Trailing characters.
 XFAIL(lambda: vcsn.context('law(ab), b').label('ab*'),
       '''{ab}: invalid letter: *
-  while reading label: ab*''')
+  while reading label: "ab*"''')
 
 # tupleset.
 check('lat<lal, lal>, q',   'a|x',   'a|x', r'a|x')

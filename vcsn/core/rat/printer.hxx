@@ -241,14 +241,12 @@ namespace vcsn
 
           const auto& i = *it;
           // Find the size of the sequence of nodes equal to i.
-          auto next =
+          const auto next =
             std::find_if(it, end(v),
                          [&](const auto& e) { return !rs_.equal(e, i); });
-          auto count = std::distance(it, next);
+          const auto count = std::distance(it, next);
           if (1 < count
-              && (!expressionset_t::context_t::is_lal
-                  || ! is_letter_(*i)
-                  || exponent_threshold_ < count))
+              && (!is_letter_(*i) || exponent_threshold_ < count))
             {
               // We can display an exponent.
               print_child(*i, precedence_t::exponent);

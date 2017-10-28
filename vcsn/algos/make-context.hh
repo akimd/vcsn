@@ -29,7 +29,7 @@ namespace vcsn
       }
     catch (const std::runtime_error& e)
       {
-        raise(e, "  while reading context: ", name);
+        raise(e, "  while reading context: ", str_quote(name));
       }
   }
 

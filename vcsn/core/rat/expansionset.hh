@@ -359,8 +359,21 @@ namespace vcsn
                              std::true_type,
                              Conjunction conjunction) const
       {
-        // Spontaneous transitions from the lhs.
-        auto one = ls_.one();
+        const auto one = ls_.one();
+
+        // Left constant.
+        //
+        // `<k> & \e . [P]` => `\e . [<k>1 & P]`
+        // because
+        // `$ . [<k>1] & \e . [P]` => `\e . [<k>1 & P]`
+        if (!ws_.is_zero(l.constant))
+          for (const auto& rhs: r.polynomials)
+            if (ls_.is_one(rhs.first))
+              ps_.add_here(res.polynomials[rhs.first],
+                           ps_.conjunction(ps_.lweight(l.constant, ps_.one()),
+                                           rhs.second));
+
+        // Label one from the lhs.
         {
           auto i = l.polynomials.find(one);
           if (i != std::end(l.polynomials))
@@ -371,7 +384,18 @@ namespace vcsn
                                          ps_.lmul_label(rs_.atom(rhs.first),
                                                         rhs.second)));
         }
-        // Spontaneous transitions from the rhs.
+
+        // Right constant.
+        //
+        // `\e . [P] & <k>` => `\e . [P & <k>1]`
+        if (!ws_.is_zero(r.constant))
+          for (const auto& lhs: l.polynomials)
+            if (ls_.is_one(lhs.first))
+              ps_.add_here(res.polynomials[lhs.first],
+                           ps_.conjunction(lhs.second,
+                                           ps_.lweight(r.constant, ps_.one())));
+
+        // Label one from the rhs.
         {
           auto i = r.polynomials.find(one);
           if (i != std::end(r.polynomials))
@@ -393,8 +417,6 @@ namespace vcsn
         -> std::enable_if_t<detail::is_letterized_t<LabelSet>{},
                        value_t>
       {
-        denormalize(l);
-        denormalize(r);
         auto res = value_t{ws_.mul(l.constant, r.constant)};
         for (const auto& p: zip_maps(l.polynomials, r.polynomials))
           res.polynomials[p.first]

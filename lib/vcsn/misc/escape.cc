@@ -16,7 +16,7 @@ namespace vcsn
     char fill = os.fill('0');
     switch (c)
       {
-      case -1:   os << "<end-of-file>"; break;
+      case EOF:  os << "<end-of-file>"; break;
       case '\\': os << "\\\\";          break;
       case '\n': os << "\\n";           break;
       default:

@@ -40,7 +40,7 @@ namespace vcsn LIBVCSN_API
       }
     catch (const std::runtime_error& e)
       {
-        raise(e, "  while reading: ", str_escape(str));
+        raise(e, "  while reading: ", str_quote(str));
       }
   }
 
@@ -84,7 +84,7 @@ namespace vcsn LIBVCSN_API
     if (buf.empty())
       raise(std::forward<Args>(args)...);
     else
-      raise(std::forward<Args>(args)..., ": ", str_escape(buf));
+      raise(std::forward<Args>(args)..., ": ", str_quote(buf));
   }
 
   /// Read a single char, with possible \-escape support.

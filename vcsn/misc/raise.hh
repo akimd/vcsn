@@ -39,7 +39,7 @@ namespace vcsn
       if (!is.good())
         // This shouldn't really happen; however it's best to fail cleanly.
         is.clear();
-      o << str_escape(buf);
+      o << str_quote(buf);
     }
 
     /// Disambiguation: both 'istream&' and 'const T&' are elligible.

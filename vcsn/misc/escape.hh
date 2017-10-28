@@ -34,12 +34,28 @@ namespace vcsn LIBVCSN_API
   std::ostream& str_escape(std::ostream& os, char c,
                            const char* special = nullptr);
 
+  /// Convert to a string, escaped.
   template <typename T>
   std::string str_escape(T&& s,
                          const char* special = nullptr)
   {
     std::ostringstream o;
     str_escape(o, std::forward<T>(s), special);
+    return o.str();
+  }
+
+  /// Convert to a string, in quotes.
+  template <typename... Args>
+  std::string str_quote(Args&&... args)
+  {
+    std::ostringstream o;
+    o << '"';
+    using swallow = int[];
+    (void) swallow
+      {
+        (str_escape(o, std::forward<Args>(args), "\""), 0)...
+      };
+    o << '"';
     return o.str();
   }
 }
