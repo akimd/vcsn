@@ -319,8 +319,6 @@ check(r'\e|\e',
       '<1>')
 check('a|x',
       r'a|x.[\e]')
-XFAIL(lambda: c.expression('a*|x*').expansion(),
-      'to-expansion: cannot denormalize')
 
 # Check the tupling of expansions: d(e|f) = d(e) | d(f).
 c = vcsn.context('lal<char>, q')

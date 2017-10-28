@@ -30,7 +30,7 @@ except ImportError as e:
     exit(0)
 
 def log(*msg, level=0):
-    if True:
+    if False:
         print('ipynbdoctest:', *msg, file=sys.stderr, flush=True)
 
 def is_libcpp():
