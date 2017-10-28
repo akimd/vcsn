@@ -93,7 +93,11 @@ def check(r1, r2, exp):
 check('a|a', 'a|a', 'a|a.[\e]')
 check('a|b', 'b|c', 'a|c.[\e]')
 check('a*|b*', 'b*|c*',
-      '<1> + \e|\e.[\e|b*@b*|\e] + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c*] + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e)] + a|c.[a*|\e@\e|c* + a*|b*@b*|c* + a*|\e@(b|\e)(b*|c*) + (\e|b)(a*|b*)@\e|c*]')
+      '<1>'
+      ' + \e|\e.[\e|b*@b*|\e]'
+      ' + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c*]'
+      ' + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e)]'
+      ' + a|c.[a*|\e@\e|c* + a*|b*@b*|c* + a*|\e@(b|\e)(b*|c*) + (\e|b)(a*|b*)@\e|c*]')
 check(r'a|\e', r'\e|b', 'a|b.[\e]')
 check(r'(a|\e)(b|c)', 'c|a', 'a|a.[b|\e]')
 check('a|b', r'(\e|a)(b|c)', 'a|a.[\e|c]')
@@ -105,27 +109,25 @@ check(r'(a|c)(b|\e)', 'c|d', r'a|d.[b|\e]')
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
-ctx = vcsn.context('lan, q')
-def check(r1, r2, exp):
-    '''Check that `&` between expansions corresponds to the expansion of
-    `&` between expressions.'''
-    e1 = expr(r1)
-    e2 = expr(r2)
-    CHECK_EQ(exp, e1.expansion() & e2.expansion())
-    CHECK_EQ(exp, (e1&e2).expansion())
-    check_aut(e1&e2)
+for ctx in [vcsn.context('lal, q'), vcsn.context('lan, q')]:
+    def check(r1, r2, exp):
+        '''Check that `&` between expansions corresponds to the expansion of
+        `&` between expressions.'''
+        e1 = expr(r1)
+        e2 = expr(r2)
+        CHECK_EQ(exp, e1.expansion() & e2.expansion())
+        CHECK_EQ(exp, (e1&e2).expansion())
+        check_aut(e1&e2)
 
-check('ab', 'cd', '<0>')
-check('(ab)*', 'a*b*', '<1> + \e.[\e&bb* + \e&aa*b* + ab(ab)*&\e] + a.[b(ab)*&a*b*]')
-check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*',
-      r'<1>'
-      r' + \e.[<1/3>\e&b(<1/3>b)* + <1/2>a(<1/2>a)*&\e + <1/2>\e&a(<1/2>a)*(<1/3>b)*]'
-      r' + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
-check('a', r'\e', '<0>')
-check('a', r'\z', '<0>')
+    check('ab', 'cd', '<0>')
+    check('(ab)*', 'a*b*', '<1> + a.[b(ab)*&a*b*]')
+    check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*',
+          r'<1> + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
+    check('a', r'\e', '<0>')
+    check('a', r'\z', '<0>')
 
-# Check that ab&ac = 0, not a.[0].
-check('ab', 'ac', '<0>')
+    # Check that ab&ac = 0, not a.[0].
+    check('ab', 'ac', '<0>')
 
 
 ## --------- ##
