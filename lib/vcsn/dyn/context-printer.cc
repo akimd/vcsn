@@ -35,11 +35,12 @@ namespace vcsn
         "#define VCSN_INSTANTIATION 1\n"
         "#define MAYBE_EXTERN\n"
         "\n";
-      for (const auto& h: headers_)
-        o << "#include <" << h << ">\n";
-      o << '\n';
-      for (const auto& h: headers_late_)
-        o << "#include <" << h << ">\n";
+      for (const auto& hs: {headers_, headers_mid_, headers_late_})
+        {
+          for (const auto& h: hs)
+            o << "#include <" << h << ">\n";
+          o << '\n';
+        }
       o << '\n'
         << os_.str();
       return o;
@@ -116,7 +117,7 @@ namespace vcsn
 
     DEFINE(tupleset)
     {
-      headers_late_.insert("vcsn/labelset/tupleset.hh");
+      headers_mid_.insert("vcsn/labelset/tupleset.hh");
       os_ << "vcsn::tupleset<" << incendl;
       bool first = true;
       for (auto v: t.get_sets())

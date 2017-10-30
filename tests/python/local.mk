@@ -77,6 +77,7 @@ PY_LOG_COMPILER = vcsn run $(PYTHON)
   %D%/proper.py                                 \
   %D%/properlazy.py                             \
   %D%/push-weights.py                           \
+  %D%/random-label.py                           \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \
   %D%/shortest.py                               \

@@ -60,10 +60,8 @@ CHECK_EQ(w('799.99999'), w('850') + w('800'))
 ## Random Weights.  ##
 ## ---------------- ##
 
-def check(ctx, w, params):
-    w = ctx.weight(w)
-    output = ctx.random_weight(params)
-    CHECK_EQ(output, w)
+def check(ctx, ref, params):
+    CHECK_EQ(ref, ctx.random_weight(params))
 
 ctx = vcsn.context('lal_char(abc), z')
 

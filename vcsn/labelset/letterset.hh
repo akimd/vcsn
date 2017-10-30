@@ -456,22 +456,88 @@ namespace vcsn
   | random_label.   |
   `----------------*/
 
+  template <typename GenSet,
+            typename RandomGenerator = std::mt19937>
+  class random_label_generator
+  {
+  public:
+    using labelset_t = letterset<GenSet>;
+    using label_t = typename labelset_t::value_t;
+    using random_generator_t = RandomGenerator;
+
+    random_label_generator(const labelset_t& ls,
+                           const std::string& param,
+                           RandomGenerator& gen)
+      : ls_{ls}
+      , gen_{gen}
+    {
+      parse_params_(param);
+    }
+
+    /// Generate a random label.
+    label_t operator()()
+    {
+      auto dis = std::bernoulli_distribution(one_p_);
+      if (dis(gen_) || ls_.generators().empty())
+        return ls_.one();
+      else
+        {
+          // Pick a member of a container following a uniform distribution.
+          auto pick = make_random_selector(gen_);
+          return ls_.value(pick(ls_.generators()));
+        }
+    }
+
+  private:
+    void parse_params_(const std::string& params)
+    {
+      // By default \e is equiprobable with the other letters.
+      const auto equi_one_p = 1.0 / (size(ls_.generators()) + 1);
+      one_p_ = equi_one_p;
+
+      using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
+      using boost::algorithm::erase_all_copy;
+      const auto sep
+        = boost::escaped_list_separator<char>("#####", ",", "\"");
+      for (const auto& arg: tokenizer(params, sep))
+        {
+          const auto eq = arg.find('=');
+          const auto op = erase_all_copy(arg.substr(0, eq), " ");
+          if (op == "\\e")
+            {
+              if (eq == std::string::npos
+                  || arg.substr(eq + 1) == "=")
+                one_p_ = equi_one_p;
+              else
+                {
+                  const auto value
+                    = detail::lexical_cast<float>(arg.substr(eq + 1));
+                  require(0 <= value && value <= 1,
+                          "random_label: invalid probability: ", value);
+                  one_p_ = value;
+                }
+            }
+          else
+            raise("random_label: invalid parameter: ", arg);
+        }
+    }
+
+    const labelset_t& ls_;
+    float one_p_;
+    random_generator_t& gen_;
+  };
+
+
   /// Random label from letterset.
   template <typename GenSet,
-            typename RandomGenerator = std::default_random_engine>
+            typename RandomGenerator = std::mt19937>
   typename letterset<GenSet>::value_t
   random_label(const letterset<GenSet>& ls,
-               RandomGenerator& gen = RandomGenerator())
+               const std::string& param,
+               RandomGenerator& gen = make_random_engine())
   {
-    // FIXME: the proportion should be controllable.
-    auto dis = std::bernoulli_distribution(0.5);
-    if (dis(gen) || ls.generators().empty())
-      return ls.one();
-    else
-      {
-        // Pick a member of a container following a uniform distribution.
-        auto pick = make_random_selector(gen);
-        return ls.value(pick(ls.generators()));
-      }
+    auto rand = random_label_generator<GenSet, RandomGenerator>
+      {ls, param, gen};
+    return rand();
   }
 }

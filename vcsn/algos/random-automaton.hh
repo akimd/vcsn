@@ -82,8 +82,14 @@ namespace vcsn
       max_labels = num_gens;
     auto num_labels = std::uniform_int_distribution<>(1, *max_labels);
 
+    auto random_label = [&ls, &gen]()
+    {
+      return vcsn::random_label(ls, "", gen);
+    };
+
     auto random_weight = [&weights, &ws]()
     {
+      // FIXME: pass gen.
       return weights.empty() ? ws.one() : vcsn::random_weight(ws, weights);
     };
 
@@ -186,8 +192,7 @@ namespace vcsn
             auto n = num_labels(gen);
             for (auto _: detail::irange(n))
               res->add_transition(src, states[dst],
-                                  random_label(ls, gen),
-                                  random_weight());
+                                  random_label(), random_weight());
           }
       }
 
@@ -198,8 +203,7 @@ namespace vcsn
         for (auto s : res->states())
           if (dis(gen))
             res->add_transition(s, s,
-                random_label(*ctx.labelset(), gen),
-                random_weight());
+                                random_label(), random_weight());
 
       }
 
