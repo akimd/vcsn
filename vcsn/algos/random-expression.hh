@@ -136,7 +136,9 @@ namespace vcsn
       void print_label_(std::ostream& out, const format& fmt) const
       {
         const auto& ls = *es_.labelset();
-        ls.print(random_label(ls, gen_), out,
+        // Do not generate the empty label, leave it to the expression
+        // generator.
+        ls.print(random_label(ls, "\\e=0", gen_), out,
                  fmt.for_labels().delimit(true));
       }
 
