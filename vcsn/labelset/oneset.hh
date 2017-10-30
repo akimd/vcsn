@@ -252,10 +252,11 @@ namespace vcsn
   }
 
   /// Random label from oneset.
-  template <typename RandomGenerator = std::default_random_engine>
+  template <typename RandomGenerator = std::mt19937>
   typename oneset::value_t
   random_label(const oneset& ls,
-               RandomGenerator& = RandomGenerator())
+               const std::string&,
+               RandomGenerator& = make_random_engine())
   {
     return ls.one();
   }

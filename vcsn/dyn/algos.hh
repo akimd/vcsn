@@ -892,6 +892,14 @@ namespace vcsn
                       const std::string& param = "+, ., *=.2, w., .w, length=10",
                       identities ids = {});
 
+    /// A random label.
+    ///
+    /// \param ctx
+    ///    The context of the result.
+    /// \param param
+    ///    A string containing paramaters for the generation.
+    label random_label(const context& ctx, const std::string& param);
+
     /// A random weight.
     ///
     /// \param ctx

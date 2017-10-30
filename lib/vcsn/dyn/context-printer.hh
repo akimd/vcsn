@@ -84,6 +84,7 @@ namespace vcsn
       ///
       /// So we use a second set for "late" headers.
       std::set<std::string> headers_;
+      std::set<std::string> headers_mid_;
       std::set<std::string> headers_late_;
 
       /// Flags to pass to the linker.

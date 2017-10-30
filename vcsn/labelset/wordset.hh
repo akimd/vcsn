@@ -421,10 +421,12 @@ namespace vcsn
 
   /// Random label from wordset.
   template <typename GenSet,
-            typename RandomGenerator = std::default_random_engine>
+            const std::string&,
+            typename RandomGenerator = std::mt19937>
   typename wordset<GenSet>::value_t
   random_label(const wordset<GenSet>& ls,
-               RandomGenerator& gen = RandomGenerator())
+               const std::string&,
+               RandomGenerator& gen = make_random_engine())
   {
     require(!ls.generators().empty(),
             "random_label: the alphabet needs at least 1 letter");

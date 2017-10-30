@@ -352,18 +352,4 @@ namespace vcsn
       return res;
     }
   }
-
-  /// Random label from general case.
-  template <typename LabelSet,
-            typename RandomGenerator = std::default_random_engine>
-  typename LabelSet::value_t
-  random_label(const LabelSet& ls,
-               RandomGenerator& gen = RandomGenerator())
-  {
-    require(!ls.generators().empty(),
-            "random_label: the alphabet needs at least 1 letter");
-    // Pick a member of a container following a uniform distribution.
-    auto pick = make_random_selector(gen);
-    return ls.value(pick(ls.generators()));
-  }
 }

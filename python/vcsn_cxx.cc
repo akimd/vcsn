@@ -481,6 +481,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random_deterministic", &context::random_automaton_deterministic)
     .def("random_expression", &context_random_expression,
          (arg("parameters") = "", arg("identities") = "default"))
+    .def("random_label", &context::random_label,
+         (arg("parameters") = ""))
     .def("random_weight", &context::random_weight,
          (arg("parameters") = ""))
     .def("trie", static_cast<string_trie_t>(&context::trie),
