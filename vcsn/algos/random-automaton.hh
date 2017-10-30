@@ -87,10 +87,9 @@ namespace vcsn
       return vcsn::random_label(ls, "", gen);
     };
 
-    auto random_weight = [&weights, &ws]()
+    auto random_weight = [&ws, &weights, &gen]()
     {
-      // FIXME: pass gen.
-      return weights.empty() ? ws.one() : vcsn::random_weight(ws, weights);
+      return weights.empty() ? ws.one() : vcsn::random_weight(ws, weights, gen);
     };
 
     auto states = std::vector<state_t>{};

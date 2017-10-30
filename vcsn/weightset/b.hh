@@ -253,5 +253,4 @@ namespace vcsn
 
     VCSN_JOIN_SIMPLE(b, b);
   } // detail::
-
 }

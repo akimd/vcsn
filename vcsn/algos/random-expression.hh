@@ -127,7 +127,7 @@ namespace vcsn
       void print_weight_(std::ostream& out, const format& fmt) const
       {
         out << "<";
-        es_.weightset()->print(random_weight_.generate_random_weight(), out,
+        es_.weightset()->print(random_weight_(), out,
                                fmt.for_weights());
         out << ">";
       }
@@ -314,7 +314,7 @@ namespace vcsn
       /// Random weights generator parameters.
       std::string random_weight_params_;
       /// Random weights generator.
-      random_weight<weightset_t, RandomGenerator> random_weight_{gen_, ws_};
+      random_weight<weightset_t, RandomGenerator> random_weight_{ws_, gen_};
       /// Random selection in containers.
       discrete_chooser<RandomGenerator> choose_{gen_};
     };

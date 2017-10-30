@@ -114,7 +114,7 @@ namespace vcsn
     /// It contains the parsing of the arguments (which can be overridden),
     /// the map of probabilities, the min and the max.
     template <typename WeightSet,
-              typename RandomGenerator = std::default_random_engine>
+              typename RandomGenerator = std::mt19937>
     class random_weight_base
     {
     public:
@@ -122,7 +122,7 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
       using random_generator_t = RandomGenerator;
 
-      random_weight_base(random_generator_t& gen, const weightset_t& ws)
+      random_weight_base(const weightset_t& ws, random_generator_t& gen)
         : gen_{gen}
         , ws_{ws}
         , min_{ws.min()}
@@ -135,9 +135,21 @@ namespace vcsn
           parse_param_(param);
       }
 
-      weight_t generate_random_weight() const
+      /// Generate a random weight.
+      weight_t operator()() const
       {
-        return print_random_weight_();
+        if (choose_map(weight_weight_, gen_))
+        {
+          /// There is a biased probability to choose a value
+          /// specified on the parameters.
+          auto it = chooser_it_(weight_weight_, weight_);
+          return it->first;
+        }
+        /// Otherwise, choose a random value from the WeightSet.
+        else
+        {
+          return pick_value_();
+        }
       }
 
     protected:
@@ -169,23 +181,6 @@ namespace vcsn
       }
 
       virtual weight_t pick_value_() const = 0;
-
-      /// A random weight.
-      weight_t print_random_weight_() const
-      {
-        if (choose_map(weight_weight_, gen_))
-        {
-          /// There is a biased probability to choose a value
-          /// specified on the parameters.
-          auto it = chooser_it_(weight_weight_, weight_);
-          return it->first;
-        }
-        /// Otherwise, choose a random value from the WeightSet.
-        else
-        {
-          return pick_value_();
-        }
-      }
 
       random_generator_t& gen_;
       weightset_t ws_;

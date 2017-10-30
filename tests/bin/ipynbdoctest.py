@@ -324,7 +324,8 @@ def test_notebook(ipynb):
         if source.startswith('%timeit'):
             run_cell(kc, 'pass')
             continue
-        if 'VCSN_SEED' in source and not is_libcpp():
+        if (('VCSN_SEED' in source or 'vcsn.setenv(SEED=1)' in source)
+            and not is_libcpp()):
             SKIP('random number generation not on libc++')
             # Of course, we can't run the remainder as we certainly
             # have skipped definitions used later in the notebook.

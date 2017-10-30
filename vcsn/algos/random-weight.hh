@@ -10,15 +10,15 @@
 namespace vcsn
 {
   /// Generate a random weight.
-  template <typename WeightSet>
+  template <typename WeightSet,
+            typename RandomGenerator = std::mt19937>
   typename WeightSet::value_t
-  random_weight(const WeightSet& ws, const std::string& param = {})
+  random_weight(const WeightSet& ws, const std::string& param = {},
+                RandomGenerator& gen = make_random_engine())
   {
-    auto random_w
-      = detail::random_weight<WeightSet,
-                              std::mt19937>{make_random_engine(), ws};
-    random_w.parse_param(param);
-    return random_w.generate_random_weight();
+    auto rand = detail::random_weight<WeightSet, RandomGenerator>{ws, gen};
+    rand.parse_param(param);
+    return rand();
   }
 
   namespace dyn
