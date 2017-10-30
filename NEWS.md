@@ -6,11 +6,13 @@ Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
 
-# Vcsn 2.6 (2017-07-26)
-The Vcsn group is happy to announce the release of Vcsn 2.6.  Most of our
-work was devoted to providing a better, smoother, user experience.  This
-includes improvements in the build system, better performances, and extended
-consistency.  Multitape expressions also received a lot of attention.
+# Vcsn 2.6 (2017-11-13)
+
+The Vcsn team is happy to announce the long overdue release of Vcsn 2.6.
+Most of our work was devoted to providing a better, smoother, user
+experience.  This includes improvements in the build system, better
+performances, extended consistency, and more legible error messages.
+Multitape expressions also received a lot of attention.
 
 For more information see the detailed news below.
 
@@ -68,7 +70,7 @@ sufficient.
 
 Now, `vcsn compile my-prog.cc` generates `my-prog` which can be run directly.
 
-### random_expression support the tuple operators.
+### random_expression supports the tuple operator
 It is now possible to generate multitape expressions such as `(a|x*)*`.
 Before, random_expression was limited to expressions on multitape labels
 such as `(a|x)*`.
@@ -140,17 +142,17 @@ A few algorithms were added:
 
   - polynomial.shuffle and polynomial.infiltrate
 
-    The missing brothers of polynomial.conjunction.
+    The missing siblings of polynomial.conjunction.
 
 ### Doxygen is no longer needed
 By default, `make install` generated and installed the C++ API documentation
 using Doxygen.  It is now disabled by default, pass `--enable-doxygen` to
-configure to restore it.
+`configure` to restore it.
 
 ## Bug Fixes
 ### Severe performance regression when reading daut
-Version 2.5 introduced a very large penalty when reading daut files,
-especially large ones.
+Version 2.5 introduced a large penalty when reading daut files, especially
+large ones.
 
 ### Tupling of automata could be wrong on weights
 As a consequence, `expression.inductive` was also producing incorrect
@@ -177,6 +179,12 @@ useless states (non coaccessible) are no longer generated.
 For instance the derived-term automaton of `(\e|a)* @ (aa|\e)*` has exactly
 two states.  It used to have three additional useless states.
 
+### Better diagnostics
+Many error messages have been improved.
+
+The Daut automaton format now treats `->` as a keyword, so `0->1 a` is now
+properly read instead of producing a weird error message because Vcsn
+thought your state was named `0->1`.
 
 # Vcsn 2.5 (2017-01-28)
 
