@@ -1,5 +1,5 @@
-# Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2017 Vaucanson Group.
+# Vcsn, a generic library for finite state machines.
+# Copyright (C) 2012-2017 Vcsn Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -9,7 +9,7 @@
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-# The Vaucanson Group consists of people listed in the `AUTHORS' file.
+# The Vcsn Group consists of people listed in the `AUTHORS' file.
 
 # Should soon be obsolete with Autoconf 2.70.
 ACLOCAL_AMFLAGS = -I build-aux/m4
