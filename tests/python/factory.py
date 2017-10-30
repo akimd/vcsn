@@ -149,19 +149,21 @@ CHECK_EQ(30, a.info('number of final states'))
 
 
 # For a while, we were only able to get matching letters (a|A, b|B,
-# etc.).
-ctx = vcsn.context('lat<lal(a-z), lal(a-z)>, b')
-a = ctx.random_automaton(num_states=10, density=1, max_labels=1)
+# etc.).  Don't use too many labels (max_labels), as it results in
+# label classes, unrecognized by a.labels().
+ctx = vcsn.context('lat<lal(abc), lal(abc)>, b')
+a = ctx.random_automaton(num_states=100, density=1, max_labels=2)
 # Get all the labels.
 print("random_automaton: {:d}".format(a))
 labels = a.labels()
+print("labels: {}".format(labels))
 # Make sure there are \e|a and a|\e.
-CHECK_NE([l for l in labels if re.match(r'\\e\|[a-z]', l)], [])
-CHECK_NE([l for l in labels if re.match(r'[a-z]\|\\e', l)], [])
+CHECK_NE([l for l in labels if re.match(r'\\e\|[abc]', l)], [])
+CHECK_NE([l for l in labels if re.match(r'[abc]\|\\e', l)], [])
 # Make sure there are a|b labels.
 CHECK_NE([l for l in labels
-          if (re.match(r'[a-z]\|[a-z]', l)
-              and not re.match(r'([a-z])\|\1', l))],
+          if (re.match(r'[abc]\|[abc]', l)
+              and not re.match(r'([abc])\|\1', l))],
          [])
 # Make sure there are \e|\e labels.
 CHECK(r'\e|\e' in labels)
@@ -296,7 +298,7 @@ for i in range(100):
 # them into multitape expressions. And with identities = none, that's
 # all we have left: tupling operator on single-tape labels.
 exp = randexp('lat<lan(abc), lan(abc)>, q',
-              '@,+,*,.', length=100, identities='none')
+              '@,+,*,.,\e', length=1000, identities='none')
 check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 
 # Check that we use | correctly.
@@ -306,7 +308,7 @@ for i in range(100):
 # Since @ can only appear on top of |, it is less likely to appear.
 # So make a very large expression.
 exp = randexp('lat<lan(abc), lan(abc)>, q',
-              '+,*=.2,.,|=.1,@=10', length=1000, identities='none')
+              '+,*=.2,.,|=.1,@=10,\e', length=2000, identities='none')
 check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 
 
