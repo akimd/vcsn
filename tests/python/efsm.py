@@ -130,6 +130,22 @@ if have_ofst:
 
         CHECK_EQ(a2_vcsn, a2_ofst)
 
+    # Check that our infos are compatible.
+    print('Info')
+    zmin = vcsn.context('lal_char(ab), zmin')
+    a = zmin.expression('[ab]*a(<2>[ab])').automaton()
+    vcsninfo = a.info()
+    print("vcsninfo:\n{}\n".format(format(vcsninfo)))
+    ofstinfo = a.fstinfo()
+    print("ofstinfo:\n{}\n".format(format(ofstinfo)))
+    for k in ['number of states',
+              'number of accessible states',
+              'number of coaccessible states',
+              'number of final states',
+    'number of transitions']:
+        print('Info:', k)
+        CHECK_EQ(vcsninfo[k], ofstinfo[k])
+
     # Make sure determinizations agree.  This automaton, determinized,
     # has weights on the final states only, which exercises a bug we
     # once had.
@@ -142,6 +158,7 @@ if have_ofst:
 
     # Make sure compositions agree, even when there are empty words on
     # some tapes.
+    print("Compose")
     c_vcsn, c_ofst = compose('<2>a|m', '<3>m|x')
     CHECK_EQ(c_vcsn, c_ofst)
 
@@ -155,6 +172,7 @@ if have_ofst:
     CHECK_EQUIV(c_vcsn, c_ofst)
 
     # Check our proper against OpenFST
+    print("Proper")
     import glob
     files = [f for f in glob.glob(os.path.join(medir, '*.efsm'))
              if not os.path.basename(f).startswith('bad_')]

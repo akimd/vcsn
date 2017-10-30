@@ -22,10 +22,11 @@ def _info_to_dict(info):
     '''Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.
     '''
-    res = dict()
+    res = {}
     for l in info.splitlines():
-        (k, v) = l.split(':', 1)
+        k, v = l.split(':', 1)
         v = v.strip()
+
         # Beware that we may display "N/A" for Boolean (e.g., "is
         # ambiguous" for non LAL), and for integers (e.g., "number of
         # deterministic states" for non LAL).

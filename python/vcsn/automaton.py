@@ -14,9 +14,28 @@ from vcsn.dot import (_dot_pretty, _dot_to_boxart, _dot_to_svg,
                       _dot_to_svg_dot2tex)
 
 
+def _automaton_fst_output(cmd, aut):
+    '''Run the command `cmd` on the automaton `aut` coded in OpenFST
+    format via pipes and return the output as bytes.
+    '''
+    p1 = Popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
+    p2 = Popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
+    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+    p1.stdin.write(aut.format('efsm').encode('utf-8'))
+    p1.stdin.close()
+    res, err = p2.communicate()
+    if p1.wait():
+        raise RuntimeError(
+            "efstcompile failed: " + p1.stderr.read().decode('utf-8'))
+    if p2.wait():
+        raise RuntimeError(
+            cmd + " failed: " + err.decode('utf-8'))
+    return res
+
+
 def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
-    format via pipes.
+    format via pipes and return the result as an automaton.
     '''
     p1 = Popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
     p2 = Popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
@@ -53,6 +72,49 @@ def _automaton_fst_files(cmd, *aut):
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res.decode('utf-8'), 'efsm')
+
+
+_fstinfo_bool = {
+    'acceptor': 'is acceptor',
+    'accessible': 'is accessible',
+    'coaccessible': 'is coaccessible',
+    'cyclic at initial state': 'is cyclic at initial state',
+    'cyclic': 'is cyclic',
+    'error': 'is error',
+    'expanded': 'is expanded',
+    'input deterministic': 'is input deterministic',
+    'input epsilons': 'is input epsilons',
+    'input label sorted': 'is input label sorted',
+    'input lookahead': 'is input lookahead',
+    'input matcher': 'is input matcher',
+    'input/output epsilons': 'is input/output epsilons',
+    'mutable': 'is mutable',
+    'output deterministic': 'is output deterministic',
+    'output epsilons': 'is output epsilons',
+    'output label sorted': 'is output label sorted',
+    'output lookahead': 'is output lookahead',
+    'output matcher': 'is output matcher',
+    'string': 'is string',
+    'top sorted': 'is top sorted',
+    'weighted': 'is weighted',
+}
+
+_fstinfo_int = {
+    'number of arcs': 'number of transitions',
+}
+
+
+def _fstinfo_normalize(k, v):
+    if k.startswith('#'):
+        k = k.replace('#', 'number')
+        if k in _fstinfo_int:
+            k = _fstinfo_int[k]
+        v = int(v)
+    elif k in _fstinfo_bool:
+        k = _fstinfo_bool[k]
+        assert v in ['y', 'n']
+        v = v == 'y'
+    return k, v
 
 
 @variadicProxy('__and__')
@@ -269,6 +331,18 @@ class automaton:
     fstlightestpath  = lambda self: _automaton_fst('fstshortestpath', self)
     fstsynchronize   = lambda self: _automaton_fst('fstsynchronize', self)
     fsttranspose     = lambda self: _automaton_fst('fstreverse', self)
+
+
+    def fstinfo(self):
+        info = _automaton_fst_output('fstinfo', self).decode('utf-8')
+        res = {}
+        for l in info.splitlines():
+            k, v = l.split('  ', 1)
+            v = v.strip()
+            k, v = _fstinfo_normalize(k, v)
+            res[k] = v
+        return res
+
 
     def HTML(self):
         '''Display `self` with SVG and MathJax together.'''
