@@ -14,7 +14,7 @@ namespace vcsn
 
   namespace detail
   {
-    /// Check if an epsilon appears on at least one tape of any transition.
+    /// Whether a one appears on at least one tape of any transition.
     template <Automaton Aut>
     std::enable_if_t<is_multitape<labelset_t_of<Aut>>{}, bool>
     is_proper_tapes_(const Aut& aut)

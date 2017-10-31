@@ -104,7 +104,7 @@ namespace vcsn
             else if (op == "length")
               length_ = value;
             else
-              raise("random_expression: invalid operator: ", op);
+              raise("random_expression: invalid operator: ", str_quote(op));
           }
         }
         proba_op_ = transform(operators_,
@@ -126,10 +126,10 @@ namespace vcsn
       /// Print random weight.
       void print_weight_(std::ostream& out, const format& fmt) const
       {
-        out << "<";
+        out << '<';
         es_.weightset()->print(random_weight_(), out,
                                fmt.for_weights());
-        out << ">";
+        out << '>';
       }
 
       /// Print label.

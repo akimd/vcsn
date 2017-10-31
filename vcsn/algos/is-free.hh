@@ -18,18 +18,16 @@ namespace vcsn
     bool is_free_(const Aut& aut)
     {
       return aut->labelset()->is_letterized()
-             && is_proper_tapes_(aut);
+        && is_proper_tapes_(aut);
     }
   }
 
-  /**@brief Test whether an automaton is free.
-
-     An automaton is free iff it is letterrized and there is no label
-     containing epsilon.
-
-     @param aut The tested automaton
-     @return Whether the automaton is free
-  */
+  /// Whether an automaton is free.
+  ///
+  /// An automaton is free iff it is letterized and proper.
+  ///
+  /// \param aut The tested automaton
+  /// \return Whether the automaton is free
   template <Automaton Aut>
   bool is_free(const Aut& aut)
   {
@@ -57,14 +55,16 @@ namespace vcsn
     }
   }
 
-  /*-----------------------.
-  | is_letterize_boolean.  |
-  `-----------------------*/
+  /*------------------------.
+  | is_letterizes_boolean.  |
+  `------------------------*/
 
+  /// Whether the automaton is free, and the weightset is B.
+  /// I.e., a PODFA (plain old dfa).
   template <Automaton Aut>
   constexpr bool is_letterized_boolean()
   {
     return labelset_t_of<Aut>::is_letterized()
-           && std::is_same<vcsn::weightset_t_of<Aut>, vcsn::b>::value;
+      && std::is_same<vcsn::weightset_t_of<Aut>, vcsn::b>::value;
   }
 }

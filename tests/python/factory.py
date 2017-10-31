@@ -10,9 +10,9 @@ def get_labels(aut):
     return set(re.findall(r'\w+ -> \w+ (.*)$', a.format('daut'), re.M))
 vcsn.automaton.labels = get_labels
 
-def check_aut_cache(exp, aut, prop, value):
+def check_is_deterministic(exp, aut, value):
     CHECK_EQ(exp, aut)
-    CHECK_EQ(value, aut.info(prop))
+    CHECK_EQ(value, aut.info('is deterministic'))
 
 ## ------- ##
 ## cerny.  ##
@@ -29,13 +29,13 @@ CHECK_EQ(meaut('cerny-6.gv'), a)
 ## ----------- ##
 
 def check_de_bruijn(exp, aut):
-    check_aut_cache(exp, aut, 'is deterministic', False)
+    check_is_deterministic(exp, aut, False)
 
 check_de_bruijn(meaut('de-bruijn-2.gv'),
-                vcsn.context('lal_char(ab), b').de_bruijn(2))
+                vcsn.context('lal(ab), b').de_bruijn(2))
 
 check_de_bruijn(meaut('de-bruijn-3.gv'),
-                vcsn.context('lal_char(xyz), b').de_bruijn(3))
+                vcsn.context('lal(xyz), b').de_bruijn(3))
 
 ## ---------------- ##
 ## div/quotkbaseb.  ##
@@ -106,7 +106,7 @@ CHECK_EQ(ctx.double_ring(4, [2, 3]),
 ## ---------- ##
 
 def check_ladybird(exp, aut):
-    check_aut_cache(exp, aut, 'is deterministic', False)
+    check_is_deterministic(exp, aut, False)
 
 b = vcsn.context('lal_char(abc), b')
 z = vcsn.context('lal_char(abc), z')
@@ -245,12 +245,8 @@ operators = [
 def check_operators(e, ops):
     info = e.info()
     print('Info:', info)
-    for o in operators:
-        print('check:', o)
-        if o in ops:
-            CHECK_NE(0, info[o])
-        else:
-            CHECK_EQ(0, info[o])
+    ks = [k for k in operators if info[k] != 0]
+    CHECK_EQ(ops, ks)
 
 # A random expression without any operator is only a label.
 exp = randexp('lal(a-z), b')
@@ -259,7 +255,7 @@ CHECK(re.match(r'\w{1}|\\e', str(exp)))
 # Check that operators are present only if the user has specified them.
 exp = randexp('lal(a), b',
               '+=1,*=0.5,{c}=1,{\\}=0', length=100, identities='none')
-check_operators(exp, ['add', 'complement', 'star', 'atom'])
+check_operators(exp, ['add', 'atom', 'complement', 'star'])
 
 # Check the length.
 for _ in range(10):
