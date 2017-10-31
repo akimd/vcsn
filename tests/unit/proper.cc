@@ -72,6 +72,7 @@ check_law_char_b()
   res->set_final(s[1]);
 
   std::cout << "---------- LAW\n";
+  dot(res,std::cout) << '\n';
   print_info(res);
   std::cout << "proper:\n";
   auto pro = proper(res);

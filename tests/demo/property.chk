@@ -23,9 +23,9 @@ a number: 18
 # Properties on a double tape automaton.
 is deterministic: N/A
 on_tape<0, is deterministic>: N/A
-is deterministic: 1
+is deterministic: 0
 on_tape<0, is deterministic>: N/A
-is deterministic: 1
+is deterministic: 0
 on_tape<0, is deterministic>: 0
 is deterministic: 0
 EOF

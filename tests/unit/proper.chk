@@ -103,6 +103,31 @@ is useless: 0
 is valid: 1
 
 ---------- LAW
+digraph
+{
+  vcsn_context = "wordset<char_letters(ab)>, b"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "\\e"]
+  1 -> F1
+  1 -> 0 [label = "\\e"]
+  1 -> 2 [label = "a"]
+  2 -> 0 [label = "a"]
+  2 -> 1 [label = "\\e"]
+}
 type: mutable_automaton<wordset<char_letters(ab)>, b>
 number of states: 3
 number of lazy states: 0
@@ -111,13 +136,13 @@ number of final states: 1
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
-number of codeterministic states: 3
-number of deterministic states: 3
+number of codeterministic states: 0
+number of deterministic states: 0
 number of transitions: 6
 number of spontaneous transitions: 3
 is complete: N/A
 is deterministic: N/A
-is codeterministic: 1
+is codeterministic: 0
 is empty: 0
 is eps-acyclic: 0
 is free: N/A
@@ -289,13 +314,13 @@ number of final states: 1
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
-number of codeterministic states: 3
-number of deterministic states: 3
+number of codeterministic states: 0
+number of deterministic states: 0
 number of transitions: 6
 number of spontaneous transitions: 3
 is complete: N/A
 is deterministic: N/A
-is codeterministic: 1
+is codeterministic: 0
 is empty: 0
 is eps-acyclic: 0
 is free: N/A
@@ -315,13 +340,13 @@ number of final states: 1
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
-number of codeterministic states: 3
-number of deterministic states: 3
+number of codeterministic states: 1
+number of deterministic states: 1
 number of transitions: 5
 number of spontaneous transitions: 2
 is complete: N/A
 is deterministic: N/A
-is codeterministic: 1
+is codeterministic: 0
 is empty: 0
 is eps-acyclic: 1
 is free: N/A
@@ -417,13 +442,13 @@ number of final states: 1
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
-number of codeterministic states: 3
-number of deterministic states: 3
+number of codeterministic states: 0
+number of deterministic states: 0
 number of transitions: 6
 number of spontaneous transitions: 3
 is complete: N/A
 is deterministic: N/A
-is codeterministic: 1
+is codeterministic: 0
 is empty: 0
 is eps-acyclic: 0
 is free: N/A
@@ -443,13 +468,13 @@ number of final states: 1
 number of accessible states: 3
 number of coaccessible states: 3
 number of useful states: 3
-number of codeterministic states: 3
-number of deterministic states: 3
+number of codeterministic states: 0
+number of deterministic states: 0
 number of transitions: 6
 number of spontaneous transitions: 3
 is complete: N/A
 is deterministic: N/A
-is codeterministic: 1
+is codeterministic: 0
 is empty: 0
 is eps-acyclic: 0
 is free: N/A

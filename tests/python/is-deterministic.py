@@ -16,59 +16,50 @@ def check(expect, i):
     CHECK_EQ(deter, t.info('is deterministic'))
 
 check(True, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), b"
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> 0 [label = "b"]
-  2 -> 1 [label = "a"]
-  2 -> 2 [label = "b"]
-  1 -> F1
-}
+  $ -> 0
+  0 -> 1 a
+  0 -> 2 b
+  1 -> 0 b
+  2 -> 1 a
+  2 -> 2 b
+  1 -> $
+'''))
+
+# A spontaneous transition.
+check(False, vcsn.automaton('''
+  $ -> 0
+  0 -> 1 \e
+  1 -> $
 '''))
 
 # A loop.
 check(False, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(abc), b"
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 0 [label = "a"]
-  1 -> 1 [label = "b"]
-  1 -> 2 [label = "b"]
-  2 -> 2 [label = "c"]
-  2 -> F2
-}
+  $ -> 0
+  0 -> 1 a
+  0 -> 0 a
+  1 -> 1 b
+  1 -> 2 b
+  2 -> 2 c
+  2 -> $
 '''))
 
 check(True, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), b"
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> 3 [label = "a"]
-  2 -> 3 [label = "b"]
-  3 -> 3 [label = "a"]
-  3 -> 3 [label = "b"]
-  3 -> F3
-}
+  $ -> 0
+  0 -> 1 a
+  0 -> 2 b
+  1 -> 3 a
+  2 -> 3 b
+  3 -> 3 a
+  3 -> 3 b
+  3 -> $
 '''))
 
 check(True, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab), b"
-  I0 -> 0
-  0 -> 1 [label = "b"]
-  0 -> 2 [label = "a"]
-  1 -> 2 [label = "a"]
-  2 -> F2
-}
+  $ -> 0
+  0 -> 1 b
+  0 -> 2 a
+  1 -> 2 a
+  2 -> $
 '''))
 
 # No states.
@@ -79,36 +70,42 @@ digraph
 }
 '''))
 
-# No initial states.
+# No initial state.
 check(True, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(a), b"
-  0 -> 1 [label = "a"]
-}
+  0 -> 1 a
 '''))
 
 # Two initial states.
 check(False, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(a), b"
-  I0 -> 0
-  I1 -> 1
-  0 -> 2 [label = "a"]
-  1 -> 2 [label = "a"]
-  2 -> F2
-}
+  $ -> 0
+  $ -> 1
+  0 -> 2 a
+  1 -> 2 a
+  2 -> $
 '''))
 
 # An unreachable not deterministic state.
 check(False, vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(a), b"
-  I0 -> 0
-  1 -> 2 [label = "a"]
-  1 -> 3 [label = "a"]
-  2 -> F2
-}
+  $ -> 0
+  1 -> 2 a
+  1 -> 3 a
+  2 -> $
+'''))
+
+
+
+# A word transition.
+check(False, vcsn.automaton('''
+  context = law, b
+  $ -> 0
+  0 -> 1 ab
+  1 -> $
+'''))
+
+# Wordset, but deterministic.
+check(True, vcsn.automaton('''
+  context = law, b
+  $ -> 0
+  0 -> 1 a, b
+  1 -> $
 '''))

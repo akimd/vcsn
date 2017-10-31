@@ -15,12 +15,13 @@ namespace vcsn
   bool
   is_deterministic(const Aut& aut, state_t_of<Aut> s)
   {
+    const auto& ls = *aut->labelset();
     using automaton_t = Aut;
-
     using label_t = label_t_of<automaton_t>;
     auto seen = std::unordered_set<label_t>{};
-    for (auto t : all_out(aut, s))
-      if (!seen.insert(aut->label_of(t)).second)
+    for (const auto t : all_out(aut, s))
+      if (!ls.is_letter(aut->label_of(t))
+          || !seen.insert(aut->label_of(t)).second)
         return false;
     return true;
   }
