@@ -302,8 +302,15 @@ for n in [18, 21]:
     bench('a.determinize()',
           'a = ladybird({})'.format(n),
           setup=['n = {}'.format(n),
-                 'c = vcsn.context("lal_char(abc), b")',
+                 'c = vcsn.context("lal(abc), b")',
                  'a = c.ladybird(n)'])
+n = 15
+bench('a.is_deterministic()',
+      'a = ladybird({}).determinize()'.format(n),
+      setup=['n = {}'.format(n),
+             'c = vcsn.context("lal(abc), b")',
+             'a = c.ladybird(n).determinize()'],
+      number=1000000)
 
 # In the case of 18, check that we scale well with the size of the
 # (context's) alphabet.
