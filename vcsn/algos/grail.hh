@@ -44,10 +44,11 @@ namespace vcsn
       // http://www.dcc.fc.up.pt/~rvr/FAdoDoc/_modules/fio.html#saveToFile
       void operator()()
       {
-        bool is_deter = is_deterministic_(aut_) && is_proper_(aut_);
-        os_ << (is_transducer_ ? "@Transducer" : is_deter ? "@DFA" : "@NFA");
+        os_ << (is_transducer_ ?                               "@Transducer"
+                : is_deterministic_(aut_) && is_proper(aut_) ? "@DFA"
+                :                                              "@NFA");
         list_states_(finals_());
-        if (!is_deter)
+        if (aut_->num_initials() != 1)
           {
             os_ << " *";
             list_states_(initials_());

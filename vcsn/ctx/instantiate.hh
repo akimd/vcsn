@@ -160,7 +160,7 @@ namespace vcsn
         REGISTER(copy, aut_t);
         REGISTER(determinize, aut_t, const std::string);
         REGISTER(evaluate, aut_t, wls_t);
-        REGISTER(info, aut_t, std::ostream, bool);
+        REGISTER(info, aut_t, std::ostream, unsigned, bool);
         REGISTER(is_free, aut_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(print, aut_t, std::ostream, const std::string);

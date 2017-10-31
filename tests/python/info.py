@@ -3,13 +3,9 @@
 import vcsn
 from test import *
 
-# check OBJ EXPECTED
-# ------------------
-# Check that OBJ.info(True) == EXPECTED.
-
-
+# Check that OBJ.info() == EXPECTED.
 def check(obj, exp):
-    CHECK_EQ(exp, obj.info(details=3))
+    CHECK_EQ(exp, obj.info(details=3, strict=False))
 
 ## ---------------- ##
 ## automaton.info.  ##
@@ -88,7 +84,7 @@ check(vcsn.context('law_char(ab), b')
       .expression('a(a+b)*').standard(),
       {
           'is ambiguous': 'N/A',
-          'is codeterministic': 'N/A',
+          'is codeterministic': False,
           'is complete': 'N/A',
           'is cycle ambiguous': 'N/A',
           'is deterministic': 'N/A',
@@ -104,8 +100,8 @@ check(vcsn.context('law_char(ab), b')
           'is valid': True,
           'number of accessible states': 4,
           'number of coaccessible states': 4,
-          'number of codeterministic states': 'N/A',
-          'number of deterministic states': 'N/A',
+          'number of codeterministic states': 2,
+          'number of deterministic states': 4,
           'number of final states': 3,
           'number of initial states': 1,
           'number of lazy states': 0,

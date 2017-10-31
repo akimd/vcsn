@@ -1,4 +1,4 @@
-@NFA 2 * 0
+@NFA 2
 0 @epsilon 1
 0 a 0
 0 b 0

@@ -128,6 +128,14 @@ automaton automaton_conjunction(const boost::python::list& l,
   return automaton::conjunction(make_vector<automaton>(l), lazy);
 }
 
+std::string automaton_info(const automaton& aut,
+                           unsigned details, bool strict)
+{
+  auto&& o = std::ostringstream{};
+  vcsn::dyn::info(aut.val_, o, details, strict);
+  return o.str();
+}
+
 automaton automaton_infiltrate(const boost::python::list& l)
 {
   return automaton::infiltrate(make_vector<automaton>(l));
@@ -370,6 +378,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("has_lightening_cycle", &automaton::has_lightening_cycle)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltrate", &automaton_infiltrate).staticmethod("_infiltrate")
+    .def("_info", &automaton_info,
+         (arg("details") = 2, arg("strict") = true))
     .def("insplit", &automaton::insplit, (arg("lazy") = false))
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)

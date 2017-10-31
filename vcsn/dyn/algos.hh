@@ -394,8 +394,10 @@ namespace vcsn
     /// \param out  the output stream where to print the info
     /// \param details
     ///    levels of details from 1 (fewer), to 3 (more).
+    /// \param strict
+    ///    whether to evaluate unknown cached properties
     std::ostream& info(const automaton& aut, std::ostream& out = std::cout,
-                       unsigned details = 2);
+                       unsigned details = 2, bool strict = true);
 
     /// Output various facts about \a exp.
     std::ostream& info(const expression& exp, std::ostream& out = std::cout);

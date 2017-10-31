@@ -48,7 +48,7 @@ def check_aut(function_name, type_):
     print("Checking:", function_name)
     fun = getattr(t, function_name)
     f0 = fun(0)
-    f0_info = f0.info(details=3)
+    f0_info = f0.info(details=3, strict=False)
     CHECK_EQ('(ab+ba)c+(ac+ca)b+(bc+cb)a',
              f0.expression())
     CHECK_EQ('(ef+fe)g+(eg+ge)f+(fg+gf)e',
@@ -96,11 +96,11 @@ def check_aut(function_name, type_):
 
         f0_proper = f0.is_proper()
         # We do not check is_proper for t for the same reason.
-        CHECK_EQ(f0_proper, f0.info('is proper'))
+        CHECK_EQ(f0_proper, f0.info('is proper', strict=False))
 
         f0_deter = f0.is_deterministic()
-        CHECK_EQ(t_deter, t.info('is deterministic'))
-        CHECK_EQ(f0_deter, f0.info('is deterministic'))
+        CHECK_EQ(t_deter, t.info('is deterministic', strict=False))
+        CHECK_EQ(f0_deter, f0.info('is deterministic', strict=False))
 
 
 check_aut('focus',

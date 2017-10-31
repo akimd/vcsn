@@ -94,11 +94,13 @@ void single_tape()
   auto aut = make_mutable_automaton(ctx);
 
   // Making: --> p --a--> q -->
-  auto p = aut->new_state();
-  auto q = aut->new_state();
-  aut->set_initial(p);
-  aut->new_transition(p, q, ctx.labelset()->value('a'));
-  aut->set_final(q);
+  {
+    auto p = aut->new_state();
+    auto q = aut->new_state();
+    aut->set_initial(p);
+    aut->new_transition(p, q, ctx.labelset()->value('a'));
+    aut->set_final(q);
+  }
 
   /**
    * Behavior of properties across function calls.
@@ -113,7 +115,6 @@ void single_tape()
    */
 
   // Define `is_deterministic` value.
-  is_deterministic(aut);
   aut->properties().print_prop(*aut, is_deterministic_ptag{}) << '\n';
 
   // Does not change `is_deterministic` value.
@@ -209,6 +210,7 @@ void single_tape()
   aut->properties().print_prop(*aut, a_number_ptag{}) << '\n';
 }
 
+
 void double_tape()
 {
   using namespace vcsn;
@@ -229,12 +231,14 @@ void double_tape()
 
   // Making: --> p --a|a, a|b--> q -->
   auto aut = make_mutable_automaton(ctx);
-  auto p = aut->new_state();
-  auto q = aut->new_state();
-  aut->set_initial(p);
-  aut->new_transition(p, q, ctx.labelset()->tuple('a', 'a'));
-  aut->new_transition(p, q, ctx.labelset()->tuple('a', 'b'));
-  aut->set_final(q);
+  {
+    auto p = aut->new_state();
+    auto q = aut->new_state();
+    aut->set_initial(p);
+    aut->new_transition(p, q, ctx.labelset()->tuple('a', 'a'));
+    aut->new_transition(p, q, ctx.labelset()->tuple('a', 'b'));
+    aut->set_final(q);
+  }
 
   /**
    * There is special property `on_tape` templated on the number of the
@@ -247,25 +251,26 @@ void double_tape()
   // tape.
   aut->properties().print_prop(*aut, is_deterministic_ptag{}) << '\n';
   aut->properties().print_prop(*aut, on_tape<0, is_deterministic_ptag>{})
-     << '\n';
+    << '\n';
 
   // Define `is_deterministic` value.
   is_deterministic(aut);
   aut->properties().print_prop(*aut, is_deterministic_ptag{}) << '\n';
   aut->properties().print_prop(*aut, on_tape<0, is_deterministic_ptag>{})
-     << '\n';
+    << '\n';
 
   // Define `is_deterministic` value for first tape.
   auto f0 = focus<0>(aut);
   is_deterministic(f0);
   aut->properties().print_prop(*aut, is_deterministic_ptag{}) << '\n';
   aut->properties().print_prop(*aut, on_tape<0, is_deterministic_ptag>{})
-     << '\n';
+    << '\n';
   f0->properties().print_prop(*f0, is_deterministic_ptag{}) << '\n';
 }
 
 int main()
 {
   single_tape();
+  std::cout << '\n';
   double_tape();
 }

@@ -68,9 +68,15 @@ namespace vcsn
   `--------------------------*/
 
   /// Print info about an automaton.
+  ///
+  /// \param aut      the automaton
+  /// \param out      where to print the results
+  /// \param details  level of details (increasing cost)
+  /// \param strict   whether to evaluate unknown cached properties.
   template <Automaton Aut>
   std::ostream&
-  info(const Aut& aut, std::ostream& out = std::cout, unsigned details = 2)
+  info(const Aut& aut, std::ostream& out = std::cout,
+       unsigned details = 2, bool strict = true)
   {
     const char* sep = "";
     if (2 <= details)
@@ -79,6 +85,7 @@ namespace vcsn
         aut->print_set(out, format::sname);
         sep = "\n";
       }
+
 #define ECHO(Level, Name, Value)                 \
     do {                                         \
       if (Level <= details)                      \
@@ -86,14 +93,17 @@ namespace vcsn
       sep = "\n";                                \
   } while (false)
 
-#define ECHO_PROP(Level, Property)                           \
-    do {                                                     \
-      if (Level <= details)                                  \
-        {                                                    \
-          out << sep;                                        \
-          aut->properties().print_prop(*aut, Property, out); \
-        }                                                    \
-      sep = "\n";                                            \
+#define ECHO_PROP(Level, Property)                                      \
+    do {                                                                \
+      if (Level <= details)                                             \
+        {                                                               \
+          auto& props = aut->properties();                              \
+          if (strict && props.is_unknown(*aut, Property ## _ptag{}))    \
+            (void) Property(aut);                                       \
+          out << sep;                                                   \
+          props.print_prop(*aut, Property ## _ptag{}, out);             \
+        }                                                               \
+      sep = "\n";                                                       \
   } while (false)
 
 #define VCSN_IF_STATIC(Pred, Fun, Aut)                       \
@@ -114,10 +124,8 @@ namespace vcsn
     ECHO(2, "number of accessible states", num_accessible_states(aut));
     ECHO(2, "number of coaccessible states", num_coaccessible_states(aut));
     ECHO(1, "number of useful states", num_useful_states(aut));
-    ECHO(2, "number of codeterministic states",
-         VCSN_IF_FREE(num_codeterministic_states, aut));
-    ECHO(2, "number of deterministic states",
-         VCSN_IF_FREE(num_deterministic_states, aut));
+    ECHO(2, "number of codeterministic states", num_codeterministic_states(aut));
+    ECHO(2, "number of deterministic states", num_deterministic_states(aut));
     ECHO(1, "number of transitions", aut->num_transitions());
     ECHO(2, "number of spontaneous transitions",
          detail::num_spontaneous_transitions(aut));
@@ -126,13 +134,13 @@ namespace vcsn
     ECHO(3, "is ambiguous", VCSN_IF_FREE(is_ambiguous, aut));
     ECHO(2, "is complete", VCSN_IF_FREE(is_complete, aut));
     ECHO(3, "is cycle ambiguous", VCSN_IF_FREE(is_cycle_ambiguous, aut));
-    ECHO_PROP(2, is_deterministic_ptag{});
-    ECHO(2, "is codeterministic", VCSN_IF_FREE(is_codeterministic, aut));
+    ECHO_PROP(2, is_deterministic);
+    ECHO(2, "is codeterministic", is_codeterministic(aut));
     ECHO(2, "is empty", is_empty(aut));
     ECHO(2, "is eps-acyclic", is_eps_acyclic(aut));
-    ECHO_PROP(2, is_free_ptag{});
+    ECHO_PROP(2, is_free);
     ECHO(2, "is normalized", is_normalized(aut));
-    ECHO_PROP(2, is_proper_ptag{});
+    ECHO_PROP(2, is_proper);
     ECHO(2, "is standard", is_standard(aut));
     ECHO(3, "is synchronizing", VCSN_IF_FREE(is_synchronizing, aut));
     ECHO(2, "is trim", is_trim(aut));
@@ -149,11 +157,12 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <Automaton Aut, typename Ostream, typename Bool>
+      template <Automaton Aut, typename Ostream,
+                typename Unsigned, typename Bool>
       std::ostream& info(const automaton& aut, std::ostream& out,
-                         unsigned details)
+                         unsigned details, bool strict)
       {
-        info(aut->as<Aut>(), out, details);
+        info(aut->as<Aut>(), out, details, strict);
         return out;
       }
     }

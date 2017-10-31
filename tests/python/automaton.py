@@ -645,6 +645,7 @@ def check_fado(aut):
         SKIP("FAdo not installed")
 
 for fn in glob.glob(os.path.join(medir, '*.fado')):
+    print("Checking {}".format(fn))
     ref = vcsn.automaton(filename=fn.replace('.fado', '.gv'))
     # Check that we can read FAdo.
     CHECK_EQ(ref, vcsn.automaton(filename=fn, format='fado'))
