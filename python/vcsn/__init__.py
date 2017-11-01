@@ -79,16 +79,17 @@ def setenv(**vars):
     '''Set/unset environment variables for Vcsn.  Pass a list
     of assignments:
 
-    vcsn.setenv(FOO=0, BAR=1)
+    vcsn.setenv(FOO=None, BAR=1, BAZ=0)
 
     is equivalent to:
 
     unsetenv('VCSN_FOO')
     setenv('VCSN_BAR', '1')
+    setenv('VCSN_BAZ', '0')
     '''
     for k, v in vars.items():
         k = 'VCSN_' + k
-        if not v:
+        if v is None:
             if k in os.environ:
                 del os.environ[k]
         else:
