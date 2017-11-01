@@ -45,6 +45,11 @@ a|\e|\e  => a|\e|\e
 \e|\e|i  => \e|\e|i
 a|\e|i   => a|\e|i
 
+# Promotion from single tape to multitape.
+0         => 0|0|0
+[01]*     => (0|0|0+1|1|1)*
+a|e|i + 0 => a|e|i+0|0|0
+
 a|e|i                => a|e|i
 a*|e*|i*             => a*|e*|i*
 (a|e|i)*             => (a|e|i)*
@@ -55,7 +60,7 @@ abcd|efgh|ijkl       => abcd|efgh|ijkl
 
 a|e|i|z ! 1.6: too many tapes\n! a|e|i|z\n!      ^\n!   while reading expression: "a|e|i|z"
 a|e     ! 1.1-3: not enough tapes: 2 expected 3\n! a|e\n! ^^^\n!   while reading expression: "a|e"
-a       ! 1.1: not enough tapes: 1 expected 3\n! a\n! ^\n!   while reading expression: "a"
+a       ! 1.1: {0123456789efgh}?: conv: invalid label: a\n!   while converting expression "a" to RatE[{0123456789abcd}? x {0123456789efgh}? x {0123456789ijkl}? -> Q](associative)\n! a\n! ^\n!   while reading expression: "a"
 
 a|e + a|e|i ! 1.1-3: not enough tapes: 2 expected 3\n! a|e + a|e|i\n! ^^^\n!   while reading expression: "a|e + a|e|i"
 

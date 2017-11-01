@@ -68,15 +68,17 @@
   #include <vcsn/dyn/context.hh>
 
 #define TRY(Loc, Stm)                           \
-  try                                           \
-    {                                           \
-      Stm;                                      \
-    }                                           \
-  catch (std::exception& e)                     \
-    {                                           \
-      error(Loc, e.what());                     \
-      YYERROR;                                  \
-    }
+  do                                            \
+    try                                         \
+      {                                         \
+        Stm;                                    \
+      }                                         \
+    catch (std::exception& e)                   \
+      {                                         \
+        error(Loc, e.what());                   \
+        YYERROR;                                \
+      }                                         \
+  while (false)
 
   namespace vcsn
   {
@@ -204,23 +206,16 @@
 input:
   add terminator.opt
   {
-    auto dim_exp = dyn::num_tapes(dyn::context_of($1.exp));
-    auto dim_ctx = dyn::num_tapes(driver_.ctx_);
-    if (dim_exp == 0 && dim_ctx == 1)
-      // tuple never returns a tuple of rank 1 (see the case
-      // `$2.size() == 1`).  Time to make it for such contexts.
-      $$ = vcsn::dyn::tuple({$1.exp});
-    else if (dim_exp == dim_ctx)
-      // Provide a value for $$ only for sake of traces: shows the result.
+    // Adjust with possible needed conversions e.g., `a*` -> `(a|a)*`.
+    // Avoid it if possible, it is really expensive (see `vcsn score
+    // -O 'b.expression'`).
+    //
+    // FIXME: a better comparison would be nice.
+    if (dyn::format(dyn::context_of($1.exp), "sname")
+        == dyn::format(driver_.ctx_, "sname"))
       $$ = $1;
     else
-      throw syntax_error(@$,
-                         "not enough tapes: "
-                         // num_tapes returns 0 on non lat.  In this
-                         // case, 1 is clearer.
-                         + std::to_string(std::max(size_t{1}, dim_exp))
-                         + " expected "
-                         + std::to_string(dim_ctx));
+      TRY(@$, $$ = copy($1.exp, driver_.ctx_, driver_.ids_));
     driver_.result_ = $$.exp;
     YYACCEPT;
   }

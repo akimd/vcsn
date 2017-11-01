@@ -234,8 +234,7 @@ namespace vcsn
       print_random_expression_(std::ostream& out, unsigned length,
                                const format& fmt) const
       {
-        // If there is no operators at all, that's impossible to
-        // construct an expression, so just return a label.
+        // If there is no operator at all, return a label.
         if (operators_.empty())
           print_label_(out, fmt);
 

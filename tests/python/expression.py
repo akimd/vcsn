@@ -71,7 +71,11 @@ check(qexp(r'a{T}'))
 # Doesn't make any sense, but that's not for copy to check that.
 check(qexp(r'a@b'))
 
-# FIXME: check the tuple case.
+q3 = vcsn.context('lat<lan, lan, lan>, q')
+check(qexp('a'),    q3, exp='a|a|a')
+check(qexp('ab*c'), q3, exp='(a|a|a)(b|b|b)*(c|c|c)')
+check(qexp('abc'),  q3, exp='(a|a|a)(b|b|b)(c|c|c)')
+
 
 ## ------------ ##
 ## Complement.  ##

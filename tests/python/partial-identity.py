@@ -29,8 +29,8 @@ def check(e, exp, ids='auto'):
     CHECK_EQ(e.automaton().partial_identity(), e2.automaton())
     # The projection of the partial identity is the original
     # expression.
-    CHECK_EQ(e, e2.project(0))
-    CHECK_EQ(e, e2.project(1))
+    for tape in range(e2.context().num_tapes()):
+        CHECK_EQ(e, e2.project(tape))
 
 check('a', 'a|a')
 check('abc', '(a|a)(b|b)(c|c)')
