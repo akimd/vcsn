@@ -896,8 +896,8 @@ check(qexp('<4>a*bcd {/} <2>bcd'), file='rdivide-1')
 
 # Tuple.
 def tuple(*exps):
-    return vcsn.expression._tuple([vcsn.context('lal, q').expression(e)
-                                   for e in exps])
+    return vcsn.tuple(*[vcsn.context('lal, q').expression(e)
+                        for e in exps])
 check(tuple('abc', 'xyz'), file='tuple-1')
 check(tuple('abc', 'xy'),  file='tuple-2')
 check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')

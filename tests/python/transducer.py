@@ -50,9 +50,9 @@ CHECK_EQ(r'''digraph
 ## LAN x LAN x LAN -> Q.  ##
 ## ---------------------- ##
 
-# Using expression._tuple.
+# Using tuple.
 exp = lambda e: vcsn.context("lal_char, q").expression(e)
-f = vcsn.expression._tuple([exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*')])
+f = vcsn.tuple(exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*'))
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
 
 # Using the operator |.

@@ -26,6 +26,8 @@ from vcsn.label      import label
 from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
+from vcsn.tools      import _tuple
+
 from vcsn_cxx import configuration as config # pylint: disable=wrong-import-order
 
 datadir = config('configuration.datadir')
@@ -91,6 +93,11 @@ def setenv(**vars):
                 del os.environ[k]
         else:
             os.environ[k] = str(v)
+
+def tuple(*args):
+    'Allow `vcsn.tuple(a, b, c)` rather than `a._tuple([b, c])`.'
+    return _tuple(args)
+
 
 def vcsn_traceback_levels(tb):
     '''Returns the amount of frames deep into the traceback

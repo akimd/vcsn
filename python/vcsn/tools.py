@@ -125,3 +125,8 @@ def _tmp_file(suffix, **kwargs):
     return tempfile.NamedTemporaryFile(prefix='vcsn-',
                                        suffix=('.' + suffix),
                                        **kwargs)
+
+def _tuple(args):
+    'Allow `vcsn.tuple(a, b, c)` rather than `a._tuple([b, c])`.'
+    # pylint: disable=protected-access
+    return args[0]._tuple(list(args))

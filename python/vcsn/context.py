@@ -8,8 +8,7 @@
 # FIXME: Remove comment once issues are fixed.
 # pylint: disable=unused-import,undefined-variable
 from vcsn_cxx import context, label, polynomial, expression, weight
-from vcsn.tools import _extend, _format
-
+from vcsn.tools import _extend, _format, _tuple
 
 @_extend(context)
 class context:
@@ -48,6 +47,11 @@ class context:
                     'x': 'latex',
                     }
         return _format(self, spec, 'text', syntaxes)
+
+    def __pow__(self, n):
+        if n <= 0:
+            raise RuntimeError("exponent must be positive: {}", n)
+        return _tuple([self] * n)
 
     expression = lambda *a, **kw: expression(*a, **kw)
     label = lambda *a, **kw: label(*a, **kw)
