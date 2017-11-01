@@ -45,13 +45,13 @@ for c in ['letterset<char_letters()>, b',
     check(c, 'letterset<char_letters()>, b')
 
 # An open context is printed as open in LaTeX.
-check('lal_char, b',      r'(\{\ldots\})^?\to\mathbb{B}', 'latex')
+check('lal_char, b',      r'\{\ldots\}^?\to\mathbb{B}', 'latex')
 check('lal_char, b',      r'{...}? -> B',               'text')
 check('lal_char, b',      r'{...}? → 𝔹',               'utf8')
-check('lal_char(abc), b', r'(\{a, b, c\})^?\to\mathbb{B}', 'latex')
+check('lal_char(abc), b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
 check('lal_char(abc), b', r'{abc}? -> B',          'text')
 check('lal_char(abc), b', r'{abc}? → 𝔹',          'utf8')
-check('lal_char(), b',    r'(\{\})^?\to\mathbb{B}',  'latex')
+check('lal_char(), b',    r'\{\}^?\to\mathbb{B}',  'latex')
 check('lal_char(), b',    r'{}? -> B',             'text')
 check('lal_char(), b',    r'{}? → 𝔹',             'utf8')
 

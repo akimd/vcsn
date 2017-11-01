@@ -389,9 +389,8 @@ namespace vcsn
       switch (fmt.kind())
         {
         case format::latex:
-          o << '(';
           this->genset()->print_set(o, fmt);
-          o << ")^?";
+          o << "^?";
           break;
         case format::sname:
           o << "letterset<";

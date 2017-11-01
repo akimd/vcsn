@@ -1044,6 +1044,8 @@ namespace vcsn
     {
       const char *sep = "";
       const char *close = "";
+      if (fmt.delimit() && fmt.kind() != format::sname)
+        o << '(';
       switch (fmt.kind())
         {
         case format::latex:
@@ -1068,10 +1070,12 @@ namespace vcsn
       (void) swallow
         {
           (o << (I == 0 ? "" : sep),
-           set<I>().print_set(o, fmt),
+           set<I>().print_set(o, fmt.delimit(true)),
            0)...
         };
       o << close;
+      if (fmt.delimit() && fmt.kind() != format::sname)
+        o << ')';
       return o;
     }
 

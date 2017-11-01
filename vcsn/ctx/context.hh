@@ -105,7 +105,7 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, format fmt = {}) const
     {
-      labelset()->print_set(o, fmt);
+      labelset()->print_set(o, fmt.delimit(false));
       switch (fmt.kind())
         {
         case format::latex:
@@ -124,7 +124,7 @@ namespace vcsn
           assert(0);
           break;
         }
-      weightset()->print_set(o, fmt);
+      weightset()->print_set(o, fmt.delimit(false));
       return o;
     }
 
