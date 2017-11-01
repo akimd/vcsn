@@ -56,16 +56,12 @@ namespace vcsn
       arg.print_set(o);
     }
 
-    /// Serialize std::exception, namely RuntimeErrors.
-    //FIXME: I'm sure there's an easier way to do this.
-    //Basic parameter overload did not compile,
-    //empty template + parameter overload did not either.
-    //`long` instead of `int` also doesn't work.
+    /// Serialize exceptions.
     template <typename T>
     auto print_(std::ostream& o, const T& e, int)
       -> decltype(e.what(), void())
     {
-      o << e.what() << "\n";
+      o << e.what() << '\n';
     }
   }
 

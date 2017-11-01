@@ -581,7 +581,7 @@ namespace vcsn
     value_t
     conv(const VS& vs, const typename VS::value_t& v) const
     {
-      return tuple(set<0>().conv(vs, v), set<1>().conv(vs, v));
+      return this->partial_identity_(vs, v, indices);
     }
 
     /// Read one label from i, return the corresponding value.
@@ -716,7 +716,7 @@ namespace vcsn
                      const typename tupleset<LS2...>::value_t& l2,
                      seq<I1...>, seq<I2...>) const
     {
-      return tuple(std::get<I1>(l1)..., std::get<I2>(l2)...);
+      return value_t{std::get<I1>(l1)..., std::get<I2>(l2)...};
     }
 
     template <std::size_t... I>
@@ -957,6 +957,14 @@ namespace vcsn
           seq<I...>) const
     {
       return value_t{set<I>().conv(vs.template set<I>(), std::get<I>(v))...};
+    }
+
+    template <typename VS, std::size_t... I>
+    value_t
+    partial_identity_(const VS& vs, const typename VS::value_t& v,
+                      seq<I...>) const
+    {
+      return value_t{set<I>().conv(vs, v)...};
     }
 
     /// When the valuesets are labelsets and support one, accept the

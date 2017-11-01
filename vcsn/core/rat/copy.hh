@@ -167,9 +167,9 @@ namespace vcsn
           (v);
       }
 
-      /// expressionset to decode the input value.
+      /// Expressionset to decode the input value.
       const in_expressionset_t& in_rs_;
-      /// expressionset to build the output value.
+      /// Expressionset to build the output value.
       const out_expressionset_t& out_rs_;
       /// Output value, under construction.
       out_expression_t res_;
@@ -181,7 +181,17 @@ namespace vcsn
          const typename InExpSet::value_t& v)
     {
       auto copy = copy_impl<InExpSet, OutExpSet>{in_rs, out_rs};
-      return copy(v);
+      try
+        {
+          return copy(v);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e,
+                "  while converting expression ",
+                str_quote(to_string(in_rs, v)),
+                " to ", to_string(out_rs));
+        }
     }
   } // namespace rat
 } // namespace vcsn
