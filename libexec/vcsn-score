@@ -4,6 +4,7 @@
 # pylint: disable=global-statement
 
 import argparse
+import multiprocessing
 import os
 import re
 import subprocess
@@ -25,6 +26,9 @@ def getargs():
     opt = p.add_argument
     opt('-O', '--only', metavar='RE', type=re.compile, default='.*',
         help='run only benches whose title is matched by RE')
+    opt('-j', '--jobs', metavar='NUM', type=int, default='0',
+        help='''number of benches to run concurrently.  Pass 0 to
+        avoid using any Thread.''')
     opt('-r', '--repeat', metavar='NUM', type=int, default='3',
         help='''number runs to perform, the best of which being kept.  The higher,
         the more stable the results are expected to be.  Pass 0 to run
@@ -121,50 +125,50 @@ def output(s):
         print(s, flush=True, file=args.out)
 
 
-def bench(stmt, comment, title=None, setup=None, number=1):
-    'Report the best timing of three batches of number runs of cmd.'
-    if title is None:
-        title = stmt
-    if setup is None:
-        setup = ['pass']
+class Bench:
+    # pylint: disable=too-many-arguments
+    def __init__(self, stmt, comment, title, setup, number):
+        if args.check:
+            number = 1
+            args.repeat = 1
+            self.__stmt_orig = stmt
+            self.__setup_orig = setup
+            stmt = downsize(stmt)
+            comment = downsize(comment)
+            title = downsize(title)
+            setup = [downsize(s) for s in setup]
 
-    if not isinstance(setup, list):
-        setup = [setup]
+        self.__stmt = stmt
+        self.__comment = comment
+        self.__title = title
+        self.__setup = setup
+        self.__number = number
 
-    if args.check:
-        number = 1
-        args.repeat = 1
-        oldstmt = stmt
-        oldsetup = list(setup)
-        stmt = downsize(stmt)
-        comment = downsize(comment)
-        title = downsize(title)
-        for i, s in enumerate(oldsetup):
-            setup[i] = downsize(s)
+        if 1 < self.__number:
+            self.__comment += ', {}x'.format(self.__number)
 
-    if args.only.search(title + ' # ' + comment):
 
-        if 1 < number:
-            comment += ', {}x'.format(number)
-
+    def run(self):
+        log('Bench.run: {}'.format(self.__title))
         env = {
             'vcsn': vcsn,
             'b': vcsn.context('lal_char(abc), b'),
         }
         try:
-            for i, s in enumerate(setup):
-                if args.check and oldsetup[i] != s:
-                    log('run: {:27s} (was: {})'.format(s, oldsetup[i]))
+            for i, s in enumerate(self.__setup):
+                if args.check and self.__setup_orig[i] != s:
+                    log('run: {:27s} (was: {})'.format(s, self.__setup_orig[i]))
                 else:
                     log('run:', s)
                 exec(s, globals(), env) # pylint: disable=exec-used
 
-            if args.check and oldstmt != stmt:
-                log('run: {:27s} (was: {})'.format(stmt, oldstmt))
+            if args.check and self.__stmt_orig != self.__stmt:
+                log('run: {:27s} (was: {})'.format(self.__stmt, self.__stmt_orig))
             else:
-                log('run:', stmt)
+                log('run:', self.__stmt)
             if args.repeat:
-                t = min(timeit.repeat(stmt, number=number, repeat=args.repeat, globals=env))
+                t = min(timeit.repeat(self.__stmt, number=self.__number,
+                                      repeat=args.repeat, globals=env))
                 t = '{:5.2f}s'.format(t)
             else:
                 # Just run the set up, the user is just warming ccache
@@ -176,9 +180,24 @@ def bench(stmt, comment, title=None, setup=None, number=1):
             err = exc
             global nfail
             nfail += 1
-        output('{:7s}: {:23s} # {}'.format(t, title, comment))
+        output('{:7s}: {:23s} # {}'.format(t, self.__title, self.__comment))
         if err:
             print(err, file=sys.stderr)
+
+
+benches = []
+def bench(stmt, comment, title=None, setup=None, number=1):
+    'Report the best timing of three batches of number runs of cmd.'
+    if title is None:
+        title = stmt
+    if setup is None:
+        setup = ['pass']
+
+    if not isinstance(setup, list):
+        setup = [setup]
+
+    if args.only.search(title + ' # ' + comment):
+        benches.append(Bench(stmt, comment, title, setup, number))
 
 # Check the cost of dyn calls.
 #
@@ -829,6 +848,13 @@ bench('a.weight_series()',
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r).standard()'],
       number=10)
+
+if args.jobs == 0:
+    for b in benches:
+        Bench.run(b)
+else:
+    with multiprocessing.Pool(args.jobs) as pool:
+        pool.map(Bench.run, benches)
 
 if nfail:
     print("vcsn-score: error: there were {} failures".format(nfail),
