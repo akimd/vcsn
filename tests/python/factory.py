@@ -248,31 +248,28 @@ def check_operators(e, ops):
     ks = [k for k in operators if info[k] != 0]
     CHECK_EQ(ops, ks)
 
-# A random expression without any operator is only a label.
-exp = randexp('lal(a-z), b')
-CHECK(re.match(r'\w{1}|\\e', str(exp)))
+# A random expression without any operator is an error.
+XFAIL(lambda: randexp('lal(a-z), b', 'l=0'))
 
 # Check that operators are present only if the user has specified them.
 exp = randexp('lal(a), b',
-              '+=1,*=0.5,{c}=1,{\\}=0', length=100, identities='none')
+              '+=1, *=0.5, {c}=1, {\\}=0', length=100, identities='none')
 check_operators(exp, ['add', 'atom', 'complement', 'star'])
 
 # Check the length.
 for _ in range(10):
-    exp = randexp('lal_char(a), b',
-                  '+', length=15, identities='none')
-    length = exp.info('length')
-    print('Length =', length)
-    CHECK(length <= 15)
+    exp = randexp('lal(a), b',
+                  '+, *=.1', length=15, identities='none')
+    CHECK_EQ(15, exp.info('length'))
 
 # Check rweight and lweight.
-exp = randexp('lal_char(abc), b',
+exp = randexp('lal(abc), b',
               '+=1, w.=1', length=50, identities='none')
 check_operators(exp, ['add', 'atom', 'lweight'])
 
 
 # Check the weight generation on expression.
-exp = randexp('lal_char(abc), b',
+exp = randexp('lal(abc), b',
               '+, w., w="1=1"', length=20, identities='none')
 CHECK_NE(str(exp).find('<1>'), -1)
 CHECK_EQ(str(exp).find('<0>'), -1)

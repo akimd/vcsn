@@ -886,12 +886,12 @@ namespace vcsn
     ///    A specification of the wanted operators and their relative
     ///    probability.  May also contain the maximum number of
     ///    symbols of the expression with key `length`.  For instance:
-    ///    "+=1,.=2,{T}=0.5,length=6".
+    ///    "l, +=1,.=2,{T}=0.5,length=6".
     /// \param ids
     ///    The identities to use for the expression.
     expression
     random_expression(const context& ctx,
-                      const std::string& param = "+, ., *=.2, w., .w, length=10",
+                      const std::string& param = "default",
                       identities ids = {});
 
     /// A random label.

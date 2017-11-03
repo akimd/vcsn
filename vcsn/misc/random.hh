@@ -30,20 +30,23 @@ namespace vcsn LIBVCSN_API
       : gen_(g)
     {}
 
-    template <typename Container_w, typename Container>
+    template <typename Weights, typename Container>
     typename Container::iterator
-    select(Container_w weight, Container cont) const
+    operator()(Weights weights, Container cont) const
     {
-      auto dis = std::discrete_distribution<>(weight.begin(), weight.end());
-      auto res = std::next(cont.begin(), dis(gen_));
-      return res;
+      auto dis = std::discrete_distribution<>(weights.begin(), weights.end());
+      return std::next(cont.begin(), dis(gen_));
     }
 
-    template <typename Container_w, typename Container>
+    template <typename Container>
     typename Container::iterator
-    operator()(Container_w weight, Container cont) const
+    operator()(Container cont) const
     {
-      return select(weight, cont);
+      auto weights = std::vector<typename Container::mapped_type>{};
+      weights.reserve(cont.size());
+      for (const auto& p:cont)
+        weights.push_back(p.second);
+      return operator()(weights, cont);
     }
 
   private:

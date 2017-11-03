@@ -490,7 +490,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
           arg("weights") = std::string("")))
     .def("random_deterministic", &context::random_automaton_deterministic)
     .def("random_expression", &context_random_expression,
-         (arg("parameters") = "", arg("identities") = "default"))
+         (arg("parameters") = "default",
+          arg("identities") = "default"))
     .def("random_label", &context::random_label,
          (arg("parameters") = ""))
     .def("random_weight", &context::random_weight,

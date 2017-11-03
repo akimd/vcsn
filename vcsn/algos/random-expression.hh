@@ -70,12 +70,14 @@ namespace vcsn
       }
 
     private:
-      // FIXME: maybe use something similar to Boost.ProgramOptions or
+      // FIXME: use something similar to Boost.ProgramOptions or
       // getargs.
-      void parse_param_(const std::string& param)
+      void parse_param_(std::string param)
       {
-        // Set default value.
-        length_ = 6;
+        using namespace std::literals;
+        if (param.empty() || param == "default")
+          param = "\\e=.2, +, ., *=.2";
+        param = "length=10, l"s + (param.empty() ? ""s : ", "s) + param;
         using tokenizer = boost::tokenizer<boost::escaped_list_separator<char>>;
         using boost::algorithm::erase_all_copy;
         const auto sep
@@ -99,7 +101,17 @@ namespace vcsn
                 // Ignore operators that don't make sense.
                 if ((op != "|" && op != "@")
                     || context_t_of<expressionset_t>::is_lat)
-                  operators_[op] = value;
+                  {
+                    if (arities_.at(op) == 0)
+                      nullary_ops_[op] = value;
+                    else if (arities_.at(op) == 1)
+                      {
+                        unary_ops_[op] = value;
+                        binary_or_unary_ops_[op] = value;
+                      }
+                    else
+                      binary_or_unary_ops_[op] = value;
+                  }
               }
             else if (op == "length")
               length_ = value;
@@ -107,15 +119,22 @@ namespace vcsn
               raise("random_expression: invalid operator: ", str_quote(op));
           }
         }
-        proba_op_ = transform(operators_,
-                              [](const auto& v){ return v.second; });
+        VCSN_REQUIRE(!nullary_ops_.empty(),
+                     "at least one leaf expression (\"l\", \"\\e\", \"\\z\")",
+                     " is needed: ",
+                     str_quote(param));
+        VCSN_REQUIRE(!binary_or_unary_ops_.empty(),
+                     "at least one operator is needed: ",
+                     str_quote(param));
       }
 
       /// A string that specifies the current parameters.
       std::string make_param_(unsigned length) const
       {
         auto res = std::string{};
-        for (const auto& p: operators_)
+        for (const auto& p: nullary_ops_)
+          res += p.first + "=" + std::to_string(p.second) + ", ";
+        for (const auto& p: binary_or_unary_ops_)
           res += p.first + "=" + std::to_string(p.second) + ", ";
         if (!random_weight_params_.empty())
           res += "w=\"" + random_weight_params_ + "\", ";
@@ -132,20 +151,28 @@ namespace vcsn
         out << '>';
       }
 
-      /// Print label.
-      void print_label_(std::ostream& out, const format& fmt) const
+      /// Print expression leaf.
+      void print_nullary_(std::ostream& out, unsigned length,
+                          const std::string& op, const format& fmt) const
       {
-        const auto& ls = *es_.labelset();
-        // Do not generate the empty label, leave it to the expression
-        // generator.
-        ls.print(random_label(ls, "\\e=0", gen_), out,
-                 fmt.for_labels().delimit(true));
+        assert(1 == length);
+        if (op == "l")
+          {
+            const auto& ls = *es_.labelset();
+            // Do not generate the empty label, leave it to the expression
+            // generator.
+            ls.print(random_label(ls, "\\e=0", gen_), out,
+                     fmt.for_labels().delimit(true));
+          }
+        else
+          out << op;
       }
 
       /// Print expression with unary operator.
-      void print_unary_exp_(std::ostream& out, unsigned length,
-                            const std::string& op, const format& fmt) const
+      void print_unary_(std::ostream& out, unsigned length,
+                        const std::string& op, const format& fmt) const
       {
+        assert(2 <= length);
         // Prefix.
         if (op == "!" || op == "w.")
         {
@@ -173,21 +200,17 @@ namespace vcsn
       /// Print binary expression with binary operator.
       /// It is composed of the left and right side, and the operator.
       /// The number of symbols is randomly distribued between both side.
-      void print_binary_exp_(std::ostream& out, unsigned length,
-                             const std::string& op, const format& fmt) const
+      void print_binary_(std::ostream& out, unsigned length,
+                         const std::string& op, const format& fmt) const
       {
-        if (length < 3)
-          print_label_(out, fmt);
-        else
-        {
-          auto dis = std::uniform_int_distribution<>(1, length - 2);
-          const auto num_lhs = dis(gen_);
-          out << "(";
-          print_random_expression_(out, num_lhs, fmt);
-          out << op;
-          print_random_expression_(out, length - 1 - num_lhs, fmt);
-          out << ")";
-        }
+        assert(3 <= length);
+        auto dis = std::uniform_int_distribution<>(1, length - 2);
+        const auto num_lhs = dis(gen_);
+        out << "(";
+        print_random_expression_(out, num_lhs, fmt);
+        out << op;
+        print_random_expression_(out, length - 1 - num_lhs, fmt);
+        out << ")";
       }
 
 
@@ -196,8 +219,8 @@ namespace vcsn
       /// GCC5 crashes on the equivalent code with static_if.
       template <typename ExpSet = expressionset_t>
       auto
-      print_tuple_exp_(std::ostream& out, unsigned length,
-                       const std::string& op, const format& fmt) const
+      print_tuple_(std::ostream& out, unsigned length,
+                   const std::string& op, const format& fmt) const
         -> std::enable_if_t<context_t_of<ExpSet>::is_lat,
                             void>
       {
@@ -222,8 +245,8 @@ namespace vcsn
       /// Print a tuple operator.
       template <typename ExpSet = expressionset_t>
       auto
-      print_tuple_exp_(std::ostream& out, unsigned length,
-                       const std::string& op, const format& fmt) const
+      print_tuple_(std::ostream& out, unsigned length,
+                   const std::string& op, const format& fmt) const
         -> std::enable_if_t<!context_t_of<ExpSet>::is_lat,
                             void>
       {
@@ -236,51 +259,51 @@ namespace vcsn
       print_random_expression_(std::ostream& out, unsigned length,
                                const format& fmt) const
       {
-        // If there is no operator at all, return a label.
-        if (operators_.empty())
-          print_label_(out, fmt);
-
-        // One symbol left: print a label.
-        else if (length == 1)
-          print_label_(out, fmt);
-
-        // All operators are possible, choose one randomly (with
-        // associated weight probability) and print the associated
-        // expression.
-        else
-        {
-          // Choose an operator.
-          auto op = choose_(proba_op_, operators_)->first;
-          switch (arities_.at(op))
-            {
-            case 0:
-              out << op;
-              break;
-            case 1:
-              print_unary_exp_(out, length, op, fmt);
-              break;
-            case 2:
-              print_binary_exp_(out, length, op, fmt);
-              break;
-            case 3:
-              print_tuple_exp_(out, length, op, fmt);
-              break;
-            default:
-              assert(!"invalid arity");
-            }
-        }
+        // Choose an operator.
+        const auto& ops = [&]
+          {
+            if (length == 1)
+              return nullary_ops_;
+            else if (length == 2)
+              // If need a unary but there is none, go for a nullary.
+              return unary_ops_.empty() ? nullary_ops_ : unary_ops_;
+            else // 3 <= length
+              return binary_or_unary_ops_;
+          }();
+        auto op = choose_(ops)->first;
+        switch (arities_.at(op))
+          {
+          case 0:
+            print_nullary_(out, length, op, fmt);
+            break;
+          case 1:
+            print_unary_(out, length, op, fmt);
+            break;
+          case 2:
+            print_binary_(out, length, op, fmt);
+            break;
+          case 3:
+            print_tuple_(out, length, op, fmt);
+            break;
+          default:
+            assert(!"invalid arity");
+          }
         return out;
-      }
+        }
+
 
       expressionset_t es_;
       weightset_t ws_;
       unsigned length_;
       /// For each operator, its probability.
-      std::map<std::string, float> operators_;
+      std::map<std::string, float> nullary_ops_;
+      std::map<std::string, float> unary_ops_;
+      std::map<std::string, float> binary_or_unary_ops_;
       /// Number of arguments of each operator.
       const std::unordered_map<std::string, int> arities_
       {
         // Nullary.
+        {"l", 0},
         {"\\e", 0},
         {"\\z", 0},
         // Unary.
@@ -305,9 +328,6 @@ namespace vcsn
         {"|", 3},
       };
 
-      /// Vector of weights associated with the operators, i.e., the
-      /// probabilities to pick each operator.
-      std::vector<float> proba_op_;
       /// Random generator.
       RandomGenerator& gen_;
       /// Random weights generator parameters.
