@@ -23,21 +23,23 @@ if '-O3' not in vcsn.config('configuration.cxxflags'):
     warnings.warn('not compiled with -O3, benches are irrelevant')
 
 
-parser = argparse.ArgumentParser(description='Bench some algorithms.')
-parser.add_argument('-O', '--only', metavar='RE',
-                    type=re.compile, default='.*',
-                    help='run only benches whose title is matched by RE')
-parser.add_argument('-r', '--repeat', metavar='NUM',
-                    type=int, default='3',
-                    help='''number runs to perform, the best of which being
-                    kept.  The higher, the more stable the results are
-                    expected to be.  Pass 0 to run only the set-up parts;
-                    this is useful to warm up the plugin cache (ccache).''')
-parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
-parser.add_argument('--check', action='store_true',
-                    help='only run a quick check. Implies -r 1.')
+def getargs():
+    p = argparse.ArgumentParser(description='Bench some algorithms.')
+    opt = p.add_argument
+    opt('-O', '--only', metavar='RE', type=re.compile, default='.*',
+        help='run only benches whose title is matched by RE')
+    opt('-r', '--repeat', metavar='NUM', type=int, default='3',
+        help='''number runs to perform, the best of which being kept.  The higher,
+        the more stable the results are expected to be.  Pass 0 to run
+        only the set-up parts; this is useful to warm up the plugin
+        cache (ccache).''')
+    opt('-v', '--verbose', action='store_true', help='be verbose')
+    opt('--check', action='store_true',
+        help='only run a quick check. Implies -r 1.')
+    return p.parse_args()
 
-args = parser.parse_args()
+
+args = getargs()
 
 # The last setup that we run.  Used to maintain a cache of setups:
 # when the same setup is used several times in a row, the first result
