@@ -27,7 +27,6 @@ namespace vcsn
       using labelset_t = labelset_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using word_t = word_t_of<automaton_t>;
-      using wordset_t = law_t<labelset_t>;
       using context_t = context_t_of<automaton_t>;
       using wps_t = word_polynomialset_t<context_t>;
       using polynomial_t = typename wps_t::value_t;
@@ -55,34 +54,36 @@ namespace vcsn
         }
       };
 
-      weight_t
-      operator()(const word_t& word) const
+      /// Evaluation of a word.
+      weight_t operator()(const word_t& word) const
       {
         if (is_free(aut_))
-          return eval_free(word);
+          return eval_free_(word);
         else
-          return eval_non_free(word);
+          return eval_non_free_(word);
       }
 
-      /// Polynomial implementation.
+      /// Evaluation of a polynomial.
       weight_t operator()(const polynomial_t& poly) const
       {
-        weight_t res = ws_.zero();
+        auto res = ws_.zero();
         for (const auto& m: poly)
-          res = ws_.add(res, ws_.mul(weight_of(m), (*this)(label_of(m))));
-
+          res = ws_.add(res, ws_.mul(weight_of(m), operator()(label_of(m))));
         return res;
       }
 
     private:
-      weight_t eval_non_free(const word_t& word) const
+      /// General case of evaluation: load the word on `pre`, and let
+      /// it follow the transitions, gaining weight (ah ah), and
+      /// loosing letters.
+      weight_t eval_non_free_(const word_t& word) const
       {
-        // Initialization.
-        weight_t res = ws_.zero();
+        const auto wordset = make_wordset(*aut_->labelset());
+        auto res = ws_.zero();
 
         // A queue of current word states in the automaton.
         auto q = std::queue<labeled_weight>{};
-        q.emplace(ws_.one(), wordset_.delimit(word), aut_->pre());
+        q.emplace(ws_.one(), wordset.delimit(word), aut_->pre());
 
         while (!q.empty())
           {
@@ -90,14 +91,14 @@ namespace vcsn
             q.pop();
 
             for (auto t : all_out(aut_, cur.s))
-              if (aut_->dst_of(t) == aut_->post() && wordset_.is_special(cur.l))
+              if (aut_->dst_of(t) == aut_->post() && wordset.is_special(cur.l))
                 // The word is accepted.
                 {
                   cur.w = ws_.mul(cur.w, aut_->weight_of(t));
                   res = ws_.add(res, cur.w);
                 }
               else if (auto new_word
-                        = wordset_.maybe_ldivide(ls_.word(aut_->label_of(t)), cur.l))
+                        = wordset.maybe_ldivide(ls_.word(aut_->label_of(t)), cur.l))
                 q.emplace(
                     ws_.mul(cur.w, aut_->weight_of(t)),
                     std::move(*new_word),
@@ -111,40 +112,34 @@ namespace vcsn
       template <typename LabelSet = labelset_t>
       std::enable_if_t<LabelSet::is_letterized(),
                        weight_t>
-      eval_free(const word_t& word) const
+      eval_free_(const word_t& word) const
       {
-        // Initialization.
-        const weight_t zero = ws_.zero();
-
         // An array indexed by state numbers.
         //
-        // Do not use braces (v1{size, zero}): the type of zero might
-        // result in the compiler believing we are building a vector
-        // with two values: size and zero.
+        // Do not use braces (v1{size, ws_.zero()}): the type of zero
+        // might result in the compiler believing we are building a
+        // vector with two values: size and zero.
         //
         // We start with just two states numbered 0 and 1: pre() and
         // post().
-        weights_t v1(2, zero);
+        auto v1 = weights_t(2, ws_.zero());
         v1.reserve(states_size(aut_));
         v1[aut_->pre()] = ws_.one();
-        weights_t v2{v1};
+        auto v2 = v1;
         v2.reserve(states_size(aut_));
 
         // Computation.
-        auto ls = *aut_->labelset();
-        for (auto l : ls.letters_of(ls.delimit(word)))
+        for (const auto l : ls_.letters_of(ls_.delimit(word)))
           {
-            v2.assign(v2.size(), zero);
+            v2.assign(v2.size(), ws_.zero());
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                // With wordset,  `out` expects a label as 3rd parameter,
-                // not a letter.
-                for (auto t : out(aut_, s, l))
+                for (const auto t : out(aut_, s, l))
                   {
+                    const auto dst = aut_->dst_of(t);
                     // Make sure the vectors are large enough for dst.
                     // Exponential growth on the capacity, but keep
                     // the actual size as small as possible.
-                    auto dst = aut_->dst_of(t);
                     if (v2.size() <= dst)
                       {
                         auto capacity = v2.capacity();
@@ -152,8 +147,8 @@ namespace vcsn
                           capacity *= 2;
                         v1.reserve(capacity);
                         v2.reserve(capacity);
-                        v1.resize(dst + 1, zero);
-                        v2.resize(dst + 1, zero);
+                        v1.resize(dst + 1, ws_.zero());
+                        v2.resize(dst + 1, ws_.zero());
                       }
                     // Introducing a reference to v2[dst] is tempting,
                     // but won't work for std::vector<bool>.  FIXME:
@@ -172,7 +167,7 @@ namespace vcsn
       template <typename LabelSet = labelset_t>
       std::enable_if_t<!LabelSet::is_letterized(),
                        weight_t>
-      eval_free(const word_t&) const
+      eval_free_(const word_t&) const
       {
         BUILTIN_UNREACHABLE();
       }
@@ -180,8 +175,6 @@ namespace vcsn
       automaton_t aut_;
       const weightset_t& ws_ = *aut_->weightset();
       const labelset_t& ls_ = *aut_->labelset();
-      const wordset_t wordset_ = make_wordset(*aut_->labelset());
-      const wps_t wps_ = make_word_polynomialset(aut_->context());
     };
 
   } // namespace detail

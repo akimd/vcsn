@@ -56,7 +56,7 @@ namespace vcsn
   }
 
   /*------------------------.
-  | is_letterizes_boolean.  |
+  | is_letterized_boolean.  |
   `------------------------*/
 
   /// Whether the automaton is free, and the weightset is B.
