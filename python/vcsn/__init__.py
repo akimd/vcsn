@@ -26,7 +26,7 @@ from vcsn.label      import label
 from vcsn.polynomial import polynomial
 from vcsn.weight     import weight
 
-from vcsn.tools      import _tuple
+from vcsn.tools      import _tuple, _timeit as timeit
 
 from vcsn_cxx import configuration as config # pylint: disable=wrong-import-order
 
