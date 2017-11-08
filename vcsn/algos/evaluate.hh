@@ -54,6 +54,7 @@ namespace vcsn
         }
       };
 
+      /// Evaluation of a word.
       template <typename LabelSet = labelset_t>
       std::enable_if_t<!LabelSet::is_free(),
                       weight_t>
@@ -113,7 +114,7 @@ namespace vcsn
 
         // Computation.
         const auto ls = *aut_->labelset();
-        for (auto l : ls.letters_of(ls.delimit(word)))
+        for (const auto l : ls.letters_of(ls.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
@@ -149,10 +150,23 @@ namespace vcsn
       /// Polynomial implementation.
       weight_t operator()(const polynomial_t& poly) const
       {
+        // Since the algorithm itself is about circulating monomials,
+        // it's natural to load the queue with a polynonial, rather
+        // than performing a full evaluation for each monomial of the
+        // polynonial.  But this benchmark:
+        //
+        //     import vcsn
+        //     c = vcsn.context('law(a-z), z')
+        //     a = c.de_bruijn(100)
+        //     p = c.polynomial('\z')
+        //     for i in range(1, 100):
+        //         p = p + c.polynomial('abcxyz' * i)
+        //     print(vcsn.timeit(lambda: a(p)))
+        //
+        // shows no improvement if we do so.
         auto res = ws_.zero();
         for (const auto& m: poly)
-          res = ws_.add(res, ws_.mul(weight_of(m), (*this)(label_of(m))));
-
+          res = ws_.add(res, ws_.mul(weight_of(m), operator()(label_of(m))));
         return res;
       }
 
@@ -178,7 +192,7 @@ namespace vcsn
 
   /// Evaluation for lao automaton.
   ///
-  /// Require a proper automaton.
+  /// Requires a proper automaton.
   /// In a proper lao automaton, an accepting path can only be composed by
   /// initial and final transitions. Sum the weight of these paths.
   template <Automaton Aut>
@@ -186,14 +200,15 @@ namespace vcsn
   evaluate(const Aut& a, const label_t_of<Aut>& = {})
     -> std::enable_if_t<context_t_of<Aut>::is_lao, weight_t_of<Aut>>
   {
-    require(is_proper(a), "evaluate: cannot evaluate with spontaneous transitions");
+    require(is_proper(a),
+            "evaluate: cannot evaluate with spontaneous transitions");
     const auto& ws = *a->weightset();
     auto res = ws.zero();
-    for (auto init_tr: initial_transitions(a))
+    for (const auto init_tr: initial_transitions(a))
       {
-        auto s = a->dst_of(init_tr);
-        auto w = a->weight_of(init_tr);
-        for (auto out: all_out(a, s))
+        const auto s = a->dst_of(init_tr);
+        const auto w = a->weight_of(init_tr);
+        for (const auto out: all_out(a, s))
           {
             assert(a->dst_of(out) == a->post());
             res = ws.add(res, ws.mul(w, a->weight_of(out)));
