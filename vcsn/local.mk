@@ -335,7 +335,6 @@ from_registries_gen =				\
   lib/vcsn/algos/algos.cc			\
   lib/vcsn/dyn/context-printer-header-algo.cc
 CLEANFILES += %D%/dyn/registries.stamp $(from_registries_gen)
-move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
 %D%/dyn/registries.stamp: $(registries_gen) $(algo_headers) $(algo_implems)
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
