@@ -1,7 +1,7 @@
-FROM debian:sid
+FROM debian:stable
 MAINTAINER Clément Démoulins <demoulins@lrde.epita.fr>
 
-COPY sources.list /etc/apt/sources.list
+# COPY sources.list /etc/apt/sources.list
 COPY 02proxy /etc/apt/apt.conf.d/02proxy
 
 RUN apt-get update                              \
@@ -34,7 +34,7 @@ RUN apt-get update                              \
         pdf2svg                                 \
         python-matplotlib                       \
         python3-all-dev                         \
-        python3.5-dev                           \
+        python3-dev                             \
         texlive-latex-extra                     \
         texlive-pictures                        \
   && apt-get autoremove                         \
