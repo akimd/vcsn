@@ -69,11 +69,6 @@ if args.dir is not None:
 if args.output is not None:
     args.out = open(args.output, 'w')
 
-# The last setup that we run.  Used to maintain a cache of setups:
-# when the same setup is used several times in a row, the first result
-# is just reused.
-last_setup = ['pass']
-
 # The number of failures
 nfail = 0
 
@@ -159,16 +154,12 @@ def bench(stmt, comment, title=None, setup=None, number=1):
         b = vcsn.context('lal_char(abc), b') # pylint: disable=unused-variable
 
         try:
-            # Run the set up if it is not the last one we ran.
-            global last_setup
-            if setup != last_setup:
-                for i, s in enumerate(setup):
-                    if args.check and oldsetup[i] != s:
-                        log('run: {:27s} (was: {})'.format(s, oldsetup[i]))
-                    else:
-                        log('run:', s)
-                    exec(s) # pylint: disable=exec-used
-                last_setup = setup
+            for i, s in enumerate(setup):
+                if args.check and oldsetup[i] != s:
+                    log('run: {:27s} (was: {})'.format(s, oldsetup[i]))
+                else:
+                    log('run:', s)
+                exec(s) # pylint: disable=exec-used
 
             # Inject the result into `builtins`, so that the stmt run by
             # timeit finds them.  See
