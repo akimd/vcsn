@@ -9,7 +9,9 @@ except ImportError:
     import __builtin__ as builtins  # pylint: disable=import-error
 
 import argparse
+import os
 import re
+import subprocess
 import sys
 import timeit
 import warnings
@@ -36,10 +38,36 @@ def getargs():
     opt('-v', '--verbose', action='store_true', help='be verbose')
     opt('--check', action='store_true',
         help='only run a quick check. Implies -r 1.')
-    return p.parse_args()
+    opt('-o', '--output', metavar='FILE',
+        help='''also save the result in `FILE`''')
+    opt('-d', '--dir', metavar='DIR',
+        help='''also print the result in `DIR/DESC` where DESC is the
+        result of `git describe`''')
+    res =  p.parse_args()
+    if res.dir is not None and res.output is not None:
+        raise RuntimeError('--dir and --output cannot be used together')
+    return res
+
+
+def git_describe():
+    b = subprocess.check_output(
+        ['git', 'describe', '--first-parent', '--long', '--dirty'])
+    res = b.decode('utf-8').strip()
+    # v2.9-41-gf6bb8af2 -> v2.9-041-gf6bb8af2.
+    res = re.sub(r'-(\d+)-g',
+                 lambda m: '-{:03}-g'.format(int(m.group(1))),
+                 res)
+    return res
 
 
 args = getargs()
+
+# Implement --dir/--output.
+args.out = None
+if args.dir is not None:
+    args.output = os.path.join(args.dir, git_describe())
+if args.output is not None:
+    args.out = open(args.output, 'w')
 
 # The last setup that we run.  Used to maintain a cache of setups:
 # when the same setup is used several times in a row, the first result
@@ -94,6 +122,13 @@ def log(*logs):
     'Print logs to stderr.'
     if args.verbose:
         print(*logs, file=sys.stderr)
+
+
+def output(s):
+    'Print to stdout and possibly output file.'
+    print(s, flush=True)
+    if args.out is not None:
+        print(s, flush=True, file=args.out)
 
 
 def bench(stmt, comment, title=None, setup=None, number=1):
@@ -160,7 +195,7 @@ def bench(stmt, comment, title=None, setup=None, number=1):
             err = exc
             global nfail
             nfail += 1
-        print('{:7s}: {:23s} # {}'.format(t, title, comment), flush=True)
+        output('{:7s}: {:23s} # {}'.format(t, title, comment))
         if err:
             print(err, file=sys.stderr)
 
