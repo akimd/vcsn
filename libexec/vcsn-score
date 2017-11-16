@@ -448,7 +448,8 @@ ctx = 'lal_char(a-e), z'
 r = "[a-e]?{600}"
 bench('a.shortest(5)',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).standard()'],
       number=5)
@@ -457,7 +458,8 @@ ctx = 'lat<lan_char(a), lan_char(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.shortest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).derived_term().strip()'],
       number=10)
@@ -481,7 +483,8 @@ r = "[a-e]?{150}"
 for algo, number in [('auto', 10), ('yen', 500), ('eppstein', 500)]:
     bench('a.lightest(5, "{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-          setup=['c = vcsn.context(ctx)',
+          setup=['ctx = "{}"'.format(ctx),
+                 'c = vcsn.context(ctx)',
                  'r = "{}"'.format(r),
                  'a = c.expression(r).standard()'],
           number=number)
@@ -491,7 +494,8 @@ for algo, number in [('auto', 10), ('yen', 500), ('eppstein', 500)]:
 ctx = 'lal_char(a-e), nmin'
 bench('a.lightest()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).standard()'],
       number=500)
@@ -500,7 +504,8 @@ ctx = 'lat<lan_char(a), lan_char(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.lightest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).derived_term().strip()'],
       number=10)
@@ -511,7 +516,8 @@ r = "[a-e]?{150}"
 for algo, number in [('a-star', 20), ('bellman-ford', 1), ('dijkstra', 500)]:
     bench('a.lightest_automaton(1, "{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-          setup=['c = vcsn.context(ctx)',
+          setup=['ctx = "{}"'.format(ctx),
+                 'c = vcsn.context(ctx)',
                  'r = "{}"'.format(r),
                  'a = c.expression(r).standard()'],
           number=number)
@@ -521,7 +527,8 @@ ctx = "lal_char(a-e), z"
 r = "[a-e]?{700}"
 bench('a.sort()',
       'a = std({})'.format(r),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).standard()'])
 
@@ -530,7 +537,8 @@ ctx = "lal(a-e), q"
 e = "[a-e]?{15}"
 bench('e.split()',
       'e = {}'.format(e),
-      setup=['c = vcsn.context(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
+             'c = vcsn.context(ctx)',
              'e = c.expression("{}")'.format(e)])
 
 # proper.
@@ -690,8 +698,8 @@ def bench_minimize(ws, algo, number=1):
     r = '[a-g]{300}'
     bench('a.minimize("{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
-          setup=['ctx = vcsn.context("{}")'.format(ctx),
-                 'r = ctx.expression("{}")'.format(r),
+          setup=['c = vcsn.context("{}")'.format(ctx),
+                 'r = c.expression("{}")'.format(r),
                  'a = r.standard()'],
           number=number)
 bench_minimize('b', 'brzozowski', 200)
@@ -728,7 +736,7 @@ ctx = "lal_char(abc), zmin"
 r = "[a-c]{200}*+[a-c]{200}*"
 bench('a.has_twins_property()',
       'a = std({}, "associative"), c = {}'.format(r, ctx_signature(ctx)),
-      setup=['ctx = "{}".format(ctx)',
+      setup=['ctx = "{}"'.format(ctx),
              'r = "{}"'.format(r),
              'a = vcsn.context(ctx).expression(r, "associative").standard()'],
       number=20)
