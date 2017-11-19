@@ -78,7 +78,7 @@ else:
 
 
 def git_summary(fn):
-    m = re.match(r'^v\d+\.\d+-\d+-g([\da-f]+)(?:\.\d+)?$', fn)
+    m = re.match(r'^v(?:.*)-\d+-g([\da-f]+)(?:\.\d+)?$', fn)
     if m and repo:
         try:
             return repo.commit(m.group(1)).summary
