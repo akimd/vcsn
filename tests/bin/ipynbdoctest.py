@@ -141,10 +141,8 @@ def canonical_dict(dict, ignores):
         if dict['evalue'] == "No module named 'pandas'":
             SKIP('pandas not installed')
             exit(0)
-        if dict['evalue'] == "No module named 'ipywidgets'":
-            SKIP('ipywidgets not installed')
-            exit(0)
-        if dict['evalue'] in ["module 'vcsn' has no attribute 'ipython'",
+        if dict['evalue'] in ["No module named 'ipywidgets'",
+                              "module 'vcsn' has no attribute 'ipython'",
                               "'module' object has no attribute 'ipython'"]:
             SKIP('ipywidgets not installed')
             exit(0)
@@ -162,15 +160,14 @@ def canonical_dict(dict, ignores):
         if re.search('pygmentize: (command )?not found', dict['text']):
             SKIP('pygmentize (from python-pygments) not installed')
             exit(0)
-        if 'ERROR:root:Cell magic `%%automaton` not found.' in dict['text']:
-            SKIP("cell magic doesn't work")
-            exit(0)
-        if 'ERROR:root:Line magic function `%demo` not found' in dict['text']:
-            SKIP("line magic doesn't work")
+        if dict['text'] in ['UsageError: Cell magic `%%automaton` not found.\n',
+                            'UsageError: Line magic function `%demo` not found.\n',
+                            'ERROR:root:Cell magic `%%automaton` not found.\n',
+                            'ERROR:root:Line magic function `%demo` not found']:
+            SKIP("No cell/line magic support")
             exit(0)
         if re.search('Use of this header .* is deprecated', dict['text']):
             SKIP('spurious warnings about deprecated header')
-            print(dict['text'])
             exit(0)
 
         # Normalize newline.  For some reason, out of our 400+ lines
