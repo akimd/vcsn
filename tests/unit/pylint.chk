@@ -11,20 +11,36 @@ for p in pylint                                                   \
          pylint-$short_python_version pylint$short_python_version \
          pylint3
 do
+    echo "Checking $p"
     # We require Python >= 3 and Pylint >= 1.5.4.
     version=$($p --version 2> /dev/null || true)
-    if $(echo "$version" |
-         grep -E '^Python [3-9]\.' >/dev/null) &&
-       $(echo "$version" |
-         grep -E '^pylint[^ ]* ([2-9]\.*|1\.([6-9]|[1-9][0-9]+)|1\.5\.([4-9]|[1-9][0-9]+))' >/dev/null)
-    then
-        pylint=$p
-        break
-    fi
+    # Python 3.5.4 (default, Sep 27 2017, 15:52:32)
+    python_version=$(echo "$version" | sed -ne '/^Python /{s///;s/ .*//;p;}')
+    echo "    Python version: $python_version"
+    # pylint 1.7.4,
+    pylint_version=$(echo "$version" | sed -ne '/^pylint /{s///;s/,.*//;p;}')
+    echo "    Pylint version: $pylint_version"
+    case $python_version:$pylint_version in
+        (:*)
+            echo "    Skip $p: cannot get Python version";;
+        (*:)
+            echo "    Skip $p: cannot get pylint version";;
+        (2.*:*)
+            echo "    Skip $p: Python 2";;
+        (3.*:[0-1].[0-5].*)
+            echo "    Skip $p: Python >= 3 with pylint < 1.6";;
+        (3.[6-9].*:1.6.*)
+            echo "    Skip $p: Python >= 3.6 with pylint < 1.7";;
+        (*)
+            echo "    Keep $p"
+            pylint=$p
+            break
+            ;;
+    esac
 done
 
 if test -z "$pylint"; then
-    tap_skip "Could not find Pylint >= 1.5.4 with Python >= 3"
+    tap_skip "Could not find usable Pylint"
     exit 0
 fi
 
