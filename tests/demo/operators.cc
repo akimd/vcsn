@@ -26,29 +26,23 @@ namespace
     auto a1 = make_automaton("context = lal, q\n"
                              "$ 0 <1/2>\n"
                              "0 1 <2>a, <6>b\n"
-                             "1 $\n", "daut");
+                             "1 $\n");
     // Its context.
     auto ctx = context_of(a1);
 
     // Evaluate it.
-    ASSERT(evaluate(a1, make_word(ctx, "a"))
-           == make_weight(ctx, "1"));
-    ASSERT(evaluate(a1, make_word(ctx, "b"))
-           == make_weight(ctx, "3"));
+    ASSERT(evaluate(a1, make_word(ctx, "a")) == make_weight(ctx, "1"));
+    ASSERT(evaluate(a1, make_word(ctx, "b")) == make_weight(ctx, "3"));
 
     // Concatenate to itself.
     auto a2 = a1 * a1;
-    ASSERT(evaluate(a2, make_word(ctx, "ab"))
-           == make_weight(ctx, "3"));
-    ASSERT(evaluate(a2, make_word(ctx, "bb"))
-           == make_weight(ctx, "9"));
+    ASSERT(evaluate(a2, make_word(ctx, "ab")) == make_weight(ctx, "3"));
+    ASSERT(evaluate(a2, make_word(ctx, "bb")) == make_weight(ctx, "9"));
 
     // Self-conjunction, aka "power 2".
     auto a3 = a1 & a1;
-    ASSERT(evaluate(a3, make_word(ctx, "a"))
-           == make_weight(ctx, "1"));
-    ASSERT(evaluate(a3, make_word(ctx, "b"))
-           == make_weight(ctx, "9"));
+    ASSERT(evaluate(a3, make_word(ctx, "a")) == make_weight(ctx, "1"));
+    ASSERT(evaluate(a3, make_word(ctx, "b")) == make_weight(ctx, "9"));
   }
   // automata: end
 

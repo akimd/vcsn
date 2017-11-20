@@ -8,11 +8,9 @@
 #include <vcsn/labelset/letterset.hh> // letterset
 #include <vcsn/weightset/b.hh> // weightset b
 
-/**
- * Example usage of Vcsn's static layer.
- *
- * Creation of an automaton, composition, then display.
- */
+// Example usage of Vcsn's static layer.
+//
+// Creation of an automaton, composition, then display.
 int main()
 {
   using namespace vcsn;
