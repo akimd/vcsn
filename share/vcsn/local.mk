@@ -16,13 +16,16 @@ dist_pkgdata_DATA = %D%/version.yaml
 
 .PHONY: %D%/version.yaml
 %D%/version.yaml:
-	$(AM_V_GEN)						\
-	version=$$(git -C $(srcdir) describe 2>/dev/null |	\
-	  sed -e 's/^v//');					\
-	if test x"$$version" != x; then				\
-	  echo "configuration:" > $@.tmp;			\
-	  echo "  version: $$version" >>$@.tmp;			\
-	  $(move_if_change) $@.tmp $(srcdir)/$@;		\
+	$(AM_V_GEN)							\
+	version=$$(git -C $(srcdir) describe				\
+	             --first-parent --long --dirty 2>/dev/null |	\
+	  sed -e 's/^v//'						\
+	      -e 's/-\([0-9]-g\)/-00\1/g;'				\
+	      -e 's/-\([0-9][0-9]-g\)/-0\1/g;');			\
+	if test x"$$version" != x; then					\
+	  echo "configuration:" > $@.tmp;				\
+	  echo "  version: $$version" >>$@.tmp;				\
+	  $(move_if_change) $@.tmp $(srcdir)/$@;			\
 	fi
 
 jsdir = $(pkgdatadir)/js
