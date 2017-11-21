@@ -154,6 +154,9 @@ def canonical_dict(dict, ignores):
             exit(0)
 
     if 'text' in dict:
+        if dict['text'].startswith('SKIP: '):
+            SKIP('On demand from the notebook: ' + dict['text'][len('SKIP: '):])
+            exit(0)
         if re.search('fstcompile: (command )?not found', dict['text']):
             SKIP('OpenFST not installed')
             exit(0)

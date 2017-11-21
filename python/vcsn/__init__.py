@@ -1,3 +1,4 @@
+import hashlib
 import inspect
 import os
 import sys
@@ -74,6 +75,19 @@ def is_vcsn(tb):
         return 'vcsn' == inspect.getmodule(tb.tb_frame).__package__
     except AttributeError:
         return False
+
+
+def md5(fname):
+    'If fname is a file, return its MD5 sum, otherwise the empty string.'
+    try:
+        hash = hashlib.md5()
+        with open(fname, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b''):
+                hash.update(chunk)
+        return hash.hexdigest()
+    except OSError:
+        return ''
+
 
 def setenv(**vars):
     '''Set/unset environment variables for Vcsn.  Pass a list
