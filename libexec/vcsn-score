@@ -14,13 +14,6 @@ import warnings
 
 import vcsn
 
-if '-DNDEBUG' not in ' '.join([vcsn.config('configuration.cppflags'),
-                               vcsn.config('configuration.cxxflags')]):
-    warnings.warn('not compiled with -DNDEBUG, benches are irrelevant')
-if '-O3' not in vcsn.config('configuration.cxxflags'):
-    warnings.warn('not compiled with -O3, benches are irrelevant')
-
-
 def getargs():
     p = argparse.ArgumentParser(description='Bench some algorithms.')
     opt = p.add_argument
@@ -36,7 +29,9 @@ def getargs():
         cache (ccache).''')
     opt('-v', '--verbose', action='store_true', help='be verbose')
     opt('--check', action='store_true',
-        help='only run a quick check. Implies -r 1.')
+        help='''run scaled down versions of the benchmarks.  Implies -r 1.  Very
+        useful with `-j` to warn the algorithm cache.  Do not use it
+        to record actual benchmarks.''')
     opt('-o', '--output', metavar='FILE',
         help='''also save the result in `FILE`''')
     opt('-d', '--dir', metavar='DIR',
@@ -60,6 +55,14 @@ def git_describe():
 
 
 args = getargs()
+
+if '-DNDEBUG' not in ' '.join([vcsn.config('configuration.cppflags'),
+                               vcsn.config('configuration.cxxflags')]):
+    warnings.warn('not compiled with -DNDEBUG, benches are irrelevant')
+if '-O3' not in vcsn.config('configuration.cxxflags'):
+    warnings.warn('not compiled with -O3, benches are irrelevant')
+if args.check:
+    warnings.warn('run with --check, benches are irrelevant')
 
 # Implement --dir/--output.
 args.out = None
