@@ -42,6 +42,22 @@ can be seen from the Python interface.  For example:
     In [5]: a.info('is deterministic')
     Out[5]: False
 
+### vcsn score has several new options
+The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
+`vcsn score-compare` to see the trends in performances between versions.
+
+The new option -o/--output allows to specify the output file name.
+
+Better yet: option -d/--dir specifies the directory in which the score file
+is saved; its name will be forged from `git describe`, something like
+`v2.5-050-g01dbf326`.  Such names are interpreted by `vcsn score-compare` to
+relate the benches to the git commit title.  Both features need that you run
+these commands from a git repository of Vcsn.
+
+Option -j/--job allows to run the benchmarks concurrently.  This can be very
+useful to "warn" vcsn (have it compile the needed algorithms), or to get a
+nice approximation of the actual benches, however, sticking to a single bench
+at a time is recommended to get faithful measurements.
 
 # Vcsn 2.6 (2017-11-13)
 
@@ -5590,6 +5606,7 @@ LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners
 LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused Harald
 LocalWords:  cxxflags Eppstein eppstein Soudière Schilly SageMathCloud prog
 LocalWords:  abcdefghijklmnopqrstuvwxyz macOS rpath Doxygen doxygen Tupling
+LocalWords:  tupleset dir dbf CoCalc
 
 Local Variables:
 coding: utf-8
