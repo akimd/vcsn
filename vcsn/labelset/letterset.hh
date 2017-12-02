@@ -238,11 +238,9 @@ namespace vcsn
       return !is_one(v);
     }
 
-    // FIXME: specialize for both implementation.
     static size_t hash(value_t v)
     {
-      // Do not use get_value when is_one.  Let's hash one() as 0.
-      return is_one(v) ? 0 : hash_value(v);
+      return hash_value(v);
     }
 
     value_t
@@ -281,23 +279,7 @@ namespace vcsn
       this->convs_(i, fun);
     }
 
-    // FIXME: Nullableset removal: update comment.
     /// The longest common prefix.
-    ///
-    /// It would be better not to define it and to adjust
-    /// tupleset::ldivide to be SNIFAE compliant, so that we get a
-    /// compile time error instead of a runtime one when we try to
-    /// using lgcd/ldivide on labelsets that don't support it.  However,
-    /// I feel it is not nice not to get tupleset::ldivide fail to
-    /// compile without a clear explanation of why, and it is quite
-    /// some work to write code that supports this possible missing
-    /// ldivide/lgcd (see the case of conjunction in expansionset, case
-    /// of non free labelsets).
-    ///
-    /// Since I'm not convinced that letterset is the right
-    /// abstraction (I, Akim, now tend to think that we should only
-    /// support nullableset<letterset>), let's not fight this fight
-    /// now.
     value_t lgcd(const value_t l, const value_t r) const
     {
       if (equal(l, r))
