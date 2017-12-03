@@ -115,11 +115,19 @@ EOF
 
 version ()
 {
+  authors=$(vcsn configuration configuration.authors)
   version=$(vcsn configuration configuration.version)
   url=$(vcsn configuration configuration.url)
 cat <<EOF
-vcsn ($version)
-<$url>
+vcsn (Vcsn $version)
+Copyright (C) 2017 Vcsn Group.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+$(echo "Written by $authors." | fold -s -w 78)
+
+For more information, see <$url>.
 EOF
   exit 0
 }

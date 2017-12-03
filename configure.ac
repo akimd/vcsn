@@ -356,6 +356,8 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
+AC_SUBST([PACKAGE_AUTHORS],
+         [$(tr '\n' "," < "$srcdir/AUTHORS.md" | sed -e 's/,$//;s/,/, /g')])
 AC_CONFIG_FILES([share/vcsn/config.yaml:share/vcsn/config.in.yaml])
 
 AC_OUTPUT
