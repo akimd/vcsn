@@ -242,8 +242,8 @@ if args['shared']:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -fPIC -c -o '{tmp}.o'"
         " -MMD -MF '{deps}' -MQ '{output}'"
         " '{input}'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC {libs} -shared -o '{tmp}.so'"
-        " '{tmp}.o'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -fPIC -shared -o '{tmp}.so'"
+        " '{tmp}.o' {libs}")
     run("mv -f '{tmp}.so' '{output}'")
     clean()
     notify()
@@ -253,6 +253,6 @@ else:
     run("LC_ALL=C {ccache} {cxx} {cppflags} {cxxflags} -c -o '{tmp}.o'"
         " -MMD -MF '{deps}' -MQ '{output}'"
         " '{input}'")
-    run("LC_ALL=C {cxx} {cxxflags} {ldflags} {libs} -o '{tmp}' '{tmp}.o'")
+    run("LC_ALL=C {cxx} {cxxflags} {ldflags} -o '{tmp}' '{tmp}.o' {libs}")
     run("mv -f '{tmp}' '{output}'")
     clean()
