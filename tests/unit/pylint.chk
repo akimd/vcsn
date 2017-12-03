@@ -21,6 +21,8 @@ do
     pylint_version=$(echo "$version" | sed -ne '/^pylint /{s///;s/,.*//;p;}')
     echo "    Pylint version: $pylint_version"
     case $python_version:$pylint_version in
+        (:)
+            echo "    Skip $p: cannot get version";;
         (:*)
             echo "    Skip $p: cannot get Python version";;
         (*:)
