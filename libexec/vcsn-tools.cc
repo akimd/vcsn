@@ -57,6 +57,8 @@ namespace
       "+"
 #endif
       "ABDEFLNPSWchf:e:C:O:o:qI:";
+    // Don't let getopt display error messages.
+    opterr = 0;
 
     while (true)
       switch (auto opt = getopt(argc, argv, optstring))
@@ -144,7 +146,7 @@ namespace
           exit(0);
 
         case '?':
-          raise("unknown option: ", optarg);
+          raise("invalid option: -", char(optopt));
         }
   }
 
@@ -374,11 +376,11 @@ try
 }
 catch (const std::exception& e)
 {
-  std::cerr << "error: " << e.what() << '\n';
+  std::cerr << argv[0] << ": error: " << e.what() << '\n';
   exit(EXIT_FAILURE);
 }
 catch (...)
 {
-  std::cerr << "error: unknown exception caught\n";
+  std::cerr << argv[0] << ": error: unknown exception caught\n";
   exit(EXIT_FAILURE);
 }
