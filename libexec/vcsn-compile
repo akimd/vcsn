@@ -21,31 +21,31 @@ args = {'verbose': 0}
 def parse_args():
     p = argparse.ArgumentParser(description='''Compile Vcsn programs
                                                or libraries.''')
-    p.add_argument('vars', nargs='*',
-                   help='''variable assignments such
-                   as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
-    p.add_argument('input', help='source file to compile')
-    p.add_argument('-v', '--verbose', help='be verbose',
-                   action='count',
-                   default=int(configuration('configuration.verbose')))
-    p.add_argument('-q', '--quiet',
-                   help='hide warnings (including compiler warnings)',
-                   action='store_true')
-    p.add_argument('-c', '--color', dest='color', action='store',
-                   default='auto',
-                   choices=['auto', 'always', 'never'],
-                   help='whether to use colors in the output')
-    p.add_argument('-p', '--plain', action='store_true',
-                   help='disable all extra features (color and demangle)')
-    p.add_argument('-f', '--force', action='store_true',
-                   help='force build even if not needed')
-    p.add_argument('-d', '--debug', action='store_true',
-                   default='VCSN_DEBUG' in os.environ,
-                   help='''do not remove object file (needed to
-                   debug in C++)''')
-    p.add_argument('-shared',
-                   help='create a shared lib instead of an executable',
-                   action='store_true')
+    opt = p.add_argument
+    opt('vars', nargs='*',
+        help='''variable assignments such
+        as `CXX=g++`, or `CXXFLAGS+=-g`, or `CXXFLAGS-=-O3`.''')
+    opt('input', help='source file to compile')
+    opt('-v', '--verbose', help='be verbose',
+        action='count',
+        default=int(configuration('configuration.verbose')))
+    opt('-q', '--quiet',
+    help='hide warnings (including compiler warnings)',
+        action='store_true')
+    opt('-c', '--color', dest='color', action='store',
+        default='auto',
+    choices=['auto', 'always', 'never'],
+        help='whether to use colors in the output')
+    opt('-p', '--plain', action='store_true',
+        help='disable all extra features (color and demangle)')
+    opt('-f', '--force', action='store_true',
+        help='force build even if not needed')
+    opt('-d', '--debug', action='store_true',
+        default='VCSN_DEBUG' in os.environ,
+        help='do not remove object file (needed to debug in C++)')
+    opt('-shared',
+        help='create a shared lib instead of an executable',
+        action='store_true')
 
     # Parse the arguments, and complete the 'args' object with the value
     # from the configuration (cxx, cxxflags, etc.).
