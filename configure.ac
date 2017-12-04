@@ -298,16 +298,18 @@ AC_CHECK_PROGS([PERL], [perl])
 ## Libraries.  ##
 ## ----------- ##
 
+# ltdl.
 AC_CHECK_HEADERS([ltdl.h], [],
                  [AC_MSG_ERROR([libltdl (a component from Libtool) is needed])])
 
+# libyaml-cpp
 AC_CHECK_HEADERS([yaml-cpp/yaml.h], [],
                  [AC_MSG_ERROR([yaml-cpp is needed])])
 save_LIBS=$LIBS
 LIBS="$LIBS -lyaml-cpp"
 # This symbol is really in the library.  At least in 0.5.1.
 AC_LINK_IFELSE([AC_LANG_PROGRAM([@%:@include <yaml-cpp/yaml.h>],
-                                [YAML::Parser p();])],
+                                [YAML::Parser p;])],
                [AC_SUBST([YAMLCPP_LIBS], [-lyaml-cpp])],
                [AC_MSG_ERROR([yaml-cpp is needed])])
 LIBS=$sa_LIBS
@@ -354,6 +356,8 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
+AC_SUBST([PACKAGE_AUTHORS],
+         [$(tr '\n' "," < "$srcdir/AUTHORS.md" | sed -e 's/,$//;s/,/, /g')])
 AC_CONFIG_FILES([share/vcsn/config.yaml:share/vcsn/config.in.yaml])
 
 AC_OUTPUT

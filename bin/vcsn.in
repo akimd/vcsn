@@ -79,20 +79,25 @@ help ()
   cat <<EOF
 usage: vcsn COMMAND ARGS...
 
-If COMMAND is "notebook", run Vcsn as an IPython Notebook.
+COMMAND can be:
 
-If COMMAND is "run" (or "-e"), set up the environment to find
-Vcsn, and run the ARGS...
+- notebook: run Vcsn as an IPython Notebook.
+- python, ipython: run Python/IPython.
+- gdb: run gdb with a type pretty-printer.
 
-If COMMAND is "efstcompile", "efstdecompile", "python", or "ipython",
-run the corresponding program.
+- compile: compile a C++ program using libvcsn.
+- run: set up the environment to find Vcsn, and run the ARGS...
+- ps: display Vcsn compilation jobs.
+- demangle: improve readability of C++ compiler error messages.
 
-If COMMAND is "gdb", run gdb with a type pretty-printer.
+- efstcompile, efstdecompile: compile/decompile EFST files
 
-If COMMAND is one of the following commands, run the corresponding
-algorithm:
+- version: display version tag.
 
-$(commands)
+- score, score-compare: generate/compare benchmarks.
+
+- $(commands | sed -e '1s/^  //'):
+  run the corresponding algorithm.
 
 For more information, run:
 
@@ -110,11 +115,19 @@ EOF
 
 version ()
 {
+  authors=$(vcsn configuration configuration.authors)
   version=$(vcsn configuration configuration.version)
   url=$(vcsn configuration configuration.url)
 cat <<EOF
-vcsn ($version)
-<$url>
+vcsn (Vcsn $version)
+Copyright (C) 2017 Vcsn Group.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+$(echo "Written by $authors." | fold -s -w 78)
+
+For more information, see <$url>.
 EOF
   exit 0
 }
@@ -130,9 +143,10 @@ fi
 
 case $1 in
   ('--export') ;; # We are sourced to set up the environment.
-  (-e|run) shift 1; exec "$@";;
+  (run) shift 1; exec "$@";;
   (-h|--help) help;;
   (-v|--version) version;;
+  (version) vcsn configuration configuration.version;;
 
   (compile|demangle|ps|score|score-compare)
       prog=$(command -v "vcsn-$1")

@@ -40,8 +40,10 @@ run 0 2 -/bin/sh -c "vcsn thompson -Ee -ab |
                      vcsn lweight -C 'lal, q' -W 2 -A - |
                      vcsn evaluate -L -e-ab"
 
-run 1 - -/bin/sh -c "vcsn evaluate 2>&1" <<EOF
-error: evaluate: no matching algorithm
+run 1 - -"vcsn evaluate" </dev/null
+sed -e 's,^.*/vcsn-tools:,vcsn-tools:,' err.eff >error-message
+run 0 - -cat error-message <<EOF
+vcsn-tools: error: evaluate: no matching algorithm
   candidates are:
       AUT:automaton L:word -> weight
       AUT:automaton P:polynomial -> weight

@@ -2,6 +2,7 @@ configuration:
   # Package version.
   version: @PACKAGE_VERSION@
   url: @PACKAGE_URL@
+  authors: @PACKAGE_AUTHORS@
 
   # Running Python.
   python: @PYTHON@

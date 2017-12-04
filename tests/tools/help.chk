@@ -190,7 +190,14 @@ EOF
 
 # An unknown algorithm.
 run 1 - -"$builddir/tests/bin/vcsn tools foobarbaz" </dev/null
-mv err.eff error-message
+sed -e 's,^.*/vcsn-tools:,vcsn-tools:,' err.eff >error-message
 run 0 - -cat error-message <<EOF
-error: unknown algorithm: foobarbaz
+vcsn-tools: error: unknown algorithm: foobarbaz
+EOF
+
+# Invalid option.
+run 1 - -"$builddir/tests/bin/vcsn standard -x " </dev/null
+sed -e 's,^.*/vcsn-tools:,vcsn-tools:,' err.eff >error-message
+run 0 - -cat error-message <<EOF
+vcsn-tools: error: invalid option: -x
 EOF

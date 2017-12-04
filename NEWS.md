@@ -5,6 +5,8 @@ This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
 the internal API may also be documented.
 
+# Vcsn 2.9.dev
+
 ## New features
 ### Nullableset removal
 Nullableset was merged with letterset.  This means that being free (labels
@@ -42,6 +44,9 @@ can be seen from the Python interface.  For example:
     In [5]: a.info('is deterministic')
     Out[5]: False
 
+# Vcsn 2.6.dev
+
+## New features
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.
