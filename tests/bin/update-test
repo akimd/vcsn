@@ -5,9 +5,11 @@
 # single expected output is tedious and error-prone.
 #
 # usage:
-#   update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
+# update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
 
-import argparse, re
+import argparse
+import re
+
 
 def getargs():
     p = argparse.ArgumentParser(description='Update test cases.')
@@ -25,86 +27,91 @@ def getargs():
 args = getargs()
 subst = dict()
 
+
 def log(*args_):
-  if args.verbose:
-    print(*args_)
+    if args.verbose:
+        print(*args_)
+
 
 def contents(file):
-  '''The contents of a file.'''
-  f = open(file)
-  return f.read()
+    '''The contents of a file.'''
+    f = open(file)
+    return f.read()
+
 
 def diff_to_re(match):
-  '''Convert a portion of patch into a regex substitution to perform.
-  No longer used, we now use the expected/effective parts.
-  '''
-  frm = []
-  to  = []
-  is_diff = False
-  for l in match.group(1).splitlines():
-    # t in [-+ ]
-    t = l[1]
-    l = l[2:]
-    if t in ['-', ' ']:
-      is_diff = True
-      frm.append(l)
-    if t in ['+', ' ']:
-      is_diff = True
-      to.append(l)
-  if is_diff:
-    frm = "\n".join(frm)
-    to = "\n".join(to)
-    subst[frm] = to
+    '''Convert a portion of patch into a regex substitution to perform.
+    No longer used, we now use the expected/effective parts.
+    '''
+    frm = []
+    to = []
+    is_diff = False
+    for l in match.group(1).splitlines():
+        # t in [-+ ]
+        t = l[1]
+        l = l[2:]
+        if t in ['-', ' ']:
+            is_diff = True
+            frm.append(l)
+        if t in ['+', ' ']:
+            is_diff = True
+            to.append(l)
+    if is_diff:
+        frm = "\n".join(frm)
+        to = "\n".join(to)
+        subst[frm] = to
+
 
 def exp_eff_to_re(match):
-  fr = ''
-  to  = ''
-  # For some reason, with python-2.7 on OS X, I raise an
-  # exception.TypeError when I use (keepends = True) instead of
-  # (True)!!!
-  for l in match.group(1).splitlines(True):
-    fr += l[1:]
-  # Drop the final \n.
-  fr = fr[:-1]
-  for l in match.group(2).splitlines(True):
-    to += l[1:]
-  to = to[:-1]
-  subst[fr] = to
-  log("SUBST: {} -> {}".format(fr, to))
+    fr = ''
+    to = ''
+    # For some reason, with python-2.7 on OS X, I raise an
+    # exception.TypeError when I use (keepends = True) instead of
+    # (True)!!!
+    for l in match.group(1).splitlines(True):
+        fr += l[1:]
+    # Drop the final \n.
+    fr = fr[:-1]
+    for l in match.group(2).splitlines(True):
+        to += l[1:]
+    to = to[:-1]
+    subst[fr] = to
+    log("SUBST: {} -> {}".format(fr, to))
+
 
 def update(test, logfile):
-  logfile = args.builddir + '/' + logfile
-  try:
-    l = contents(logfile)
-    log("LOG: ", logfile)
-    global subst # pylint: disable=global-statement
-    subst = dict()
-    re.sub(r'Expected (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n'
-           +'Effective (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n',
-           exp_eff_to_re, l, flags = re.MULTILINE)
+    logfile = args.builddir + '/' + logfile
+    try:
+        l = contents(logfile)
+        log("LOG: ", logfile)
+        global subst  # pylint: disable=global-statement
+        subst = dict()
+        re.sub(r'Expected (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n'
+               + 'Effective (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n',
+               exp_eff_to_re, l, flags=re.MULTILINE)
 #    re.sub(r'((?:^\t[-+ ].*\n)+)',
 #           diff_to_re, l, flags = re.MULTILINE)
-    if subst != dict():
-      # Turn "subst{frm} -> to" into a large RE.
-      frm = '|'.join([re.escape(x) for x in subst.keys()])
-      log("FROM:", frm)
-      test = re.sub("(" + frm + ")",
-                    lambda m: subst[m.group(1)],
-                    test, flags = re.MULTILINE)
-    return test
-  except IOError:
-    return test
+        if subst != dict():
+            # Turn "subst{frm} -> to" into a large RE.
+            frm = '|'.join([re.escape(x) for x in subst.keys()])
+            log("FROM:", frm)
+            test = re.sub("(" + frm + ")",
+                          lambda m: subst[m.group(1)],
+                          test, flags=re.MULTILINE)
+        return test
+    except IOError:
+        return test
 
 for t in args.tests:
-  log("FILE:", t)
-  old = contents(t)
-  new = old
-  # Use the logs provided by the user, and the ones computed from the
-  # test file name (e.g., tests/python/automaton.py ->
-  # tests/python/automaton.log), and the ones from the test
-  # directories (tests/python/automaton.dir/a1.gv ->
-  # tests/python/automaton.log)
-  for l in args.log + [t[:t.rfind('.')] + '.log'] + [t[:t.rfind('.dir/')] + '.log']:
-    new = update(new, l)
-  if new != old:
-    open(t, 'w').write(new)
+    log("FILE:", t)
+    old = contents(t)
+    new = old
+    # Use the logs provided by the user, and the ones computed from the
+    # test file name (e.g., tests/python/automaton.py ->
+    # tests/python/automaton.log), and the ones from the test
+    # directories (tests/python/automaton.dir/a1.gv ->
+    # tests/python/automaton.log)
+    for l in args.log + [t[:t.rfind('.')] + '.log'] + [t[:t.rfind('.dir/')] + '.log']:
+        new = update(new, l)
+    if new != old:
+        open(t, 'w').write(new)
