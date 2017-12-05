@@ -15,6 +15,8 @@
 ## Tests.  ##
 ## ------- ##
 
+python_scripts += %D%/bin/update-test
+
 check_PROGRAMS =
 TAP_DRIVER = $(top_srcdir)/build-aux/bin/tap-driver.sh
 

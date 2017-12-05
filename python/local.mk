@@ -43,8 +43,8 @@ vcsn_tools_python_PYTHON =                      \
   %D%/vcsn_tools/demangle.py                    \
   %D%/vcsn_tools/gdb-demangle.py
 
-# All our Python sources.
-vcsn_python =                                   \
+# All our Python sources, installed or not.
+vcsn_python +=                                   \
   $(python_scripts)                             \
   $(vcsn_python_PYTHON)                         \
   $(vcsn_python_demo_PYTHON)                    \
