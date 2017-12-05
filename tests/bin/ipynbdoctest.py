@@ -93,6 +93,8 @@ def canonicalize(s, type, ignores):
         s = re.sub('<td> +', '<td>', s)
         s = re.sub(r'<style>\s*.dataframe thead tr:only-child.*?</style>\n', '', s,
                    flags = re.S)
+        s = re.sub(r'<style scoped>.*?</style>\n', '', s,
+                   flags = re.S)
 
     if type in ['image/svg+xml', 'text/html']:
         # Normalize Graphviz version.
