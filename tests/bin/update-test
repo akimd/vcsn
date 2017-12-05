@@ -93,7 +93,7 @@ def update(test, logfile):
 #           diff_to_re, l, flags = re.MULTILINE)
         if subst != dict():
             # Turn "subst{frm} -> to" into a large RE.
-            frm = '|'.join([re.escape(x) for x in subst.keys()])
+            frm = '|'.join([re.escape(x) for x in subst])
             log("FROM:", frm)
             test = re.sub("(" + frm + ")",
                           lambda m: subst[m.group(1)],
