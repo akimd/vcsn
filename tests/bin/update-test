@@ -9,21 +9,20 @@
 
 import argparse, re
 
-parser = argparse.ArgumentParser(description='Update test cases.')
-parser.add_argument('tests', metavar='test', nargs='+',
-                    type=str, default=None,
-                    help='a test file to update')
-parser.add_argument('--builddir', metavar='DIR',
-                    type=str, default='.',
-                    help='look for the logs in DIR')
-parser.add_argument('--log', metavar='FILE', nargs="+",
-                    type=str, default=[],
-                    help='consider DIR/FILE')
-parser.add_argument('-v', '--verbose', action='store_true',
-                    help='Be verbose')
+def getargs():
+    p = argparse.ArgumentParser(description='Update test cases.')
+    opt = p.add_argument
+    opt('tests', metavar='test', nargs='+', type=str, default=None,
+        help='a test file to update')
+    opt('--builddir', metavar='DIR', type=str, default='.',
+        help='look for the logs in DIR')
+    opt('--log', metavar='FILE', nargs="+", type=str, default=[],
+        help='consider DIR/FILE')
+    opt('-v', '--verbose', action='store_true',
+        help='Be verbose')
+    return p.parse_args()
 
-args = parser.parse_args()
-
+args = getargs()
 subst = dict()
 
 def log(*args_):
