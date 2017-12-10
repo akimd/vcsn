@@ -15,6 +15,7 @@ import warnings
 
 import vcsn
 
+
 def git_describe():
     b = subprocess.check_output(
         ['git', 'describe', '--first-parent', '--long', '--dirty'])
@@ -49,7 +50,7 @@ def getargs():
     opt('-d', '--dir', metavar='DIR',
         help='''also print the result in `DIR/DESC` where DESC is the
         result of `git describe`''')
-    res =  p.parse_args()
+    res = p.parse_args()
 
     if res.dir is not None and res.output is not None:
         raise RuntimeError('--dir and --output cannot be used together')
@@ -103,7 +104,8 @@ def ctx_signature(ctx):
                                      for x in m.group(1).split(',')]),
                  ctx)
     ctx = re.sub(r'^(.*), *(.*)$',
-                 lambda m: '{} -> {}'.format(m.group(1), ws_signature(m.group(2))),
+                 lambda m: '{} -> {}'.format(m.group(1),
+                                             ws_signature(m.group(2))),
                  ctx)
     return ctx
 
@@ -137,6 +139,7 @@ count = multiprocessing.Value('i', 1)
 # List of benches to run.
 benches = []
 
+
 def output(s):
     'Print to stdout and possibly output file.'
     global count
@@ -149,6 +152,7 @@ def output(s):
           s, flush=True)
     if args.out is not None:
         print(s, flush=True, file=args.out)
+
 
 def bench(stmt, comment, title=None, setup=None, number=1):
     'Report the best timing of three batches of number runs of cmd.'
@@ -163,8 +167,10 @@ def bench(stmt, comment, title=None, setup=None, number=1):
     if args.only.search(title + ' # ' + comment):
         benches.append(Bench(stmt, comment, title, setup, number))
 
+
 class Bench:
     # pylint: disable=too-many-arguments
+
     def __init__(self, stmt, comment, title, setup, number):
         if args.check:
             number = 1
@@ -185,7 +191,6 @@ class Bench:
         if 1 < self.__number:
             self.__comment += ', {}x'.format(self.__number)
 
-
     def run(self):
         log('Bench.run: {}'.format(self.__title))
         env = {
@@ -198,7 +203,7 @@ class Bench:
                     log('run: {:27s} (was: {})'.format(s, self.__setup_orig[i]))
                 else:
                     log('run:', s)
-                exec(s, globals(), env) # pylint: disable=exec-used
+                exec(s, globals(), env)  # pylint: disable=exec-used
 
             if args.check and self.__stmt_orig != self.__stmt:
                 log('run: {:27s} (was: {})'.format(self.__stmt, self.__stmt_orig))
@@ -397,7 +402,7 @@ n = 13
 bench('a.determinize("lazy,weighted").accessible()',
       'a = de_bruijn({}), c = {}'.format(n, ctx_signature(ctx)),
       setup=['c = vcsn.context("{}")'.format(ctx),
-            'n = {}'.format(n),
+             'n = {}'.format(n),
              'a = c.de_bruijn(n)'],
       number=5)
 
@@ -448,7 +453,6 @@ for ctx, number in [('lal(a-z), z', 20000),
                  'r = c.expression("{}")'.format(r),
                  'a = r.standard()'],
           number=number)
-
 
     bench('a.evaluate(wc.polynomial("abcxyz"*{}))'.format(n),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -675,6 +679,7 @@ bench('a.compose(a2)',
              'a = c.expression("a|a").standard()',
              'a2 = c.expression(r).automaton()'],
       number=50)
+
 
 def bench_compose(ls, r, a, number=50):
     ctx = "lat<{ls}(a-z), {ls}(a-z)>, b".format(ls=ls)
