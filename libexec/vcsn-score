@@ -14,6 +14,17 @@ import warnings
 
 import vcsn
 
+def git_describe():
+    b = subprocess.check_output(
+        ['git', 'describe', '--first-parent', '--long', '--dirty'])
+    res = b.decode('utf-8').strip()
+    # v2.9-41-gf6bb8af2 -> v2.9-041-gf6bb8af2.
+    res = re.sub(r'-(\d+)-g',
+                 lambda m: '-{:03}-g'.format(int(m.group(1))),
+                 res)
+    return res
+
+
 def getargs():
     p = argparse.ArgumentParser(description='Bench some algorithms.')
     opt = p.add_argument
@@ -38,21 +49,18 @@ def getargs():
         help='''also print the result in `DIR/DESC` where DESC is the
         result of `git describe`''')
     res =  p.parse_args()
+
     if res.dir is not None and res.output is not None:
         raise RuntimeError('--dir and --output cannot be used together')
+
+    # Implement --dir/--output.
+    res.out = None
+    if res.dir is not None:
+        res.output = os.path.join(res.dir, git_describe())
+    if res.output is not None:
+        res.out = open(res.output, 'w')
+
     return res
-
-
-def git_describe():
-    b = subprocess.check_output(
-        ['git', 'describe', '--first-parent', '--long', '--dirty'])
-    res = b.decode('utf-8').strip()
-    # v2.9-41-gf6bb8af2 -> v2.9-041-gf6bb8af2.
-    res = re.sub(r'-(\d+)-g',
-                 lambda m: '-{:03}-g'.format(int(m.group(1))),
-                 res)
-    return res
-
 
 args = getargs()
 
@@ -63,13 +71,6 @@ if '-O3' not in vcsn.config('configuration.cxxflags'):
     warnings.warn('not compiled with -O3, benches are irrelevant')
 if args.check:
     warnings.warn('run with --check, benches are irrelevant')
-
-# Implement --dir/--output.
-args.out = None
-if args.dir is not None:
-    args.output = os.path.join(args.dir, git_describe())
-if args.output is not None:
-    args.out = open(args.output, 'w')
 
 # The number of failures
 nfail = 0
@@ -118,12 +119,27 @@ def log(*logs):
         print(*logs, file=sys.stderr)
 
 
+# List of benches to run.
+benches = []
+
 def output(s):
     'Print to stdout and possibly output file.'
     print(s, flush=True)
     if args.out is not None:
         print(s, flush=True, file=args.out)
 
+def bench(stmt, comment, title=None, setup=None, number=1):
+    'Report the best timing of three batches of number runs of cmd.'
+    if title is None:
+        title = stmt
+    if setup is None:
+        setup = ['pass']
+
+    if not isinstance(setup, list):
+        setup = [setup]
+
+    if args.only.search(title + ' # ' + comment):
+        benches.append(Bench(stmt, comment, title, setup, number))
 
 class Bench:
     # pylint: disable=too-many-arguments
@@ -184,20 +200,6 @@ class Bench:
         if err:
             print(err, file=sys.stderr)
 
-
-benches = []
-def bench(stmt, comment, title=None, setup=None, number=1):
-    'Report the best timing of three batches of number runs of cmd.'
-    if title is None:
-        title = stmt
-    if setup is None:
-        setup = ['pass']
-
-    if not isinstance(setup, list):
-        setup = [setup]
-
-    if args.only.search(title + ' # ' + comment):
-        benches.append(Bench(stmt, comment, title, setup, number))
 
 # Check the cost of dyn calls.
 #
