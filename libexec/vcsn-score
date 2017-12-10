@@ -4,6 +4,7 @@
 # pylint: disable=global-statement
 
 import argparse
+import math
 import multiprocessing
 import os
 import re
@@ -122,12 +123,30 @@ def log(*logs):
         print(*logs, file=sys.stderr)
 
 
+# Number of the next bench report.  Because we are using a process
+# pool (not a thread pool), we can't just use some simple global.
+#
+# We use processes, not threads, because the GIL is locked when we go
+# into C++ code, so there is no parallelism at all with threads.
+#
+# We could have a `Bench.number` counter, but we are interested in a
+# "progress bar", so what matters is the complete benches, not the
+# order in which they are run.
+count = multiprocessing.Value('i', 1)
+
 # List of benches to run.
 benches = []
 
 def output(s):
     'Print to stdout and possibly output file.'
-    print(s, flush=True)
+    global count
+    with count.get_lock():
+        c = count.value
+        count.value += 1
+    nbenches = len(benches)
+    width = int(math.log10(nbenches) + 1) if benches else 1
+    print('{:{}}/{:{}}'.format(c, width, nbenches, width),
+          s, flush=True)
     if args.out is not None:
         print(s, flush=True, file=args.out)
 
