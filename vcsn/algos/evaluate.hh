@@ -60,7 +60,7 @@ namespace vcsn
       operator()(const word_t& word) const
       {
         // Initialization.
-        weight_t res = ws_.zero();
+        auto res = ws_.zero();
 
         // A queue of current word states in the automaton.
         auto q = std::queue<labeled_weight>{};
@@ -71,7 +71,7 @@ namespace vcsn
             auto cur = q.front();
             q.pop();
 
-            for (auto t : all_out(aut_, cur.s))
+            for (const auto t : all_out(aut_, cur.s))
               if (aut_->dst_of(t) == aut_->post() && wordset_.is_special(cur.l))
                 // The word is accepted.
                 {
@@ -95,7 +95,7 @@ namespace vcsn
       operator()(const word_t& word) const
       {
         // Initialization.
-        const weight_t zero = ws_.zero();
+        const auto zero = ws_.zero();
 
         // An array indexed by state numbers.
         //
@@ -105,25 +105,25 @@ namespace vcsn
         //
         // We start with just two states numbered 0 and 1: pre() and
         // post().
-        weights_t v1(2, zero);
+        auto v1 = weights_t(2, zero);
         v1.reserve(states_size(aut_));
         v1[aut_->pre()] = ws_.one();
-        weights_t v2{v1};
+        auto v2 = weights_t{v1};
         v2.reserve(states_size(aut_));
 
         // Computation.
-        auto ls = *aut_->labelset();
+        const auto ls = *aut_->labelset();
         for (auto l : ls.letters_of(ls.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                for (auto t : out(aut_, s, l))
+                for (const auto t : out(aut_, s, l))
                   {
                     // Make sure the vectors are large enough for dst.
                     // Exponential growth on the capacity, but keep
                     // the actual size as small as possible.
-                    auto dst = aut_->dst_of(t);
+                    const auto dst = aut_->dst_of(t);
                     if (v2.size() <= dst)
                       {
                         auto capacity = v2.capacity();
@@ -149,7 +149,7 @@ namespace vcsn
       /// Polynomial implementation.
       weight_t operator()(const polynomial_t& poly) const
       {
-        weight_t res = ws_.zero();
+        auto res = ws_.zero();
         for (const auto& m: poly)
           res = ws_.add(res, ws_.mul(weight_of(m), (*this)(label_of(m))));
 
