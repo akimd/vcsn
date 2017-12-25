@@ -880,6 +880,14 @@ bench('a.weight_series()',
              'a = vcsn.context(ctx).expression(r).standard()'],
       number=10)
 
+
+## ------ ##
+## main.  ##
+## ------ ##
+
+print('vcsn version: {}'.format(vcsn.version))
+if args.out is not None:
+    print('# vcsn: {}'.format(vcsn.version), flush=True, file=args.out)
 if args.jobs == 0:
     for b in benches:
         Bench.run(b)
