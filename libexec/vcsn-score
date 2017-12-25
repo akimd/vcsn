@@ -172,11 +172,11 @@ class Bench:
     # pylint: disable=too-many-arguments
 
     def __init__(self, stmt, comment, title, setup, number):
+        self.__stmt_orig = stmt
+        self.__setup_orig = setup
         if args.check:
             number = 1
             args.repeat = 1
-            self.__stmt_orig = stmt
-            self.__setup_orig = setup
             stmt = downsize(stmt)
             comment = downsize(comment)
             title = downsize(title)
@@ -191,6 +191,13 @@ class Bench:
         if 1 < self.__number:
             self.__comment += ', {}x'.format(self.__number)
 
+    def log(self, cmd, ocmd):
+        'Report that we run `cmd` (originally `ocmd`).'
+        if args.check and cmd != ocmd:
+            log('run: {:27s} (was: {})'.format(cmd, ocmd))
+        else:
+            log('run:', cmd)
+
     def run(self):
         log('Bench.run: {}'.format(self.__title))
         env = {
@@ -199,16 +206,10 @@ class Bench:
         }
         try:
             for i, s in enumerate(self.__setup):
-                if args.check and self.__setup_orig[i] != s:
-                    log('run: {:27s} (was: {})'.format(s, self.__setup_orig[i]))
-                else:
-                    log('run:', s)
+                self.log(s, self.__setup_orig[i])
                 exec(s, globals(), env)  # pylint: disable=exec-used
 
-            if args.check and self.__stmt_orig != self.__stmt:
-                log('run: {:27s} (was: {})'.format(self.__stmt, self.__stmt_orig))
-            else:
-                log('run:', self.__stmt)
+            self.log(self.__stmt, self.__stmt_orig)
             if args.repeat:
                 t = min(timeit.repeat(self.__stmt, number=self.__number,
                                       repeat=args.repeat, globals=env))
