@@ -78,8 +78,9 @@ else:
     repo = None
 
 
-def git_summary(fn):
-    m = re.match(r'^v(?:.*)-\d+-g([\da-f]+)(?:\.\d+)?$', fn)
+def git_summary(desc):
+    'From a git describe string, recover the commit title.'
+    m = re.match(r'^v(?:.*)-\d+-g([\da-f]+)(?:\.\d+)?$', desc)
     if m and repo:
         try:
             return repo.commit(m.group(1)).summary
@@ -394,6 +395,9 @@ def read_file(fn):
     '''
     with open(fn) as f:
         for line in f:
+            # Skip empty lines and comments.
+            if not line or line.startswith('#'):
+                continue
             v, k = [str.strip(x) for x in line.split(':', 1)]
             # Get rid of "s", we know the unit.  And make it a float.
             if v[-1] == 's':

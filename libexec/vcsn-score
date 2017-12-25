@@ -45,6 +45,8 @@ def getargs():
         help='''run scaled down versions of the benchmarks.  Implies -r 1.  Very
         useful with `-j` to warn the algorithm cache.  Do not use it
         to record actual benchmarks.''')
+    opt('-l', '--list', action='store_true', help='list of benches cases')
+    opt('-s', '--sort', action='store_true', help='sort benches by name')
     opt('-o', '--output', metavar='FILE',
         help='''also save the result in `FILE`''')
     opt('-d', '--dir', metavar='DIR',
@@ -110,8 +112,8 @@ def ctx_signature(ctx):
 def downsize(statement):
     'Replace size identifiers with 1.'
     # Examples of numbers not to match:
-    # - lal_char, f2
-    # - lal_char(A-Z0-9), ...
+    # - lal, f2
+    # - lal(A-Z0-9), ...
     # - a2 = ...
     return re.sub(r'(?<![-a-zA-Z])\d+', '1', statement)
 
@@ -169,11 +171,11 @@ class Bench:
     # pylint: disable=too-many-arguments
 
     def __init__(self, stmt, comment, title, setup, number):
+        self.__stmt_orig = stmt
+        self.__setup_orig = setup
         if args.check:
             number = 1
             args.repeat = 1
-            self.__stmt_orig = stmt
-            self.__setup_orig = setup
             stmt = downsize(stmt)
             comment = downsize(comment)
             title = downsize(title)
@@ -188,24 +190,29 @@ class Bench:
         if 1 < self.__number:
             self.__comment += ', {}x'.format(self.__number)
 
+    def log(self, cmd, ocmd):
+        'Report that we run `cmd` (originally `ocmd`).'
+        if args.check and cmd != ocmd:
+            log('run: {:27s} (was: {})'.format(cmd, ocmd))
+        else:
+            log('run:', cmd)
+
+    @property
+    def title(self):
+        return '{:23s} # {}'.format(self.__title, self.__comment)
+
     def run(self):
-        log('Bench.run: {}'.format(self.__title))
+        log('Bench.run: {}'.format(self.title))
         env = {
             'vcsn': vcsn,
-            'b': vcsn.context('lal_char(abc), b'),
+            'b': vcsn.context('lal(abc), b'),
         }
         try:
             for i, s in enumerate(self.__setup):
-                if args.check and self.__setup_orig[i] != s:
-                    log('run: {:27s} (was: {})'.format(s, self.__setup_orig[i]))
-                else:
-                    log('run:', s)
+                self.log(s, self.__setup_orig[i])
                 exec(s, globals(), env)  # pylint: disable=exec-used
 
-            if args.check and self.__stmt_orig != self.__stmt:
-                log('run: {:27s} (was: {})'.format(self.__stmt, self.__stmt_orig))
-            else:
-                log('run:', self.__stmt)
+            self.log(self.__stmt, self.__stmt_orig)
             if args.repeat:
                 t = min(timeit.repeat(self.__stmt, number=self.__number,
                                       repeat=args.repeat, globals=env))
@@ -220,7 +227,7 @@ class Bench:
             err = exc
             global nfail
             nfail += 1
-        output('{:7s}: {:23s} # {}'.format(t, self.__title, self.__comment))
+        output('{:7s}: {}'.format(t, self.title))
         if err:
             print(err, file=sys.stderr)
 
@@ -302,7 +309,7 @@ for fmt, number in [('daut', 5), ('dot', 1), ('efsm', 5), ('fado', 5)]:
 
 
 def bench_derived_term(alphabet, exp, algo, number):
-    ctx = "lal_char({}), z".format(alphabet)
+    ctx = "lal({}), z".format(alphabet)
     cmd = 'r.derived_term("{}")'.format(algo)
     if 'lazy' in algo:
         # Accessible resolves the lazy states.
@@ -339,7 +346,7 @@ bench_derived_term('a', 'a?{150}', 'expansion',  2)
 bench_derived_term('a', 'a?{150}', 'lazy,expansion',  2)
 
 # standard
-ctx = 'lal_char(a-z), z'
+ctx = 'lal(a-z), z'
 e = "(a+b)*b(<2>a+<2>b){20000}"
 bench('r.standard()',
       'r = {}, c = {}'.format(e, ctx_signature(ctx)),
@@ -349,7 +356,7 @@ bench('r.standard()',
       number=10)
 
 # thompson
-ctx = 'lal_char(a-z), z'
+ctx = 'lal(a-z), z'
 bench('r.thompson()',
       'r = {}, c = {}'.format(e, ctx_signature(ctx)),
       setup=['ctx = "{}"'.format(ctx),
@@ -381,7 +388,7 @@ bench('a.is_deterministic()',
 # In the case of 18, check that we scale well with the size of the
 # (context's) alphabet.
 n = 18
-ctx = 'lal_char(a-zA-Z0-9), b'
+ctx = 'lal(a-zA-Z0-9), b'
 bench('a.determinize()',
       'a = ladybird({}), c = {}'.format(n, ctx_signature(ctx)),
       setup=['n = {}'.format(n),
@@ -393,7 +400,7 @@ for n, algo, number in [(13, '', 20), (13, '"weighted"', 5),
                         (14, '', 10), (14, '"weighted"', 5),
                         (16, '', 2),  (16, '"weighted"', 1)]:
     for ws in ['b', 'f2']:
-        ctx = 'lal_char(abc), ' + ws
+        ctx = 'lal(abc), ' + ws
         bench('a.determinize({})'.format(algo),
               'a = de_bruijn({}), c = {}'.format(n, ctx_signature(ctx)),
               setup=['c = vcsn.context("{}")'.format(ctx),
@@ -418,7 +425,7 @@ bench('a.determinize("lazy,weighted").accessible()',
 # like): the automata are almost deterministic (and easy to
 # determinize), are "wide", and have few final states.
 n = 100
-ctx = 'lal_char(a-zA-Z0-9), b'
+ctx = 'lal(a-zA-Z0-9), b'
 r = '([^]+a){{{}}}'.format(n)
 for algo in ['', '"weighted"', '"lazy,weighted"']:
     cmd = 'a.determinize({})'.format(algo)
@@ -484,7 +491,7 @@ bench('a.shortest(5000)',
              'a = b.de_bruijn(n)'],
       number=10)
 
-ctx = 'lal_char(a-e), z'
+ctx = 'lal(a-e), z'
 r = "[a-e]?{600}"
 bench('a.shortest(5)',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -494,7 +501,7 @@ bench('a.shortest(5)',
              'a = c.expression(r).standard()'],
       number=5)
 
-ctx = 'lat<lal_char(a), lal_char(x)>, q'
+ctx = 'lat<lal(a), lal(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.shortest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -505,7 +512,7 @@ bench('a.shortest(5000)',
       number=10)
 
 # FIXME: restore once issue #99 is fixed.
-# ctx = 'lal_char(a-e), z'
+# ctx = 'lal(a-e), z'
 # r = "[a-e]{10000}"
 # bench('a.shortest()',
 #       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -518,7 +525,7 @@ bench('a.shortest(5000)',
 ## ---------- ##
 
 # lightest
-ctx = 'lal_char(a-e), nmin'
+ctx = 'lal(a-e), nmin'
 r = "[a-e]?{150}"
 for algo, number in [('auto', 10), ('yen', 500), ('eppstein', 500)]:
     bench('a.lightest(5, "{}")'.format(algo),
@@ -531,7 +538,7 @@ for algo, number in [('auto', 10), ('yen', 500), ('eppstein', 500)]:
 
 # Building [a-z]?{300} is really time-consuming.  Make more iterations
 # instead.
-ctx = 'lal_char(a-e), nmin'
+ctx = 'lal(a-e), nmin'
 bench('a.lightest()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['ctx = "{}"'.format(ctx),
@@ -540,7 +547,7 @@ bench('a.lightest()',
              'a = c.expression(r).standard()'],
       number=500)
 
-ctx = 'lat<lal_char(a), lal_char(x)>, q'
+ctx = 'lat<lal(a), lal(x)>, q'
 r = r'(\e|x + a|\e)*'
 bench('a.lightest(5000)',
       'a = derived_term({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -551,7 +558,7 @@ bench('a.lightest(5000)',
       number=10)
 
 # lightest-automaton.
-ctx = 'lal_char(a-e), nmin'
+ctx = 'lal(a-e), nmin'
 r = "[a-e]?{150}"
 for algo, number in [('a-star', 20), ('bellman-ford', 1), ('dijkstra', 500)]:
     bench('a.lightest_automaton(1, "{}")'.format(algo),
@@ -563,7 +570,7 @@ for algo, number in [('a-star', 20), ('bellman-ford', 1), ('dijkstra', 500)]:
           number=number)
 
 # sort.
-ctx = "lal_char(a-e), z"
+ctx = "lal(a-e), z"
 r = "[a-e]?{700}"
 bench('a.sort()',
       'a = std({})'.format(r),
@@ -586,82 +593,84 @@ r = "a?{1200}"
 bench('a.proper()',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a), b").expression(r).thompson()'])
+             'a = vcsn.context("lal(a), b").expression(r).thompson()'])
 
 # to-expression.
 bench('a.expression("associative", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'],
+      setup=['a = vcsn.context("lal(abc), b").ladybird(2000)'],
       number=10)
 
 r = '[a-d]?{100}'
 bench('a.expression("associative", "naive")',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'])
+             'a = vcsn.context("lal(a-d), b").expression(r).standard()'])
 
 bench('a.expression("associative", "naive")',
       'a = ladybird(8000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(8000)'],
+      setup=['a = vcsn.context("lal(abc), b").ladybird(8000)'],
       number=10)
 
 r = '[a-d]?{15}'
 bench('a.expression("linear", "delgado")',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'],
+             'a = vcsn.context("lal(a-d), b").expression(r).standard()'],
       number=5)
 
 bench('a.expression("linear", "delgado")',
       'a = ladybird(2000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(2000)'],
+      setup=['a = vcsn.context("lal(abc), b").ladybird(2000)'],
       number=5)
 
 r = '[a-d]?{9}'
 bench('a.expression("linear", "naive")',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-d), b").expression(r).standard()'],
+             'a = vcsn.context("lal(a-d), b").expression(r).standard()'],
       number=5)
 
 
 bench('a.expression("linear", "naive")',
       'a = ladybird(4000)',
-      setup=['a = vcsn.context("lal_char(abc), b").ladybird(4000)'],
+      setup=['a = vcsn.context("lal(abc), b").ladybird(4000)'],
       number=2)
 
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
-r = "[a-e]?{50}"
-bench('a.conjunction(a)',
-      'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+# The very narrow automaton, a{200000}, highlights the cost of the
+# possible spontaneous transitions for lan.
+for r in ["[a-e]?{50}", "a{200000}"]:
+    bench('a.conjunction(a)',
+          'a = std({})'.format(r),
+          setup=['r = "{}"'.format(r),
+                 'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
 
 bench('a.shuffle(a)',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+             'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
 
 # infiltrate.
 r = "[a-e]?{30}"
 bench('a.infiltrate(a)',
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+             'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
 
 # Conjunction with spontaneous transitions.
 r = "[a-e]?{80}"
 bench('a.conjunction(a)',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).thompson()'])
+             'a = vcsn.context("lal(a-e), z").expression(r).thompson()'])
 
 r = "[a-e]?{5}"
 bench('a.conjunction(a, a, a)',
       'a = thompson({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).thompson()'])
+             'a = vcsn.context("lal(a-e), z").expression(r).thompson()'])
 
 # power.
 n = 12
@@ -669,7 +678,7 @@ r = "[a-e]*b(<2>[a-e])*"
 bench('a & {}'.format(n),
       'a = std({})'.format(r),
       setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal_char(a-e), z").expression(r).standard()'])
+             'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
 
 # compose.
 ctx = "lat<lal<char(a-z)>, lal<char(a-z)>>, b"
@@ -711,7 +720,7 @@ bench_compose('lal', r, 'std', 20)
 bench_compose('lal', r, 'thm', 10)
 
 # automaton.has_bounded_lag.
-ctx = "lat<lal_char(abc), lal_char(xyz)>, b"
+ctx = "lat<lal(abc), lal(xyz)>, b"
 r1 = "['(a,x)'-'(b,y)']{1000}*"
 r2 = "(a|x+a|y+a|z+b|x+b|y){1000}*"
 bench('a.has_bounded_lag()',
@@ -721,7 +730,7 @@ bench('a.has_bounded_lag()',
              'c = vcsn.context(ctx)',
              'a = c.expression(r).standard()'],
       number=10)
-ctx = "lat<lal_char(abc), lal_char(xyz)>, b"
+ctx = "lat<lal(abc), lal(xyz)>, b"
 r1 = "['(a,x)'-'(b,y)']*{600}"
 r2 = "(a|x+a|y+a|z+b|x+b|y)*{600}"
 bench('a.has_bounded_lag()',
@@ -734,7 +743,7 @@ bench('a.has_bounded_lag()',
 
 # Minimize.
 def bench_minimize(ws, algo, number=1):
-    ctx = 'lal_char(a-k), ' + ws
+    ctx = 'lal(a-k), ' + ws
     r = '[a-g]{300}'
     bench('a.minimize("{}")'.format(algo),
           'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -751,7 +760,7 @@ bench_minimize('z', 'weighted')
 
 
 # reduce.
-ctx = "lal_char(a-k), z"
+ctx = "lal(a-k), z"
 r = "[a-g]{300}"
 bench('a.reduce()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -759,7 +768,7 @@ bench('a.reduce()',
              'c = vcsn.context(ctx)',
              'r = "{}"'.format(r),
              'a = c.expression(r).standard()'])
-ctx = "lal_char(a-k), q"
+ctx = "lal(a-k), q"
 bench('a.reduce()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
       setup=['ctx = "{}"'.format(ctx),
@@ -769,10 +778,10 @@ bench('a.reduce()',
 # synchronizing_word.
 bench('a.synchronizing_word()',
       'a = de_bruijn(6)',
-      setup='a = vcsn.context("lal_char(abc), b").de_bruijn(6).determinize()')
+      setup='a = vcsn.context("lal(abc), b").de_bruijn(6).determinize()')
 
 # has_twins_property.
-ctx = "lal_char(abc), zmin"
+ctx = "lal(abc), zmin"
 r = "[a-c]{200}*+[a-c]{200}*"
 bench('a.has_twins_property()',
       'a = std({}, "associative"), c = {}'.format(r, ctx_signature(ctx)),
@@ -782,7 +791,7 @@ bench('a.has_twins_property()',
       number=20)
 
 # is_cycle_ambiguous.
-ctx = "lal_char(abc), z"
+ctx = "lal(abc), z"
 r = "[a-c]{2000}(<2>ab+a<3>b)"
 bench('a.is_cycle_ambiguous()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -792,7 +801,7 @@ bench('a.is_cycle_ambiguous()',
       number=20)
 
 # is_ambiguous.
-ctx = "lal_char(abc), z"
+ctx = "lal(abc), z"
 r = "[a-c]{2000}(<2>ab+a<3>b)"
 bench('a.is_ambiguous()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -802,7 +811,7 @@ bench('a.is_ambiguous()',
       number=20)
 
 # is_functional.
-ctx = "lat<lal_char(ab), lal_char(xy)>, b"
+ctx = "lat<lal(ab), lal(xy)>, b"
 r = "(a|x){2000}(b|y)"
 bench('a.is_functional()',
       'a = std({})'.format(r),
@@ -812,7 +821,7 @@ bench('a.is_functional()',
       number=100)
 
 # accessible.
-ctx = "lal_char(a-z), b"
+ctx = "lal(a-z), b"
 r = "[a-m]{20000}"
 bench('a.accessible()',
       'a = thompson({}).proper(prune=False)'.format(r),
@@ -822,7 +831,7 @@ bench('a.accessible()',
       number=4)
 
 # scc.
-ctx = "lal_char(abc), b"
+ctx = "lal(abc), b"
 r = '(abc)*{1000}'
 for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
     bench('a.scc("{}")'.format(algo),
@@ -837,12 +846,12 @@ for algo in ['dijkstra', 'kosaraju', 'tarjan_iterative', 'tarjan_recursive']:
 r = '[a-j]{6}'
 bench('p.trie()',
       'p = [a-j]{6}',
-      setup=['c = vcsn.context("law_char(a-j), b")',
+      setup=['c = vcsn.context("law(a-j), b")',
              'm = c.polynomial("[a-j]")',
              'p = m ** 6'])
 
 # synchronize
-ctx = "lat<law_char, law_char>, b"
+ctx = "lat<law, law>, b"
 r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){2000}"""
 bench('a.synchronize()',
       'a = std({})'.format(r),
@@ -852,7 +861,7 @@ bench('a.synchronize()',
              'a = c.expression(r).standard()'])
 
 # is_synchronized
-ctx = "lat<law_char, law_char>, b"
+ctx = "lat<law, law>, b"
 r = r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn){500000}"""
 bench('a.is_synchronized()',
       'a = std({})'.format(r),
@@ -862,7 +871,7 @@ bench('a.is_synchronized()',
              'a = c.expression(r).standard()'])
 
 # weight_series
-ctx = "lal_char(a-z), nmin"
+ctx = "lal(a-z), nmin"
 r = "a{12000}+<1>[b-z]{12000}"
 bench('a.weight_series()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -871,7 +880,7 @@ bench('a.weight_series()',
              'a = vcsn.context(ctx).expression(r).standard()'],
       number=200)
 
-ctx = "lal_char(a-z), z"
+ctx = "lal(a-z), z"
 r = "[a-z]{200}"
 bench('a.weight_series()',
       'a = std({}), c = {}'.format(r, ctx_signature(ctx)),
@@ -880,6 +889,22 @@ bench('a.weight_series()',
              'a = vcsn.context(ctx).expression(r).standard()'],
       number=10)
 
+
+## ------ ##
+## main.  ##
+## ------ ##
+
+if args.sort:
+    benches = sorted(benches, key=lambda b: b.title)
+
+if args.list:
+    for b in benches:
+        output(b.title)
+    exit(0)
+
+print('vcsn version: {}'.format(vcsn.version))
+if args.out is not None:
+    print('# vcsn: {}'.format(vcsn.version), flush=True, file=args.out)
 if args.jobs == 0:
     for b in benches:
         Bench.run(b)

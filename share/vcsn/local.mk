@@ -28,6 +28,12 @@ dist_pkgdata_DATA = %D%/version.yaml
 	  $(move_if_change) $@.tmp $(srcdir)/$@;			\
 	fi
 
+# When the user runs `make python`, she wants the proper version
+# information to be recorded.  However, she does not want
+# VCSN_PYTHON_DEPS to include version.yaml, as the test suite would
+# never be lazy.
+python: %D%/version.yaml
+
 jsdir = $(pkgdatadir)/js
 dist_js_DATA =                                  \
   %D%/js/AutomatonD3Widget.js
