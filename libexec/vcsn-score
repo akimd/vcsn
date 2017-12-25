@@ -45,6 +45,7 @@ def getargs():
         help='''run scaled down versions of the benchmarks.  Implies -r 1.  Very
         useful with `-j` to warn the algorithm cache.  Do not use it
         to record actual benchmarks.''')
+    opt('-l', '--list', action='store_true', help='list of benches cases')
     opt('-o', '--output', metavar='FILE',
         help='''also save the result in `FILE`''')
     opt('-d', '--dir', metavar='DIR',
@@ -198,8 +199,12 @@ class Bench:
         else:
             log('run:', cmd)
 
+    @property
+    def title(self):
+        return '{:23s} # {}'.format(self.__title, self.__comment)
+
     def run(self):
-        log('Bench.run: {}'.format(self.__title))
+        log('Bench.run: {}'.format(self.title))
         env = {
             'vcsn': vcsn,
             'b': vcsn.context('lal(abc), b'),
@@ -224,7 +229,7 @@ class Bench:
             err = exc
             global nfail
             nfail += 1
-        output('{:7s}: {:23s} # {}'.format(t, self.__title, self.__comment))
+        output('{:7s}: {}'.format(t, self.title))
         if err:
             print(err, file=sys.stderr)
 
@@ -885,6 +890,11 @@ bench('a.weight_series()',
 ## ------ ##
 ## main.  ##
 ## ------ ##
+
+if args.list:
+    for b in benches:
+        output(b.title)
+    exit(0)
 
 print('vcsn version: {}'.format(vcsn.version))
 if args.out is not None:
