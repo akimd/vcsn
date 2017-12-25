@@ -46,6 +46,7 @@ def getargs():
         useful with `-j` to warn the algorithm cache.  Do not use it
         to record actual benchmarks.''')
     opt('-l', '--list', action='store_true', help='list of benches cases')
+    opt('-s', '--sort', action='store_true', help='sort benches by name')
     opt('-o', '--output', metavar='FILE',
         help='''also save the result in `FILE`''')
     opt('-d', '--dir', metavar='DIR',
@@ -890,6 +891,9 @@ bench('a.weight_series()',
 ## ------ ##
 ## main.  ##
 ## ------ ##
+
+if args.sort:
+    benches = sorted(benches, key=lambda b: b.title)
 
 if args.list:
     for b in benches:
