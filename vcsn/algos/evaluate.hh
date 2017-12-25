@@ -113,8 +113,7 @@ namespace vcsn
         v2.reserve(states_size(aut_));
 
         // Computation.
-        const auto ls = *aut_->labelset();
-        for (const auto l : ls.letters_of(ls.delimit(word)))
+        for (const auto l : ls_.letters_of(ls_.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
