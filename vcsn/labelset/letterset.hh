@@ -103,7 +103,7 @@ namespace vcsn
     static word_t word(value_t v)
     {
       if (is_one(v))
-        return make_wordset(self_t{}).one();
+        return {};
       else
         return {v};
     }
@@ -153,42 +153,20 @@ namespace vcsn
     /// Three-way comparison between \a l and \a r.
     static int compare(const value_t l, const value_t r)
     {
-      if (auto res = int(is_one(r)) - int(is_one(l)))
-        return res;
-      else
-        return genset_t::compare(l, r);
+      return genset_t::compare(l, r);
     }
 
     /// Whether \a l == \a r.
     static bool
     equal(const value_t l, const value_t r)
     {
-      if (is_one(l))
-        return is_one(r);
-      else
-        return !is_one(r) && genset_t::equal(l, r);
+      return genset_t::equal(l, r);
     }
 
     /// Whether \a l < \a r.
     static bool less(const value_t l, const value_t r)
     {
-      if (is_one(r))
-        return false;
-      else if (is_one(l))
-        return true;
-      else
-        return genset_t::less(l, r);
-    }
-
-    /// The concatenation.
-    value_t mul(const value_t l, const value_t r) const
-    {
-      if (is_one(r))
-        return l;
-      else if (is_one(l))
-        return r;
-      else
-        super_t::mul(l, r);
+      return genset_t::less(l, r);
     }
 
     static constexpr bool
@@ -218,7 +196,7 @@ namespace vcsn
     static bool
     is_special(value_t v) ATTRIBUTE_PURE
     {
-      return !is_one(v) && v == special();
+      return v == special();
     }
 
     static constexpr bool
