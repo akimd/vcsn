@@ -629,11 +629,13 @@ bench('a.expression("linear", "naive")',
 
 # Other conjunction and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new conjunction algorithm.
-r = "[a-e]?{50}"
-bench('a.conjunction(a)',
-      'a = std({})'.format(r),
-      setup=['r = "{}"'.format(r),
-             'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
+# The very narrow automaton, a{200000}, highlights the cost of the
+# possible spontaneous transitions for lan.
+for r in ["[a-e]?{50}", "a{200000}"]:
+    bench('a.conjunction(a)',
+          'a = std({})'.format(r),
+          setup=['r = "{}"'.format(r),
+                 'a = vcsn.context("lal(a-e), z").expression(r).standard()'])
 
 bench('a.shuffle(a)',
       'a = std({})'.format(r),
