@@ -21,6 +21,10 @@ AM_RAT_LOG_DEPS =                               \
   %D%/common.rat %D%/common-weights.rat
 $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
+vcsn_python +=					\
+  $(srcdir)/tests/bin/rat.py			\
+  $(srcdir)/tests/bin/test.py
+
 %C%_TESTS =                                     \
   $(%C%_XFAIL_TESTS)                            \
   %D%/b.rat                                     \

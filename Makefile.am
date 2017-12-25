@@ -17,6 +17,9 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 include build-aux/make/init.mk
 include build-aux/make/buildfarm.mk
 
+# All our Python sources, installed or not.
+vcsn_python =
+
 AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir) $(BOOST_CPPFLAGS)
 

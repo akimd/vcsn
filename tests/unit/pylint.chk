@@ -58,11 +58,7 @@ run 0 ignore -$pylint $pylintflags --version
 run 0 ignore -vcsn run $pylint "$pylintflags" "$srcdir"/python/vcsn
 run 0 ignore -vcsn run $pylint "$pylintflags" "$srcdir"/python/vcsn_tools
 
-# Get all the Python scripts from libexec/.
-pyscripts=$(grep -l '/usr/bin/env python' "$srcdir"/libexec/*)
-run 0 ignore -vcsn run $pylint "$pylintflags" $pyscripts
-
-# Get all the Python scripts from build-aux/bin.
-pyscripts=$(grep -lr '/usr/bin/env python' "$srcdir"/build-aux/bin/ \
-           | grep -Ev '\..*\.swp') # Ignore Vim swap files
+# Get all the auxiliary Python scripts.
+pyscripts=$(grep -l '/usr/bin/env python' -r "$srcdir"/tests/bin "$srcdir"/doc "$srcdir"/libexec "$srcdir"/build-aux/bin \
+           | grep -Ev '\.swp$|~$')
 run 0 ignore -vcsn run $pylint "$pylintflags" $pyscripts
