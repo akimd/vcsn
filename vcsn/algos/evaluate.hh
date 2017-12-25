@@ -104,7 +104,7 @@ namespace vcsn
             auto cur = q.front();
             q.pop();
 
-            for (auto t : all_out(aut_, cur.s))
+            for (auto const t : all_out(aut_, cur.s))
               if (aut_->dst_of(t) == aut_->post() && wordset.is_special(cur.l))
                 // The word is accepted.
                 {
@@ -217,11 +217,11 @@ namespace vcsn
             "evaluate: cannot evaluate with spontaneous transitions");
     const auto& ws = *a->weightset();
     auto res = ws.zero();
-    for (auto init_tr: initial_transitions(a))
+    for (const auto init_tr: initial_transitions(a))
       {
         const auto s = a->dst_of(init_tr);
         const auto w = a->weight_of(init_tr);
-        for (auto out: all_out(a, s))
+        for (const auto out: all_out(a, s))
           {
             assert(a->dst_of(out) == a->post());
             res = ws.add(res, ws.mul(w, a->weight_of(out)));
