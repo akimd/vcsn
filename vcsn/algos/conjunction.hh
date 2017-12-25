@@ -125,8 +125,6 @@ namespace vcsn
       template <bool L = Lazy>
       std::enable_if_t<sizeof...(Auts) == 2 && !L> ldivide()
       {
-        static_assert(labelset_t::has_one(),
-                      "ldivide: labelset must have a neutral");
         initialize_conjunction();
 
         while (!aut_->todo_.empty())
@@ -419,16 +417,10 @@ namespace vcsn
         };
       }
 
-      /// In the case where the labelset doesn't have one, do nothing.
-      template <std::size_t I, typename LS>
-      std::enable_if_t<!LS::has_one(), void>
-      add_one_transitions_(const LS&, const state_t, const state_name_t&)
-      {}
-
       /// If the I-th labelset has one, add the relevant spontaneous
       /// transitions leaving the state.
       template <std::size_t I, typename LS>
-      std::enable_if_t<LS::has_one(), void>
+      void
       add_one_transitions_(const LS& ls, const state_t src,
                            const state_name_t& psrc)
       {
@@ -467,34 +459,6 @@ namespace vcsn
         return all(has_proper_out<I>(psrc)...);
       }
 
-      /// Check if the transition is spontaneous (in the case of a
-      /// labelset with one).
-      template <Automaton Aut_>
-      std::enable_if_t<labelset_t_of<Aut_>::has_one(), bool>
-      is_one(const Aut_& aut, transition_t_of<Aut_> tr) const
-      {
-        return aut->labelset()->is_one(aut->label_of(tr));
-      }
-
-      /// Same as above, but for labelsets without one, so it's always
-      /// false.
-      template <Automaton Aut_>
-      constexpr std::enable_if_t<!labelset_t_of<Aut_>::has_one(), bool>
-      is_one(const Aut_&, transition_t_of<Aut_>) const
-      {
-        return false;
-      }
-
-      /// Whether the state has only proper incoming transitions.
-      template <size_t I>
-      constexpr auto
-      is_proper_in(const state_name_t&) const
-        -> std::enable_if_t<!labelset_t_of<input_automaton_t<I>>::has_one(),
-                            bool>
-      {
-        return true;
-      }
-
       /// Whether the state has only proper incoming transitions.  The
       /// automaton has been insplit, so either all incoming
       /// transitions are proper, or all transitions are spontaneous
@@ -502,8 +466,7 @@ namespace vcsn
       template <size_t I>
       auto
       is_proper_in(const state_name_t& sn) const
-        -> std::enable_if_t<labelset_t_of<input_automaton_t<I>>::has_one(),
-                            bool>
+        -> bool
       {
         // Amusingly enough, it is faster to check the incoming
         // transitions rather than recovering the decoration of the
@@ -514,7 +477,8 @@ namespace vcsn
         auto rtr = rin.begin();
         // Insplit state, so checking the first transition suffices.
         // There can be no incoming transitions in the case of pre.
-        return rtr == rin.end() || !is_one(aut, *rtr);
+        return rtr == rin.end()
+          || !aut->labelset()->is_one(aut->label_of(*rtr));
       }
 
       /// Whether the Ith state of \a psrc in the Ith input automaton
