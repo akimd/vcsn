@@ -115,7 +115,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less(const letter_t& l, const letter_t& r)
+    static bool less(const letter_t l, const letter_t r)
     {
       return genset_t::less(l, r);
     }
