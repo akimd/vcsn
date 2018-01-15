@@ -1,0 +1,42 @@
+.vcsn_template: &vcsn_template
+  script:
+    - ./bootstrap
+    - mkdir build
+    - cd build
+    - ../configure
+    - make
+    - make check
+  artifacts:
+    when: always
+    paths:
+      - build/*.log
+      - build/*/*.log
+      - build/*/*/*.log
+
+archlinux:gcc:
+  <<: *vcsn_template
+  image: registry.lrde.epita.fr/vcsn-build-arch
+  variables:
+    CC: gcc
+    CXX: g++
+
+archlinux:clang:
+  <<: *vcsn_template
+  image: registry.lrde.epita.fr/vcsn-build-arch
+  variables:
+    CC: clang
+    CXX: clang++
+
+debian:gcc:
+  <<: *vcsn_template
+  image: registry.lrde.epita.fr/vcsn-build-debian
+  variables:
+    CC: gcc
+    CXX: g++
+
+debian:clang:
+  <<: *vcsn_template
+  image: registry.lrde.epita.fr/vcsn-build-debian
+  variables:
+    CC: clang
+    CXX: clang++
