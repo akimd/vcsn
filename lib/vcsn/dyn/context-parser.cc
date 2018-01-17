@@ -229,13 +229,7 @@ namespace vcsn
       /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_(const std::string& ls)
       {
-        if (ls == "lal_char")
-          return std::make_shared<genlabelset>("letterset",
-                                               genset_("char_letters"));
-        else if (ls == "lan")
-          // lan<GENSET> => nullableset<letterset<GENSET>>.
-          return std::make_shared<genlabelset>("letterset", genset_());
-        else if (ls == "lan_char")
+        if (ls == "lal_char" || ls == "lan_char")
           return std::make_shared<genlabelset>("letterset",
                                                genset_("char_letters"));
         else if (ls == "lao")
@@ -245,17 +239,10 @@ namespace vcsn
         else if (ls == "law_char")
           return std::make_shared<genlabelset>("wordset",
                                                genset_("char_letters"));
-        else if (ls == "lal" || ls == "letterset")
+        else if (ls == "lal" || ls == "letterset" || ls == "lan")
           return std::make_shared<genlabelset>("letterset", genset_());
         else if (ls == "law" || ls == "wordset")
           return std::make_shared<genlabelset>("wordset", genset_());
-        else if (ls == "nullableset")
-          {
-            eat_('<');
-            auto res = labelset_();
-            eat_('>');
-            return res;
-          }
         else if (ls == "expressionset" || ls == "seriesset")
           return expressionset_(ls);
         else
@@ -503,7 +490,6 @@ namespace vcsn
           "law",
           "law_char",
           "letterset",
-          "nullableset",
           "wordset",
         };
     };
