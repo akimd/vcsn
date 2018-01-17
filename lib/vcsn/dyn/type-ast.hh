@@ -27,8 +27,6 @@ namespace vcsn
       virtual ~ast_node() = default;
 
       virtual void accept(context_visitor &v) const = 0;
-
-      virtual bool has_one() const { return false; }
     };
 
     class context: public ast_node
@@ -70,13 +68,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const
-      {
-        for (auto s : get_sets())
-          if (!s->has_one())
-            return false;
-        return true;
-      }
 
     private:
       value_t sets_;
@@ -98,13 +89,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const
-      {
-        for (auto s : get_sets())
-          if (!s->has_one())
-            return false;
-        return true;
-      }
 
     private:
       value_t sets_;
@@ -117,7 +101,6 @@ namespace vcsn
       {}
 
       ACCEPT()
-      virtual bool has_one() const { return true; }
     };
 
 
@@ -166,7 +149,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const { return false; }
 
     private:
       const std::shared_ptr<const ast_node> gs_;
@@ -188,7 +170,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const { return true; }
 
     private:
       const std::shared_ptr<const ast_node> gs_;
@@ -214,7 +195,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const { return true; }
 
     private:
       std::shared_ptr<context> ctx_;
@@ -235,7 +215,6 @@ namespace vcsn
       }
 
       ACCEPT()
-      virtual bool has_one() const { return true; }
 
     private:
       std::shared_ptr<expressionset> rs_;
