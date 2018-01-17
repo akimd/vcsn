@@ -230,22 +230,25 @@ namespace vcsn
       std::shared_ptr<ast_node> labelset_(const std::string& ls)
       {
         if (ls == "lal_char")
-          return std::make_shared<letterset>(genset_("char_letters"));
+          return std::make_shared<genlabelset>("letterset",
+                                               genset_("char_letters"));
         else if (ls == "lan")
           // lan<GENSET> => nullableset<letterset<GENSET>>.
-          return std::make_shared<letterset>(genset_());
+          return std::make_shared<genlabelset>("letterset", genset_());
         else if (ls == "lan_char")
-          return std::make_shared<letterset>(genset_("char_letters"));
+          return std::make_shared<genlabelset>("letterset",
+                                               genset_("char_letters"));
         else if (ls == "lao")
           return std::make_shared<oneset>();
         else if (ls == "lat")
           return tupleset_();
         else if (ls == "law_char")
-          return std::make_shared<wordset>(genset_("char_letters"));
+          return std::make_shared<genlabelset>("wordset",
+                                               genset_("char_letters"));
         else if (ls == "lal" || ls == "letterset")
-          return std::make_shared<letterset>(genset_());
+          return std::make_shared<genlabelset>("letterset", genset_());
         else if (ls == "law" || ls == "wordset")
-          return std::make_shared<wordset>(genset_());
+          return std::make_shared<genlabelset>("wordset", genset_());
         else if (ls == "nullableset")
           {
             eat_('<');

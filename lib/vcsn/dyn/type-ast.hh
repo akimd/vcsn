@@ -134,13 +134,21 @@ namespace vcsn
       const std::string generators_;
     };
 
-    /// Support for letterset<GenSet>.
-    class letterset: public ast_node
+    /// Support for letterset<GenSet> and wordset<GenSet>
+    class genlabelset: public ast_node
     {
     public:
-      letterset(const std::shared_ptr<const ast_node>& gs)
-        : gs_(gs)
+      genlabelset(std::string type,
+                  const std::shared_ptr<const ast_node>& gs)
+        : type_{std::move(type)}
+        , gs_(gs)
       {}
+
+      /// The type (wordset or letterset).
+      const std::string& type() const
+      {
+        return type_;
+      }
 
       /// The generator set.
       std::shared_ptr<const ast_node> genset() const
@@ -151,29 +159,10 @@ namespace vcsn
       ACCEPT()
 
     private:
+      const std::string type_;
       const std::shared_ptr<const ast_node> gs_;
     };
 
-
-    /// Support for wordset<GenSet>.
-    class wordset: public ast_node
-    {
-    public:
-      wordset(const std::shared_ptr<const ast_node>& gs)
-        : gs_(gs)
-      {}
-
-      /// The generator set.
-      std::shared_ptr<const ast_node> genset() const
-      {
-        return gs_;
-      }
-
-      ACCEPT()
-
-    private:
-      const std::shared_ptr<const ast_node> gs_;
-    };
 
     class expressionset: public ast_node
     {

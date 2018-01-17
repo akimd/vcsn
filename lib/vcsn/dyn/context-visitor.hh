@@ -18,14 +18,13 @@ namespace vcsn
       DEFINE(expansionset);
       DEFINE(expressionset);
       DEFINE(genset);
-      DEFINE(letterset);
+      DEFINE(genlabelset);
       DEFINE(oneset);
       DEFINE(other);
       DEFINE(polynomialset);
       DEFINE(tuple);
       DEFINE(tupleset);
       DEFINE(weightset);
-      DEFINE(wordset);
 #undef DEFINE
     };
   }

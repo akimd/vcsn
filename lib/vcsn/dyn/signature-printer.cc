@@ -83,11 +83,20 @@ namespace vcsn
         os_ << t.generators();
     }
 
-    DEFINE(letterset)
+    DEFINE(genlabelset)
     {
-      os_ << "letterset<";
-      t.genset()->accept(*this);
-      os_ << '>';
+      if (t.type() == "letterset")
+        {
+          os_ << "letterset<";
+          t.genset()->accept(*this);
+          os_ << '>';
+        }
+      else
+        {
+          os_ << "wordset<";
+          t.genset()->accept(*this);
+          os_ << '>';
+        }
     }
 
     DEFINE(expansionset)
@@ -109,13 +118,6 @@ namespace vcsn
     DEFINE(weightset)
     {
       os_ << t.get_type();
-    }
-
-    DEFINE(wordset)
-    {
-      os_ << "wordset<";
-      t.genset()->accept(*this);
-      os_ << '>';
     }
 
     DEFINE(other)

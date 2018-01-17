@@ -11,13 +11,12 @@ namespace vcsn
     class expansionset;
     class expressionset;
     class genset;
-    class letterset;
+    class genlabelset;
     class oneset;
     class other;
     class polynomialset;
     class tuple;
     class tupleset;
     class weightset;
-    class wordset;
   }
 }

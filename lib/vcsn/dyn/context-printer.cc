@@ -147,12 +147,23 @@ namespace vcsn
       os_ << "vcsn::set_alphabet<vcsn::" << t.letter_type() << '>';
     }
 
-    DEFINE(letterset)
+    DEFINE(genlabelset)
     {
-      header("vcsn/labelset/letterset.hh");
-      os_ << "vcsn::letterset<";
-      t.genset()->accept(*this);
-      os_ << '>';
+      if (t.type() == "letterset")
+        {
+          header("vcsn/labelset/letterset.hh");
+          os_ << "vcsn::letterset<";
+          t.genset()->accept(*this);
+          os_ << '>';
+        }
+      else
+        {
+          assert(t.type() == "wordset");
+          header("vcsn/labelset/wordset.hh");
+          os_ << "vcsn::wordset<";
+          t.genset()->accept(*this);
+          os_ << '>';
+        }
     }
 
     DEFINE(expressionset)
@@ -177,14 +188,6 @@ namespace vcsn
       if (t.get_type() == "qmp")
         linkflags("-lgmp -lgmpxx");
       os_ << "vcsn::" << t.get_type();
-    }
-
-    DEFINE(wordset)
-    {
-      header("vcsn/labelset/wordset.hh");
-      os_ << "vcsn::wordset<";
-      t.genset()->accept(*this);
-      os_ << '>';
     }
 
     DEFINE(other)
