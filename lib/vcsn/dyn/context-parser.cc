@@ -33,16 +33,8 @@ namespace vcsn::ast
         : is_(is)
       {}
 
-      /// Accept anything.
-      std::shared_ptr<ast_node> parse()
-      {
-        auto res = any_();
-        check_eof_(res);
-        return res;
-      }
-
       /// Accept only a valid context.
-      std::shared_ptr<ast_node> parse_context()
+      std::shared_ptr<ast_node> parse()
       {
         auto res = context_();
         check_eof_(res);
@@ -421,7 +413,7 @@ namespace vcsn::ast
     auto parser = context_parser{is};
     try
       {
-        return parser.parse_context();
+        return parser.parse();
       }
     catch (const std::runtime_error& e)
       {

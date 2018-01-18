@@ -32,14 +32,6 @@ namespace vcsn::ast
         return res;
       }
 
-      /// Accept only a valid context.
-      std::shared_ptr<ast_node> parse_context()
-      {
-        auto res = context_();
-        check_eof_(res);
-        return res;
-      }
-
     private:
       /// The next character, possibly preceded by spaces.
       int peek_()
