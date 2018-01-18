@@ -1,7 +1,8 @@
+#include <lib/vcsn/dyn/type-parser.hh>
+
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <lib/vcsn/dyn/type-parser.hh>
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
@@ -13,6 +14,8 @@ namespace vcsn::ast
 {
   namespace
   {
+    using namespace std::literals;
+
     /// Parser of snames.
     class type_parser
     {
@@ -74,17 +77,15 @@ namespace vcsn::ast
         }
       }
 
-      /// The next word in the stream.  Does not consider that
-      /// underscore is word-constituent.  Skips spaces.
+      /// The next "word" in the stream, including "const std::string".
+      /// Skips spaces.
       std::string word_()
       {
         skip_space(is_);
         std::string res;
         int c;
-        while ((c = is_.peek()) != EOF)
-          if (c == '<' || c == ',' || c == '>' || c == '(')
-            break;
-          else
+        while ((c = is_.peek()) != EOF
+               && c != '<' && c != ',' && c != '>' && c != '(')
           {
             res += c;
             is_.ignore();
@@ -229,21 +230,13 @@ namespace vcsn::ast
       /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_(const std::string& ls)
       {
-        if (ls == "lal_char" || ls == "lan_char")
-          return std::make_shared<genlabelset>("letterset",
-                                               genset_("char_letters"));
-        else if (ls == "lao")
+        if (ls == "lao")
           return std::make_shared<oneset>();
         else if (ls == "lat")
           return tupleset_();
-        else if (ls == "law_char")
-          return std::make_shared<genlabelset>("wordset",
-                                               genset_("char_letters"));
-        else if (ls == "lal" || ls == "letterset" || ls == "lan")
-          return std::make_shared<genlabelset>("letterset", genset_());
-        else if (ls == "law" || ls == "wordset")
-          return std::make_shared<genlabelset>("wordset", genset_());
-        else if (ls == "expressionset" || ls == "seriesset")
+        else if (has(labelsets_, ls))
+          return std::make_shared<genlabelset>(ls, genset_());
+        else if (ls == "expressionset")
           return expressionset_(ls);
         else
           raise("invalid labelset name: ", str_quote(ls));
@@ -482,13 +475,6 @@ namespace vcsn::ast
       /// The set of weightset names.
       std::set<std::string> labelsets_ =
         {
-          "lal",
-          "lal_char",
-          "lan",
-          "lan_char",
-          "lao",
-          "law",
-          "law_char",
           "letterset",
           "wordset",
         };

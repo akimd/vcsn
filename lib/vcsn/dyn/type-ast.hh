@@ -110,9 +110,9 @@ namespace vcsn
     class genset: public ast_node
     {
     public:
-      genset(const std::string& letter_type, const std::string& gens)
-        : letter_type_(letter_type)
-        , generators_(gens)
+      genset(std::string letter_type, std::string gens = "")
+        : letter_type_{std::move(letter_type)}
+        , generators_{std::move(gens)}
       {}
 
       ACCEPT()
