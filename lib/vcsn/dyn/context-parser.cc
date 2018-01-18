@@ -125,8 +125,6 @@ namespace vcsn::ast
           res = automaton_(w);
         else if (w == "context")
           res = context_(w);
-        else if (w == "expansionset")
-          res = expansionset_();
         else if (w == "expressionset" || w == "seriesset")
           res = expressionset_(w);
         else if (has(labelsets_, w))
@@ -280,83 +278,11 @@ namespace vcsn::ast
       std::shared_ptr<automaton> automaton_(std::string prefix)
       {
         auto res = std::shared_ptr<automaton>{};
-        // focus_automaton<TapeNum, Aut>.
-        if (prefix == "focus_automaton")
-          {
-            eat_('<');
-            res = std::make_shared<automaton>(prefix,
-                                              std::make_shared<other>(word_()));
-            eat_(',');
-            res->get_content().emplace_back(automaton_());
-            eat_('>');
-          }
-        // xxx_automaton<Aut>.
-        else if (prefix == "delay_automaton"
-                 || prefix == "expression_automaton"
-                 || prefix == "filter_automaton"
-                 || prefix == "insplit_automaton"
-                 || prefix == "lazy_proper_automaton"
-                 || prefix == "name_automaton"
-                 || prefix == "pair_automaton"
-                 || prefix == "partition_automaton"
-                 || prefix == "permutation_automaton"
-                 || prefix == "scc_automaton"
-                 || prefix == "synchronized_automaton"
-                 || prefix == "transpose_automaton")
-          {
-            eat_('<');
-            res = std::make_shared<automaton>(prefix, automaton_());
-            eat_('>');
-          }
-        // xxx_automaton<Aut, Tag, Lazy>.
-        else if (prefix == "determinized_automaton")
-          {
-            eat_('<');
-            res = std::make_shared<automaton>(prefix, automaton_());
-            eat_(',');
-            res->get_content().emplace_back(any_());
-            eat_(',');
-            res->get_content().emplace_back(any_());
-            eat_('>');
-          }
         // mutable_automaton<Context>.
-        else if (prefix == "mutable_automaton")
+        if (prefix == "mutable_automaton")
           {
             eat_('<');
             res = std::make_shared<automaton>(prefix, context_());
-            eat_('>');
-          }
-        // xxx_automaton<ExpresionSet>.
-        else if (prefix == "derived_term_automaton")
-          {
-            eat_('<');
-            res = std::make_shared<automaton>(prefix, expressionset_());
-            eat_('>');
-          }
-        // xxx_automaton<Aut...>.
-        else if (prefix == "compose_automaton"
-                 || prefix == "product_automaton"
-                 || prefix == "tuple_automaton")
-          {
-            eat_('<');
-            std::string w = "";
-            if (prefix != "tuple_automaton")
-            {
-              w = word_();
-              eat_(',');
-            }
-            res = std::make_shared<automaton>(prefix,
-                                              automaton_(word_()));
-            if (prefix != "tuple_automaton")
-            {
-              auto& c = res->get_content();
-              c.insert(c.begin(), std::make_shared<other>(w));
-            }
-            while (peek_() == ',')
-              {
-                eat_(',');
-                res->get_content().emplace_back(automaton_());
-              }
             eat_('>');
           }
         else
@@ -420,15 +346,6 @@ namespace vcsn::ast
             eat_(')');
           }
         return std::make_shared<expressionset>(context, ids);
-      }
-
-      /// `"expansionset" "<" <Expressionset> ">"`.
-      std::shared_ptr<expansionset> expansionset_()
-      {
-        eat_('<');
-        auto res = std::make_shared<expansionset>(expressionset_());
-        eat_('>');
-        return res;
       }
 
       /// `"polynomialset" "<" <Context> ">"`.
