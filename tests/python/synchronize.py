@@ -14,7 +14,7 @@ def check(input, file):
     #CHECK_EQUIV(input, syn) #free automaton for determinize?
     CHECK(syn.is_synchronized())
 
-ctx = vcsn.context('lat<law_char, law_char>, b')
+ctx = vcsn.context('lat<law, law>, b')
 
 check(ctx.expression(r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn)""").standard(), "bool")
 check(ctx.expression(r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn)""").standard().minimize().strip(), "bool_min")
@@ -34,7 +34,7 @@ def check(input, file):
     d = input.delay_automaton()
     CHECK_EQ(aut, d)
 
-ctx = vcsn.context('lat<law_char, law_char>, b')
+ctx = vcsn.context('lat<law, law>, b')
 
 check(ctx.expression(r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn)""").standard(), "bool_delay")
 check(ctx.expression(r"""(abc|de)((f|\e)+((g|h)(i|j)*(\e|k)))(l|mn)""").standard().minimize().strip(), "bool_min_delay")

@@ -324,7 +324,7 @@ CHECK_EQ(r'\z', a & c)
 CHECK_EQ(r'<6>\e', a & b)
 CHECK_EQ('<4>a', b & c)
 
-poly = vcsn.context('law_char, q').polynomial
+poly = vcsn.context('law, q').polynomial
 a = poly('<1>aa')
 b = poly('<2>ab')
 CHECK_EQ(r'\z', a & b)

@@ -339,7 +339,7 @@ sub setup_det_aopt ($)
 
   verbose 1, "Aopt $size\n";
   my $base = "aopt-$size";
-  standard ($base, "(\\e+a){$size}", "lal_char(a), b");
+  standard ($base, "(\\e+a){$size}", "lal(a), b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)
@@ -382,7 +382,7 @@ sub setup_eps_aopt ($)
 
   verbose 1, "Aopt $size\n";
   my $base = "tho-aopt-$size";
-  thompson ($base, "(\\e+a){$size}", "lal_char(a), b");
+  thompson ($base, "(\\e+a){$size}", "lal(a), b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)
@@ -439,7 +439,7 @@ sub setup_prefix ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          run "vcsn-standard -e '(?\@lal_char(ab), b)$exp' -Oefsm >$base.efsm";
+          run "vcsn-standard -e '(?\@lal(ab), b)$exp' -Oefsm >$base.efsm";
           $prog = 'fstdeterminize';
           $res{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
@@ -451,7 +451,7 @@ sub setup_prefix ($)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-standard -e '(?\@lal_char(ab), b)$exp' >$base.gv";
+          run "vcsn-standard -e '(?\@lal(ab), b)$exp' >$base.gv";
           $prog = 'vcsn-determinize';
           $res{$d} = "$prog -O null -f $base.gv";
         }

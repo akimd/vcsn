@@ -208,7 +208,7 @@ CHECK_EQ(zexp('<9>a'), zexp('<3><3>a'))
 ## label * label.  ##
 ## --------------- ##
 
-l = vcsn.context('law_char, b').label
+l = vcsn.context('law, b').label
 CHECK_EQ(l('abc'),
          l('ab') * l(r'\e') * l('c'))
 CHECK_EQ(l('\e'),
@@ -224,7 +224,7 @@ CHECK_EQ(c2.word('abc|aBc'),
 ## polynomial * polynomial.  ##
 ## ------------------------- ##
 
-pol = vcsn.context('law_char, z').polynomial
+pol = vcsn.context('law, z').polynomial
 CHECK_EQ(pol('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
          pol(r'\e + <2>a + <3>b') * pol(r'\e') * pol('c + <5>d'))
 

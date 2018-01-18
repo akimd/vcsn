@@ -26,7 +26,7 @@ check_accessible(a, a)
 # Cycle.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab), b"
+    vcsn_context = "law(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2 [label="a"]
@@ -67,7 +67,7 @@ digraph {
 # No final state.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab), b"
+    vcsn_context = "law(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2 [label="a"]
@@ -100,7 +100,7 @@ digraph {
 # No initial state.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab), b"
+    vcsn_context = "law(ab), b"
     0 -> 1 [label="a"]
     1 -> 2[label="a"]
     2 -> 3[label="a"]
@@ -119,7 +119,7 @@ digraph {
 # Simple input.
 check_accessible('''
 digraph {
-    vcsn_context = "law_char(ab), b"
+    vcsn_context = "law(ab), b"
     I0 -> 0
     0 -> 1 [label="a"]
     1 -> 2[label="a"]

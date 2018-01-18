@@ -85,7 +85,7 @@ check(metext('lan-log.in.daut'), metext('lan-log.out.daut'))
 
 
 ## ------------- ##
-## law_char, b.  ##
+## law, b.  ##
 ## ------------- ##
 
 check(metext('law-b.in.gv'), metext('law-b.out.gv'))
@@ -106,12 +106,12 @@ check(metext('lan-z.in.gv'), metext('lan-z.out.gv'))
 
 
 ## ---------------------------------- ##
-## law_char, zmin: invalid \e-cycle.  ##
+## law, zmin: invalid \e-cycle.  ##
 ## ---------------------------------- ##
 
 check_fail(r'''digraph
 {
-  vcsn_context = "law_char(ab), zmin"
+  vcsn_context = "law(ab), zmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

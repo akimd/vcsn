@@ -7,7 +7,7 @@ import vcsn
 from test import *
 
 # The name of the current context.
-context = 'lal_char(abcd), b'
+context = 'lal(abcd), b'
 # The current context.
 ctx = vcsn.context(context)
 # Whether expressions or series.
@@ -15,15 +15,15 @@ identities = "associative"
 
 # Compute the name of the context.
 contexts = {
-    'b': "law_char(a-h), b",
-    'br': "law_char(a-h), expressionset<law_char(i-n), b>",
-    'brr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), b>>",
-    'q': "law_char(a-h), q",
-    'qr': "law_char(a-h), expressionset<law_char(i-n), q>",
-    'qrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), q>>",
-    'z': "law_char(a-h), z",
-    'zr': "law_char(a-h), expressionset<law_char(i-n), z>",
-    'zrr': "law_char(a-h), expressionset<law_char(i-n), expressionset<law_char(w-z), z>>",
+    'b': "law(a-h), b",
+    'br': "law(a-h), expressionset<law(i-n), b>",
+    'brr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), b>>",
+    'q': "law(a-h), q",
+    'qr': "law(a-h), expressionset<law(i-n), q>",
+    'qrr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), q>>",
+    'z': "law(a-h), z",
+    'zr': "law(a-h), expressionset<law(i-n), z>",
+    'zrr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), z>>",
 }
 
 

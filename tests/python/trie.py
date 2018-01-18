@@ -4,7 +4,7 @@ import os
 import vcsn
 from test import *
 
-# In law_char, when reading the monomial `a|b` (yes, `|` is not
+# In law, when reading the monomial `a|b` (yes, `|` is not
 # escaped), we looped for ever: the `a` was read by
 # setalpha::get_word, which then returned, and then
 # polynomialset::conv_label repeatedly called get_word on `|b`, which
@@ -66,7 +66,7 @@ def check(algo, ctx, polynomial, exp):
 
 
 check('trie',
-      'law_char, q',
+      'law, q',
       r'<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
       r'''context = letterset<char_letters(abcd)>, q
 $ -> 0
@@ -88,7 +88,7 @@ $ -> 0
 
 
 check('cotrie',
-      'law_char, q',
+      'law, q',
       r'<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
       r'''context = letterset<char_letters(abcd)>, q
 $ -> 0 <2>
@@ -112,7 +112,7 @@ $ -> 7 <6>
 ## ---------------- ##
 
 check('trie',
-      'lat<law_char, law_char>, q',
+      'lat<law, law>, q',
       '<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
       + ' + <14>forteen|quatorze + <40>forty|quarante',
       r'''context = lat<letterset<char_letters(efhnortuwy)>, letterset<char_letters(adeinoqrstuxz)>>, q

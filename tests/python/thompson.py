@@ -110,7 +110,7 @@ r'''digraph
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check(r'(?@law_char(ab), z)<12>\e+<23>a+<34>b',
+check(r'(?@law(ab), z)<12>\e+<23>a+<34>b',
 r'''digraph
 {
   vcsn_context = "wordset<char_letters(ab)>, z"

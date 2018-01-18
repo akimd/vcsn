@@ -111,7 +111,7 @@ check(r'ab{\}cd', r'(ab{\}cd){T}')
 check('ab{/}cd', r'((cd){T}{\}(ab){T})')
 check('(ab){c}', '(ba){c}')
 
-ctx = vcsn.context('law_char(abcd), b')
+ctx = vcsn.context('law(abcd), b')
 check(r'\e')
 check(r'\z')
 check('a')
@@ -120,7 +120,7 @@ check('abc+aba', 'cba+aba')
 check('(ab)*&(ab)*', '(ba)*&(ba)*')
 check('(ab)*', '(ba)*')
 
-ctx = vcsn.context('law_char(abcd), expressionset<law_char(efgh), expressionset<law_char(xyz), q>>')
+ctx = vcsn.context('law(abcd), expressionset<law(efgh), expressionset<law(xyz), q>>')
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')
 

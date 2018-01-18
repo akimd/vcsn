@@ -32,7 +32,7 @@ CHECK(not a.is_partial_identity())
 ## ----- ##
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law_char(abc),law_char(abc)>, b"
+  vcsn_context = "lat<law(abc),law(abc)>, b"
   I -> 0
   0 -> 1 [label = "(aaa, a)"]
   1 -> 0 [label = "(a, aaa)"]
@@ -43,7 +43,7 @@ a = vcsn.automaton(r'''digraph {
 CHECK(a.is_partial_identity())
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law_char(abc),law_char(abcd)>, b"
+  vcsn_context = "lat<law(abc),law(abcd)>, b"
   I -> 0
   0 -> 1 [label = "(aaa, a)"]
   1 -> 0 [label = "(a, aaa)"]

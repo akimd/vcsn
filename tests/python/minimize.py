@@ -102,7 +102,7 @@ xfail('signature',  a)
 check('weighted',   a, exp)
 
 ## Non-lal automata.
-a = vcsn.context('law_char(a-c), b').expression('abc(bc)*+acb(bc)*').standard()
+a = vcsn.context('law(a-c), b').expression('abc(bc)*+acb(bc)*').standard()
 exp = metext('nonlal.exp.gv')
 check('signature', a, exp)
 check('weighted',  a, exp)
@@ -129,6 +129,6 @@ CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 
 ## Check minimization idempotency in the non-lal case as well.
-a = vcsn.context('law_char(ab), b').expression('ab').standard()
+a = vcsn.context('law(ab), b').expression('ab').standard()
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 CHECK_ISOMORPHIC(a.minimize('weighted'), a)

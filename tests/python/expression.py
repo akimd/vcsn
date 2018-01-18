@@ -309,7 +309,7 @@ check('(<5>a)(b)(c*)', '<5>(abc*)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
-ctx = vcsn.context('law_char(abcd), q')
+ctx = vcsn.context('law(abcd), q')
 check('(a<5>)b', '<5>(ab)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')

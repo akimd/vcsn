@@ -49,7 +49,7 @@ check_lift('''digraph
 ## Lift(tape...).  ##
 ## --------------- ##
 
-c = vcsn.context('lat<lal(abc), lal(def), law_char(ghi)>, q')
+c = vcsn.context('lat<lal(abc), lal(def), law(ghi)>, q')
 a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).

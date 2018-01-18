@@ -4,7 +4,7 @@ import vcsn
 from test import *
 
 lal = vcsn.context("lal,b")
-law = vcsn.context("law_char,b")
+law = vcsn.context("law,b")
 
 def check(ctx, a, ctx2 = None, b = None):
     if ctx2 is None:
@@ -29,7 +29,7 @@ check(law, '(ab+cd)*de', lal)
 
 # transducers might need padding.
 #
-latw = vcsn.context("lat<law_char, lal>, z")
+latw = vcsn.context("lat<law, lal>, z")
 latl = vcsn.context("lat<lal, lal>, z")
 
 check(latw, "(a|b)", latl)

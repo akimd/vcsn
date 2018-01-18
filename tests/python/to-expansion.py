@@ -90,7 +90,7 @@ check('a{c}{c}', r'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
 e = vcsn.context('lal(a), q').expression('((<2>a)*+(<4>aa)*){c}')
 check(e, 'a.[((<2>a)*+<2>(a(<4>(aa))*)){c}]')
 # About the same, but this time using polynomials as weights.
-ctx = vcsn.context('lal(a), polynomialset<law_char(x), q>')
+ctx = vcsn.context('lal(a), polynomialset<law(x), q>')
 check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}]')
 check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
@@ -276,7 +276,7 @@ CHECK_EQ(r'a⊙[a⊕⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
 ## On wordset.  ##
 ## ------------ ##
 
-c = vcsn.context("law_char(a-z), expressionset<lal(xyz), q>")
+c = vcsn.context("law(a-z), expressionset<lal(xyz), q>")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.
@@ -300,7 +300,7 @@ check('(<x>a)*(<y>b)* & (<z>ab)*',
 ## tupleset.  ##
 ## ---------- ##
 
-c = vcsn.context("lat<law_char(abc), law_char(xyz)>, expressionset<lal(XYZ), q>")
+c = vcsn.context("lat<law(abc), law(xyz)>, expressionset<lal(XYZ), q>")
 check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',

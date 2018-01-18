@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "law_char(ab), b"
+  vcsn_context = "law(ab), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

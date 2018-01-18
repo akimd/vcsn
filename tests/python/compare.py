@@ -103,7 +103,7 @@ check_lt('a*', 'a**')
 def check_lt(r1, r2):
     check_lt_(ctx.label(r1), ctx.label(r2))
 
-ctx = vcsn.context('law_char, q')
+ctx = vcsn.context('law, q')
 # This is lexicographical order, not shortlex.
 check_lt('', r'a')
 check_lt('a', 'b')

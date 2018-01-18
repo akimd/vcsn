@@ -7,7 +7,7 @@ from test import *
 XFAIL(lambda: vcsn.automaton('''
 digraph
 {
-  vcsn_context = "law_char(ab), b"
+  vcsn_context = "law(ab), b"
   I -> 0
   0 -> 0 [label="a, b"]
   0 -> F

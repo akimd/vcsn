@@ -79,7 +79,7 @@ repetitions = 1
 val = range(1, 8)
 
 r = "[a-e]*b(<2>[a-e])*"
-aut = vcsn.context("lal_char(a-e), z").expression(r).standard()
+aut = vcsn.context("lal(a-e), z").expression(r).standard()
 a = dict()
 time = dict()
 # print('{}, {}, {}, {}'.format('n', 'vcsn', 'ofst', 'ratio'))

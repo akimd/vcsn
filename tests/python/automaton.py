@@ -224,12 +224,12 @@ vcsn.automaton(r'''digraph
 # An open tuple context.
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal,law_char>, b"
+  vcsn_context = "lat<lal,law>, b"
   0 -> 0 [label="(a|x),(b|xyz),(c|\\e)"]
 }'''),
 vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal(abc),law_char(xyz)>, b"
+  vcsn_context = "lat<lal(abc),law(xyz)>, b"
   0 -> 0 [label="(a,x),(b,xyz),(c,\\e)"]
 }'''))
 
@@ -712,8 +712,8 @@ for fn in glob.glob(os.path.join(medir, '*.grail')):
 ## Conversion.  ##
 ## ------------ ##
 
-# Convert an automaton from lal, b to law_char, z.
-CHECK_EQ(vcsn.automaton('''context = "law_char, z"
+# Convert an automaton from lal, b to law, z.
+CHECK_EQ(vcsn.automaton('''context = "law, z"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
@@ -722,17 +722,17 @@ CHECK_EQ(vcsn.automaton('''context = "law_char, z"
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''').automaton(vcsn.context("law_char(abc), z")))
+  1 -> $''').automaton(vcsn.context("law(abc), z")))
 
 # Convert an automaton to a smaller, valid, alphabet.
-CHECK_EQ(vcsn.automaton('''context = "law_char(abc), z"
+CHECK_EQ(vcsn.automaton('''context = "law(abc), z"
   0 -> 1 a, b'''),
          vcsn.automaton('''context = "lal(a-z), b"
-  0 -> 1 a, b''').automaton(vcsn.context("law_char(abc), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law(abc), z")))
 
 # Convert an automaton to a smaller, invalid, alphabet.
 XFAIL(lambda: vcsn.automaton('''context = "lal(abc), b"
-  0 -> 1 a, b''').automaton(vcsn.context("law_char(xy), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("law(xy), z")))
 
 # Convert to an invalid smaller weightset.
 XFAIL(lambda: vcsn.automaton('''context = "lal(abc), z"

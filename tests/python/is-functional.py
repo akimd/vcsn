@@ -115,7 +115,7 @@ CHECK(a.is_functional())
 ## ----- ##
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law_char(abc),law_char(xyz)>, b"
+  vcsn_context = "lat<law(abc),law(xyz)>, b"
   I0 -> 0
   0 -> 1 [label = "(aaa, x)"]
   1 -> 2 [label = "(a, x)"]
@@ -127,7 +127,7 @@ a = vcsn.automaton(r'''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law_char(abc),law_char(xyz)>, b"
+  vcsn_context = "lat<law(abc),law(xyz)>, b"
   I0 -> 0
   0 -> 1 [label = "(aaa, xx)"]
   1 -> 2 [label = "(a, x)"]

@@ -95,7 +95,7 @@ check('expressionset<letterset<char_letters(ab)>, expressionset<letterset<char_l
 ## WeightSet: polynomialset.  ##
 ## -------------------------- ##
 
-check('lal(ab), polynomialset<law_char(xy), q>',
+check('lal(ab), polynomialset<law(xy), q>',
       'letterset<char_letters(ab)>, polynomialset<wordset<char_letters(xy)>, q>')
 
 
@@ -125,7 +125,7 @@ check('lat<lal>, b',
 check('lat<lat<lal(a)>>, b',
       'lat<lat<letterset<char_letters(a)>>>, b')
 
-ctx = '''lat<lal(ba),lal(vu), law_char(x-z)>,
+ctx = '''lat<lal(ba),lal(vu), law(x-z)>,
          lat<expressionset<lat<lal(fe), lal(hg)>, q>, r, q>'''
 check(ctx,
       'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
@@ -138,7 +138,7 @@ check(ctx,
 # Check that spaces are generously accepted.
 ctx = '''
 lat < lal (ba) ,
-                    lat < lal(vu) , law_char(x-z) >
+                    lat < lal(vu) , law(x-z) >
                >
 ,
 lat < expressionset < lat < lal < char (fe) > , lal (hg) >  ,
