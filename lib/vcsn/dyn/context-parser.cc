@@ -222,17 +222,11 @@ namespace vcsn::ast
       /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_(const std::string& ls)
       {
-        if (ls == "lal_char" || ls == "lan_char")
-          return std::make_shared<genlabelset>("letterset",
-                                               genset_("char_letters"));
-        else if (ls == "lao" || ls == "oneset")
+        if (ls == "lao" || ls == "oneset")
           return std::make_shared<oneset>();
         else if (ls == "lat")
           return tupleset_();
-        else if (ls == "law_char")
-          return std::make_shared<genlabelset>("wordset",
-                                               genset_("char_letters"));
-        else if (ls == "lal" || ls == "letterset" || ls == "lan")
+        else if (ls == "lal" || ls == "letterset")
           return std::make_shared<genlabelset>("letterset", genset_());
         else if (ls == "law" || ls == "wordset")
           return std::make_shared<genlabelset>("wordset", genset_());
@@ -395,12 +389,8 @@ namespace vcsn::ast
       std::set<std::string> labelsets_ =
         {
           "lal",
-          "lal_char",
-          "lan",
-          "lan_char",
           "lao",
           "law",
-          "law_char",
           "letterset",
           "oneset",
           "wordset",
