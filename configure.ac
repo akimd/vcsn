@@ -112,6 +112,9 @@ m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
     std::mismatch(std::begin(v1), std::end(v1),
                   std::begin(v2), std::end(v2));
   }
+
+  // C++17
+  namespace ns1::ns2::ns3 {}
 ])])
 
 for f in '-std=c++17' '-std=c++17 -stdlib=libc++' \
