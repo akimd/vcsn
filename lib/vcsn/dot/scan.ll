@@ -40,6 +40,8 @@ ID      {IDENT}|{NUM}
 
 %%
 %{
+  using namespace std::literals;
+
   // Growing string, for SC_STRING/SC_XML.
   auto s = std::string{};
   // Level of nesting of "<"/">" for SC_XML.
@@ -75,7 +77,7 @@ ID      {IDENT}|{NUM}
              }
   [ \t]+     loc.step(); continue;
   \n+        LINE(yyleng); loc.step(); continue;
-  .          driver_.error(loc, std::string{"invalid character: "}+yytext);
+  .          throw parser::syntax_error(loc, "invalid character: "s + yytext);
 }
 
 <SC_COMMENT>{
@@ -96,9 +98,8 @@ ID      {IDENT}|{NUM}
   "\n"+       LINE(yyleng); s.append(yytext, yyleng);
 
   <<EOF>> {
-    driver_.error(loc, "unexpected end of file in a string");
     BEGIN(INITIAL);
-    return parser::make_ID(string_t{s}, loc);
+    throw parser::syntax_error(loc, "unexpected end of file in a string");
   }
 }
 
@@ -118,9 +119,8 @@ ID      {IDENT}|{NUM}
   "\n"+     LINE(yyleng); s.append(yytext, yyleng);
 
   <<EOF>> {
-    driver_.error(loc, "unexpected end of file in a XML string");
     BEGIN(INITIAL);
-    return parser::make_ID(string_t{s}, loc);
+    throw parser::syntax_error(loc, "unexpected end of file in a XML string");
   }
 }
 

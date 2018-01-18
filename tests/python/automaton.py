@@ -29,10 +29,6 @@ xfail(r'''digraph
 ''', r'''3.18-5.0: unexpected end of file in a string
   vcsn_context = "lal_char(a), b
                  ^^^^^^^^^^^^^^^
-3.18-5.0: invalid weightset name: "b\n}"
-  while reading context: "lal_char(a), b\n}\n"
-  vcsn_context = "lal_char(a), b
-                 ^^^^^^^^^^^^^^^
   while reading automaton''')
 
 # Syntax error: attributes are assignments.
