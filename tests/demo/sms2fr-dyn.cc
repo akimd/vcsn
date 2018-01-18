@@ -71,7 +71,7 @@ struct sms2fr_impl
 
   const vcsn::dyn::automaton &grap;
   const vcsn::dyn::automaton &synt;
-  const vcsn::dyn::context ctx = vcsn::dyn::make_context("lan_char, rmin");
+  const vcsn::dyn::context ctx = vcsn::dyn::make_context("lal, rmin");
 };
 
 /// Command line arguments.
