@@ -133,7 +133,7 @@ class ContextText:
                 ctx = vcsn.context(text)
         else:
             # An unnamed context (i.e., used in the d3 widget).
-            ctx = vcsn.context('lal_char, b')
+            ctx = vcsn.context('lal, b')
 
         toLatex = lambda txt: vcsn.context(txt)._repr_latex_()
         self.widget = TextLatexWidget('Context:', text, toLatex)

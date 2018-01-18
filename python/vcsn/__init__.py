@@ -10,7 +10,7 @@ import vcsn.python3
 # vcsn_cxx symbols were not shared with other shared libraries.
 # Thus, when using some cached properties on automata, we had their static
 # methods' symbols not properly resolved, resulting in the existence of 2
-# values for properties' indices: one in lal_char_(b|q|z) and one in shared
+# values for properties' indices: one in lal_(b|q|z) and one in shared
 # libraries (loaded with the RTLD_GLOBAL flag, see lib/vcsn/dyn/translate.cc).
 # See https://docs.python.org/3.5/library/sys.html#sys.setdlopenflags
 # and dlopen(3).
@@ -51,9 +51,9 @@ except (ImportError, NameError):
     pass
 
 # Predefined contexts for casual users.
-B = context('lal_char, b')
-Z = context('lal_char, z')
-Q = context('lal_char, q')
+B = context('lal, b')
+Z = context('lal, z')
+Q = context('lal, q')
 b = B
 
 # Cause an error to get back algorithms list
