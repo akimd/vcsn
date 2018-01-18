@@ -332,18 +332,18 @@ dist_noinst_python += $(registries_gen)
 from_registries_gen =				\
   %D%/dyn/registries.hh				\
   lib/vcsn/algos/algos.cc			\
-  lib/vcsn/dyn/context-printer-header-algo.cc
+  lib/vcsn/dyn/instantiator-header-algo.cc
 CLEANFILES += %D%/dyn/registries.stamp $(from_registries_gen)
 %D%/dyn/registries.stamp: $(registries_gen) $(algo_headers) $(algo_implems)
 	$(AM_V_GEN)$(mkdir_p) $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
-	$(AM_V_at)$(PYTHON) $(srcdir)/$(registries_gen)			\
-	  --bridge lib/vcsn/dyn/context-printer-header-algo.cc.tmp	\
-	  --output lib/vcsn/algos/algos.cc.tmp				\
-	  --header %D%/dyn/registries.hh.tmp				\
-	  --srcdir $(srcdir)						\
-	  --headers $(algo_headers)					\
+	$(AM_V_at)$(PYTHON) $(srcdir)/$(registries_gen)		\
+	  --bridge lib/vcsn/dyn/instantiator-header-algo.cc.tmp	\
+	  --output lib/vcsn/algos/algos.cc.tmp			\
+	  --header %D%/dyn/registries.hh.tmp			\
+	  --srcdir $(srcdir)					\
+	  --headers $(algo_headers)				\
 	  --implems $(algo_implems)
 	$(AM_V_at)for f in $(from_registries_gen);	\
 	do						\

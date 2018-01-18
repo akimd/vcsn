@@ -33,7 +33,7 @@ lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN	\
   $(BOOST_SYSTEM_CPPFLAGS) $(BOOST_REGEX_CPPFLAGS)
 nodist_lib_libvcsn_la_SOURCES =                 \
   %D%/algos/algos.cc                            \
-  %D%/dyn/context-printer-header-algo.cc        \
+  %D%/dyn/instantiator-header-algo.cc        \
   %D%/odyn/odyn.cc
 
 # Used in vcsn/local.mk to generate the registries.
@@ -52,9 +52,9 @@ lib_libvcsn_la_SOURCES =                        \
   $(algo_implems)                               \
   %D%/dyn/context-parser.cc                     \
   %D%/dyn/context-parser.hh                     \
-  %D%/dyn/context-printer.cc                    \
-  %D%/dyn/context-printer.hh                    \
   %D%/dyn/fwd.hh                                \
+  %D%/dyn/instantiator.cc                       \
+  %D%/dyn/instantiator.hh                       \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/signature-printer.hh                  \
   %D%/dyn/translate.cc                          \

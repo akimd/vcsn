@@ -31,7 +31,7 @@ lcov --remove vcsn.info.tmp -o vcsn.info                \
      'lib/vcsn/*/stack.hh'                              \
      'lib/vcsn/algos/algos.cc'                          \
      'lib/vcsn/dot/stack.hh'                            \
-     'lib/vcsn/dyn/context-printer-header-algo.cc'      \
+     'lib/vcsn/dyn/instantiator-header-algo.cc'         \
      'lib/vcsn/odyn/odyn.cc'                            \
      'lib/vcsn/rat/location.hh'                         \
      'lib/vcsn/rat/position.hh'                         \

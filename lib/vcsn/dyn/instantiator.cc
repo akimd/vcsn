@@ -1,4 +1,4 @@
-#include <lib/vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/instantiator.hh>
 
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -11,24 +11,24 @@ namespace vcsn
 {
   namespace ast
   {
-    void context_printer::header(const std::string& h)
+    void instantiator::header(const std::string& h)
     {
       headers_.insert(h);
     }
 
-    void context_printer::linkflags(const std::string& flags)
+    void instantiator::linkflags(const std::string& flags)
     {
       // We rely on this initial space when not empty.
       linkflags_ += ' ';
       linkflags_ += flags;
     }
 
-    const std::string& context_printer::linkflags() const
+    const std::string& instantiator::linkflags() const
     {
       return linkflags_;
     }
 
-    std::ostream& context_printer::print(std::ostream& o)
+    std::ostream& instantiator::print(std::ostream& o)
     {
       o <<
         "#define BUILD_LIBVCSN 1\n"
@@ -47,7 +47,7 @@ namespace vcsn
     }
 
 #define DEFINE(Type)              \
-    void context_printer::visit(const Type& t)
+    void instantiator::visit(const Type& t)
 
     DEFINE(automaton)
     {

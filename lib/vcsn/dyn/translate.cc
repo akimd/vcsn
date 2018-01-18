@@ -12,7 +12,7 @@
 #include <boost/filesystem.hpp>
 
 #include <lib/vcsn/dyn/context-parser.hh>
-#include <lib/vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/instantiator.hh>
 #include <lib/vcsn/dyn/type-ast.hh>
 #include <lib/vcsn/dyn/type-parser.hh>
 #include <lib/vcsn/misc/xltdl.hh>
@@ -398,7 +398,7 @@ namespace vcsn
 
         /// The output stream: the corresponding C++ snippet to compile.
         std::ostringstream os;
-        ast::context_printer printer_;
+        ast::instantiator printer_;
       };
     } // namespace detail
 

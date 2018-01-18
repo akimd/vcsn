@@ -131,11 +131,11 @@ def bridge():
 
 #include <unordered_map>
 
-#include <lib/vcsn/dyn/context-printer.hh>
+#include <lib/vcsn/dyn/instantiator.hh>
 
 namespace vcsn { namespace ast {
 
-  void context_printer::header_algo(const std::string& algo)
+  void instantiator::header_algo(const std::string& algo)
   {
     static auto headers
       = std::unordered_map<std::string, std::string>
