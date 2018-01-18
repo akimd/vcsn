@@ -14,6 +14,7 @@
 #include <lib/vcsn/dyn/context-parser.hh>
 #include <lib/vcsn/dyn/context-printer.hh>
 #include <lib/vcsn/dyn/type-ast.hh>
+#include <lib/vcsn/dyn/type-parser.hh>
 #include <lib/vcsn/misc/xltdl.hh>
 
 #include <vcsn/dyn/context.hh>

@@ -1,7 +1,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <lib/vcsn/dyn/context-parser.hh>
+#include <lib/vcsn/dyn/type-parser.hh>
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 #include <vcsn/misc/escape.hh>
@@ -14,10 +14,10 @@ namespace vcsn::ast
   namespace
   {
     /// Parser of snames.
-    class context_parser
+    class type_parser
     {
     public:
-      context_parser(std::istringstream& is)
+      type_parser(std::istringstream& is)
         : is_(is)
       {}
 
@@ -495,17 +495,17 @@ namespace vcsn::ast
     };
   }
 
-  std::shared_ptr<ast_node> parse_context(const std::string& ctx)
+  std::shared_ptr<ast_node> parse_type(const std::string& type)
   {
-    std::istringstream is{ctx};
-    auto parser = context_parser{is};
+    std::istringstream is{type};
+    auto parser = type_parser{is};
     try
       {
-        return parser.parse_context();
+        return parser.parse();
       }
     catch (const std::runtime_error& e)
       {
-        raise(e, "  while reading context: ", str_quote(ctx));
+        raise(e, "  while reading type: ", str_quote(type));
       }
   }
 }

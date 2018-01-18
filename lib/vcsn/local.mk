@@ -61,6 +61,8 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/translate.cc                          \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \
+  %D%/dyn/type-parser.cc                        \
+  %D%/dyn/type-parser.hh                        \
   %D%/misc/configuration.cc                     \
   %D%/misc/direction.cc                         \
   %D%/misc/escape.cc                            \
