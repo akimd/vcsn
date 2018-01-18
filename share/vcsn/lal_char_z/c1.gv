@@ -1,7 +1,7 @@
 // Inside Vaucanson, Fig. 1a.
 digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "lal(ab), z"
   rankdir = LR
   node [shape = circle]
   {

@@ -1,7 +1,7 @@
 // Automaton A_1, as described in TAFK1.pdf, p.12, Figure 1.2.
 digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "lal(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
