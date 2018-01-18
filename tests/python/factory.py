@@ -284,23 +284,23 @@ for m in re.findall('<(.*?)>', str(exp)):
 
 # Check that we generate valid expressions on multitape contexts.
 for i in range(100):
-    randexp('lat<lan(abc), lan(abc)>, q',
+    randexp('lat<lal(abc), lal(abc)>, q',
             '+,*,.', length=20)
 # FIXME: We did not ask for tuple, but we will have some anyway, as
 # when we generate multitape labels, we pretty-print them, which turns
 # them into multitape expressions. And with identities = none, that's
 # all we have left: tupling operator on single-tape labels.
-exp = randexp('lat<lan(abc), lan(abc)>, q',
+exp = randexp('lat<lal(abc), lal(abc)>, q',
               '@,+,*,.,\e', length=1000, identities='none')
 check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 
 # Check that we use | correctly.
 for i in range(100):
-    randexp('lat<lan(abc), lan(abc)>, q',
+    randexp('lat<lal(abc), lal(abc)>, q',
             '+,*=.2,.,|,@', length=20)
 # Since @ can only appear on top of |, it is less likely to appear.
 # So make a very large expression.
-exp = randexp('lat<lan(abc), lan(abc)>, q',
+exp = randexp('lat<lal(abc), lal(abc)>, q',
               '+,*=.2,.,|=.1,@=10,\e', length=2000, identities='none')
 check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 

@@ -20,7 +20,7 @@ def check_aut(e):
 ## ----- ##
 ## Add.  ##
 ## ----- ##
-ctx = vcsn.context('lan, q')
+ctx = vcsn.context('lal, q')
 def check(r1, r2, exp):
     e1 = expr(r1)
     e2 = expr(r2)

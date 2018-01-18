@@ -131,7 +131,7 @@ CHECK_EQ(False,
 ## ------------ ##
 ## Expansions.  ##
 ## ------------ ##
-c = vcsn.context('lan, q')
+c = vcsn.context('lal, q')
 e = c.expression('a*')
 x = e.expansion()
 CHECK(x.is_normal())

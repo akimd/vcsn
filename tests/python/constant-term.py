@@ -69,11 +69,6 @@ XFAIL(lambda: e.constant_term(),
   while computing constant-term of: <x>a{\}<x>a''')
 
 # tuple.
-#
-# FIXME: Nullableset removal: What to do now?
-# We have to request for construction based on the derivation, not the
-# expansion, because expansion wants the label one, i.e., it requires
-# the labelsets to be lan, not lal.
 ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
 check('0',  ' (<2>a)|(<3>x)',  'derivation')
 check('0', r' (<2>a)|(<3>\e)', 'derivation')

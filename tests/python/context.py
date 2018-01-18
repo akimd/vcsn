@@ -167,9 +167,9 @@ def check(c1, c2):
     CHECK_EQ(False, c2 != c2)
     CHECK_EQ(True, c1 != c2)
     CHECK_EQ(True, c2 != c1)
-check('lan(abc), b', 'lan(abcd), b')
-check('lan(abc), b', 'law(abc), b')
-check('lan(abc), b', 'lan(abc), q')
+check('lal(abc), b', 'lal(abcd), b')
+check('lal(abc), b', 'law(abc), b')
+check('lal(abc), b', 'lal(abc), q')
 # Regression: at some point they were considered equal, because there
 # were no difference when printed in UTF-8.  We now check the sname.
-check('lat<lan(abc)>, b', 'lan(abc), b')
+check('lat<lal(abc)>, b', 'lal(abc), b')

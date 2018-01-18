@@ -15,9 +15,9 @@ def check(a1, a2, exp):
 ## ---------- ##
 
 make = vcsn.context
-c1 = make('lat<lan(abc), lan(efg), lan(xyz)>, b')
-c2 = make('lat<lan(xyz), lan(EFG), lal(ABC)>, q')
-c3 = make('lat<lan(abc), lan(efg), lan(EFG), lal(ABC)>, q')
+c1 = make('lat<lal(abc), lal(efg), lal(xyz)>, b')
+c2 = make('lat<lal(xyz), lal(EFG), lal(ABC)>, q')
+c3 = make('lat<lal(abc), lal(efg), lal(EFG), lal(ABC)>, q')
 check(c1, c2, c3)
 
 ## -------- ##

@@ -9,9 +9,9 @@ from test import *
 ## Contexts.  ##
 ## ---------- ##
 
-c1 = vcsn.context('lan(ab), b')
+c1 = vcsn.context('law(ab), b')
 c2 = vcsn.context('lal(xy), q')
-c3 = vcsn.context('lan(abxy), q')
+c3 = vcsn.context('law(abxy), q')
 CHECK_EQ(c3, c1.join(c2))
 CHECK_EQ(c3, c2.join(c1))
 
@@ -45,7 +45,7 @@ check('lal(ab), lat<expressionset<lal(xyz), lat<q, q>>, lat<q, q>>',
 ## tuple(automaton).  ##
 ## ------------------ ##
 
-ind = lambda e: vcsn.context('lan, q').expression(e).inductive()
+ind = lambda e: vcsn.context('lal, q').expression(e).inductive()
 a1 = ind('<2>[ab]')
 a2 = ind('x')
 CHECK_EQ('''context = lat<letterset<char_letters(ab)>, letterset<char_letters(x)>>, q
@@ -62,13 +62,13 @@ $ -> 0
 
 # Regression: Make sure the expressions of one-tuple contexts are
 # indeed one-tuple expressions.
-c = vcsn.context('lat<lan(abc)>, b')
+c = vcsn.context('lat<lal(abc)>, b')
 e = c.expression('[^]')
 CHECK_EQ(c, e.context())
 
 # FIXME: this shows that we really need to visit (in the sense of
 # visitors) the context to parse it properly.
 #
-# c = vcsn.context('lat<lat<lan(abc)>>, b')
+# c = vcsn.context('lat<lat<lal(abc)>>, b')
 # e = c.expression('[^]')
 # CHECK_EQ(c, e.context())

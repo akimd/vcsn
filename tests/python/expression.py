@@ -256,7 +256,7 @@ check_format('law(abc), q',
              r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Exponents.
-for ctx in ['lal, q', 'lan, q', 'law, q']:
+for ctx in ['lal, q', 'law, q']:
     # In wordset, for LaTeX, we use \mathit.
     A = '\mathit{a}' if ctx == 'law, q' else 'a'
     check_format(ctx,

@@ -215,7 +215,7 @@ CHECK_EQ(l('\e'),
          l('ab') ** 0)
 CHECK_EQ(l('ababab'),
          l('ab') ** 3)
-c = vcsn.context('lan, q')
+c = vcsn.context('lal, q')
 c2 = c|c
 CHECK_EQ(c2.word('abc|aBc'),
          c.word('a') * c2.word('b|B') * c.word('c'))
