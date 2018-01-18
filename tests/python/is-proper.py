@@ -35,8 +35,8 @@ digraph
 
 for ls in [("lal", True, True), ("law", True, False)]:
   for ws in ["b", "q"]:
-    check_context('is_proper', ls[1], a, ls[0] + "_char(ab), " + ws)
-    check_context('is_free', ls[2], a, ls[0] + "_char(ab), " + ws)
+    check_context('is_proper', ls[1], a, ls[0] + "(ab), " + ws)
+    check_context('is_free', ls[2], a, ls[0] + "(ab), " + ws)
 
 a = r'''
 digraph
@@ -51,7 +51,7 @@ digraph
 for ls in ["lal", "law"]:
   for ws in ["b", "z"]:
     for f in ["is_proper", "is_free"]:
-      check_context(f, False, a, ls + "_char(ab), " + ws)
+      check_context(f, False, a, ls + "(ab), " + ws)
 
 # Tuples of lal
 a = r'''

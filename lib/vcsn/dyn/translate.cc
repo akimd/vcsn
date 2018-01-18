@@ -131,7 +131,7 @@ namespace vcsn
         }
 
         /// Generate C++ syntax for context \a ctx (which might use
-        /// our syntax: 'lal_char(ab), z').
+        /// our syntax: 'lal(ab), z').
         void print_context(const std::string& ctx)
         {
           ast::parse_context(ctx)->accept(printer_);

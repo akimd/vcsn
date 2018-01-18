@@ -1213,7 +1213,7 @@ namespace vcsn
     /// Build from the description in \a is.
     static self_t make(std::istream& is)
     {
-      // name is, for instance, "polynomialset<lal_char(abcd), z>".
+      // name is, for instance, "polynomialset<lal(abcd), z>".
       eat(is, "polynomialset<");
       auto ctx = Context::make(is);
       eat(is, '>');
@@ -1282,9 +1282,9 @@ namespace vcsn
           //
           // Indeed, that's how we represent the initial and final
           // transitions: '$ -> 0 "<2>"'.  Using the one label is
-          // tempting, but it does not exist for lal_char for
-          // instance.  And it would be wrong to have '\e' when we
-          // can, and '$' otherwise...
+          // tempting, but it does not exist for lal for instance.
+          // And it would be wrong to have '\e' when we can, and '$'
+          // otherwise...
           //
           // However, we must have at least a weight: a completely
           // empty mononial ($ -> 0 "<2>,") is invalid.

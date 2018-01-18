@@ -25,7 +25,7 @@ namespace vcsn
   //
   // The runtime signatures (vname and vsignature) are obtained during
   // a call to a dyn:: routine: all its arguments are queried to get
-  // their runtime type name (e.g., `mutable_automaton<lal_char, b>`).
+  // their runtime type name (e.g., `mutable_automaton<lal, b>`).
   // These vnames are assembled into vsignatures, which are used to
   // query the registry corresponding to the algorithm.
   //

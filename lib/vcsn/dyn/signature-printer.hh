@@ -40,7 +40,7 @@ namespace vcsn
 
     /// A context, normalized.
     ///
-    /// E.g., 'lal_char(ab), b' -> 'letterset<char_letters(ab)>, b'.
+    /// E.g., 'lal(ab), b' -> 'letterset<char_letters(ab)>, b'.
     ///
     /// \param ctx   the context to normalize.
     /// \param full  whether to print the runtime values.
