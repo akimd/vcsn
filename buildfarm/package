@@ -1,13 +1,14 @@
 #!/bin/sh
 
+# Build the Docker image using the Debian package.  Does not need a
+# configured tree.  It doesn't even have to be bootstrapped.
+
 set -e
 . $(dirname "$0")/common
 
-compute_package_id
-
 cd "$DIR_BUILD"
 
-# Build the docker package.
+# Build the Docker image.
 cp "$DIR_SOURCE/Dockerfile" .
 cp "$DIR_SOURCE/debuild/sources.list" .
 
