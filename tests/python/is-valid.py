@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abc), q')
+ctx = vcsn.context('lal(abc), q')
 expr = ctx.expression
 
 # check(OUTPUT, EXP)

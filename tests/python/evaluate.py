@@ -15,16 +15,16 @@ def check(aut, word, exp):
     CHECK_EQ(exp, aut.evaluate(ctx.word_context().polynomial(word)))
 
 ## ------------- ##
-## lal_char, z.  ##
+## lal, z.  ##
 ## law_char, z.  ##
 ## ------------- ##
 
-for c in ["lal_char(ab), z", "lal_char, z", "law_char(ab), z"]:
+for c in ["lal(ab), z", "lal, z", "law_char(ab), z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal_char(ab), z"
+      vcsn_context = "lal(ab), z"
       rankdir = LR
       node [shape = circle]
       {
@@ -49,7 +49,7 @@ for c in ["lal_char(ab), z", "lal_char, z", "law_char(ab), z"]:
     initial_weight = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal_char(ab), z"
+      vcsn_context = "lal(ab), z"
       rankdir = LR
       node [shape = circle]
       {
@@ -68,12 +68,12 @@ for c in ["lal_char(ab), z", "lal_char, z", "law_char(ab), z"]:
     check(initial_weight, 'abab',   '8')
     check(initial_weight, 'aabab', '12')
 
-for c in ["lal_char(abc), z", "law_char(abc), z"]:
+for c in ["lal(abc), z", "law_char(abc), z"]:
     ctx = vcsn.context(c)
     more_letters = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal_char(abc), z"
+      vcsn_context = "lal(abc), z"
       rankdir = LR
       node [shape = circle]
       {
@@ -96,7 +96,7 @@ for c in ["lal_char(abc), z", "law_char(abc), z"]:
     prod = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal_char(abc), z"
+      vcsn_context = "lal(abc), z"
       rankdir = LR
       node [shape = circle]
       {
@@ -119,7 +119,7 @@ for c in ["lal_char(abc), z", "law_char(abc), z"]:
     cmplex = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal_char(abc), z"
+      vcsn_context = "lal(abc), z"
       rankdir = LR
       node [shape = circle]
       {
@@ -147,7 +147,7 @@ for c in ["lal_char(abc), z", "law_char(abc), z"]:
 ## law_char_zmin.  ##
 ## --------------- ##
 
-for c in ['lal_char(abc), zmin', 'law_char(abc), zmin']:
+for c in ['lal(abc), zmin', 'law_char(abc), zmin']:
     ctx = vcsn.context(c)
     a = ctx.expression('a').standard()
     check(a, '',   'oo')

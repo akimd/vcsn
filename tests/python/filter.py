@@ -9,12 +9,12 @@ def check(in_aut, ss, out_aut):
 
 # Check empty automaton.
 in_aut = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
 }''')
 
 out_aut = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
 }''')
@@ -25,7 +25,7 @@ check(in_aut, [0, 1], out_aut)
 
 # Check automaton has a state.
 in_aut = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
 }''')
 
@@ -34,7 +34,7 @@ check(in_aut, [1, 2], out_aut)
 
 out_aut = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -54,7 +54,7 @@ check(in_aut, [0, 2], out_aut)
 # Automaton with several states.
 in_aut = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   0 -> 1 [label = a]
   1 -> 0 [label = b]
   0 -> 4 [label = c]
@@ -68,7 +68,7 @@ in_aut = vcsn.automaton('''digraph
 
 out_aut = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

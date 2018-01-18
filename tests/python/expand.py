@@ -4,7 +4,7 @@ import re
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(abcd), z')
+ctx = vcsn.context('lal(abcd), z')
 def expr(e, ids='associative'):
     return ctx.expression(e, ids)
 

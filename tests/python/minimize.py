@@ -71,11 +71,11 @@ xfail('weighted',   a)
 
 ## Non-regression testcase: ensure that moore works and produces a
 ## correct result even with no non-final states.
-all_states_final = vcsn.context('lal_char(a), b').expression('a*').standard()
+all_states_final = vcsn.context('lal(a), b').expression('a*').standard()
 check('moore', all_states_final, all_states_final.minimize('signature'))
 
 ## Minimize an intricate automaton into a linear one.
-a = vcsn.context('lal_char(a-k), b') \
+a = vcsn.context('lal(a-k), b') \
         .expression('[a-k]{10}') \
         .standard()
 exp = metext('intricate.exp.gv')
@@ -84,7 +84,7 @@ check(algos, a, exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
-a = vcsn.context('lal_char(a), b') \
+a = vcsn.context('lal(a), b') \
         .expression('a{2}*+a{2}*', 'trivial') \
         .standard()
 exp = metext('small-nfa.exp.gv')
@@ -123,7 +123,7 @@ check('weighted',  a, exp)
 ## It remained associated to its old class identifier in
 ## state_to_class, which in the mean time would come to identify some
 ## subset of its old value.
-a = vcsn.context('lal_char(ab), b').expression('a+ba').automaton()
+a = vcsn.context('lal(ab), b').expression('a+ba').automaton()
 check('brzozowski', a, a)
 CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)

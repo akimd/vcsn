@@ -58,8 +58,8 @@ check(c1.polynomial('a|e|x + a|e|y + a|e|\e'),
 ## Automata.  ##
 ## ---------- ##
 
-c1 = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, b")
-c2 = vcsn.context("lat<lal_char(xyz),lal_char(def)>, b")
+c1 = vcsn.context("lat<lal(abc),lal(xyz)>, b")
+c2 = vcsn.context("lat<lal(xyz),lal(def)>, b")
 
 check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
@@ -111,7 +111,7 @@ check(c1.expression("(a|x)*").standard(),
 
 # Check that weights are added, not replaced
 
-cz = vcsn.context('lat<lal_char, lal_char>, z')
+cz = vcsn.context('lat<lal, lal>, z')
 aut = cz.expression('[ab]|[ab]').automaton()
 b = r'''digraph
 {
@@ -167,8 +167,8 @@ check(c1.expression("(a|x)*").standard(),
 ## Heterogeneous contexts.  ##
 ## ------------------------ ##
 
-c_ratb = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, expressionset<lal_char(mno), b>")
-c_q = vcsn.context("lat<lal_char(xyz),lal_char(def)>, q")
+c_ratb = vcsn.context("lat<lal(abc),lal(xyz)>, expressionset<lal(mno), b>")
+c_q = vcsn.context("lat<lal(xyz),lal(def)>, q")
 check(c_ratb.expression("<o>(a|x)").standard(),
       c_q.expression("<3/2>(x|d)").standard(),
       r'''digraph
@@ -198,7 +198,7 @@ check(c_ratb.expression("<o>(a|x)").standard(),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal_char(xyz), lal_char(abc)>, b"
+  vcsn_context = "lat<lal(xyz), lal(abc)>, b"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
@@ -209,7 +209,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal_char(abc), lal_char(def)>, b"
+  vcsn_context = "lat<lal(abc), lal(def)>, b"
   I0 -> 0
   0 -> 1 [label = "(\\e, d)"]
   1 -> 2 [label = "(a, e)"]
@@ -245,7 +245,7 @@ res = r'''digraph
 check(a1, a2, res)
 
 
-c_r = vcsn.context("lat<lal_char(abc),lal_char(xyz)>, r")
+c_r = vcsn.context("lat<lal(abc),lal(xyz)>, r")
 check(c_r.expression("<3.1>(a|x)").standard(),
       c2.expression("x|d").standard(),
       r'''digraph

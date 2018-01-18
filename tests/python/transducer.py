@@ -6,7 +6,7 @@ from test import *
 ## ---------------- ##
 ## LAN x LAN -> Q.  ##
 ## ---------------- ##
-c = vcsn.context("lat<lal_char(abc), lal_char(xyz)>, q")
+c = vcsn.context("lat<lal(abc), lal(xyz)>, q")
 
 # Make sure we can copy/convert a k-tape expression.
 e = c.expression('a|x')
@@ -51,12 +51,12 @@ CHECK_EQ(r'''digraph
 ## ---------------------- ##
 
 # Using tuple.
-exp = lambda e: vcsn.context("lal_char, q").expression(e)
+exp = lambda e: vcsn.context("lal, q").expression(e)
 f = vcsn.tuple(exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*'))
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
 
 # Using the operator |.
-c = vcsn.context("lat<lal_char(a), lal_char(b), lal_char(c)>, q")
+c = vcsn.context("lat<lal(a), lal(b), lal(c)>, q")
 e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
 CHECK_EQ(f, e)
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)

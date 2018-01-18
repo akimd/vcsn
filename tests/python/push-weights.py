@@ -11,7 +11,7 @@ def check(i, o):
 
 # q
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
   I0 -> 0
   0 -> 1 [label = "<2>a"]
   1 -> 2 [label = "<3>b"]
@@ -21,7 +21,7 @@ i = vcsn.automaton('''digraph {
   4 -> F4
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
   I0 -> 0 [label = "<92>"]
   0 -> 1 [label = "a"]
   1 -> 2 [label = "<15/23>b"]
@@ -34,7 +34,7 @@ check(i, o)
 
 # zmin.
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(a-f), zmin"
+  vcsn_context = "lal(a-f), zmin"
   I0 -> 0
   0 -> 1 [label = "<0>a, <1>b, <4>c"]
   0 -> 2 [label = "<0>d,<1>e"]
@@ -43,7 +43,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(a-f), zmin"
+  vcsn_context = "lal(a-f), zmin"
   I0 -> 0
   0 -> 1 [label = "<0>a, <1>b, <4>c"]
   0 -> 2 [label = "<10>d, <11>e"]
@@ -55,7 +55,7 @@ check(i, o)
 
 # q
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
   I0 -> 0
   0 -> 1 [label = "<5>a"]
   1 -> 2 [label = "<2>b"]
@@ -65,7 +65,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3 [label = "<2>"]
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
   I0 -> 0 [label = "<220>"]
   0 -> 1 [label = "a"]
   1 -> 2 [label = "<19/22>b"]
@@ -78,7 +78,7 @@ check(i, o)
 
 # zmin
 i = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), zmin"
+  vcsn_context = "lal(abc), zmin"
   I0 -> 0
   0 -> 1 [label = "<5>a"]
   1 -> 2 [label = "<2>b"]
@@ -88,7 +88,7 @@ i = vcsn.automaton('''digraph {
   3 -> F3 [label = "<2>"]
 }''')
 o = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), zmin"
+  vcsn_context = "lal(abc), zmin"
   I0 -> 0 [label = "<10>"]
   0 -> 1 [label = "<0>a"]
   1 -> 2 [label = "<2>b"]
@@ -107,7 +107,7 @@ check(i, o)
 # costing 10, and a four-transition one costing 0.  Yet we use the
 # long one.
 i = vcsn.automaton('''
-context = "lal_char(a), zmin"
+context = "lal(a), zmin"
 $ -> 0
 0 -> 1 <0>a
 1 -> 2 <0>a
@@ -119,7 +119,7 @@ $ -> 0
 ''')
 
 o = vcsn.automaton('''
-context = "lal_char(a), zmin"
+context = "lal(a), zmin"
 $ -> 0 <2>
 0 -> 1 <0>a
 1 -> 2 <0>a

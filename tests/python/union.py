@@ -9,8 +9,8 @@ def union(*auts):
         res = res.add(a, "general")
     return res
 
-ab = vcsn.context('lal_char(ab), b').expression('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc), b').expression('(b+c)*').standard()
+ab = vcsn.context('lal(ab), b').expression('(a+b)*').standard()
+bc = vcsn.context('lal(bc), b').expression('(b+c)*').standard()
 CHECK_EQ(meaut('abc.gv'), union(ab, bc))
 
 ## ------------ ##
@@ -21,7 +21,7 @@ CHECK_EQ(meaut('abc.gv'), union(ab, bc))
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "lal(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -53,7 +53,7 @@ digraph
 b = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "lal(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -75,7 +75,7 @@ digraph
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "lal(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -113,12 +113,12 @@ digraph
 CHECK_EQ(exp, a + b)
 
 # Check union of contexts.
-a1 = vcsn.context('lal_char(a), expressionset<lal_char(x), b>').expression('<x>a*').standard()
-a2 = vcsn.context('lal_char(b), expressionset<lal_char(y), b>').expression('<y>b*').standard()
+a1 = vcsn.context('lal(a), expressionset<lal(x), b>').expression('<x>a*').standard()
+a2 = vcsn.context('lal(b), expressionset<lal(y), b>').expression('<y>b*').standard()
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab), expressionset<lal_char(xy), b>"
+  vcsn_context = "lal(ab), expressionset<lal(xy), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -161,16 +161,16 @@ def check(exp, *auts):
     CHECK_EQ(exp, str(union(*auts).expression()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal(a), expressionset<lal(uv), b>') \
          .expression('<u>a').derived_term().strip()
-a2 = vcsn.context('lal_char(b), b').expression('b*').derived_term().strip()
+a2 = vcsn.context('lal(b), b').expression('b*').derived_term().strip()
 check('<u>a+b*', a1, a2)
 check('<u>a+b*', a2, a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a), z').expression('<2>a')  .automaton()
-q = vcsn.context('lal_char(b), q').expression('<1/3>b').automaton()
-r = vcsn.context('lal_char(c), r').expression('<.4>c') .automaton()
+z = vcsn.context('lal(a), z').expression('<2>a')  .automaton()
+q = vcsn.context('lal(b), q').expression('<1/3>b').automaton()
+r = vcsn.context('lal(c), r').expression('<.4>c') .automaton()
 
 check('<2>a+<1/3>b', z, q)
 check('<2>a+<1/3>b', q, z)

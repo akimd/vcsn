@@ -155,7 +155,7 @@ $ -> 0
 
 
 # Check that weird input is properly accepted.
-t = vcsn.context('lal_char, q').trie('''
+t = vcsn.context('lal, q').trie('''
 he's
 <2>t
 {}

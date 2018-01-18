@@ -18,7 +18,7 @@ def check_is_deterministic(exp, aut, value):
 ## cerny.  ##
 ## ------- ##
 
-a = vcsn.context('lal_char(abc), b').cerny(6)
+a = vcsn.context('lal(abc), b').cerny(6)
 a_info = a.info()
 CHECK_EQ(6, a_info['number of states'])
 CHECK_EQ(True, a_info['is deterministic'])
@@ -41,7 +41,7 @@ check_de_bruijn(meaut('de-bruijn-3.gv'),
 ## div/quotkbaseb.  ##
 ## ---------------- ##
 
-b = vcsn.context('lal_char(0-9), b')
+b = vcsn.context('lal(0-9), b')
 
 XFAIL(lambda: b.divkbaseb(0, 2), "divkbaseb: divisor cannot be 0")
 XFAIL(lambda: b.divkbaseb(2, 0), "divkbaseb: base (0) must be at least 2")
@@ -84,12 +84,12 @@ check(3, 10,
 ## double_ring.  ##
 ## ------------- ##
 
-ctx = vcsn.context('lal_char(abcd), b')
+ctx = vcsn.context('lal(abcd), b')
 CHECK_EQ(ctx.double_ring(0, []),
          vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "lal(abcd), b"
   rankdir = LR
 }
 '''))
@@ -108,8 +108,8 @@ CHECK_EQ(ctx.double_ring(4, [2, 3]),
 def check_ladybird(exp, aut):
     check_is_deterministic(exp, aut, False)
 
-b = vcsn.context('lal_char(abc), b')
-z = vcsn.context('lal_char(abc), z')
+b = vcsn.context('lal(abc), b')
+z = vcsn.context('lal(abc), z')
 
 exp = meaut('ladybird-2.gv')
 check_ladybird(exp, b.ladybird(2))
@@ -118,7 +118,7 @@ exp = vcsn.automaton(str(exp).replace(', b', ', z'))
 check_ladybird(exp, z.ladybird(2))
 
 check_ladybird(meaut('ladybird-2-zmin.gv'),
-               vcsn.context('lal_char(abc), zmin').ladybird(2))
+               vcsn.context('lal(abc), zmin').ladybird(2))
 
 
 ## ------------- ##
@@ -134,13 +134,13 @@ CHECK_EQ(meaut('levenshtein.gv'), nmin.levenshtein())
 ## ------------------ ##
 
 # Expect a clique.
-c1 = vcsn.context('lal_char(), b').random_automaton(4, 1, 4, 4)
+c1 = vcsn.context('lal(), b').random_automaton(4, 1, 4, 4)
 c2 = meaut('clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 
 # Expect the right number of states.
-a = vcsn.context('lal_char(a), b').random_automaton(100, .1, 20, 30)
+a = vcsn.context('lal(a), b').random_automaton(100, .1, 20, 30)
 CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>',
          a.info('type'))
 CHECK_EQ(100, a.info('number of states'))
@@ -309,7 +309,7 @@ check_operators(exp, ['add', 'atom', 'compose', 'mul', 'one', 'star', 'tuple'])
 ## random_deterministic.  ##
 ## ---------------------- ##
 
-a = vcsn.context('lal_char(a), b').random_deterministic(100)
+a = vcsn.context('lal(a), b').random_deterministic(100)
 CHECK_EQ('mutable_automaton<letterset<char_letters(a)>, b>',
          a.info('type'))
 print('automaton {:d}'.format(a))
@@ -325,4 +325,4 @@ CHECK(a.is_complete())
 ## --- ##
 
 CHECK_EQ(meaut('u-5.gv'),
-         vcsn.context('lal_char(abc), b').u(5))
+         vcsn.context('lal(abc), b').u(5))

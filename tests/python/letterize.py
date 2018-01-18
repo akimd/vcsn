@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-lal = vcsn.context("lal_char,b")
+lal = vcsn.context("lal,b")
 law = vcsn.context("law_char,b")
 
 def check(ctx, a, ctx2 = None, b = None):
@@ -29,8 +29,8 @@ check(law, '(ab+cd)*de', lal)
 
 # transducers might need padding.
 #
-latw = vcsn.context("lat<law_char, lal_char>, z")
-latl = vcsn.context("lat<lal_char, lal_char>, z")
+latw = vcsn.context("lat<law_char, lal>, z")
+latl = vcsn.context("lat<lal, lal>, z")
 
 check(latw, "(a|b)", latl)
 check(latw, "<2>(abc|x)", latl, r"<2>(a|x)(b|\e)(c|\e)")

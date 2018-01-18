@@ -13,7 +13,7 @@ def check(obj, exp):
 
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
-check(vcsn.context('lal_char(:a-z), q')
+check(vcsn.context('lal(:a-z), q')
       .expression(r"a+a\:").standard(),
       {
           'is ambiguous': False,
@@ -46,7 +46,7 @@ check(vcsn.context('lal_char(:a-z), q')
           'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, q>',
       })
 
-check(vcsn.context('lal_char(a-z), q')
+check(vcsn.context('lal(a-z), q')
       .expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {
           'is ambiguous': False,
@@ -123,7 +123,7 @@ check(vcsn.context('law_char(ab), b')
 def check(obj, exp):
     CHECK_EQ(exp, obj.info())
 
-b = vcsn.context('lal_char(abc), b')
+b = vcsn.context('lal(abc), b')
 check(b.expression('abc'),
       {
           'add': 0,
@@ -174,7 +174,7 @@ check(b.expression(r'\e+bc*'),
           'zero': 0,
       })
 
-q = vcsn.context('lal_char(abc), q')
+q = vcsn.context('lal(abc), q')
 check(q.expression('<2>a<3>'),
       {
           'add': 0,
@@ -251,7 +251,7 @@ check(q.expression(r'(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
           'zero': 1,
       })
 
-c = vcsn.context('lat<lal_char, lal_char>, q')
+c = vcsn.context('lat<lal, lal>, q')
 check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
       {
           'add': 3,

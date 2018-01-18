@@ -31,7 +31,7 @@ def check_mult(lhs, rhs):
             CHECK(std.is_standard(), std, " is standard")
         CHECK_EQUIV(gen, std)
 
-ctx = vcsn.context('lal_char, q')
+ctx = vcsn.context('lal, q')
 auts = [ctx.expression('a').standard(),
         ctx.expression('ab').standard(),
         ctx.expression('a+b').standard(),
@@ -39,19 +39,19 @@ auts = [ctx.expression('a').standard(),
 check_mult(auts, [1, 3, (-1, 5), (2, 4), (2, -1)])
 
 # We want the determinization to terminate.
-ctx = vcsn.context('lal_char, b')
+ctx = vcsn.context('lal, b')
 auts = [auts,
         ctx.expression('a(ba)*').automaton('derived_term'),
         ctx.expression('a+b').derived_term(breaking=True),
         ctx.expression('a*').derived_term()]
 check_mult(auts, auts)
 
-ab = vcsn.context('lal_char(ab), b').expression('(a+b)*')
-bc = vcsn.context('lal_char(bc), b').expression('(b+c)*')
+ab = vcsn.context('lal(ab), b').expression('(a+b)*')
+bc = vcsn.context('lal(bc), b').expression('(b+c)*')
 result = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -96,12 +96,12 @@ digraph
 ''')
 CHECK_EQ(result, ab.standard().multiply(bc.standard()))
 
-CHECK_EQ(vcsn.context('lal_char(abc), b').expression('[ab]*[bc]*'), ab * bc)
+CHECK_EQ(vcsn.context('lal(abc), b').expression('[ab]*[bc]*'), ab * bc)
 
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "lal(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -125,7 +125,7 @@ digraph
 CHECK_EQ(vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(ab), z"
+  vcsn_context = "lal(ab), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -163,17 +163,17 @@ def check(exp, eff):
     CHECK_EQ(exp, str(eff.expression('associative')))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+a1 = vcsn.context('lal(a), expressionset<lal(uv), b>') \
          .expression('<u>a').derived_term()
-a2 = vcsn.context('lal_char(b), b').expression('b*').standard()
+a2 = vcsn.context('lal(b), b').expression('b*').standard()
 check(r'<u>a(\e+bb*)', a1*a2)
 # FIXME: Why don't we get (\e+bb*)<u>a?
 check('<u>a+bb*<u>a', a2*a1)
 
 # Z, Q, R.
-z = vcsn.context('lal_char(a), z').expression('<2>a')  .derived_term()
-q = vcsn.context('lal_char(b), q').expression('<1/3>b').derived_term()
-r = vcsn.context('lal_char(c), r').expression('<.4>c') .derived_term()
+z = vcsn.context('lal(a), z').expression('<2>a')  .derived_term()
+q = vcsn.context('lal(b), q').expression('<1/3>b').derived_term()
+r = vcsn.context('lal(c), r').expression('<.4>c') .derived_term()
 
 check('<2>a<1/3>b', z*q)
 check('<1/3>b<2>a', q*z)
@@ -190,11 +190,11 @@ check('<0.4>c<0.333333>b', r*q)
 ## expression * expression.  ##
 ## ------------------------- ##
 
-br = vcsn.context('lal_char(a), expressionset<lal_char(uv), b>') \
+br = vcsn.context('lal(a), expressionset<lal(uv), b>') \
          .expression('<u>a')
-z = vcsn.context('lal_char(b), z').expression('<2>b')
-q = vcsn.context('lal_char(c), q').expression('<1/3>c')
-r = vcsn.context('lal_char(d), r').expression('<.4>d')
+z = vcsn.context('lal(b), z').expression('<2>b')
+q = vcsn.context('lal(c), q').expression('<1/3>c')
+r = vcsn.context('lal(d), r').expression('<.4>d')
 CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 
 # This is a real regression (#68): we used to interpret `<3><3>a` as
@@ -233,7 +233,7 @@ CHECK_EQ(pol('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
 ## weight * weight.  ##
 ## ----------------- ##
 
-w = vcsn.context('lal_char, seriesset<lal_char, q>').weight
+w = vcsn.context('lal, seriesset<lal, q>').weight
 CHECK_EQ(w('<4>aa+<6>ab+<6>ba+<9>bb'),
          w('<2>a+<3>b') * w('<2>a+<3>b'))
 # See the comment above about #68.

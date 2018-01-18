@@ -5,7 +5,7 @@ from test import *
 
 # Use a context with expression weights to check the order of
 # products.
-ctx = vcsn.context("lal_char(abc), seriesset<lal_char(xyz), q>")
+ctx = vcsn.context("lal(abc), seriesset<lal(xyz), q>")
 
 # check WEIGHT EXP
 # ----------------

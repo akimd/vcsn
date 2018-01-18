@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<lal_char(abc), lal_char(xyz)>, b"
+  vcsn_context = "lat<lal(abc), lal(xyz)>, b"
   I -> 0
   0 -> 1 [label = "[a|x-c|z]"]
   1 -> 2 [label = "[a|x-a|z], [b|x-b|z], [c|x-c|z]"]

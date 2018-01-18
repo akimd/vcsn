@@ -30,14 +30,14 @@ def check(ctx, exp):
     else:
         CHECK_EQ(exp, r)
 
-ctx1 = 'lal_char(ab), lat<q, expressionset<lal_char(xyz), b>, z>'
+ctx1 = 'lal(ab), lat<q, expressionset<lal(xyz), b>, z>'
 check(ctx1, 'a')
 check(ctx1, '<2/3,x,-3>a')
 check(ctx1, '<2/3,x+y*,-3>a')
 # Yes, once we worked properly with 3 tapes, but not 4.  So check 5.
 check('lat<lal, lal, lal, lal, lal>, q',
       '1|2|3|4|5')
-check('lal_char(ab), lat<expressionset<lal_char(xyz), lat<q, q>>, lat<q, q>>',
+check('lal(ab), lat<expressionset<lal(xyz), lat<q, q>>, lat<q, q>>',
       '<<(1,2)>x+<(2,1/3)>y*,(2,3)>a')
 
 

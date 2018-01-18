@@ -39,7 +39,7 @@ check(r'''digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -75,7 +75,7 @@ digraph
 check(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), q"
+  vcsn_context = "lal(abc), q"
 
   I0 -> 0
   0 -> 1 [label = "\\e"]

@@ -97,11 +97,11 @@ def exp(ws):
 }'''.replace('q', ws)
 
 for ws in ['z', 'q', 'r']:
-    ctx = vcsn.context('lal_char(abc), ' + ws)
+    ctx = vcsn.context('lal(abc), ' + ws)
     a = ctx.expression(r, 'associative').standard()
     check_reduce(a, exp(ws))
 
-a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>, z') \
+a = vcsn.context('lat<lal(abc),lal(xyz)>, z') \
     .expression("<2>(<3>(a|x)+<5>(b|y)+<7>(a|x))*<11>", 'associative') \
     .standard()
 check_reduce(a, '''digraph
@@ -129,7 +129,7 @@ check_reduce(a, '''digraph
 
 a = vcsn.automaton('''
 digraph {
-    vcsn_context = "lal_char(abc), z"
+    vcsn_context = "lal(abc), z"
     I -> 0
     1 -> F
     0 -> 0 [label = "a, b"]
@@ -170,6 +170,6 @@ check_reduce(a, '''digraph
 
 
 # Make sure decorated automata work properly.
-q = vcsn.context('lal_char(abc), q')
+q = vcsn.context('lal(abc), q')
 r = q.expression('<2>aa+<3>ab')
 CHECK_EQ('<2>a(a+<3/2>b)', r.derived_term().reduce().expression('associative'))

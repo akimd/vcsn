@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<lal_char(a),lal_char(x)>, zmin"
+  vcsn_context = "lat<lal(a),lal(x)>, zmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

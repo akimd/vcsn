@@ -21,7 +21,7 @@ def check(exp, r1, r2):
     a2 = r2.automaton('inductive')
     CHECK_EQ(exp, a1.is_equivalent(a2))
 
-ctx = vcsn.context('lal_char(ab), b')
+ctx = vcsn.context('lal(ab), b')
 
 check(True, r'\z', r'\z')
 check(True, r'\e', r'\e')
@@ -38,7 +38,7 @@ check(False, 'a', 'b')
 check(False, 'ab', 'ba')
 check(False, 'aa*', 'a*')
 
-ctx = vcsn.context('lal_char(ab), z')
+ctx = vcsn.context('lal(ab), z')
 check(True, 'a+b+a', '<2>a+b')
 check(True, 'a*+b+a*', '<2>a*+b')
 check(False, 'a*+a*', 'a*')

@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
     rankdir = LR
     {
       node [shape = point, width = 0]

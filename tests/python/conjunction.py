@@ -20,7 +20,7 @@ def dt(ctx, exp):
 
 # See the actual code of conjunction to understand the point of this test
 # (which is new_transition vs. add_transition).
-a1 = dt('lal_char(abcd), b', 'a*a')
+a1 = dt('lal(abcd), b', 'a*a')
 a2 = a1 & a1
 CHECK_EQ('a*a', a2.expression())
 
@@ -28,8 +28,8 @@ CHECK_EQ('a*a', a2.expression())
 ## (a+b)* & (b+c)* = b*.  ##
 ## ---------------------- ##
 
-lhs = std('lal_char(ab), b', '(a+b)*')
-rhs = std('lal_char(bc), b', '(b+c)*')
+lhs = std('lal(ab), b', '(a+b)*')
+rhs = std('lal(bc), b', '(b+c)*')
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
@@ -58,8 +58,8 @@ CHECK_EQ(r'''digraph
 ## ab & cd = 0.  ##
 ## ------------- ##
 
-lhs = std('lal_char(ab), b', 'ab')
-rhs = std('lal_char(cd), b', 'cd')
+lhs = std('lal(ab), b', 'ab')
+rhs = std('lal(cd), b', 'cd')
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -82,8 +82,8 @@ CHECK_EQ(r'''digraph
 ## (a+b)* & (c+d)* = \e.  ##
 ## ---------------------- ##
 
-lhs = std('lal_char(ab), b', '(a+b)*')
-rhs = std('lal_char(cd), b', '(c+d)*')
+lhs = std('lal(ab), b', '(a+b)*')
+rhs = std('lal(cd), b', '(c+d)*')
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "letterset<char_letters()>, b"
@@ -113,7 +113,7 @@ CHECK_EQ(r'''digraph
 lhs = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "lal(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -145,7 +145,7 @@ digraph
 rhs = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), z"
+  vcsn_context = "lal(abc), z"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -203,15 +203,15 @@ def check(exp, aut):
     CHECK_EQ(exp, aut.expression())
 
 # RatE and B, in both directions.
-a1 = std('lal_char(ab), seriesset<lal_char(uv), q>', '(<u>a+<v>b)*')
-a2 = std('lal_char(ab), b', 'a{+}')
+a1 = std('lal(ab), seriesset<lal(uv), q>', '(<u>a+<v>b)*')
+a2 = std('lal(ab), b', 'a{+}')
 check(r'<u>a(\e+<u>a(<u>a)*)', a1 & a2)
 check(r'<u>a(\e+<u>a(<u>a)*)', a2 & a1)
 
 # Z, Q, R.
-z = dt('lal_char(ab), z', '(<2>a+<3>b)*')
-q = dt('lal_char(ab), q', '(<1/2>a+<1/3>b)*')
-r = dt('lal_char(ab), r', '(<.2>a+<.3>b)*')
+z = dt('lal(ab), z', '(<2>a+<3>b)*')
+q = dt('lal(ab), q', '(<1/2>a+<1/3>b)*')
+r = dt('lal(ab), r', '(<.2>a+<.3>b)*')
 
 check('(a+b)*', z & q)
 check('(a+b)*', q & z)
@@ -229,9 +229,9 @@ check('(<0.1>a+<0.1>b)*', r & q)
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = std('lal_char(ab), seriesset<lal_char(uv), q>',
+a1 = std('lal(ab), seriesset<lal(uv), q>',
          '<u>a<v>b')
-a2 = std('lal_char(ab), seriesset<lal_char(xy), q>',
+a2 = std('lal(ab), seriesset<lal(xy), q>',
          '<x>a<y>b')
 
 def check_enumerate(exp, aut):
@@ -281,7 +281,7 @@ digraph
 ''').conjunction())
 
 # Four arguments.
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')
+ctx = vcsn.context('lal(x), seriesset<lal(abcd), q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = std(ctx, '<{}>x'.format(l))
@@ -294,18 +294,18 @@ check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 # Add stars (<u>a*, not <u>a) to avoid that the trivial identities
 # (a&b -> \z) fire and yield a global \z.
-qr = vcsn.context('lal_char(a), seriesset<lal_char(uv), q>') \
+qr = vcsn.context('lal(a), seriesset<lal(uv), q>') \
          .expression('<u>a*')
-z = vcsn.context('lal_char(b), z').expression('<2>b*')
-q = vcsn.context('lal_char(c), q').expression('<1/3>c*')
-r = vcsn.context('lal_char(d), r').expression('<.4>d*')
+z = vcsn.context('lal(b), z').expression('<2>b*')
+q = vcsn.context('lal(c), q').expression('<1/3>c*')
+r = vcsn.context('lal(d), r').expression('<.4>d*')
 CHECK_EQ(r'<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
 
 ## ------------------------- ##
 ## polynomial & polynomial.  ##
 ## ------------------------- ##
 
-poly = vcsn.context('lal_char(abc), q').polynomial
+poly = vcsn.context('lal(abc), q').polynomial
 a = poly('<2>a+<3>b')
 b = poly('<2>b+<3>c')
 c = poly('<3>c')
@@ -315,7 +315,7 @@ CHECK_EQ('<6>b', b & a)
 CHECK_EQ(r'\z', a & c)
 CHECK_EQ('<9>c', b & c)
 
-poly = vcsn.context('lal_char, q').polynomial
+poly = vcsn.context('lal, q').polynomial
 a = poly(r'<2>\e')
 b = poly(r'<2>a+<3>\e')
 c = poly('<2>a+<3>c')
@@ -334,8 +334,8 @@ CHECK_EQ('aa', a & a)
 ## nullable labels.  ##
 ## ----------------- ##
 
-lhs = aut('lal_char(ab), b', '(a+b)*', 'thompson')
-rhs = aut('lal_char(bc), b', '(b+c)*', 'thompson')
+lhs = aut('lal(ab), b', '(a+b)*', 'thompson')
+rhs = aut('lal(bc), b', '(b+c)*', 'thompson')
 res = r'''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
@@ -411,9 +411,9 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, lhs & rhs)
 CHECK_EQUIV(vcsn.automaton(res),
-            std('lal_char(b), b', 'b*'))
+            std('lal(b), b', 'b*'))
 
-third = aut('lal_char(bcd), b', '(b+c+d)*', 'thompson')
+third = aut('lal(bcd), b', '(b+c+d)*', 'thompson')
 res = r'''digraph
 {
   vcsn_context = "letterset<char_letters(b)>, b"
@@ -633,7 +633,7 @@ res = r'''digraph
 }'''
 CHECK_EQ(res, lhs & rhs & third)
 CHECK_EQUIV(vcsn.automaton(res),
-            std('lal_char(b), b', 'b*'))
+            std('lal(b), b', 'b*'))
 
 
 # Simple micro-optimization: don't build states which have no possible
@@ -737,7 +737,7 @@ CHECK_EQ(insplit_res, a & a & a)
 ###############################################
 
 a1 = vcsn.automaton(r'''
-context = "lal_char(abc), b"
+context = "lal(abc), b"
   $ -> 0
   0 -> 1 a
   1 -> $
@@ -746,7 +746,7 @@ context = "lal_char(abc), b"
 ''')
 
 a2 = vcsn.automaton(r'''
-context = "lal_char(abc), b"
+context = "lal(abc), b"
   $ -> 0
   0 -> 1 \e
   1 -> 2 a
@@ -785,6 +785,6 @@ CHECK_EQ(res, a1 & a2)
 ## ------------- ##
 
 # Check that the conjunction structure is transparent: invoke it.
-a = std('lal_char(a), b', 'a')
+a = std('lal(a), b', 'a')
 a = a & a & a
 CHECK_EQ('1', a('a'))

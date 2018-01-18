@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal_char(abcd), z')
+z = vcsn.context('lal(abcd), z')
 
 set_medir(srcdir + '/tests/python/conjunction.dir')
 
@@ -164,9 +164,9 @@ CHECK_EQ('''digraph
 ## --------------------- ##
 
 # RatE and B, in both directions.
-ab = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
+ab = vcsn.context('lal(ab), seriesset<lal(uv), q>') \
     .expression('(<u>a+<v>b)*').standard()
-a = vcsn.context('lal_char(ab), b').expression('a').standard()
+a = vcsn.context('lal(ab), b').expression('a').standard()
 CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
          str(ab.infiltrate(a).shortest(4)))
 CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
@@ -177,9 +177,9 @@ CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-uavb = vcsn.context('lal_char(ab), seriesset<lal_char(uv), q>') \
+uavb = vcsn.context('lal(ab), seriesset<lal(uv), q>') \
     .expression('<u>a<v>b').standard()
-xayb = vcsn.context('lal_char(ab), seriesset<lal_char(xy), q>') \
+xayb = vcsn.context('lal(ab), seriesset<lal(xy), q>') \
     .expression('<x>a<y>b').standard()
 CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
          str(uavb.infiltrate(xayb).shortest(len = 4)))
@@ -189,7 +189,7 @@ CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb
 ## Variadic.  ##
 ## ---------- ##
 
-ctx = vcsn.context('lal_char(x), seriesset<lal_char(abcd), q>')
+ctx = vcsn.context('lal(x), seriesset<lal(abcd), q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()

@@ -4,7 +4,7 @@ from re import match
 import vcsn
 from test import *
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
+c = vcsn.context("lal(abc), expressionset<lal(xyz), q>")
 
 def check(re, exp):
     '''Check that d(re) = exp.  Also check that both derived_term
@@ -87,10 +87,10 @@ check('(<x>(<y>a)*<z>){c}', r'a.[(<y>a)*{c}] + b.[\z{c}] + c.[\z{c}]')
 check('a{c}{c}', r'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
 # A case where it would be easy not to terminate.
 # The real value of this check is ensuring the termination of derived-term.
-e = vcsn.context('lal_char(a), q').expression('((<2>a)*+(<4>aa)*){c}')
+e = vcsn.context('lal(a), q').expression('((<2>a)*+(<4>aa)*){c}')
 check(e, 'a.[((<2>a)*+<2>(a(<4>(aa))*)){c}]')
 # About the same, but this time using polynomials as weights.
-ctx = vcsn.context('lal_char(a), polynomialset<law_char(x), q>')
+ctx = vcsn.context('lal(a), polynomialset<law_char(x), q>')
 check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}]')
 check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
@@ -111,7 +111,7 @@ check('(<xy>(abc)<yz>)*{T}', r'<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 ## With spontaneous transitions.  ##
 ## ------------------------------ ##
 
-c = vcsn.context("lal_char(abcd), expressionset<lal_char(xyz), q>")
+c = vcsn.context("lal(abcd), expressionset<lal(xyz), q>")
 
 # Ldivide with spontaneous transitions.
 check(r'\e{\}\z', r'<\z>')
@@ -170,7 +170,7 @@ check('(ab{/}ab)c&c', r'\e.[(a{\}a){T}c&c]')
 # EAT, Example 4.3.
 E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
-E1t="(?@lal_char(ab), q)"+E1
+E1t="(?@lal(ab), q)"+E1
 check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 
 
@@ -221,13 +221,13 @@ def check_prod(*exps, **kwargs):
         else:
             CHECK_ISOMORPHIC(a1, a2)
 
-ctx = vcsn.context('lal_char(abc), q')
+ctx = vcsn.context('lal(abc), q')
 
 check_prod('(<1/6>a*+<1/3>b*)*', 'a*')
 check_prod('(<1/6>a*+<1/3>b*)*', 'b*')
 check_prod('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
 
-ctx = vcsn.context('lal_char(abc), expressionset<lal_char(xyz), b>')
+ctx = vcsn.context('lal(abc), expressionset<lal(xyz), b>')
 check_prod(r'<x>\e', r'<y>\e')
 
 
@@ -241,7 +241,7 @@ check_prod('(a+b+c)*<x>a(a+b+c)*',
            '(a+b+c)*<z>c(a+b+c)*')
 
 # Use ab{\}ab to introduce expansions with the empty word as label.
-ctx = vcsn.context('lal_char(abcd), q')
+ctx = vcsn.context('lal(abcd), q')
 # FIXME: See issues #86 and #87: we cannot trust these computations.
 # They appear to work, but more by luck than correctness.  Reenable
 # once it works for real.
@@ -276,7 +276,7 @@ CHECK_EQ(r'a⊙[a⊕⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
 ## On wordset.  ##
 ## ------------ ##
 
-c = vcsn.context("law_char(a-z), expressionset<lal_char(xyz), q>")
+c = vcsn.context("law_char(a-z), expressionset<lal(xyz), q>")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.
@@ -300,7 +300,7 @@ check('(<x>a)*(<y>b)* & (<z>ab)*',
 ## tupleset.  ##
 ## ---------- ##
 
-c = vcsn.context("lat<law_char(abc), law_char(xyz)>, expressionset<lal_char(XYZ), q>")
+c = vcsn.context("lat<law_char(abc), law_char(xyz)>, expressionset<lal(XYZ), q>")
 check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',

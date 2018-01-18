@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "lal(ab), b"
   I -> 0
   0 -> 1 [label = "\\e"]
   1 -> 0 [label = "\\e"]

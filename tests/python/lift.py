@@ -12,7 +12,7 @@ def check_lift(exp, aut):
 ## Automata.  ##
 ## ---------- ##
 
-l4 = vcsn.context('lal_char(abc), b').ladybird(4)
+l4 = vcsn.context('lal(abc), b').ladybird(4)
 check_lift('''digraph
 {
   vcsn_context = "lao, expressionset<letterset<char_letters(abc)>, b>"
@@ -49,7 +49,7 @@ check_lift('''digraph
 ## Lift(tape...).  ##
 ## --------------- ##
 
-c = vcsn.context('lat<lal_char(abc), lal_char(def), law_char(ghi)>, q')
+c = vcsn.context('lat<lal(abc), lal(def), law_char(ghi)>, q')
 a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).
@@ -124,6 +124,6 @@ check_lift(aref, a.lift([1, 2]))
 ## ------------------ ##
 
 CHECK_EQ(r'''<abc>\e''',
-         vcsn.context('lal_char(abc), b').expression('abc').lift())
+         vcsn.context('lal(abc), b').expression('abc').lift())
 CHECK_EQ(r'''<<2>(abc)>\e''',
-         vcsn.context('lal_char(abc), z').expression('<2>abc').lift())
+         vcsn.context('lal(abc), z').expression('<2>abc').lift())

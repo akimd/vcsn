@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal_char(ab), b')
+ctx = vcsn.context('lal(ab), b')
 
 # check INPUT [OUTPUT = INPUT]
 # ----------------------------
@@ -47,5 +47,5 @@ fail(r'a{\}b')
 fail('a*{T}')
 
 # We don't support weighted expressions.
-fail('(?@lal_char, z)<2>a*')
-fail('(?@lal_char, z)a*<2>')
+fail('(?@lal, z)<2>a*')
+fail('(?@lal, z)a*<2>')

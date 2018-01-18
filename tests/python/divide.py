@@ -61,7 +61,7 @@ check('abcd+bbcd', 'a+b', '\z', 'bcd')
 
 
 # Weighted.
-ctx = 'lal_char, q'
+ctx = 'lal, q'
 # Addition
 check('<2>a', '<6>(a+b)', r'<12>\e')
 # Concatenation

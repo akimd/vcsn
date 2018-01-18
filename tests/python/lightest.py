@@ -19,7 +19,7 @@ def check_aut(aut, re, num, exp, tests = []):
 def check(re, num, exp, tests = []):
   check_aut(ctx.expression(re, 'none').standard(), re, num, exp, tests)
 
-ctx = vcsn.context('lal_char, nmin')
+ctx = vcsn.context('lal, nmin')
 check(r'\z', 3, r'\z', k_algos)
 check(r'\e', 3, r'<0>\e', k_algos)
 check('a+b', 2, '<0>a + <0>b', k_algos)
@@ -28,7 +28,7 @@ check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb',
 check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c', k_algos)
 
 aut = vcsn.automaton('''
-context = "lal_char, nmin"
+context = "lal, nmin"
 $ -> 0
 0 -> 1 <6>a
 0 -> 2 <1>a
@@ -44,19 +44,19 @@ $ -> 0
 check_aut(aut, "notebook example", 5,
           '<6>a + <5>ab + <4>abcd + <6>abbcd + <8>abbbcd', ['auto', 'eppstein'])
 
-ctx = vcsn.context('lal_char(abcd), z')
+ctx = vcsn.context('lal(abcd), z')
 check('[a-d]?{5}', 5, r'\e + aa + ab + ac + ad', ['auto'])
 check('<4>a+(ab)+c+<2>d', 2, 'c + ab')
 check('a+<-1>a', 2, r'\z')
 check('a+(<2>a<-10>a)', 1, '<-20>aa', ['auto'])
 
-ctx = vcsn.context('lal_char(abcd), q')
+ctx = vcsn.context('lal(abcd), q')
 check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 
 ctx = vcsn.context('law_char, nmin')
 check('<1>aaaa+<2>b', 1, '<1>aaaa')
 
-ctx = vcsn.context('lal_char, rmin')
+ctx = vcsn.context('lal, rmin')
 check(r'\z', 3, r'\z')
 check(r'\e', 3, r'<0>\e')
 check('a+b', 2, '<0>a + <0>b')

@@ -11,19 +11,19 @@ def check(num_sccs, a):
         CHECK_EQ(num_sccs, scc.condense().info()['number of states'])
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
 }''')
 check(0, a)
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> F0
 }''')
 check(1, a)
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
@@ -31,7 +31,7 @@ a = vcsn.automaton('''digraph {
 check(2, a)
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
@@ -43,7 +43,7 @@ check(1, a)
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> 1 [label = "c"]
   1 -> 2 [label = "a"]
@@ -61,7 +61,7 @@ check(1, a)
 
 a = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "lal(abcd), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -77,7 +77,7 @@ a = vcsn.automaton('''digraph
 }''')
 check(4, a)
 
-ctx = vcsn.context('lal_char(abc), b')
+ctx = vcsn.context('lal(abc), b')
 a = ctx.expression('(abc)*{5}').standard()
 check(6, a)
 

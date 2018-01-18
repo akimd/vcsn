@@ -8,7 +8,7 @@ from test import *
 ## ----- ##
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal_char(abc), lal_char>, z"
+  vcsn_context = "lat<lal(abc), lal>, z"
   I0 -> 0
   0 -> 1 [label = "(a, a)"]
   1 -> 2 [label = "(b, b)"]
@@ -17,7 +17,7 @@ a = vcsn.automaton('''digraph {
 CHECK(a.is_partial_identity())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal_char(abc), lal_char>, z"
+  vcsn_context = "lat<lal(abc), lal>, z"
   I0 -> 0
   0 -> 1 [label = "(a, a)"]
   1 -> 2 [label = "(b, c)"]

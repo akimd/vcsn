@@ -14,7 +14,7 @@ def check(re, weight, exp):
       CHECK_ISOMORPHIC(ref, res)
       CHECK_EQ(weight, res.weight_series())
 
-ctx = vcsn.context('lal_char, nmin')
+ctx = vcsn.context('lal, nmin')
 check(r'\z', 'oo', r'\z')
 check(r'\e', '0', r'\e')
 check('<1>a+<2>b', '1', 'a')
@@ -30,12 +30,12 @@ def k_check(orig, new, num):
   res = aut.lightest_automaton(num)
   CHECK_ISOMORPHIC(ref, res)
 
-ctx = vcsn.context('lal_char, nmin')
+ctx = vcsn.context('lal, nmin')
 k_check('<1>a+<2>b', '<1>a+<2>b', 2)
 k_check('<1>b+<1>a+<1>c', '<1>a+<1>b', 2)
 k_check('<1>b+<1>a+<1>c', '\z', 0)
 
-ctx = vcsn.context('lal_char, q')
+ctx = vcsn.context('lal, q')
 aut = ctx.expression(r'\z').standard()
 for algo in algos:
     XFAIL(lambda: aut.lightest_automaton(1, algo),

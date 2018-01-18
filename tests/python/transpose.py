@@ -7,7 +7,7 @@ from test import *
 ## transpose(automaton).  ##
 ## ---------------------- ##
 
-c = vcsn.context("lal_char(abc), expressionset<lal_char(xyz), q>")
+c = vcsn.context("lal(abc), expressionset<lal(xyz), q>")
 a = c.expression("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
@@ -46,7 +46,7 @@ CHECK_EQ(a, a.transpose().trim().transpose().proper())
 
 # Regression: we used to not transpose the number of initial and final
 # transitions.
-a = vcsn.context('lal_char, b').expression('a+b').standard()
+a = vcsn.context('lal, b').expression('a+b').standard()
 CHECK_EQ({
            'is complete': False,
            'is codeterministic': True,
@@ -77,7 +77,7 @@ CHECK_EQ({
 
 # Stripping a transposed automaton strips the inner automaton, but not
 # the transposition shell.
-a = vcsn.context('lal_char, b').expression('ab').derived_term().determinize()
+a = vcsn.context('lal, b').expression('ab').derived_term().determinize()
 CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
          a.transpose().strip().info()['type'])
 
@@ -96,7 +96,7 @@ def check(r1, r2=None):
     CHECK_EQ(e2, e1.transpose())
     CHECK_EQ(e1, e2.transpose())
 
-ctx = vcsn.context('lal_char(abcd), b')
+ctx = vcsn.context('lal(abcd), b')
 check(r'\e')
 check(r'\z')
 check('a')

@@ -44,7 +44,7 @@ def check_conj(aut, conj):
 # Make random number generation deterministic
 random.seed(0)
 
-ctx = vcsn.context('lal_char, b')
+ctx = vcsn.context('lal, b')
 
 # Known results
 abc = ctx.expression('abc').automaton()

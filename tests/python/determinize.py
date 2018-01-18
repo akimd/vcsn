@@ -51,11 +51,11 @@ def check(aut, expfile, algo="auto", deterministic=False):
 ## de bruijn/ladybird.  ##
 ## -------------------- ##
 
-ctx = vcsn.context('lal_char(ab), b')
+ctx = vcsn.context('lal(ab), b')
 check(ctx.de_bruijn(3), 'de-bruijn-3')
 check(ctx.de_bruijn(8), 'de-bruijn-8')
 
-ctx = vcsn.context('lal_char(abc), b')
+ctx = vcsn.context('lal(abc), b')
 check(ctx.ladybird(4), 'ladybird-4')
 check(ctx.ladybird(8), 'ladybird-8')
 
@@ -97,7 +97,7 @@ for name in ['b', 'f2']:
 # same state with opposite weights.
 def null_state(weightset, weight):
     return vcsn.automaton('''
-context = "lal_char, {ws}"
+context = "lal, {ws}"
 $ -> 0
 0 -> 1 a
 0 -> 2 <{w}>a

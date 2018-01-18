@@ -10,7 +10,7 @@ from test import *
 ## Escapes.  ##
 ## --------- ##
 
-ctx = vcsn.context("lal_char, b")
+ctx = vcsn.context("lal, b")
 def check(n):
     e = r'\x{:02x}'.format(n)
     print(e)
@@ -81,7 +81,7 @@ check(qexp('abc'),  q3, exp='(a|a|a)(b|b|b)(c|c|c)')
 ## Complement.  ##
 ## ------------ ##
 
-ctx = vcsn.context("lal_char(abcd), b")
+ctx = vcsn.context("lal(abcd), b")
 
 def check_complement(r1):
     '''Check that `complement` on a rational expression corresponds to
@@ -192,7 +192,7 @@ check_transposition('ab')
 def xfail(r):
     XFAIL(lambda: ctx.expression(r))
 
-ctx = vcsn.context('lal_char(abc), b')
+ctx = vcsn.context('lal(abc), b')
 xfail('')
 xfail('<2>a')
 xfail('x')
@@ -204,9 +204,9 @@ xfail('&a')
 xfail('a&')
 xfail(r'\a')
 
-ctx = vcsn.context('lal_char(abc), q')
-xfail('(?@lal_char(abc), b)<2>a')
-xfail('(?@lal_char(abc), b')
+ctx = vcsn.context('lal(abc), q')
+xfail('(?@lal(abc), b)<2>a')
+xfail('(?@lal(abc), b')
 xfail('(?@foobar)foo')
 xfail('<2>')
 xfail('a<2')
@@ -224,25 +224,25 @@ def check_format(ctx, r, text, utf8, latex):
     CHECK_EQ(utf8, e.format('utf8'))
     CHECK_EQ(latex, e.format('latex'))
 
-check_format('lal_char(abcd), b',
+check_format('lal(abcd), b',
              'abcd',
              'abcd',
              'abcd',
              r'a \, b \, c \, d')
 
 # Check classes.  FIXME: Redundant with check-rat.
-check_format('lal_char(abcdef), b',
+check_format('lal(abcdef), b',
              '[abcdef]',
              '[^]', '[^]', r'[\hat{}]')
-check_format('lal_char(abcdef), b',
+check_format('lal(abcdef), b',
              '[abcde]',
              '[^f]', '[^f]', r'[\hat{}f]')
-check_format('lal_char(a-z), b',
+check_format('lal(a-z), b',
              '[abcd]',
              '[a-d]', '[a-d]', r'[a\textrm{-}d]')
 
 # Check weights.
-check_format('lal_char(abc), expressionset<lal_char(def), expressionset<lal_char(xyz), q>>',
+check_format('lal(abc), expressionset<lal(def), expressionset<lal(xyz), q>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
              '<<<93>x>d>a+(<<<42>y>e>b)*',
              '⟨⟨⟨93⟩x⟩d⟩a+(⟨⟨⟨42⟩y⟩e⟩b)*',
@@ -300,7 +300,7 @@ def check(s1, exp):
     eff = ctx.expression(s1, 'distributive')
     CHECK_EQ(exp, eff.format('text'))
 
-ctx = vcsn.context('lal_char(abcd), q')
+ctx = vcsn.context('lal(abcd), q')
 check('a+b', 'a+b')
 check('(a+a)*', '(<2>a)*')
 check(r'a+\z', 'a')

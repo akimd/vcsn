@@ -39,7 +39,7 @@ def check(input, exp):
     check_algo(input)
 
 
-ctx = vcsn.context('lal_char, q')
+ctx = vcsn.context('lal, q')
 
 check_algo('a')
 check_algo('ab')
@@ -48,12 +48,12 @@ check_algo(ctx.expression('a<2>', 'none'))
 check_algo('<1/2>a*+<1/3>b*')
 
 # This used to trigger an assert.
-l_br = vcsn.context('lal_char(a), expressionset<lal_char(xy), b>')
+l_br = vcsn.context('lal(a), expressionset<lal(xy), b>')
 check(l_br.expression('<y>a(<x>a)*').automaton('derived_term'),
 '''
 digraph
 {
-  vcsn_context = "lal_char(a), expressionset<lal_char(xy), b>"
+  vcsn_context = "lal(a), expressionset<lal(xy), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -75,7 +75,7 @@ digraph
 ''')
 
 check('''
-context = "lal_char(ab), b"
+context = "lal(ab), b"
 $ -> 0
 0 -> 1 a
 0 -> 2 b
@@ -85,7 +85,7 @@ $ -> 0
 '''
 digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "lal(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -117,7 +117,7 @@ digraph
 check('''
 digraph
 {
-  vcsn_context = "lal_char(ab), expressionset<lal_char(xyz), b>"
+  vcsn_context = "lal(ab), expressionset<lal(xyz), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -141,7 +141,7 @@ digraph
 '''
 digraph
 {
-  vcsn_context = "lal_char(ab), expressionset<lal_char(xyz), b>"
+  vcsn_context = "lal(ab), expressionset<lal(xyz), b>"
   rankdir = LR
   {
     node [shape = point, width = 0]

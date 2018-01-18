@@ -9,7 +9,7 @@ from test import *
 exp = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal_char(ab), b"
+  vcsn_context = "lal(ab), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -47,7 +47,7 @@ CHECK_EQ(exp, exp.universal())
 a = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
 
   I -> 0
   0 -> 1 [label = a]
@@ -67,7 +67,7 @@ digraph
 exp = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   rankdir = LR
   {
     node [shape = point, width = 0]

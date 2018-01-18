@@ -7,7 +7,7 @@ from test import *
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), b"
+  vcsn_context="lal(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -22,7 +22,7 @@ CHECK(not a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), b"
+  vcsn_context="lal(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -50,7 +50,7 @@ CHECK_EQ('introAAAoutro',
 b = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), b"
+  vcsn_context="lal(ab), b"
   I -> 0
   I -> 1
   0 -> 2 [label = "a"]
@@ -69,7 +69,7 @@ CHECK_EQ("aa", (a*b).proper().ambiguous_word())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), expressionset<lal_char(xy), b>"
+  vcsn_context="lal(ab), expressionset<lal(xy), b>"
   I -> 0
   0 -> 1 [label = "<x>a"]
   0 -> 2 [label = "<y>a"]
@@ -85,7 +85,7 @@ CHECK(not a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), b"
+  vcsn_context="lal(ab), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -103,7 +103,7 @@ CHECK(a.is_deterministic())
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context="lal_char(ab), nmin"
+  vcsn_context="lal(ab), nmin"
   I -> 1
   1 -> 2 [label = "a"]
   1 -> 3 [label = "a"]
@@ -126,7 +126,7 @@ CHECK(not a.is_deterministic())
 ## -------------------- ##
 
 aut1 = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -140,7 +140,7 @@ aut1 = vcsn.automaton('''digraph {
 CHECK(aut1.is_cycle_ambiguous())
 
 aut2 = vcsn.automaton('''digraph {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -156,7 +156,7 @@ CHECK(not aut2.is_cycle_ambiguous())
 aut3 = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(abc), b"
+  vcsn_context = "lal(abc), b"
   I0 -> 0
   0 -> 1 [label = "c"]
   1 -> 2 [label = "a"]
@@ -172,7 +172,7 @@ digraph
 }''')
 CHECK(aut3.is_cycle_ambiguous())
 
-ctx = vcsn.context("lal_char(abc), b")
+ctx = vcsn.context("lal(abc), b")
 
 r1 = "((abc)*){5}abc" + format(aut1.expression())
 aut4 = ctx.expression(r1).derived_term()

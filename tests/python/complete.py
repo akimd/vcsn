@@ -19,7 +19,7 @@ def check(i, o):
 check('''
 digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "lal(abcd), b"
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -29,7 +29,7 @@ digraph
 ''', '''
 digraph
 {
-  vcsn_context = "lal_char(abcd), b"
+  vcsn_context = "lal(abcd), b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -85,7 +85,7 @@ digraph
 check('''
 digraph
 {
-  vcsn_context = "lal_char(a), b"
+  vcsn_context = "lal(a), b"
 
   0 -> 0 [label = "a"]
   0 -> F0
@@ -93,7 +93,7 @@ digraph
 ''', '''
 digraph
 {
-  vcsn_context = "lal_char(a), b"
+  vcsn_context = "lal(a), b"
   rankdir = LR
   {
     node [shape = point, width = 0]

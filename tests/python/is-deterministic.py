@@ -66,7 +66,7 @@ check(True, vcsn.automaton('''
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char(a), b"
+  vcsn_context = "lal(a), b"
 }
 '''))
 

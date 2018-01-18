@@ -46,7 +46,7 @@ static unsigned check_basic()
 
 static unsigned check_zmin()
 {
-  using lal_char_zmin = context<vcsn::ctx::lal_char, vcsn::zmin>;
+  using lal_char_zmin = context<vcsn::ctx::lal, vcsn::zmin>;
   using automaton_t = mutable_automaton<lal_char_zmin>;
   using state_t = state_t_of<automaton_t>;
 
@@ -79,7 +79,7 @@ static unsigned check_zmin()
 
 static unsigned check_r_loop()
 {
-  using lal_char_r = context<vcsn::ctx::lal_char, vcsn::r>;
+  using lal_char_r = context<vcsn::ctx::lal, vcsn::r>;
   using automaton_t = mutable_automaton<lal_char_r>;
   using state_t = state_t_of<automaton_t>;
 

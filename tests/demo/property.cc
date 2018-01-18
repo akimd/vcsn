@@ -86,7 +86,7 @@ namespace
      * Automaton creation.
      */
 
-    // Create the context: lal_char, b.
+    // Create the context: lal, b.
     auto al = set_alphabet<char_letters>{'a', 'b'};
     auto ctx = ctx::lal_char_b{al};
 
@@ -221,7 +221,7 @@ namespace
      * Automaton creation.
      */
 
-    // Context of the automaton: lat<lal_char, lal_char>, b.
+    // Context of the automaton: lat<lal, lal>, b.
     using letterset_t = letterset<set_alphabet<char_letters>>;
     using labelset_t = tupleset<letterset_t, letterset_t>;
     auto ls = letterset_t{'a', 'b'};
