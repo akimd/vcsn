@@ -8,7 +8,7 @@ namespace vcsn
 {
   namespace ast
   {
-    class signature_printer : public context_visitor
+    class signature_printer : public visitor
     {
     public:
       signature_printer(std::ostream& os, bool full)

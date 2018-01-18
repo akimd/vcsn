@@ -54,7 +54,6 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-printer.cc                    \
   %D%/dyn/context-printer.hh                    \
-  %D%/dyn/context-visitor.hh                    \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/signature-printer.hh                  \
@@ -63,6 +62,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/type-ast.hh                           \
   %D%/dyn/type-parser.cc                        \
   %D%/dyn/type-parser.hh                        \
+  %D%/dyn/visitor.hh                            \
   %D%/misc/configuration.cc                     \
   %D%/misc/direction.cc                         \
   %D%/misc/escape.cc                            \

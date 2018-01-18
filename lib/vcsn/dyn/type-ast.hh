@@ -6,7 +6,7 @@
 
 #include <vcsn/core/rat/identities.hh>
 
-#include <lib/vcsn/dyn/context-visitor.hh>
+#include <lib/vcsn/dyn/visitor.hh>
 #include <vcsn/dyn/fwd.hh>
 
 
@@ -16,7 +16,7 @@ namespace vcsn
   {
 
 #define ACCEPT()                                    \
-      virtual void accept(context_visitor &v) const \
+      virtual void accept(visitor &v) const \
       {                                             \
         v.visit(*this);                             \
       }
@@ -26,7 +26,7 @@ namespace vcsn
     public:
       virtual ~ast_node() = default;
 
-      virtual void accept(context_visitor &v) const = 0;
+      virtual void accept(visitor &v) const = 0;
     };
 
     class context: public ast_node

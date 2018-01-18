@@ -3,13 +3,13 @@
 #include <set>
 #include <sstream>
 
-#include <lib/vcsn/dyn/context-visitor.hh>
+#include <lib/vcsn/dyn/visitor.hh>
 
 namespace vcsn
 {
   namespace ast
   {
-    class context_printer : public context_visitor
+    class context_printer : public visitor
     {
     public:
       context_printer(std::ostringstream& os)
