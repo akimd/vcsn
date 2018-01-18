@@ -13,6 +13,18 @@ namespace vcsn::ast
 {
   namespace
   {
+    bool
+    isalpha_(int c)
+    {
+      return std::isalpha(c) || c == '_';
+    }
+
+    bool
+    isalnum_(int c)
+    {
+      return std::isalnum(c) || c == '_';
+    }
+
     /// Parser of snames.
     class context_parser
     {
@@ -74,23 +86,14 @@ namespace vcsn::ast
         }
       }
 
-      /// The next word in the stream.  Does not consider that
-      /// underscore is word-constituent.  Skips spaces.
+      /// The next word in the stream.  Skips spaces.
       std::string word_()
       {
         skip_space(is_);
         std::string res;
-        int c;
-        while ((c = is_.peek()) != EOF)
-          if (c == '<' || c == ',' || c == '>' || c == '(')
-            break;
-          else
-          {
-            res += c;
-            is_.ignore();
-          }
-        // Keep inner spaces, but not trailing spaces.
-        boost::algorithm::trim_right(res);
+        if (isalpha_(is_.peek()))
+          while (isalnum_(is_.peek()))
+            res += is_.get();
         return res;
       }
 
