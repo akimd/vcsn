@@ -57,7 +57,7 @@ namespace vcsn
       eat(is, sname());
 
       // The result.
-      set_alphabet res;
+      auto res = set_alphabet{};
 
       // This labelset might be open: no initial letter is given, they
       // will be discovered afterwards.
@@ -70,7 +70,7 @@ namespace vcsn
           // would add 'a' twice uselessly.
           //
           // Rather, keep the 'a' in \a prev, and flush prev when needed.
-          boost::optional<letter_t> prev;
+          auto prev = boost::optional<letter_t>{};
           while (true)
             switch (is.peek())
               {
