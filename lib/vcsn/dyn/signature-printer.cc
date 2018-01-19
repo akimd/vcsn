@@ -4,22 +4,28 @@
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 
-namespace vcsn
+namespace vcsn::ast
 {
-  namespace ast
+  namespace
   {
-
-    std::string normalize_context(const std::string& ctx, bool full)
+    /// Print a type ast in a user friendly manner.
+    ///
+    /// This is also the format which is used to name the generated
+    /// files.
+    class signature_printer : public visitor
     {
-      std::ostringstream os;
-      auto printer = ast::signature_printer{os, full};
-      auto ast = parse_context(ctx);
-      ast->accept(printer);
-      return os.str();
-    }
+    public:
+      /// Construct the printer.
+      ///
+      /// \param os  output stream
+      /// \param full  whether to print the dynamic values
+      ///      (e.g., `lal(abc), b` instead of `lal, b`.
+      signature_printer(std::ostream& os, bool full)
+        : os_(os), full_(full)
+      {}
 
 #define DEFINE(Type)                            \
-    void signature_printer::visit(const Type& t)
+    void visit(const Type& t)
 
     DEFINE(automaton)
     {
@@ -131,5 +137,26 @@ namespace vcsn
       t.get_content()->accept(*this);
       os_ << '>';
     }
+
+#undef DEFINE
+
+    private:
+      std::ostream& os_;
+      bool full_;
+    };
+  }
+
+
+  std::string pretty(const std::shared_ptr<ast_node>& t, bool full)
+  {
+    auto o = std::ostringstream{};
+    auto pr = signature_printer{o, full};
+    t->accept(pr);
+    return o.str();
+  }
+
+  std::string normalize_context(const std::string& ctx, bool full)
+  {
+    return pretty(parse_context(ctx), full);
   }
 }

@@ -65,24 +65,19 @@ namespace vcsn::ast
 
       /// We managed to read \a res in \a is, check that `is_` is
       /// finished.
-      void check_eof_(std::shared_ptr<ast_node> res)
+      void check_eof_(const std::shared_ptr<ast_node>& res)
       {
         if (peek_() != EOF)
-        {
-          std::ostringstream o;
-          auto printer = signature_printer{o, true};
-          res->accept(printer);
           vcsn::fail_reading(is_,
-              "unexpected trailing characters after '",
-              o.str(), "'");
-        }
+                             "unexpected trailing characters after '",
+                             pretty(res), "'");
       }
 
       /// The next word in the stream.  Skips spaces.
       std::string word_()
       {
         skip_space(is_);
-        std::string res;
+        auto res = std::string{};
         if (isalpha_(is_.peek()))
           while (isalnum_(is_.peek()))
             res += is_.get();

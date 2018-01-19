@@ -4,48 +4,26 @@
 
 #include <lib/vcsn/dyn/type-ast.hh>
 
-namespace vcsn
+namespace vcsn::ast
 {
-  namespace ast
-  {
-    class signature_printer : public visitor
-    {
-    public:
-      signature_printer(std::ostream& os, bool full)
-        : os_(os), full_(full)
-      {}
+  /// Print a type ast in a "user friendly" manner.
+  ///
+  /// This is also the format which is used to name the generated
+  /// files.
+  ///
+  /// \param t     the type ast
+  /// \param full  whether to print the runtime values.
+  ///    (e.g., the generators: 'letterset<char_letters(ab)>, b' or
+  ///                           'letterset<char_letters>, b').
+  std::string pretty(const std::shared_ptr<ast_node>& t, bool full = true);
 
-#define DEFINE(Type)                            \
-      virtual void visit(const Type& t)
-
-      DEFINE(automaton);
-      DEFINE(context);
-      DEFINE(expansionset);
-      DEFINE(expressionset);
-      DEFINE(genset);
-      DEFINE(genlabelset);
-      DEFINE(oneset);
-      DEFINE(other);
-      DEFINE(polynomialset);
-      DEFINE(tuple);
-      DEFINE(tupleset);
-      DEFINE(weightset);
-
-#undef DEFINE
-
-    private:
-      std::ostream& os_;
-      bool full_;
-    };
-
-    /// A context, normalized.
-    ///
-    /// E.g., 'lal(ab), b' -> 'letterset<char_letters(ab)>, b'.
-    ///
-    /// \param ctx   the context to normalize.
-    /// \param full  whether to print the runtime values.
-    ///    (e.g., the generators: 'letterset<char_letters(ab)>, b' or
-    ///                           'letterset<char_letters>, b').
-    std::string normalize_context(const std::string& ctx, bool full = true);
-  }
+  /// A context, normalized.
+  ///
+  /// E.g., 'lal(ab), b' -> 'letterset<char_letters(ab)>, b'.
+  ///
+  /// \param ctx   the context to normalize.
+  /// \param full  whether to print the runtime values.
+  ///    (e.g., the generators: 'letterset<char_letters(ab)>, b' or
+  ///                           'letterset<char_letters>, b').
+  std::string normalize_context(const std::string& ctx, bool full = true);
 }
