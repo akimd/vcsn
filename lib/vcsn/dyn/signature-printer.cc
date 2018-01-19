@@ -52,15 +52,8 @@ namespace vcsn::ast
 
     DEFINE(tuple)
     {
-      os_ << "std::tuple<";
-      auto v = t.get_sets();
-      for (unsigned int i = 0; i < v.size() - 1; ++i)
-      {
-        v[i]->accept(*this);
-        os_ << ", ";
-      }
-      v[v.size() - 1]->accept(*this);
-      os_ << '>';
+      (void) t;
+      raise("signature_printer::tuple");
     }
 
     DEFINE(tupleset)
@@ -91,25 +84,15 @@ namespace vcsn::ast
 
     DEFINE(genlabelset)
     {
-      if (t.type() == "letterset")
-        {
-          os_ << "letterset<";
-          t.genset()->accept(*this);
-          os_ << '>';
-        }
-      else
-        {
-          os_ << "wordset<";
-          t.genset()->accept(*this);
-          os_ << '>';
-        }
+      os_ << t.type() << '<';
+      t.genset()->accept(*this);
+      os_ << '>';
     }
 
     DEFINE(expansionset)
     {
-      os_ << "expansionset<";
-      t.get_expressionset()->accept(*this);
-      os_ << '>';
+      (void) t;
+      raise("signature_printer::expansionset");
     }
 
     DEFINE(expressionset)
@@ -128,7 +111,8 @@ namespace vcsn::ast
 
     DEFINE(other)
     {
-      os_ << t.get_type();
+      (void) t;
+      raise("signature_printer::other");
     }
 
     DEFINE(polynomialset)
