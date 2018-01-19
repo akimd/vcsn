@@ -135,21 +135,21 @@ def _dot_to_svg(dot, engine='dot', *args):
                universal_newlines=True)
     res, err = p.communicate(dot, timeout=timeout)
     if p.wait():
-        raise RuntimeError("{} failed: {}", format(engine, err))
+        raise RuntimeError("{} failed: {}".format(engine, err))
 
     p = Popen(['gvpr', '-c', 'E[head.name == "F*" && head.name != "Fpre"]{lp=pos=""}'],
               stdin=PIPE, stdout=PIPE, stderr=PIPE,
               universal_newlines=True)
     res, err = p.communicate(res, timeout=timeout)
     if p.wait():
-        raise RuntimeError("{} failed: {}", format('gvpr', err))
+        raise RuntimeError("{} failed: {}".format('gvpr', err))
 
     p = Popen(['neato', '-n2', '-Tsvg'],
               stdin=PIPE, stdout=PIPE, stderr=PIPE,
               universal_newlines=True)
     res, err = p.communicate(res, timeout=timeout)
     if p.wait():
-        raise RuntimeError("{} failed: {}", format('neato', err))
+        raise RuntimeError("{} failed: {}".format('neato', err))
 
     return res
 

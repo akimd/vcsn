@@ -50,7 +50,7 @@ class context:
 
     def __pow__(self, n):
         if n <= 0:
-            raise RuntimeError("exponent must be positive: {}", n)
+            raise RuntimeError("exponent must be positive: {}".format(n))
         return _tuple([self] * n)
 
     expression = lambda *a, **kw: expression(*a, **kw)
