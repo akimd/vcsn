@@ -17,6 +17,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/aut_lao_z                                 \
   %D%/aut_law_char_z                            \
   %D%/concat                                    \
+  %D%/context                                   \
   %D%/cross                                     \
   %D%/distance                                  \
   %D%/dyn                                       \
@@ -37,6 +38,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_aut_lao_z_LDADD           = $(unit_ldadd)
 %C%_aut_law_char_z_LDADD      = $(unit_ldadd)
 %C%_concat_LDADD              = $(unit_ldadd)
+%C%_context_LDADD             = $(unit_ldadd)
 %C%_distance_LDADD            = $(unit_ldadd)
 %C%_dyn_LDADD                 = $(unit_ldadd)
 %C%_function_property_LDADD   = $(unit_ldadd)
@@ -51,6 +53,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/aut_lao_z.chk                             \
   %D%/aut_law_char_z.chk                        \
   %D%/concat.chk                                \
+  %D%/context.chk                               \
   %D%/cross.chk                                 \
   %D%/dyn.chk                                   \
   %D%/function_property.chk                     \
@@ -86,6 +89,7 @@ EXTRA_DIST +=                                   \
 %D%/aut_lao_z.log:         %D%/aut_lao_z
 %D%/aut_law_char_z.log:    %D%/aut_law_char_z
 %D%/concat.log:            %D%/concat
+%D%/context.log:           %D%/context
 %D%/cross.log:             %D%/cross
 %D%/distance.log:          %D%/distance
 %D%/dyn.log:               %D%/dyn
