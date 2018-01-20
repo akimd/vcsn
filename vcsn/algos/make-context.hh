@@ -20,7 +20,7 @@ namespace vcsn
   Ctx
   make_context(const std::string& name)
   {
-    std::istringstream is{name};
+    auto is = std::istringstream{name};
     try
       {
         auto res = Ctx::make(is);
