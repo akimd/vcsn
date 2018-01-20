@@ -32,8 +32,9 @@ disable=
         no-method-argument,fixme,cyclic-import,duplicate-code,
         redefined-outer-name,too-many-branches,
         too-many-nested-blocks,multiple-imports,too-many-statements,
-        unused-wildcard-import
-
+        unused-wildcard-import,
+# This is a nuisance in the order we pass arguments.
+        keyword-arg-before-vararg
 
 [REPORTS]
 
