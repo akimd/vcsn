@@ -337,12 +337,12 @@ namespace vcsn
 
         case format::text:
         case format::utf8:
-          o << '{';
+          o << '[';
           for (auto l: *this)
             this->print(l, o, format::sname);
           if (open_)
             o << "...";
-          o << '}';
+          o << ']';
           break;
 
         case format::raw:

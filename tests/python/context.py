@@ -32,7 +32,6 @@ XFAIL(lambda: vcsn.context("lal"),
 for c in ['letterset<char_letters(abc)>, b',
           'lal<char(abc)>, b',
           'lal<char_letters(abc)>, b',
-          'lal(abc), b',
           'lal(abc), b']:
     check(c, 'letterset<char_letters(abc)>, b')
 
@@ -40,20 +39,19 @@ for c in ['letterset<char_letters(abc)>, b',
 for c in ['letterset<char_letters()>, b',
           'lal<char>, b',
           'lal<char_letters>, b',
-          'lal, b',
           'lal, b']:
     check(c, 'letterset<char_letters()>, b')
 
 # An open context is printed as open in LaTeX.
 check('lal, b',      r'\{\ldots\}^?\to\mathbb{B}', 'latex')
-check('lal, b',      r'{...}? -> B',               'text')
-check('lal, b',      r'{...}? → 𝔹',               'utf8')
+check('lal, b',      r'[...]? -> B',               'text')
+check('lal, b',      r'[...]? → 𝔹',               'utf8')
 check('lal(abc), b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
-check('lal(abc), b', r'{abc}? -> B',          'text')
-check('lal(abc), b', r'{abc}? → 𝔹',          'utf8')
+check('lal(abc), b', r'[abc]? -> B',          'text')
+check('lal(abc), b', r'[abc]? → 𝔹',          'utf8')
 check('lal(), b',    r'\{\}^?\to\mathbb{B}',  'latex')
-check('lal(), b',    r'{}? -> B',             'text')
-check('lal(), b',    r'{}? → 𝔹',             'utf8')
+check('lal(), b',    r'[]? -> B',             'text')
+check('lal(), b',    r'[]? → 𝔹',             'utf8')
 
 # letterset and different char_letters.
 check(r'lal(), b',       r'letterset<char_letters()>, b')
@@ -130,9 +128,9 @@ ctx = '''lat<lal(ba),lal(vu), law(x-z)>,
 check(ctx,
       'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
 check(ctx,
-      '{ab}? x {uv}? x {xyz}* -> RatE[{ef}? x {gh}? -> Q] x R x Q', 'text')
+      '[ab]? x [uv]? x [xyz]* -> RatE[[ef]? x [gh]? -> Q] x R x Q', 'text')
 check(ctx,
-      '{ab}? × {uv}? × {xyz}* → RatE[{ef}? × {gh}? → ℚ] × ℝ × ℚ', 'utf8')
+      '[ab]? × [uv]? × [xyz]* → RatE[[ef]? × [gh]? → ℚ] × ℝ × ℚ', 'utf8')
 
 
 # Check that spaces are generously accepted.

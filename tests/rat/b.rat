@@ -14,7 +14,7 @@
 [a-b] => a+b
 [a-bc-d] => [a-d]
 
-[b-a] ! 1.1-5: RatE[{abcdefgh}* -> B](associative): invalid letter interval: b-a\n! [b-a]\n! ^^^^^\n!   while reading expression: "[b-a]"
+[b-a] ! 1.1-5: RatE[[abcdefgh]* -> B](associative): invalid letter interval: b-a\n! [b-a]\n! ^^^^^\n!   while reading expression: "[b-a]"
 []    ! 1.1-2: invalid empty letter class\n! []\n! ^^\n!   while reading expression: "[]"
 a|x   ! 1.2: too many tapes\n! a|x\n!  ^\n!   while reading expression: "a|x"
 a{x}  ! 1.2: unexpected character: {\n! a{x}\n!  ^\n!   while reading expression: "a{x}"

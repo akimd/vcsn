@@ -36,8 +36,8 @@ a(bc) == a.b.c
 # Base cases.
 ab => ab
 # Error cases.
-x ! 1.1: {abcdefgh}: invalid letter: x\n! x\n! ^\n!   while reading expression: "x"
-axb ! 1.2: {abcdefgh}: invalid letter: x\n! axb\n!  ^\n!   while reading expression: "axb"
+x ! 1.1: [abcdefgh]: invalid letter: x\n! x\n! ^\n!   while reading expression: "x"
+axb ! 1.2: [abcdefgh]: invalid letter: x\n! axb\n!  ^\n!   while reading expression: "axb"
 
 # Precedence and associativity.
 %identities: associative
