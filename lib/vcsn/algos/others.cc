@@ -1,4 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
+#include <lib/vcsn/dyn/ctx-parser.hh>
 #include <lib/vcsn/dyn/signature-printer.hh>
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>

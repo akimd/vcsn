@@ -13,16 +13,21 @@ def check(ctx, exp=None, format="sname"):
 
 # Invalid context: invalid weightset.
 XFAIL(lambda: vcsn.context("lal(a)_UNKNOWN"),
-      'expected ",", got: "_UNKNOWN"')
+      '''expected "->" here:
+lal(a)_UNKNOWN
+      ^_''')
 
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal(a), b_z"),
-      '''invalid weightset name: "b_z"
-  while reading context: "lal(a), b_z"''')
+      '''expected end of input here:
+lal(a), b_z
+         ^_''')
 
 # Invalid context: missing comma.
 XFAIL(lambda: vcsn.context("lal"),
-      'unexpected end-of-file: expected ","')
+      '''expected "->" here:
+lal
+   ^_''')
 
 ## --------------------- ##
 ## LabelSet: letterset.  ##

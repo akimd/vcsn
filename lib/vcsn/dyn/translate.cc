@@ -11,7 +11,6 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/filesystem.hpp>
 
-#include <lib/vcsn/dyn/context-parser.hh>
 #include <lib/vcsn/dyn/instantiator.hh>
 #include <lib/vcsn/dyn/type-ast.hh>
 #include <lib/vcsn/dyn/type-parser.hh>
@@ -131,7 +130,7 @@ namespace vcsn::dyn
       /// our syntax: 'lal(ab), z').
       void print_context(const std::string& ctx)
       {
-        ast::parse_context(ctx)->accept(printer_);
+        ast::parse_type(ctx)->accept(printer_);
       }
 
       /// Generate C++ syntax for type \a type.

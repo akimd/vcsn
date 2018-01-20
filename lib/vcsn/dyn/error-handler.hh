@@ -19,6 +19,7 @@ namespace vcsn::dyn::parser
     error_handler_base()
     {
       id_map["ConText"] = "context";
+      id_map["arrow"] = "\"->\"";
     }
 
     template <typename Iterator, typename Exception, typename Context>
@@ -31,7 +32,7 @@ namespace vcsn::dyn::parser
       if (iter != id_map.end())
 	which = iter->second;
 
-      const auto message = "error: expecting " + which + " here:";
+      const auto message = "expected " + which + " here:";
       auto& error_handler = x3::get<error_handler_tag>(context).get();
       error_handler(x.where(), message);
       return x3::error_handler_result::fail;

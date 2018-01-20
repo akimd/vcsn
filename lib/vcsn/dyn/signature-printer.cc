@@ -1,6 +1,5 @@
 #include <sstream>
 
-#include <lib/vcsn/dyn/context-parser.hh>
 #include <lib/vcsn/dyn/signature-printer.hh>
 
 
@@ -137,10 +136,5 @@ namespace vcsn::ast
     auto pr = signature_printer{o, full};
     t->accept(pr);
     return o.str();
-  }
-
-  std::string normalize_context(const std::string& ctx, bool full)
-  {
-    return pretty(parse_context(ctx), full);
   }
 }

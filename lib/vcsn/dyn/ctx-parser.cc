@@ -9,10 +9,10 @@
 #include <vcsn/misc/to-string.hh>
 
 #include <lib/vcsn/dyn/config.hh>
-#include <lib/vcsn/dyn/context-parser.hh>
 #include <lib/vcsn/dyn/ctx-ast.hh>
 #include <lib/vcsn/dyn/error-handler.hh>
 #include <lib/vcsn/dyn/signature-printer.hh>
+#include <lib/vcsn/dyn/type-parser.hh>
 
 #define BOOST_SPIRIT_X3_DEBUG 1
 #define BOOST_SPIRIT_DEBUG 1
@@ -137,10 +137,14 @@ namespace vcsn::dyn::parser
     _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"};
   };
 
+  const auto arrow
+    = x3::rule<struct _>{"arrow"}
+    = lit("->") | lit(',') | lit("→");
+
   // Grammar.
   const auto ConText_def = eps
     > labelset
-    > (lit("->") | lit(',') | lit("→"))
+    > arrow
     > weightset
   ;
 
@@ -193,6 +197,7 @@ namespace vcsn::dyn::parser
 
   const auto oneset_def
     = ident("lao")
+    | lit("{ε}")
     ;
 
   // lal
@@ -326,13 +331,35 @@ namespace vcsn::ast
           }
         else
           {
-            error_handler(iter, "expecting end of input here: ");
+            error_handler(iter, "expected end of input here:");
             vcsn::raise(err.str());
           }
       }
     else
       {
         vcsn::raise(err.str());
+      }
+  }
+
+  std::string normalize_context(const std::string& ctx, bool full)
+  {
+    try
+      {
+        return pretty(parse_context(translate_context(ctx)), full);
+      }
+    catch (const std::runtime_error& ex)
+      {
+        // Maybe the parser is already in C++ form.  This happens
+        // in some of our automata that have "letterset<char_letters>, b"
+        // as context.
+        try
+          {
+            return pretty(parse_context(ctx), full);
+          }
+        catch (const std::runtime_error&)
+          {
+            throw ex;
+          }
       }
   }
 }

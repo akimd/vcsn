@@ -149,8 +149,9 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''3.18-26: invalid labelset name: "unknown"
-  while reading context: "unknown"
+''', r'''3.18-26: expected labelset here:
+unknown
+^_
   vcsn_context = "unknown"
                  ^^^^^^^^^
 4.3: no vcsn_context defined
@@ -163,8 +164,9 @@ xfail(r'''digraph
 {
   vcsn_context = "lal, unknown"
 }
-''', r'''3.18-31: invalid weightset name: "unknown"
-  while reading context: "lal, unknown"
+''', r'''3.18-31: expected weightset here:
+lal, unknown
+     ^_
   vcsn_context = "lal, unknown"
                  ^^^^^^^^^^^^^^
   while reading automaton''')

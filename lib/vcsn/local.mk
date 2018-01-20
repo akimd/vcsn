@@ -51,8 +51,6 @@ algo_implems =                                  \
 lib_libvcsn_la_SOURCES =                        \
   $(algo_implems)                               \
   %D%/dyn/config.hh                             \
-  %D%/dyn/context-parser.cc                     \
-  %D%/dyn/context-parser.hh                     \
   %D%/dyn/ctx-ast.hh                            \
   %D%/dyn/ctx-parser.cc                         \
   %D%/dyn/ctx-parser.hh                         \

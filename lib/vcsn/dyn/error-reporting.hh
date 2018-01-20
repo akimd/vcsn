@@ -54,6 +54,7 @@ namespace vcsn::dyn::parser
   private:
 
     void print_file_line(std::size_t line) const;
+    // Print source line.
     void print_line(Iterator line_start, Iterator last) const;
     void print_indicator(Iterator& line_start, Iterator last, char ind) const;
     void skip_whitespace(Iterator& err_pos, Iterator last) const;
@@ -185,15 +186,15 @@ namespace vcsn::dyn::parser
     // make sure err_pos does not point to white space
     skip_whitespace(err_pos, last);
 
-    print_file_line(position(err_pos));
+    //print_file_line(position(err_pos));
     err_out << error_message << std::endl;
 
     Iterator start = get_line_start(first, err_pos);
     if (start != first)
       ++start;
     print_line(start, last);
-    print_indicator(start, err_pos, '_');
-    err_out << "^_" << std::endl;
+    print_indicator(start, err_pos, ' ');
+    err_out << "^_";
   }
 
   template <typename Iterator>
@@ -206,7 +207,7 @@ namespace vcsn::dyn::parser
     // make sure err_pos does not point to white space
     skip_whitespace(err_first, last);
 
-    print_file_line(position(err_first));
+    //print_file_line(position(err_first));
     err_out << error_message << std::endl;
 
     Iterator start = get_line_start(first, err_first);
@@ -215,6 +216,6 @@ namespace vcsn::dyn::parser
     print_line(start, last);
     print_indicator(start, err_first, ' ');
     print_indicator(start, err_last, '~');
-    err_out << " <<-- Here" << std::endl;
+    err_out << " <<-- Here";
   }
 }

@@ -32,6 +32,14 @@ namespace vcsn::ast
         return res;
       }
 
+      /// Accept a context.
+      std::shared_ptr<ast_node> parse_context()
+      {
+        auto res = context_();
+        check_eof_(res);
+        return res;
+      }
+
     private:
       /// The next character, possibly preceded by spaces.
       int peek_()
@@ -471,7 +479,7 @@ namespace vcsn::ast
 
   std::shared_ptr<ast_node> parse_type(const std::string& type)
   {
-    std::istringstream is{type};
+    auto is = std::istringstream{type};
     auto parser = type_parser{is};
     try
       {
@@ -480,6 +488,20 @@ namespace vcsn::ast
     catch (const std::runtime_error& e)
       {
         raise(e, "  while reading type: ", str_quote(type));
+      }
+  }
+
+  std::shared_ptr<ast_node> parse_context(const std::string& type)
+  {
+    auto is = std::istringstream{type};
+    auto parser = type_parser{is};
+    try
+      {
+        return parser.parse_context();
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while reading context: ", str_quote(type));
       }
   }
 }
