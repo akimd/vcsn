@@ -29,16 +29,12 @@ XFAIL(lambda: vcsn.context("lal"),
 ## --------------------- ##
 
 # Different types of syntactic sugar.
-for c in ['letterset<char_letters(abc)>, b',
-          'lal<char(abc)>, b',
-          'lal<char_letters(abc)>, b',
+for c in ['lal<char(abc)>, b',
           'lal(abc), b']:
     check(c, 'letterset<char_letters(abc)>, b')
 
 # An open context is not printed as open in text.
-for c in ['letterset<char_letters()>, b',
-          'lal<char>, b',
-          'lal<char_letters>, b',
+for c in ['lal<char>, b',
           'lal, b']:
     check(c, 'letterset<char_letters()>, b')
 
