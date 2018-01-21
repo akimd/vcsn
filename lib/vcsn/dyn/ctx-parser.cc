@@ -91,20 +91,20 @@ namespace vcsn::dyn::parser
   // <char>
   // <char(x)>
   // (x)
-  const auto typed_gens =
-    lit("<") >> (string("char") | string("string")) >> -gens_parens >> lit('>')
+  const auto typed_gens
+    = lit("<") >> (string("char") | string("string")) >> -gens_parens >> lit('>')
     | attr(std::string{"char"}) >> -gens_parens
     ;
 
   // <char>
   // eps
-  const auto letter_type =
-    lit("<") >> (string("char") | string("string")) >> lit('>')
+  const auto letter_type
+    = lit("<") >> (string("char") | string("string")) >> lit('>')
     | attr(std::string{"char"})
     ;
 
-  const auto oneset_def =
-    lit("lao") >> !alnum
+  const auto oneset_def
+    = lit("lao") >> !alnum
     ;
 
   const auto letterset_def
@@ -117,8 +117,8 @@ namespace vcsn::dyn::parser
     | letter_type >> gens >> lit('*')
     ;
 
-  const auto labelset_def =
-    oneset
+  const auto labelset_def
+    = oneset
     | letterset
     | wordset
     | lit("lat<") > (labelset % ',') > lit('>')
