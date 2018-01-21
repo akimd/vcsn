@@ -54,6 +54,16 @@
 /share/vcsn/notebook_profile/security/
 /share/vcsn/notebook_profile/startup/
 /share/vcsn/version.yaml
+/tests/demo/*.cmd
+/tests/demo/*.d
+/tests/demo/compose
+/tests/demo/operators
+/tests/demo/prod-eval
+/tests/demo/property
+/tests/demo/sms2fr-dyn
+/tests/demo/sms2fr-static
+/tests/unit/*.cmd
+/tests/unit/*.d
 /tests/unit/aut_lal_char_z
 /tests/unit/aut_lao_char_z
 /tests/unit/aut_law_char_z
@@ -65,4 +75,3 @@
 /vcsn/misc/position.hh
 /vcsn/parse-rat-exp.dir/
 \#*#
-stamp-h*
