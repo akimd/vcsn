@@ -88,17 +88,27 @@ namespace vcsn::dyn::parser
     lit('(') >> lexeme[*(char_ - ')')] >> lit(')')
     ;
 
-  const auto oneset_def =
-    lit("lao") >> !alnum
+  // <char>
+  // <char(x)>
+  // (x)
+  const auto typed_gens =
+    lit("<") >> (string("char") | string("string")) >> -gens_parens >> lit('>')
+    | attr(std::string{"char"}) >> -gens_parens
     ;
 
+  // <char>
+  // eps
   const auto letter_type =
     lit("<") >> (string("char") | string("string")) >> lit('>')
     | attr(std::string{"char"})
     ;
 
+  const auto oneset_def =
+    lit("lao") >> !alnum
+    ;
+
   const auto letterset_def
-    = lit("lal") >> letter_type >> -gens_parens >> !alnum
+    = lit("lal") >> typed_gens >> !alnum
     | letter_type >> gens >> !char_('*')
    ;
 
