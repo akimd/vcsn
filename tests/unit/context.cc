@@ -17,10 +17,13 @@ check_translate_context()
   CHECK("lao, q",        "oneset, q");
 
   CHECK("lal, b",        "letterset<char_letters>, b");
+  CHECK("<char>[x], b",  "letterset<char_letters(x)>, b");
   CHECK("lal<char>, b",  "letterset<char_letters>, b");
   CHECK("lal(a), b",     "letterset<char_letters(a)>, b");
   CHECK("lal(), b",      "letterset<char_letters>, b");
   CHECK("[a]-> b",       "letterset<char_letters(a)>, b");
+
+  CHECK("lal<string>, b",  "letterset<string_letters>, b");
 
   CHECK("lal, expressionset<[x] -> b>(series)",
         "letterset<char_letters>, expressionset<letterset<char_letters(x)>, b>(series)");

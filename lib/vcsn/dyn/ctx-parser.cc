@@ -34,6 +34,7 @@ namespace vcsn::dyn::parser
 {
   using x3::eps;
   using x3::lit;
+  using x3::attr;
   using x3::lexeme;
   using x3::string;
   using ascii::char_;
@@ -80,26 +81,30 @@ namespace vcsn::dyn::parser
   ;
 
   const auto gens =
-    lit('[')
-    >> lexeme[*(char_ - ']')]
-    >> lit(']')
+    lit('[') >> lexeme[*(char_ - ']')] >> lit(']')
+    ;
+
+  const auto gens_parens =
+    lit('(') >> lexeme[*(char_ - ')')] >> lit(')')
     ;
 
   const auto oneset_def =
     lit("lao") >> !alnum
     ;
 
-  const auto letterset_def =
-    gens >> !char_('*')
-    | (lit("lal(") > lexeme[*(char_ - ')')] > lit(')'))
-    | lit("lal<char>") >> !alnum
-    | lit("lal") >> !alnum
+  const auto letter_type =
+    lit("<") >> (string("char") | string("string")) >> lit('>')
+    | attr(std::string{"char"})
+    ;
+
+  const auto letterset_def
+    = lit("lal") >> letter_type >> -gens_parens >> !alnum
+    | letter_type >> gens >> !char_('*')
    ;
 
-  const auto wordset_def =
-    gens >> lit('*')
-    | (lit("law(") > lexeme[*(char_ - ')')] > lit(')'))
-    | lit("law") >> !alnum
+  const auto wordset_def
+    = lit("law") >> letter_type >> -gens_parens >> !alnum
+    | letter_type >> gens >> lit('*')
     ;
 
   const auto labelset_def =

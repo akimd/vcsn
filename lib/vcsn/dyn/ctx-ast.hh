@@ -45,10 +45,11 @@ namespace vcsn::dyn::ast
 
   struct letterset
   {
+    std::string letter_type;
     std::string gens;
     friend std::ostream& operator <<(std::ostream& o, const letterset& ls)
     {
-      o << "letterset<char_letters";
+      o << "letterset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
         o << '(' << ls.gens << ')';
       return o << '>';
@@ -57,10 +58,11 @@ namespace vcsn::dyn::ast
 
   struct wordset
   {
+    std::string letter_type;
     std::string gens;
     friend std::ostream& operator <<(std::ostream& o, const wordset& ls)
     {
-      o << "wordset<char_letters";
+      o << "wordset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
         o << '(' << ls.gens << ')';
       return o << '>';
@@ -125,7 +127,7 @@ namespace vcsn::dyn::ast
 }
 
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::oneset)
-BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::letterset, gens)
-BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::wordset, gens)
+BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::letterset, letter_type, gens)
+BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::wordset, letter_type, gens)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::ConText, ls, ws)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::expressionset, ctx, identities)
