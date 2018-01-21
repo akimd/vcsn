@@ -81,11 +81,11 @@ namespace vcsn::dyn::parser
   ;
 
   const auto gens =
-    lit('[') >> lexeme[*(char_ - ']')] >> lit(']')
+    lit('[') >> lexeme[*(lit('\\') >> char_ | char_ - ']')] >> lit(']')
     ;
 
   const auto gens_parens =
-    lit('(') >> lexeme[*(char_ - ')')] >> lit(')')
+    lit('(') >> lexeme[*(lit('\\') >> char_ | char_ - ')')] >> lit(')')
     ;
 
   // <char>
@@ -199,8 +199,8 @@ namespace vcsn::ast
 
     // Our parser
     auto const parser =
-      // we pass our error handler to the parser so we can access
-      // it later on in our on_error and on_sucess handlers
+      // We pass our error handler to the parser so we can access
+      // it later on in our on_error and on_sucess handlers.
       with<error_handler_tag>(std::ref(error_handler))
       [
         vcsn::dyn::context_parser()

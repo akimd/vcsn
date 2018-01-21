@@ -51,7 +51,7 @@ namespace vcsn::dyn::ast
     {
       o << "letterset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
-        o << '(' << ls.gens << ')';
+        o << '(' << vcsn::str_escape(ls.gens, "[]()") << ')';
       return o << '>';
     }
   };
@@ -64,7 +64,7 @@ namespace vcsn::dyn::ast
     {
       o << "wordset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
-        o << '(' << ls.gens << ')';
+        o << '(' << vcsn::str_escape(ls.gens, "[]()") << ')';
       return o << '>';
     }
   };

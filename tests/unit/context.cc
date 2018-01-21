@@ -24,6 +24,10 @@ check_translate_context()
   CHECK("lal(), b",        "letterset<char_letters>, b");
   CHECK("[a]-> b",         "letterset<char_letters(a)>, b");
 
+  CHECK("[\\]]-> b",       "letterset<char_letters(\\])>, b");
+  CHECK("lal(\\)), b",     "letterset<char_letters(\\))>, b");
+  CHECK("lal(\\\\), b",    "letterset<char_letters(\\\\)>, b");
+
   CHECK("lal<string>, b",  "letterset<string_letters>, b");
 
   CHECK("lal, expressionset<[x] -> b>(series)",
