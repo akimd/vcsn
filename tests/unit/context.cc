@@ -22,6 +22,11 @@ check_translate_context()
   CHECK("lal(), b",      "letterset<char_letters>, b");
   CHECK("[a]-> b",       "letterset<char_letters(a)>, b");
 
+  CHECK("lal, expressionset<[x] -> b>(series)",
+        "letterset<char_letters>, expressionset<letterset<char_letters(x)>, b>(series)");
+  CHECK("lal, seriesset<[x] -> b>",
+        "letterset<char_letters>, expressionset<letterset<char_letters(x)>, b>(series)");
+
   CHECK("law, zmin",     "wordset<char_letters>, zmin");
   CHECK("law(a), zmin",  "wordset<char_letters(a)>, zmin");
   CHECK("[a-z]*-> zmin", "wordset<char_letters(a-z)>, zmin");

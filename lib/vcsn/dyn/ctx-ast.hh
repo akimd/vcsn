@@ -113,9 +113,13 @@ namespace vcsn::dyn::ast
   struct expressionset
   {
     ConText ctx;
+    std::string identities = "";
     friend std::ostream& operator <<(std::ostream& o, const expressionset& es)
     {
-      return o << "expressionset<" << es.ctx << '>';
+      o << "expressionset<" << es.ctx << '>';
+      if (!es.identities.empty())
+	o << '(' << es.identities << ')';
+      return o;
     }
   };
 }
@@ -124,4 +128,4 @@ BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::oneset)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::letterset, gens)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::wordset, gens)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::ConText, ls, ws)
-BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::expressionset, ctx)
+BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::expressionset, ctx, identities)

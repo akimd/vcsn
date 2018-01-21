@@ -38,6 +38,7 @@ namespace vcsn::dyn::parser
   using x3::string;
   using ascii::char_;
   using ascii::alnum;
+  using ascii::alpha;
   using ascii::string;
 
   // Rule IDS.
@@ -46,6 +47,7 @@ namespace vcsn::dyn::parser
   struct wordset_class;
   struct labelset_class;
   struct expressionset_class;
+  struct seriesset_class;
   struct ConText_class;
   struct weightset_class;
 
@@ -60,10 +62,15 @@ namespace vcsn::dyn::parser
       labelset = "labelset";
   x3::rule<expressionset_class, ast::expressionset> const
       expressionset = "expressionset";
+  x3::rule<seriesset_class, ast::expressionset> const
+      seriesset = "seriesset";
   x3::rule<ConText_class, ast::ConText> const
       ConText = "context";
   x3::rule<weightset_class, ast::weightset> const
       weightset = "weightset";
+
+  auto mkseriesset
+  = [](auto& ctx) { _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"}; };
 
   // Grammar.
   const auto ConText_def = eps
@@ -124,17 +131,23 @@ namespace vcsn::dyn::parser
     | lit("lat<") > (weightset % ',') > lit('>')
     ;
 
+  const auto seriesset_def =
+    (lit("seriesset") > lit('<') > ConText > lit(">")) [mkseriesset]
+    ;
+
   const auto expressionset_def =
-    (lit("expressionset") | lit("seriesset")) // FIXME: not the same.
+    lit("expressionset")
     > lit('<')
     > ConText
     > lit(">")
+    > -(lit('(') > +alpha > lit(')'))
+    | seriesset
     ;
 
   BOOST_SPIRIT_DEFINE(ConText,
                       oneset, letterset, wordset, labelset,
                       weightset,
-                      expressionset);
+                      expressionset, seriesset);
 
   struct ConText_class : error_handler_base {};
 }
