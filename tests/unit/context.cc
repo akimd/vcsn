@@ -41,6 +41,8 @@ check_translate_context()
 
   CHECK("lat<[a], [b], [c]> -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
+  CHECK("[a] x [b] x [c] -> f2",
+        "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
 #undef CHECK
   return nerrs;
 }

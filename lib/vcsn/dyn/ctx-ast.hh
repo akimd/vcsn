@@ -84,13 +84,16 @@ namespace vcsn::dyn::ast
     }
   };
 
+  struct labelset;
+  using labelsets = std::vector<labelset>;
+
   struct labelset
   // Order matters: to avoid infinit recursion at creation.
     : x3::variant<oneset,
                   letterset,
                   wordset,
                   x3::forward_ast<expressionset>,
-                  std::vector<labelset>>
+                  labelsets>
   {
     using base_type::base_type;
     using base_type::operator=;

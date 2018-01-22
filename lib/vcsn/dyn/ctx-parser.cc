@@ -18,6 +18,25 @@
 #define BOOST_SPIRIT_X3_DEBUG 1
 #define BOOST_SPIRIT_DEBUG 1
 
+namespace
+{
+  // https://stackoverflow.com/questions/43089395
+  template <typename T>
+  struct as_type
+  {
+    template <typename Expr>
+    auto operator[](Expr&& expr) const
+    {
+      namespace x3 = boost::spirit::x3;
+      return x3::rule<struct _, T>{"as"}
+      = x3::as_parser(std::forward<Expr>(expr));
+    }
+  };
+
+  template <typename T>
+  static const as_type<T> as = {};
+}
+
 // Public interface.
 namespace vcsn::dyn::parser
 {
@@ -47,6 +66,7 @@ namespace vcsn::dyn::parser
   struct letterset_class;
   struct wordset_class;
   struct labelset_class;
+  struct labelset_basic_class;
   struct expressionset_class;
   struct seriesset_class;
   struct ConText_class;
@@ -59,6 +79,8 @@ namespace vcsn::dyn::parser
       letterset = "letterset";
   x3::rule<wordset_class, ast::wordset> const
       wordset = "wordset";
+  x3::rule<labelset_basic_class, ast::labelset> const
+      labelset_basic = "labelset_basic";
   x3::rule<labelset_class, ast::labelset> const
       labelset = "labelset";
   x3::rule<expressionset_class, ast::expressionset> const
@@ -117,12 +139,17 @@ namespace vcsn::dyn::parser
     | letter_type >> gens >> lit('*')
     ;
 
-  const auto labelset_def
+  const auto labelset_basic_def
     = oneset
     | letterset
     | wordset
     | lit("lat<") > (labelset % ',') > lit('>')
     | expressionset
+    ;
+
+  const auto labelset_def
+  = as<ast::labelsets>[labelset_basic >> lit('x') > (labelset_basic % 'x')]
+    | labelset_basic
     ;
 
   // An identifier must be separated from other alnum
@@ -160,7 +187,7 @@ namespace vcsn::dyn::parser
     ;
 
   BOOST_SPIRIT_DEFINE(ConText,
-                      oneset, letterset, wordset, labelset,
+                      oneset, letterset, wordset, labelset_basic, labelset,
                       weightset,
                       expressionset, seriesset);
 
