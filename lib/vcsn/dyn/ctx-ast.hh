@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 
 namespace vcsn::dyn::ast
@@ -9,16 +10,19 @@ namespace vcsn::dyn::ast
   struct printer
   {
     std::ostream& o;
+
     template <typename T>
     void operator()(const x3::forward_ast<T>& t) const
     {
       operator()(t.get());
     }
+
     template <typename T>
     void operator()(const T& t) const
     {
       o << t;
     }
+
     template <typename T>
     void operator()(const std::vector<T>& t) const
     {
@@ -51,7 +55,7 @@ namespace vcsn::dyn::ast
     {
       o << "letterset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
-        o << '(' << vcsn::str_escape(ls.gens, "[]()") << ')';
+        o << '(' << ls.gens << ')';
       return o << '>';
     }
   };
@@ -64,7 +68,7 @@ namespace vcsn::dyn::ast
     {
       o << "wordset<" << ls.letter_type << "_letters";
       if (!ls.gens.empty())
-        o << '(' << vcsn::str_escape(ls.gens, "[]()") << ')';
+        o << '(' << ls.gens << ')';
       return o << '>';
     }
   };

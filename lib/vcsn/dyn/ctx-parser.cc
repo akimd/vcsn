@@ -3,7 +3,6 @@
 
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/x3.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
 
 #include <vcsn/misc/raise.hh>
@@ -118,8 +117,9 @@ namespace vcsn::dyn::parser
   x3::rule<weightset_basic_class, ast::weightset> const
       weightset_basic = "weightset_basic";
 
-  auto mkseriesset
-  = [](auto& ctx) { _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"}; };
+  auto mkseriesset = [](auto& ctx) {
+    _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"};
+  };
 
   // Grammar.
   const auto ConText_def = eps
@@ -128,12 +128,30 @@ namespace vcsn::dyn::parser
     > weightset
   ;
 
-  const auto gens =
-    lit('[') >> lexeme[*(lit('\\') >> char_ | char_ - ']')] >> lit(']')
+  const auto append = [](auto& ctx) {
+    auto& val = _val(ctx);
+    auto c = _attr(ctx);
+    if (c == '(' || c == ')')
+      val += '\\';
+    val += c;
+  };
+
+  const auto escape = [](auto& ctx) {
+    _val(ctx) += _attr(ctx);
+  };
+
+  const auto gen
+    = (as<std::string>[char_('\\') >> char_])  [escape]
+    | (char_ - ']')                            [append]
     ;
 
-  const auto gens_parens =
-    lit('(') >> lexeme[*(lit('\\') >> char_ | char_ - ')')] >> lit(')')
+  const auto gens
+    = as<std::string>[lit('[') >> lexeme[*gen] >> lit(']')]
+    ;
+
+  // generators in parens, or nothing.
+  const auto gens_parens
+    = lit('(') >> lexeme[*(char_('\\') >> char_ | char_ - ')')] >> lit(')')
     ;
 
   // <char>
