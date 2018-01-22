@@ -69,11 +69,14 @@ namespace vcsn::dyn::ast
     }
   };
 
+  struct weightset;
+  using weightsets = std::vector<weightset>;
+
   struct weightset
     // Order matters: to avoid infinit recursion at creation.
     : x3::variant<std::string,
                   x3::forward_ast<expressionset>,
-                  std::vector<weightset>>
+                  weightsets>
   {
     using base_type::base_type;
     using base_type::operator=;
@@ -123,7 +126,7 @@ namespace vcsn::dyn::ast
     {
       o << "expressionset<" << es.ctx << '>';
       if (!es.identities.empty())
-	o << '(' << es.identities << ')';
+        o << '(' << es.identities << ')';
       return o;
     }
   };

@@ -12,7 +12,15 @@ check_translate_context()
   int nerrs = 0;
 
 #define CHECK(In, Out)                                  \
-  ASSERT_EQ(Out, vcsn::ast::translate_context(In))
+  try                                                   \
+    {                                                   \
+      ASSERT_EQ(Out, vcsn::ast::translate_context(In)); \
+    }                                                   \
+  catch (std::exception& e)                             \
+    {                                                   \
+      std::cerr << "Failed: " << e.what() << '\n';      \
+      ++nerrs;                                          \
+    }
 
   CHECK("lao, b",     "oneset, b");
   CHECK("lao, f2",    "oneset, f2");
@@ -52,6 +60,16 @@ check_translate_context()
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
   CHECK("[a] x [b] x [c] -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
+
+  CHECK("[a] -> lat<nmin, zmin, rmin>",
+        "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
+  CHECK("[a] -> nmin x zmin x rmin",
+        "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
+
+  CHECK("[a] x [b] x [c] ->  nmin x zmin x rmin",
+        "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, "
+	"lat<nmin, zmin, rmin>");
+
 #undef CHECK
   return nerrs;
 }

@@ -71,6 +71,7 @@ namespace vcsn::dyn::parser
   struct seriesset_class;
   struct ConText_class;
   struct weightset_class;
+  struct weightset_basic_class;
 
   // Rules.
   x3::rule<one_class, ast::oneset> const
@@ -91,6 +92,8 @@ namespace vcsn::dyn::parser
       ConText = "context";
   x3::rule<weightset_class, ast::weightset> const
       weightset = "weightset";
+  x3::rule<weightset_basic_class, ast::weightset> const
+      weightset_basic = "weightset_basic";
 
   auto mkseriesset
   = [](auto& ctx) { _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"}; };
@@ -147,6 +150,7 @@ namespace vcsn::dyn::parser
     | expressionset
     ;
 
+  // One or more labelsets.
   const auto labelset_def
   = as<ast::labelsets>[labelset_basic >> lit('x') > (labelset_basic % 'x')]
     | labelset_basic
@@ -155,10 +159,13 @@ namespace vcsn::dyn::parser
   // An identifier must be separated from other alnum
   auto ident(const std::string& id)
   {
-    return string(id) >> ! alnum;
+    // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
+    // `b x b` (standing for Cartesian product) would reject the first
+    // `b` as it is followed (after skipping spaces) by an alnum.
+    return lexeme[string(id) >> ! alnum];
   }
 
-  const auto weightset_def =
+  const auto weightset_basic_def =
     ident("b")
     | ident("f2")
     | ident("log")
@@ -171,6 +178,12 @@ namespace vcsn::dyn::parser
     | ident("zmin")
     | expressionset
     | lit("lat<") > (weightset % ',') > lit('>')
+    ;
+
+  // One or more weightsets.
+  const auto weightset_def
+    = as<ast::weightsets>[weightset_basic >> lit('x') >> (weightset_basic % 'x')]
+    | weightset_basic
     ;
 
   const auto seriesset_def =
@@ -188,7 +201,7 @@ namespace vcsn::dyn::parser
 
   BOOST_SPIRIT_DEFINE(ConText,
                       oneset, letterset, wordset, labelset_basic, labelset,
-                      weightset,
+                      weightset_basic, weightset,
                       expressionset, seriesset);
 
   struct ConText_class : error_handler_base {};
