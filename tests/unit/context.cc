@@ -14,7 +14,16 @@ check_translate_context()
 #define CHECK(In, Out)                                  \
   ASSERT_EQ(Out, vcsn::ast::translate_context(In))
 
-  CHECK("lao, q",        "oneset, q");
+  CHECK("lao, b",     "oneset, b");
+  CHECK("lao, f2",    "oneset, f2");
+  CHECK("lao, log",   "oneset, log");
+  CHECK("lao, nmin",  "oneset, nmin");
+  CHECK("lao, q",     "oneset, q");
+  CHECK("lao, qmp",   "oneset, qmp");
+  CHECK("lao, r",     "oneset, r");
+  CHECK("lao, rmin",  "oneset, rmin");
+  CHECK("lao, z",     "oneset, z");
+  CHECK("lao, zmin",  "oneset, zmin");
 
   CHECK("lal, b",          "letterset<char_letters>, b");
   CHECK("<char>[x], b",    "letterset<char_letters(x)>, b");
