@@ -22,6 +22,7 @@ check_translate_context()
       ++nerrs;                                          \
     }
 
+  // ASCII.
   CHECK("lao, b",     "oneset, b");
   CHECK("lao, f2",    "oneset, f2");
   CHECK("lao, log",   "oneset, log");
@@ -33,6 +34,19 @@ check_translate_context()
   CHECK("lao, z",     "oneset, z");
   CHECK("lao, zmin",  "oneset, zmin");
 
+  // UTF-8.
+  CHECK("lao, 𝔹",     "oneset, b");
+  CHECK("lao, 𝔽₂",    "oneset, f2");
+  CHECK("lao, Log",   "oneset, log");
+  CHECK("lao, ℕmin",  "oneset, nmin");
+  CHECK("lao, ℚ",     "oneset, q");
+  CHECK("lao, ℚmp",   "oneset, qmp");
+  CHECK("lao, ℝ",     "oneset, r");
+  CHECK("lao, ℝmin",  "oneset, rmin");
+  CHECK("lao, ℤ",     "oneset, z");
+  CHECK("lao, ℤmin",  "oneset, zmin");
+
+  // lal.
   CHECK("lal, b",          "letterset<char_letters>, b");
   CHECK("<char>[x], b",    "letterset<char_letters(x)>, b");
   CHECK("lal<char>, b",    "letterset<char_letters>, b");

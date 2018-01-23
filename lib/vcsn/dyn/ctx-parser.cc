@@ -61,6 +61,26 @@ namespace vcsn::dyn::parser
   using enc::alpha;
   using enc::string;
 
+  struct literal_weighsets_
+    : x3::symbols<const char*>
+  {
+    literal_weighsets_()
+    {
+      add
+        ("𝔹", "b")
+        ("𝔽₂", "f2")
+        ("Log", "log")
+        ("ℕmin", "nmin")
+        ("ℚ", "q")
+        ("ℚmp", "qmp")
+        ("ℝ", "r")
+        ("ℝmin", "rmin")
+        ("ℤ", "z")
+        ("ℤmin", "zmin")
+        ;
+    }
+  } literal_weighsets;
+
   // Rule IDS.
   struct x_class;
   struct one_class;
@@ -183,6 +203,7 @@ namespace vcsn::dyn::parser
     | ident("rmin")
     | ident("z")
     | ident("zmin")
+    | literal_weighsets
     | expressionset
     | lit("lat<") > (weightset % ',') > lit('>')
     ;
