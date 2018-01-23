@@ -157,7 +157,9 @@ namespace vcsn::dyn::parser
 
   const auto letterset_def
     = lit("lal") >> typed_gens >> !alnum
-    | letter_type >> gens >> !char_('*')
+    // Accept `[a]?` to facilitate transition: we print `lal(a), b`
+    // as `[a]?  → 𝔹`.
+    | letter_type >> gens >> -lit('?') >> !char_('*')
    ;
 
   const auto wordset_def
