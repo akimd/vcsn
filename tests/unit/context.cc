@@ -66,7 +66,8 @@ check_translate_context()
   CHECK("[a] -> nmin x zmin x rmin",
         "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
 
-  CHECK("[a] x [b] x [c] ->  nmin x zmin x rmin",
+  // Using the UTF8 characters '×' and '→' instead of 'x' and '->'.
+  CHECK("[a] × [b] × [c] → nmin × zmin × rmin",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, "
 	"lat<nmin, zmin, rmin>");
 

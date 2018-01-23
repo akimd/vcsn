@@ -41,7 +41,7 @@ namespace
 namespace vcsn::dyn::parser
 {
   namespace x3 = boost::spirit::x3;
-  namespace ascii = x3::ascii;
+  namespace enc = x3::standard;
 
   // Name collisions with X3.
   struct ConText_class;
@@ -56,12 +56,13 @@ namespace vcsn::dyn::parser
   using x3::attr;
   using x3::lexeme;
   using x3::string;
-  using ascii::char_;
-  using ascii::alnum;
-  using ascii::alpha;
-  using ascii::string;
+  using enc::char_;
+  using enc::alnum;
+  using enc::alpha;
+  using enc::string;
 
   // Rule IDS.
+  struct x_class;
   struct one_class;
   struct letterset_class;
   struct wordset_class;
@@ -74,6 +75,8 @@ namespace vcsn::dyn::parser
   struct weightset_basic_class;
 
   // Rules.
+  x3::rule<x_class> const
+      x = "x";
   x3::rule<one_class, ast::oneset> const
       oneset = "oneset";
   x3::rule<letterset_class, ast::letterset> const
@@ -101,7 +104,7 @@ namespace vcsn::dyn::parser
   // Grammar.
   const auto ConText_def = eps
     > labelset
-    > (lit("->") | lit(","))
+    > (lit("->") | lit(',') | lit("→"))
     > weightset
   ;
 
@@ -150,9 +153,13 @@ namespace vcsn::dyn::parser
     | expressionset
     ;
 
+  // Cartesian product.
+  const auto x_def
+    = lit("×") | lit('x');
+
   // One or more labelsets.
   const auto labelset_def
-  = as<ast::labelsets>[labelset_basic >> lit('x') > (labelset_basic % 'x')]
+    = as<ast::labelsets>[labelset_basic >> x > (labelset_basic % x)]
     | labelset_basic
     ;
 
@@ -182,7 +189,7 @@ namespace vcsn::dyn::parser
 
   // One or more weightsets.
   const auto weightset_def
-    = as<ast::weightsets>[weightset_basic >> lit('x') >> (weightset_basic % 'x')]
+    = as<ast::weightsets>[weightset_basic >> x >> (weightset_basic % x)]
     | weightset_basic
     ;
 
@@ -199,7 +206,8 @@ namespace vcsn::dyn::parser
     | seriesset
     ;
 
-  BOOST_SPIRIT_DEFINE(ConText,
+  BOOST_SPIRIT_DEFINE(x,
+                      ConText,
                       oneset, letterset, wordset, labelset_basic, labelset,
                       weightset_basic, weightset,
                       expressionset, seriesset);
@@ -247,7 +255,7 @@ namespace vcsn::ast
       ];
 
     bool r = phrase_parse(iter, end, parser,
-                          boost::spirit::x3::ascii::space, res);
+                          boost::spirit::x3::standard::space, res);
 
     if (r)
       {
