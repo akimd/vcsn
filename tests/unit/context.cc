@@ -62,10 +62,14 @@ check_translate_context()
 
   CHECK("lal<string>, b",  "letterset<string_letters>, b");
 
-  CHECK("lal, expressionset<[x] -> b>(series)",
-        "letterset<char_letters>, expressionset<letterset<char_letters(x)>, b>(series)");
-  CHECK("lal, seriesset<[x] -> b>",
-        "letterset<char_letters>, expressionset<letterset<char_letters(x)>, b>(series)");
+  CHECK("lao, RatE[[x] -> b]",
+        "oneset, expressionset<letterset<char_letters(x)>, b>");
+  CHECK("lao, expressionset<[x] -> b>",
+        "oneset, expressionset<letterset<char_letters(x)>, b>");
+  CHECK("lao, expressionset<[x] -> b>(series)",
+        "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
+  CHECK("lao, seriesset<[x] -> b>",
+        "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
 
   CHECK("law, zmin",     "wordset<char_letters>, zmin");
   CHECK("law(a), zmin",  "wordset<char_letters(a)>, zmin");

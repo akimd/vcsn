@@ -221,11 +221,11 @@ namespace vcsn::dyn::parser
     ;
 
   const auto expressionset_def =
-    lit("expressionset")
-    > lit('<')
+    lit("expressionset<")
     > ConText
     > lit(">")
-    > -(lit('(') > +alpha > lit(')'))
+    > -(lit('(') > +alpha > lit(')')) // identities.
+    | lit("RatE[") > ConText > lit(']') > -(lit('(') > +alpha > lit(')')) // identities.
     | seriesset
     ;
 
