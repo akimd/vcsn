@@ -28,14 +28,14 @@ namespace vcsn
 
     static symbol sname()
     {
-      static auto res = symbol{"lao"};
+      static auto res = symbol{"oneset"};
       return res;
     }
 
     /// Build from the description in \a is.
     static oneset make(std::istream& is)
     {
-      kind_t::make(is);
+      eat(is, sname());
       return {};
     }
 

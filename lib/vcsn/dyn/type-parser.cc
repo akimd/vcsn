@@ -222,7 +222,7 @@ namespace vcsn::ast
       /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_(const std::string& ls)
       {
-        if (ls == "lao")
+        if (ls == "oneset")
           return std::make_shared<oneset>();
         else if (ls == "lat")
           return tupleset_();
@@ -467,6 +467,7 @@ namespace vcsn::ast
       /// The set of weightset names.
       std::set<std::string> labelsets_ =
         {
+          "oneset",
           "letterset",
           "wordset",
         };

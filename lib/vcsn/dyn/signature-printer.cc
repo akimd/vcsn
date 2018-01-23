@@ -73,7 +73,7 @@ namespace vcsn
     DEFINE(oneset)
     {
       (void) t;
-      os_ << "lao";
+      os_ << "oneset";
     }
 
     DEFINE(genset)

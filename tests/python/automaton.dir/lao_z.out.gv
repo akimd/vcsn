@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lao, z"
+  vcsn_context = "oneset, z"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

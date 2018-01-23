@@ -15,7 +15,7 @@ def check_lift(exp, aut):
 l4 = vcsn.context('lal(abc), b').ladybird(4)
 check_lift('''digraph
 {
-  vcsn_context = "lao, expressionset<letterset<char_letters(abc)>, b>"
+  vcsn_context = "oneset, expressionset<letterset<char_letters(abc)>, b>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

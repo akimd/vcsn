@@ -225,7 +225,7 @@ namespace vcsn::ast
         if (ls == "lal_char" || ls == "lan_char")
           return std::make_shared<genlabelset>("letterset",
                                                genset_("char_letters"));
-        else if (ls == "lao")
+        else if (ls == "lao" || ls == "oneset")
           return std::make_shared<oneset>();
         else if (ls == "lat")
           return tupleset_();
@@ -402,6 +402,7 @@ namespace vcsn::ast
           "law",
           "law_char",
           "letterset",
+          "oneset",
           "wordset",
         };
     };

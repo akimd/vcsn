@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lao, z"
+  vcsn_context = "oneset, z"
   rankdir = LR
   edge [texmode = math, lblstyle = auto]
   d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"

@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lao, z"
+  vcsn_context = "oneset, z"
   0 -> 1 [label = "<42>"]
   0 -> 1 [label = "<51>"]
   1 -> F1 [label = "<999>"]
