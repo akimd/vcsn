@@ -73,17 +73,27 @@ check_translate_context()
   // Expressionset as a weightset.
   CHECK("lao, RatE[[x] -> b]",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
+  CHECK("lao, RatE [  [x] -> b  ]",
+        "oneset, expressionset<letterset<char_letters(x)>, b>");
   CHECK("lao, expressionset<[x] -> b>",
+        "oneset, expressionset<letterset<char_letters(x)>, b>");
+  CHECK("lao, expressionset  <  [x] -> b  >",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
   CHECK("lao, expressionset<[x] -> b>(series)",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
   CHECK("lao, seriesset<[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
+  CHECK("lao, seriesset <[x] -> b>",
+        "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
 
   // Polynomialset as a weightset.
   CHECK("lao, Poly[[x] -> b]",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
+  CHECK("lao, Poly [[x] -> b]",
+        "oneset, polynomialset<letterset<char_letters(x)>, b>");
   CHECK("lao, polynomialset<[x] -> b>",
+        "oneset, polynomialset<letterset<char_letters(x)>, b>");
+  CHECK("lao, polynomialset <[x] -> b>",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
 
   CHECK("law, zmin",     "wordset<char_letters>, zmin");
@@ -92,10 +102,14 @@ check_translate_context()
 
   CHECK("lat<[a], [b], [c]> -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
+  CHECK("lat < [a], [b], [c] > -> f2",
+        "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
   CHECK("[a] x [b] x [c] -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
 
   CHECK("[a] -> lat<nmin, zmin, rmin>",
+        "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
+  CHECK("[a] -> lat < nmin , zmin , rmin >",
         "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
   CHECK("[a] -> nmin x zmin x rmin",
         "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");

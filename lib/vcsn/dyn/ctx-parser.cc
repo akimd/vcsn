@@ -202,7 +202,7 @@ namespace vcsn::dyn::parser
     = oneset
     | letterset
     | wordset
-    | lit("lat<") > (labelset % ',') > lit('>')
+    | lit("lat") > lit('<') > (labelset % ',') > lit('>')
     | expressionset
     | polynomialset
     ;
@@ -240,7 +240,7 @@ namespace vcsn::dyn::parser
     | literal_weighsets
     | expressionset
     | polynomialset
-    | lit("lat<") > (weightset % ',') > lit('>')
+    | lit("lat") > lit('<') > (weightset % ',') > lit('>')
     ;
 
   // One or more weightsets.
@@ -254,17 +254,17 @@ namespace vcsn::dyn::parser
     ;
 
   const auto expressionset_def
-    = lit("expressionset<")
+    = lit("expressionset") > '<'
     > ConText
     > lit('>')
     > -(lit('(') > +alpha > lit(')')) // identities.
-    | lit("RatE[") > ConText > lit(']') > -(lit('(') > +alpha > lit(')')) // identities.
+    | lit("RatE") > '[' > ConText > ']' > -('(' > +alpha > ')') // identities.
     | seriesset
     ;
 
   const auto polynomialset_def
-    = lit("polynomialset<") > ConText > lit('>')
-    | lit("Poly[") > ConText > lit(']')
+    = lit("polynomialset") > '<' > ConText > '>'
+    | lit("Poly") > '[' > ConText > ']'
     ;
 
   BOOST_SPIRIT_DEFINE(x,
