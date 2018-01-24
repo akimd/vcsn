@@ -149,9 +149,14 @@ namespace vcsn::dyn::parser
     = as<std::string>[lit('[') >> lexeme[*gen] >> lit(']')]
     ;
 
+  const auto gen_paren
+    = (as<std::string>[char_('\\') >> char_])  [escape]
+    | (char_ - ')')                            [append]
+    ;
+
   // generators in parens, or nothing.
   const auto gens_parens
-    = lit('(') >> lexeme[*(char_('\\') >> char_ | char_ - ')')] >> lit(')')
+  = as<std::string>[lit('(') >> lexeme[*gen_paren] >> lit(')')]
     ;
 
   // <char>
