@@ -27,8 +27,11 @@ except ImportError as e:
     SKIP('cannot run ipynbdoctest: ', e)
     exit(0)
 
-def log(*msg, level=0):
-    if 0 <= level:
+# Verbosity level.
+verbose = 0
+
+def log(*msg, level=1):
+    if level <= verbose:
         print('ipynbdoctest:', *msg, file=sys.stderr, flush=True)
 
 def is_libcpp():
@@ -395,8 +398,10 @@ if __name__ == '__main__':
     )
     opt = p.add_argument
     opt('--tap', action='store_true', help='enable TAP mode')
+    opt('-v', '--verbose', help='be more verbose', action='count', default=0)
     opt('notebooks', nargs='+', help='IPython notebook to check')
     args = p.parse_args()
+    verbose = args.verbose
 
     # Set the locale to something simple, so that we don't have
     # surprises on translated error messages.
