@@ -53,11 +53,12 @@ AM_SILENT_RULES([yes])
 AC_PROG_CXX
 AC_LANG([C++])
 
-m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
+m4_define([_AX_CXX_COMPILE_STDCXX_17_testbody],
 [AC_LANG_SOURCE([
 #include <algorithm>
 #include <memory>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -115,15 +116,17 @@ m4_define([_AX_CXX_COMPILE_STDCXX_14_testbody],
 
   // C++17
   namespace ns1::ns2::ns3 {}
+
+#include <optional>
+  auto opt_string = std::optional<std::string>{};
+  auto out = std::ostringstream{};
 ])])
 
 for f in '-std=c++17' '-std=c++17 -stdlib=libc++' \
-         '-std=c++1z' '-std=c++1z -stdlib=libc++' \
-         '-std=c++14' '-std=c++14 -stdlib=libc++' \
-         '-std=c++1y' '-std=c++1y -stdlib=libc++'
+         '-std=c++1z' '-std=c++1z -stdlib=libc++'
 do
   AX_CHECK_COMPILE_FLAG([$f], [CXXFLAGS="$CXXFLAGS $f" stdpass=true], [], [],
-                        [_AX_CXX_COMPILE_STDCXX_14_testbody])
+                        [_AX_CXX_COMPILE_STDCXX_17_testbody])
   ${stdpass-false} && break
 done
 if ! "${stdpass-false}"; then

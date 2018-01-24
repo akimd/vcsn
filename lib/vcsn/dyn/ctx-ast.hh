@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 
@@ -50,12 +52,12 @@ namespace vcsn::dyn::ast
   struct letterset
   {
     std::string letter_type;
-    std::string gens;
+    std::optional<std::string> gens;
     friend std::ostream& operator <<(std::ostream& o, const letterset& ls)
     {
       o << "letterset<" << ls.letter_type << "_letters";
-      if (!ls.gens.empty())
-        o << '(' << ls.gens << ')';
+      if (ls.gens)
+        o << '(' << *ls.gens << ')';
       return o << '>';
     }
   };
@@ -63,12 +65,12 @@ namespace vcsn::dyn::ast
   struct wordset
   {
     std::string letter_type;
-    std::string gens;
+    std::optional<std::string> gens;
     friend std::ostream& operator <<(std::ostream& o, const wordset& ls)
     {
       o << "wordset<" << ls.letter_type << "_letters";
-      if (!ls.gens.empty())
-        o << '(' << ls.gens << ')';
+      if (ls.gens)
+        o << '(' << *ls.gens << ')';
       return o << '>';
     }
   };

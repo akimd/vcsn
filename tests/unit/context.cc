@@ -46,13 +46,15 @@ check_translate_context()
   CHECK("lao, ℤ",     "oneset, z");
   CHECK("lao, ℤmin",  "oneset, zmin");
 
-  // lal.
+  // lal.  No gens, open.
   CHECK("lal, b",          "letterset<char_letters>, b");
-  CHECK("<char>[x], b",    "letterset<char_letters(x)>, b");
   CHECK("lal<char>, b",    "letterset<char_letters>, b");
-  CHECK("lal<char(x)>, b", "letterset<char_letters(x)>, b");
+
+  // lal, with gens, closes.
+  CHECK("lal(), b",        "letterset<char_letters()>, b");
+  CHECK("<char>[a], b",    "letterset<char_letters(a)>, b");
+  CHECK("lal<char(a)>, b", "letterset<char_letters(a)>, b");
   CHECK("lal(a), b",       "letterset<char_letters(a)>, b");
-  CHECK("lal(), b",        "letterset<char_letters>, b");
   CHECK("[a]-> b",         "letterset<char_letters(a)>, b");
   CHECK("[a]?-> b",        "letterset<char_letters(a)>, b");
 
