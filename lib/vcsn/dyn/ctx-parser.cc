@@ -179,6 +179,8 @@ namespace vcsn::dyn::parser
     = lit("lao") >> !alnum
     ;
 
+  // lal
+  // [a], [a]?, <char>[a], <char>[a]?
   const auto letterset_def
     = lit("lal") >> typed_gens >> !alnum
     // Accept `[a]?` to facilitate transition: we print `lal(a), b`
@@ -186,8 +188,10 @@ namespace vcsn::dyn::parser
     | letter_type >> gens >> -lit('?') >> !char_('*')
    ;
 
+  // law
+  // [a]*, <char>[a]*
   const auto wordset_def
-    = lit("law") >> letter_type >> -gens_parens >> !alnum
+    = lit("law") >> typed_gens >> !alnum
     | letter_type >> gens >> lit('*')
     ;
 
