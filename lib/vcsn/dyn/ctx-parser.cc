@@ -146,7 +146,8 @@ namespace vcsn::dyn::parser
     ;
 
   const auto gens
-    = as<std::string>[lit('[') >> lexeme[*gen] >> lit(']')]
+    = lit("[...]")
+    | as<std::string>[lit('[') >> lexeme[*gen] >> lit(']')]
     ;
 
   const auto gen_paren

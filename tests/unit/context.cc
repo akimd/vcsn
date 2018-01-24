@@ -49,9 +49,11 @@ check_translate_context()
   // lal.  No gens, open.
   CHECK("lal, b",          "letterset<char_letters>, b");
   CHECK("lal<char>, b",    "letterset<char_letters>, b");
+  CHECK("[...], b",        "letterset<char_letters>, b");
 
   // lal, with gens, closes.
   CHECK("lal(), b",        "letterset<char_letters()>, b");
+  CHECK("[] -> b",         "letterset<char_letters()>, b");
   CHECK("<char>[a], b",    "letterset<char_letters(a)>, b");
   CHECK("lal<char(a)>, b", "letterset<char_letters(a)>, b");
   CHECK("lal(a), b",       "letterset<char_letters(a)>, b");
