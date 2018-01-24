@@ -41,6 +41,9 @@ namespace vcsn::dyn::ast
   struct expressionset;
   std::ostream& operator <<(std::ostream& o, const expressionset& es);
 
+  struct polynomialset;
+  std::ostream& operator <<(std::ostream& o, const polynomialset& es);
+
   struct oneset
   {
     friend std::ostream& operator <<(std::ostream& o, const oneset&)
@@ -82,6 +85,7 @@ namespace vcsn::dyn::ast
     // Order matters: to avoid infinit recursion at creation.
     : x3::variant<std::string,
                   x3::forward_ast<expressionset>,
+                  x3::forward_ast<polynomialset>,
                   weightsets>
   {
     using base_type::base_type;
@@ -102,6 +106,7 @@ namespace vcsn::dyn::ast
                   letterset,
                   wordset,
                   x3::forward_ast<expressionset>,
+                  x3::forward_ast<polynomialset>,
                   labelsets>
   {
     using base_type::base_type;
@@ -136,6 +141,15 @@ namespace vcsn::dyn::ast
       return o;
     }
   };
+
+  struct polynomialset
+  {
+    ConText ctx;
+    friend std::ostream& operator <<(std::ostream& o, const polynomialset& es)
+    {
+      return o << "polynomialset<" << es.ctx << '>';
+    }
+  };
 }
 
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::oneset)
@@ -143,3 +157,4 @@ BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::letterset, letter_type, gens)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::wordset, letter_type, gens)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::ConText, ls, ws)
 BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::expressionset, ctx, identities)
+BOOST_FUSION_ADAPT_STRUCT(vcsn::dyn::ast::polynomialset, ctx)

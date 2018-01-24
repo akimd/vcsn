@@ -88,6 +88,7 @@ namespace vcsn::dyn::parser
   struct labelset_class;
   struct labelset_basic_class;
   struct expressionset_class;
+  struct polynomialset_class;
   struct seriesset_class;
   struct ConText_class;
   struct weightset_class;
@@ -108,6 +109,8 @@ namespace vcsn::dyn::parser
       labelset = "labelset";
   x3::rule<expressionset_class, ast::expressionset> const
       expressionset = "expressionset";
+  x3::rule<polynomialset_class, ast::polynomialset> const
+      polynomialset = "polynomialset";
   x3::rule<seriesset_class, ast::expressionset> const
       seriesset = "seriesset";
   x3::rule<ConText_class, ast::ConText> const
@@ -201,6 +204,7 @@ namespace vcsn::dyn::parser
     | wordset
     | lit("lat<") > (labelset % ',') > lit('>')
     | expressionset
+    | polynomialset
     ;
 
   // Cartesian product.
@@ -235,6 +239,7 @@ namespace vcsn::dyn::parser
     | ident("zmin")
     | literal_weighsets
     | expressionset
+    | polynomialset
     | lit("lat<") > (weightset % ',') > lit('>')
     ;
 
@@ -248,20 +253,26 @@ namespace vcsn::dyn::parser
     (lit("seriesset") > lit('<') > ConText > lit(">")) [mkseriesset]
     ;
 
-  const auto expressionset_def =
-    lit("expressionset<")
+  const auto expressionset_def
+    = lit("expressionset<")
     > ConText
-    > lit(">")
+    > lit('>')
     > -(lit('(') > +alpha > lit(')')) // identities.
     | lit("RatE[") > ConText > lit(']') > -(lit('(') > +alpha > lit(')')) // identities.
     | seriesset
+    ;
+
+  const auto polynomialset_def
+    = lit("polynomialset<") > ConText > lit('>')
+    | lit("Poly[") > ConText > lit(']')
     ;
 
   BOOST_SPIRIT_DEFINE(x,
                       ConText,
                       oneset, letterset, wordset, labelset_basic, labelset,
                       weightset_basic, weightset,
-                      expressionset, seriesset);
+                      expressionset, seriesset,
+                      polynomialset);
 
   struct ConText_class : error_handler_base {};
 }

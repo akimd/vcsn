@@ -70,6 +70,7 @@ check_translate_context()
 
   CHECK("lal<string>, b",  "letterset<string_letters>, b");
 
+  // Expressionset as a weightset.
   CHECK("lao, RatE[[x] -> b]",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
   CHECK("lao, expressionset<[x] -> b>",
@@ -78,6 +79,12 @@ check_translate_context()
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
   CHECK("lao, seriesset<[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
+
+  // Polynomialset as a weightset.
+  CHECK("lao, Poly[[x] -> b]",
+        "oneset, polynomialset<letterset<char_letters(x)>, b>");
+  CHECK("lao, polynomialset<[x] -> b>",
+        "oneset, polynomialset<letterset<char_letters(x)>, b>");
 
   CHECK("law, zmin",     "wordset<char_letters>, zmin");
   CHECK("law(a), zmin",  "wordset<char_letters(a)>, zmin");
