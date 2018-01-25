@@ -329,7 +329,7 @@ namespace vcsn
         case format::sname:
           o << sname() << '(';
           for (auto l: *this)
-            this->print(l, o, format::sname);
+            this->print(l, o, fmt);
           // FIXME: Don't display openness here, as our "make()"
           // parser is not ready for it.
           o << ')';
@@ -339,7 +339,7 @@ namespace vcsn
         case format::utf8:
           o << '[';
           for (auto l: *this)
-            this->print(l, o, format::sname);
+            this->print(l, o, fmt);
           if (open_)
             o << "...";
           o << ']';
