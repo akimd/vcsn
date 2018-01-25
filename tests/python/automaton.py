@@ -272,7 +272,7 @@ vcsn.automaton(r'''digraph
 }'''))
 
 # A dot file which uses the HTML strings.  And a subgraph.
-CHECK_EQ(r'''context = letterset<char_letters(ab)>, q
+CHECK_EQ(r'''context = [ab]? → ℚ
 $ -> 0
 $ -> 3
 0 -> 1 a, b

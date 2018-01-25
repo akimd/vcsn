@@ -43,13 +43,13 @@ xfail(r'(ab){T}')
 
 # "\z".
 check(r'\z',
-'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 1 -> $''')
 
 # "\e".
 check(r'\e',
-'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $
 1 -> $''')
@@ -60,7 +60,7 @@ $ -> 0
 
 # "a+b"
 check('a+b',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 \e
 0 -> 3 \e
@@ -72,7 +72,7 @@ $ -> 0
 
 # "\e+a"
 check(r'\e+a',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $
 0 -> 1 \e
@@ -88,7 +88,7 @@ $ -> 0
 
 # "ab"
 check('ab',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 \e
 1 -> 2 a
@@ -99,7 +99,7 @@ $ -> 0
 
 # "a?bb"
 check('a?bb',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 \e
 1 -> 2 \e
@@ -123,7 +123,7 @@ $ -> 0
 
 # "a*"
 check('a*',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $
 0 -> 1 \e
@@ -138,7 +138,7 @@ $ -> 0
 
 # <x>a*
 check('<x>a*',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $ <x>
 0 -> 1 <x>\e
@@ -153,7 +153,7 @@ $ -> 0
 
 # (a?)<y>
 check('(a?)<y>',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $ <y>
 0 -> 1 \e
@@ -169,7 +169,7 @@ $ -> 0
 
 # (<x>a?)<y>
 check('(<x>a?)<y>',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $ <xy>
 0 -> 1 <x>\e
@@ -185,7 +185,7 @@ $ -> 0
 
 # (a?b?+c?)
 check('(a?b?+c?)',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $ <<2>\e>
 0 -> 1 \e
@@ -222,7 +222,7 @@ $ -> 0
 
 # "a+b"
 check('a+b',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 a
 0 -> 2 \e
@@ -233,7 +233,7 @@ $ -> 0
 
 # "\e+a"
 check(r'\e+a',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> $
 0 -> 2 \e
@@ -248,7 +248,7 @@ $ -> 0
 
 # "ab"
 check('ab',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 a
 1 -> 2 \e
@@ -258,7 +258,7 @@ $ -> 0
 
 # "a(a?b?)b"
 check('a(a?b?)b',
-r'''context = letterset<char_letters(abc)>, seriesset<letterset<char_letters(xyz)>, q>
+r'''context = [abc]? → RatE[[xyz]? → ℚ](distributive)
 $ -> 0
 0 -> 1 a
 1 -> 2 \e

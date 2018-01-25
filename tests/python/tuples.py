@@ -48,7 +48,7 @@ check('lal(ab), lat<expressionset<lal(xyz), lat<q, q>>, lat<q, q>>',
 ind = lambda e: vcsn.context('lal, q').expression(e).inductive()
 a1 = ind('<2>[ab]')
 a2 = ind('x')
-CHECK_EQ('''context = lat<letterset<char_letters(ab)>, letterset<char_letters(x)>>, q
+CHECK_EQ('''context = [ab]? × [x...]? → ℚ
 $ -> 0
 0 -> 1 <2>a|x
 0 -> 2 <2>b|x

@@ -30,7 +30,7 @@ XFAIL(lambda: a.eliminate_state())
 # transitions (<\e>\e, and <aa*>$) instead of a unique one
 # (<\e+aa*>$), which is visible in the dot output.
 a = vcsn.context('lal, b').expression('aa*').standard().lift()
-CHECK_EQ(r'''context = oneset, expressionset<letterset<char_letters(a)>, b>
+CHECK_EQ(r'''context = {ε} → RatE[[a]? → 𝔹]
 $ -> 0
 0 -> 1 <a>
 1 -> $ <\e+aa*>''',

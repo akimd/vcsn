@@ -1,4 +1,4 @@
-context = letterset<char_letters(abc)>, q
+context = [abc]? → ℚ
 $ -> 0 <3>
 0 -> 1 <1/2>a, <1/3>b
 1 -> $ <2>

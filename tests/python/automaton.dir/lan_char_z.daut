@@ -1,4 +1,4 @@
-context = letterset<char_letters(abcdefghijklmnopqrstuvwxyz)>, z
+context = [abcdefghijklmnopqrstuvwxyz]? → ℤ
 $ -> 0
 0 -> 1 \e
 1 -> 2 <2>\e
