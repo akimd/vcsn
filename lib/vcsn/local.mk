@@ -57,6 +57,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/dyn/ctx-parser.cc                         \
   %D%/dyn/ctx-parser.hh                         \
   %D%/dyn/error-handler.hh                      \
+  %D%/dyn/error-reporting.hh                    \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/instantiator.cc                       \
   %D%/dyn/instantiator.hh                       \

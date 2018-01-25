@@ -305,7 +305,9 @@ namespace vcsn::ast
     using boost::spirit::x3::with;
     using vcsn::dyn::parser::error_handler_type;
     using vcsn::dyn::parser::error_handler_tag;
-    auto error_handler = error_handler_type(iter, end, std::cerr, "input");
+
+    auto err = std::ostringstream{};
+    auto error_handler = error_handler_type(iter, end, err, "");
 
     // Our parser
     auto const parser =
@@ -323,19 +325,20 @@ namespace vcsn::ast
       {
         if (iter == end)
           {
+            assert(err.str().empty());
             auto o = std::ostringstream{};
             o << res;
             return o.str();
           }
         else
           {
-            error_handler(iter, "Error! Expecting end of input here: ");
-            vcsn::raise("failed1");
+            error_handler(iter, "expecting end of input here: ");
+            vcsn::raise(err.str());
           }
       }
     else
       {
-        vcsn::raise("failed2");
+        vcsn::raise(err.str());
       }
   }
 }
