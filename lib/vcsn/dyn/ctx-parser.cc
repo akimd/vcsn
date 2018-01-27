@@ -65,18 +65,22 @@ namespace vcsn::dyn::parser
   {
     literal_weighsets_()
     {
-      add
-        ("𝔹", "b")
-        ("𝔽₂", "f2")
-        ("Log", "log")
-        ("ℕmin", "nmin")
-        ("ℚ", "q")
-        ("ℚmp", "qmp")
-        ("ℝ", "r")
-        ("ℝmin", "rmin")
-        ("ℤ", "z")
-        ("ℤmin", "zmin")
-        ;
+      auto a = [this](auto ref, auto a, auto b)
+        {
+          add(ref, ref);
+          add(a, ref);
+          add(b, ref);
+        };
+      a("b",    "𝔹",    "B");
+      a("f2",   "𝔽₂",   "F2");
+      a("log",  "Log",  "LOG");
+      a("nmin", "ℕmin", "Nmin");
+      a("q",    "ℚ",    "Q");
+      a("qmp",  "ℚmp",  "Qmp");
+      a("r",    "ℝ",    "R");
+      a("rmin", "ℝmin", "Rmin");
+      a("z",    "ℤ",    "Z");
+      a("zmin", "ℤmin", "Zmin");
     }
   } literal_weighsets;
 
@@ -119,6 +123,15 @@ namespace vcsn::dyn::parser
       weightset = "weightset";
   x3::rule<weightset_basic_class, ast::weightset> const
       weightset_basic = "weightset_basic";
+
+  // An identifier must be separated from other alnum
+  auto ident(const std::string& id)
+  {
+    // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
+    // `b x b` (standing for Cartesian product) would reject the first
+    // `b` as it is followed (after skipping spaces) by an alnum.
+    return lexeme[string(id) >> ! alnum];
+  }
 
   auto mkseriesset = [](auto& ctx) {
     _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"};
@@ -179,7 +192,7 @@ namespace vcsn::dyn::parser
     ;
 
   const auto oneset_def
-    = lit("lao") >> !alnum
+    = ident("lao")
     ;
 
   // lal
@@ -217,27 +230,8 @@ namespace vcsn::dyn::parser
     | labelset_basic
     ;
 
-  // An identifier must be separated from other alnum
-  auto ident(const std::string& id)
-  {
-    // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
-    // `b x b` (standing for Cartesian product) would reject the first
-    // `b` as it is followed (after skipping spaces) by an alnum.
-    return lexeme[string(id) >> ! alnum];
-  }
-
   const auto weightset_basic_def =
-    ident("b")
-    | ident("f2")
-    | ident("log")
-    | ident("nmin")
-    | ident("q")
-    | ident("qmp")
-    | ident("r")
-    | ident("rmin")
-    | ident("z")
-    | ident("zmin")
-    | literal_weighsets
+    lexeme[literal_weighsets >> !alnum]
     | expressionset
     | polynomialset
     | lit("lat") > lit('<') > (weightset % ',') > lit('>')

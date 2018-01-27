@@ -22,29 +22,22 @@ check_translate_context()
       ++nerrs;                                          \
     }
 
-  // ASCII.
-  CHECK("lao, b",     "oneset, b");
-  CHECK("lao, f2",    "oneset, f2");
-  CHECK("lao, log",   "oneset, log");
-  CHECK("lao, nmin",  "oneset, nmin");
-  CHECK("lao, q",     "oneset, q");
-  CHECK("lao, qmp",   "oneset, qmp");
-  CHECK("lao, r",     "oneset, r");
-  CHECK("lao, rmin",  "oneset, rmin");
-  CHECK("lao, z",     "oneset, z");
-  CHECK("lao, zmin",  "oneset, zmin");
+#define CHECK_WS(Ref, A, B)                     \
+  CHECK("lao, " Ref,  "oneset, " Ref);          \
+  CHECK("lao, " A,    "oneset, " Ref);          \
+  CHECK("lao, " B,    "oneset, " Ref);
 
-  // UTF-8.
-  CHECK("lao, 𝔹",     "oneset, b");
-  CHECK("lao, 𝔽₂",    "oneset, f2");
-  CHECK("lao, Log",   "oneset, log");
-  CHECK("lao, ℕmin",  "oneset, nmin");
-  CHECK("lao, ℚ",     "oneset, q");
-  CHECK("lao, ℚmp",   "oneset, qmp");
-  CHECK("lao, ℝ",     "oneset, r");
-  CHECK("lao, ℝmin",  "oneset, rmin");
-  CHECK("lao, ℤ",     "oneset, z");
-  CHECK("lao, ℤmin",  "oneset, zmin");
+  CHECK_WS("b",    "𝔹",    "B");
+  CHECK_WS("f2",   "𝔽₂",   "F2");
+  CHECK_WS("log",  "Log",  "LOG");
+  CHECK_WS("nmin", "ℕmin", "Nmin");
+  CHECK_WS("q",    "ℚ",    "Q");
+  CHECK_WS("qmp",  "ℚmp",  "Qmp");
+  CHECK_WS("r",    "ℝ",    "R");
+  CHECK_WS("rmin", "ℝmin", "Rmin");
+  CHECK_WS("z",    "ℤ",    "Z");
+  CHECK_WS("zmin", "ℤmin", "Zmin");
+#undef CHECK_WS
 
   // lal.  No gens, open.
   CHECK("lal, b",          "letterset<char_letters>, b");
