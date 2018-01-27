@@ -31,15 +31,7 @@ namespace vcsn
     `-------------------------------*/
 
     template <Automaton Aut>
-    ATTRIBUTE_CONST
-    std::enable_if_t<!labelset_t_of<Aut>::has_one(), size_t>
-    num_spontaneous_transitions(const Aut&)
-    {
-      return 0;
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<labelset_t_of<Aut>::has_one(), size_t>
+    size_t
     num_spontaneous_transitions(const Aut& aut)
     {
       size_t res = 0;

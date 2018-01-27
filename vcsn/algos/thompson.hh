@@ -38,9 +38,6 @@ namespace vcsn
 
       using super_t = typename expressionset_t::const_visitor;
 
-      static_assert(labelset_t_of<Aut>::has_one(),
-                    "thompson: requires nullable labels");
-
       /// Name of this algorithm, for error messages.
       constexpr static const char* me() { return "thompson"; }
 

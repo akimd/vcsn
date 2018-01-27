@@ -188,18 +188,11 @@ namespace vcsn
       }
 
       template <typename L, std::size_t... I>
-      std::enable_if_t<L::has_one(), res_label_t>
+      res_label_t
       hidden_one_(index_sequence<I...>) const
       {
         full_label_t l = aut_->labelset()->one();
         return std::make_tuple(std::get<I>(l)...);
-      }
-
-      template <typename L, std::size_t... I>
-      std::enable_if_t<!L::has_one(), res_label_t>
-      hidden_one_(index_sequence<I...>) const
-      {
-        raise("Should not get here");
       }
 
       template <std::size_t... I>

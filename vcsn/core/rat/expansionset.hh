@@ -147,16 +147,7 @@ namespace vcsn
       /// Whether an expansion is normal.
       bool is_normal(const value_t& x) const
       {
-        return detail::static_if<context_t::has_one()>
-          ([](const auto& ls, const value_t& x)
-           {
-             return !has(x.polynomials, ls.one());
-           },
-           [](const auto&, const value_t&)
-           {
-             return true;
-           })
-          (ls_, x);
+        return !has(x.polynomials, ls_.one());
       }
 
       /// Normalize: eliminate null polynomials and move the constant
@@ -168,8 +159,7 @@ namespace vcsn
                          {
                            return ps_.is_zero(p.second);
                          });
-        auto has_one = bool_constant<context_t::has_one()>();
-        return normalize_(res, has_one);
+        return normalize_(res);
       }
 
       /// Normalize \a res.
@@ -177,7 +167,7 @@ namespace vcsn
       /// There must not remain a constant-term associated to one: put
       /// it with the constant term of the expansion.  I.e., turn
       /// `ε⊙[⟨w⟩ε + P...] + X_p...` into `⟨w⟩ + ε⊙[P...] + X_p...`.
-      value_t& normalize_(value_t& res, std::true_type) const
+      value_t& normalize_(value_t& res) const
       {
         auto one = ls_.one();
         auto i = res.polynomials.find(one);
@@ -195,12 +185,6 @@ namespace vcsn
         return res;
       }
 
-      /// Normalize when there is no label one: identity.
-      value_t& normalize_(value_t& res, std::false_type) const
-      {
-        return res;
-      }
-
       /// Move the constant to the polynomial associated to one.
       ///
       /// Note that this should be named `maybe_denormalize`, as if
@@ -210,13 +194,12 @@ namespace vcsn
       /// be zero.
       value_t& denormalize(value_t& res) const
       {
-        auto has_one = bool_constant<context_t::has_one()>();
-        return denormalize_(res, has_one);
+        return denormalize_(res);
       }
 
       /// Denormalize \a res move the constant to the polynomial
       /// associated to one.
-      value_t& denormalize_(value_t& res, std::true_type) const
+      value_t& denormalize_(value_t& res) const
       {
         if (!ws_.is_zero(res.constant))
           {
@@ -225,12 +208,6 @@ namespace vcsn
                          polynomial_t{{rs_.one(), res.constant}});
             res.constant = ws_.zero();
           }
-        return res;
-      }
-
-      /// Denormalize when there is no label one: identity.
-      value_t& denormalize_(value_t& res, std::false_type) const
-      {
         return res;
       }
 
@@ -346,17 +323,8 @@ namespace vcsn
     private:
       template <typename Conjunction>
       void
-      conjunctions_with_one_(value_t&,
-                             const value_t&, const value_t&,
-                             std::false_type,
-                             Conjunction) const
-      {}
-
-      template <typename Conjunction>
-      void
       conjunctions_with_one_(value_t& res,
                              const value_t& l, const value_t& r,
-                             std::true_type,
                              Conjunction conjunction) const
       {
         const auto one = ls_.one();
@@ -422,8 +390,7 @@ namespace vcsn
           res.polynomials[p.first]
             = conjunction(std::get<0>(p.second), std::get<1>(p.second));
 
-        auto has_one = bool_constant<context_t::has_one()>();
-        conjunctions_with_one_(res, l, r, has_one, conjunction);
+        conjunctions_with_one_(res, l, r, conjunction);
         normalize(res);
         return res;
       }
@@ -556,13 +523,9 @@ namespace vcsn
       {
         auto res = value_t{ws_.is_zero(v.constant) ? ws_.one() : ws_.zero()};
 
-        detail::static_if<labelset_t::has_one()>
-          ([this](const auto& v, const auto& ls)
-          {
-            require(!has(v.polynomials, ls.one()),
-                    me(), ": complement: expansion must be normalized: ",
-                    to_string(*this, v));
-          })(v, ls_);
+        require(!has(v.polynomials, ls_.one()),
+                me(), ": complement: expansion must be normalized: ",
+                to_string(*this, v));
 
         // Turn the polynomials into expressions, and complement them.
         // The static-if is made of oneset.
@@ -807,15 +770,8 @@ namespace vcsn
       }
 
       void
-      compose_with_one_(value_t&,
-                        const value_t&, const value_t&,
-                        std::false_type) const
-      {}
-
-      void
       compose_with_one_(value_t& res,
-                        const value_t& l, const value_t& r,
-                        std::true_type) const
+                        const value_t& l, const value_t& r) const
       {
         if (old_way_)
           return compose_with_one_old_(res, l, r);
@@ -949,8 +905,7 @@ namespace vcsn
                 ps_.add_here(res.polynomials[l],
                              ps_.compose(lm.second, rm.second));
               }
-        auto has_one = bool_constant<context_t::has_one()>();
-        compose_with_one_(res, l, r, has_one);
+        compose_with_one_(res, l, r);
         // Beware that we might have introduced some constant terms
         // (e.g., \e|x @ x|\e), and some polynomials equal to 0 (\e|x @ y|\e).
         normalize(res);

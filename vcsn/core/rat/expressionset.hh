@@ -463,8 +463,7 @@ namespace vcsn
       static bool is_label_(const tuple_t& v, detail::index_sequence<I...>)
       {
         for (auto b: {(std::get<I>(v.sub())->type() == type_t::atom
-                       || (std::get<I>(v.sub())->type() == type_t::one
-                           && labelset_t::template valueset_t<I>::has_one()))...})
+                       || std::get<I>(v.sub())->type() == type_t::one)...})
           if (!b)
             return false;
         return true;

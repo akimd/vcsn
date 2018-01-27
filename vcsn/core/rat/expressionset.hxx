@@ -440,7 +440,6 @@ namespace vcsn
     // a|\e @ 1 => a|\e, 1@\e|a => \e|a, a|x@x|b => a|x, a|x@y|b => 0.
     else if (ids_.is_linear()
              && are_composable<context_t>()
-             && context_t::has_one()
              && number_of_tapes<context_t>::value == 2
              && (type_ignoring_lweight_(l) == type_t::atom
                  || type_ignoring_lweight_(l) == type_t::one)
@@ -452,7 +451,6 @@ namespace vcsn
       // FIXME: this piece of code does not belong to here, it should
       // be handled in the realm of labelsets.
       detail::static_if<are_composable<context_t>()
-                        && context_t::has_one()
                         && number_of_tapes<context_t>::value == 2>
         ([this, &res](const auto& ls, const auto& l, const auto& r)
          {

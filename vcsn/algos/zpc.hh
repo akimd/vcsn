@@ -30,9 +30,6 @@ namespace vcsn
     class zpc_visitor
       : public ExpSet::const_visitor
     {
-      static_assert(labelset_t_of<Aut>::has_one(),
-                    "zpc: requires nullable labels");
-
     public:
       using automaton_t = Aut;
       using expressionset_t = ExpSet;

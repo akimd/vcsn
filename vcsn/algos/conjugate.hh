@@ -15,9 +15,6 @@ namespace vcsn
   Aut
   conjugate(const Aut& aut)
   {
-    require(aut->labelset()->has_one(),
-            __func__, ": labelset must be nullable");
-
     const auto& ls = *aut->labelset();
     const auto& ws = *aut->weightset();
 
