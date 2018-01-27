@@ -3,7 +3,7 @@
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b"
+  vcsn_context = "[a]? × [a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -18,7 +18,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b"
+  vcsn_context = "[a]? × [a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -37,7 +37,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "lat<letterset<char_letters(a)>, letterset<char_letters(a)>>, b"
+  vcsn_context = "[a]? × [a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

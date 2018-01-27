@@ -14,7 +14,7 @@ def check(i, exp=None):
 
 check(r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, q"
+  vcsn_context = "[abc]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -48,7 +48,7 @@ digraph
   2 -> F2
 }''',r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, q"
+  vcsn_context = "[abc]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -84,7 +84,7 @@ digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, q"
+  vcsn_context = "[abc]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

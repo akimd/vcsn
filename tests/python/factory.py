@@ -114,7 +114,7 @@ z = vcsn.context('lal(abc), z')
 exp = meaut('ladybird-2.gv')
 check_ladybird(exp, b.ladybird(2))
 
-exp = vcsn.automaton(str(exp).replace(', b', ', z'))
+exp = exp.automaton(z)
 check_ladybird(exp, z.ladybird(2))
 
 check_ladybird(meaut('ladybird-2-zmin.gv'),

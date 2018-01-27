@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, zmin"
+  vcsn_context = "[abcd]? → ℤmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

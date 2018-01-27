@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, q"
+  vcsn_context = "[abc]? × [xyz]? → ℚ"
   rankdir = LR
   edge [texmode = math, lblstyle = auto]
   d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"

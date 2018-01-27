@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, expressionset<letterset<char_letters(xyz)>, b>"
+  vcsn_context = "[a]? → RatE[[xyz]? → 𝔹]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

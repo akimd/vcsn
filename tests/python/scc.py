@@ -99,7 +99,7 @@ a = vcsn.automaton(
     'daut')
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, b"
+  vcsn_context = "[abc]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -115,7 +115,7 @@ CHECK_EQ(r'''digraph
 
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, b"
+  vcsn_context = "[abc]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

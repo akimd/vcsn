@@ -65,7 +65,7 @@ check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
+  vcsn_context = "[abc]? × [def]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -85,7 +85,7 @@ check(c1.expression("a|x").standard(),
 
 a = r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
+  vcsn_context = "[abc]? × [def]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -115,7 +115,7 @@ cz = vcsn.context('lat<lal, lal>, z')
 aut = cz.expression('[ab]|[ab]').automaton()
 b = r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(ab)>>, z"
+  vcsn_context = "[ab...]? × [ab...]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -147,7 +147,7 @@ check(c1.expression("(a|x)*").standard(),
       c2.expression("(y|d)*").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, b"
+  vcsn_context = "[abc]? × [def]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -173,7 +173,7 @@ check(c_ratb.expression("<o>(a|x)").standard(),
       c_q.expression("<3/2>(x|d)").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, expressionset<letterset<char_letters(mno)>, q>"
+  vcsn_context = "[abc]? × [def]? → RatE[[mno]? → ℚ]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -218,7 +218,7 @@ a2 = vcsn.automaton(r'''digraph
 
 res = r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(xyz)>, letterset<char_letters(def)>>, b"
+  vcsn_context = "[xyz]? × [def]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -250,7 +250,7 @@ check(c_r.expression("<3.1>(a|x)").standard(),
       c2.expression("x|d").standard(),
       r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(def)>>, r"
+  vcsn_context = "[abc]? × [def]? → ℝ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

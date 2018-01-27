@@ -27,7 +27,7 @@ CHECK_EQ('(a+b)|x', e)
 CHECK_EQ(r'''a|x.[\e] + b|x.[\e]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, q"
+  vcsn_context = "[abc]? × [xyz]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -64,7 +64,7 @@ CHECK_EQ(r'''<1> + \e|\e|c.[<5>\e|\e|(<5>c)*] + \e|b|\e.[<3>\e|(<3>b)*|\e] + \e|
 CHECK_EQ(r'''\left\langle 1\right\rangle  \oplus \varepsilon|\varepsilon|c \odot \left[\left\langle 5\right\rangle  \left. \varepsilon \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus \varepsilon|b|\varepsilon \odot \left[\left\langle 3\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus \varepsilon|b|c \odot \left[\left\langle 15\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|\varepsilon|\varepsilon \odot \left[\left\langle 2\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \varepsilon \right. \right] \oplus a|\varepsilon|c \odot \left[\left\langle 10\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|b|\varepsilon \odot \left[\left\langle 6\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus a|b|c \odot \left[\left\langle 30\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right]''', e.expansion().format('latex'))
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, q"
+  vcsn_context = "[a]? × [b]? × [c]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

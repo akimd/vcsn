@@ -12,7 +12,7 @@ a = vcsn.B.expression('a').standard()
 check(a, 0, vcsn.B.expression(r'\e').standard())
 check(a, 5, '''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -67,7 +67,7 @@ digraph
 
 check(a, 3, '''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -21,7 +21,7 @@ $ -> 0
 lazy = aut.proper(lazy=True)
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -42,7 +42,7 @@ CHECK_EQ('1', str(lazy('aa')))
 
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -74,7 +74,7 @@ lazy = aut.proper(lazy=True)
 
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -103,7 +103,7 @@ CHECK_EQ('1', str(lazy('aaaaab')))
 
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

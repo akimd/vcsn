@@ -38,7 +38,7 @@ digraph {
 }''',
 '''digraph
 {
-  vcsn_context = "wordset<char_letters(ab)>, b"
+  vcsn_context = "[ab]* → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -77,7 +77,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "wordset<char_letters(ab)>, b"
+  vcsn_context = "[ab]* → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -110,7 +110,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "wordset<char_letters(ab)>, b"
+  vcsn_context = "[ab]* → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
 }''')
@@ -130,7 +130,7 @@ digraph {
 ''',
 '''digraph
 {
-  vcsn_context = "wordset<char_letters(ab)>, b"
+  vcsn_context = "[ab]* → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -329,7 +329,7 @@ digraph
 }
 ''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -362,7 +362,7 @@ digraph
 }
 ''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

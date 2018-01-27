@@ -32,7 +32,7 @@ lhs = std('lal(ab), b', '(a+b)*')
 rhs = std('lal(bc), b', '(b+c)*')
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters(b)>, b"
+  vcsn_context = "[b]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -62,7 +62,7 @@ lhs = std('lal(ab), b', 'ab')
 rhs = std('lal(cd), b', 'cd')
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters()>, b"
+  vcsn_context = "[]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -86,7 +86,7 @@ lhs = std('lal(ab), b', '(a+b)*')
 rhs = std('lal(cd), b', '(c+d)*')
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters()>, b"
+  vcsn_context = "[]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -166,7 +166,7 @@ digraph
 
 exp = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -250,7 +250,7 @@ check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 # unary case: return only the accessible part.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -338,7 +338,7 @@ lhs = aut('lal(ab), b', '(a+b)*', 'thompson')
 rhs = aut('lal(bc), b', '(b+c)*', 'thompson')
 res = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(b)>, b"
+  vcsn_context = "[b]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -416,7 +416,7 @@ CHECK_EQUIV(vcsn.automaton(res),
 third = aut('lal(bcd), b', '(b+c+d)*', 'thompson')
 res = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(b)>, b"
+  vcsn_context = "[b]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -652,7 +652,7 @@ $ -> 0
 
 res = r'''digraph
 {
-  vcsn_context = "letterset<char_letters()>, b"
+  vcsn_context = "[]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -692,7 +692,7 @@ $ -> 0
 
 insplit_res = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, q"
+  vcsn_context = "[a]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -755,7 +755,7 @@ context = "lal(abc), b"
 
 res = r'''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, b"
+  vcsn_context = "[abc]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

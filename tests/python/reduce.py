@@ -11,8 +11,8 @@ def check_reduce(a, exp):
 
 from test import *
 
-# The following tests yields two different results, depending whether
-# we work in Q/R vs. Z.  When asked whether this is expecting, Sylvain
+# The following tests yield two different results, depending whether
+# we work in Q/R vs. Z.  When asked whether this is expected, Sylvain
 # Lombardy answers:
 #
 # Oui, c'est normal.
@@ -56,57 +56,33 @@ r = '<2>(<3>a+<5>b+<7>a)*<11>'
 def exp(ws):
     '''The expected result for the following tests.'''
     if ws == 'z':
-        return '''digraph
-{
-  vcsn_context = "letterset<char_letters(abc)>, z"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-  }
-  I0 -> 0
-  0 -> F0 [label = "<22>"]
-  0 -> 0 [label = "<10>a, <5>b"]
-}'''
+        return '''
+  context = [abc]? → ℤ
+  $ -> 0
+  0 -> 0 <10>a, <5>b
+  0 -> $ <22>
+'''
     else:
         # Using replace() instead of format() allows to use
         # bin/update-tests.
-        return '''digraph
-{
-  vcsn_context = "letterset<char_letters(abc)>, q"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-  }
-  I0 -> 0 [label = "<2>"]
-  0 -> F0 [label = "<11>"]
-  0 -> 0 [label = "<10>a, <5>b"]
-}'''.replace('q', ws)
+        return '''
+  context = [abc]? → ℚ
+  $ -> 0 <2>
+  0 -> 0 <10>a, <5>b
+  0 -> $ <11>
+'''.replace('ℚ', ws)
 
 for ws in ['z', 'q', 'r']:
     ctx = vcsn.context('lal(abc), ' + ws)
     a = ctx.expression(r, 'associative').standard()
-    check_reduce(a, exp(ws))
+    check_reduce(a, vcsn.automaton(exp(ws)))
 
 a = vcsn.context('lat<lal(abc),lal(xyz)>, z') \
     .expression("<2>(<3>(a|x)+<5>(b|y)+<7>(a|x))*<11>", 'associative') \
     .standard()
 check_reduce(a, '''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abc)>, letterset<char_letters(xyz)>>, z"
+  vcsn_context = "[abc]? × [xyz]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -142,7 +118,7 @@ digraph {
 ''')
 check_reduce(a, '''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

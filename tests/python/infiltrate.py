@@ -24,7 +24,7 @@ CHECK_EQ('(<3>a)*(a+<4>(aa*a))', str(a1.infiltrate(a1).expression()))
 a = meaut("a.gv")
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, z"
+  vcsn_context = "[a]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -52,7 +52,7 @@ CHECK_EQ('''digraph
 abc = meaut("abc.gv")
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -114,7 +114,7 @@ CHECK_EQ('''digraph
 xy = meaut('xy.gv')
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(abcxy)>, z"
+  vcsn_context = "[abcxy]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

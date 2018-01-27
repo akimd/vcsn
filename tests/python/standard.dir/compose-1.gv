@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<letterset<char_letters(abcxz)>, letterset<char_letters(Yxyz)>>, q"
+  vcsn_context = "[abcxz]? × [Yxyz]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

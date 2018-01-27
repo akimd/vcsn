@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "oneset, z"
+  vcsn_context = "{ε} → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

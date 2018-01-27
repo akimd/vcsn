@@ -3,7 +3,7 @@
 run 0 - tests/unit/transpose <<\EOF
 digraph
 {
-  vcsn_context = "wordset<char_letters(abcd)>, expressionset<letterset<char_letters(wxyz)>, b>"
+  vcsn_context = "[abcd]* → RatE[[wxyz]? → 𝔹]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -25,7 +25,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "wordset<char_letters(abcd)>, expressionset<letterset<char_letters(wxyz)>, b>"
+  vcsn_context = "[abcd]* → RatE[[wxyz]? → 𝔹]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -47,7 +47,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "wordset<char_letters(abcd)>, expressionset<letterset<char_letters(wxyz)>, b>"
+  vcsn_context = "[abcd]* → RatE[[wxyz]? → 𝔹]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -3,7 +3,7 @@
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, z"
+  vcsn_context = "[abcd]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -34,7 +34,7 @@ Between s1 and s1
 5 2
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, z"
+  vcsn_context = "[abcd]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -57,7 +57,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, z"
+  vcsn_context = "[abcd]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -74,7 +74,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcd)>, z"
+  vcsn_context = "[abcd]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

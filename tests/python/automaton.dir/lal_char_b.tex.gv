@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(\"\\'\\(\\),<>[]abcdefghijklmnopqrstuvwxyz{|})>, b"
+  vcsn_context = "[\"\\'()\\,\\<\\>\\[\\]abcdefghijklmnopqrstuvwxyz{\\|}]? → 𝔹"
   rankdir = LR
   edge [texmode = math, lblstyle = auto]
   d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"

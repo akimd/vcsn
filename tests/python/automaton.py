@@ -292,7 +292,7 @@ c = vcsn.context('lal(ab), z')
 a = c.expression('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -323,7 +323,7 @@ CHECK_EQ('''digraph
 # conjunction: state names, and useless states, etc.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -366,7 +366,7 @@ CHECK_EQ('''digraph
 # Tooltip.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -409,7 +409,7 @@ CHECK_EQ('''digraph
 # Transitions.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -453,7 +453,7 @@ CHECK_EQ('''digraph
 # Empty set.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters()>, b"
+  vcsn_context = "[...]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -544,7 +544,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
 # "Ffoo", not I"foo" and F"foo".
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters()>, b"
+  vcsn_context = "[]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -565,7 +565,7 @@ CHECK_EQ(r'''digraph
 # Check that "->" behaves as a keyword.
 CHECK_EQ(r'''digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, b"
+  vcsn_context = "[a]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

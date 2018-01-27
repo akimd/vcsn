@@ -17,14 +17,14 @@ def check(aut, exp):
 
 
 check('''
-context = "lal(abcd), b"
+context = [abcd]? → 𝔹
 $ 0
 0 1 a
 0 2 b
 1 2 c
 2 $
 ''', '''
-context = "lal(abcd), b"
+context = [abcd]? → 𝔹
 $ -> 0
 0 -> 1 a
 0 -> 2 b
@@ -36,19 +36,20 @@ $ -> 0
 3 -> 3 a, b, c, d
 ''')
 
+# FIXME: See #201.
 # An automaton with an open context.
-check(vcsn.b.expression('a').standard(), '''
-context = "lal(a), b"
-  $ -> 0
-  0 -> 1 a
-  1 -> $
-  1 -> 2 a
-  2 -> 2 a
-''')
+#check(vcsn.b.expression('a').standard(), '''
+#context = [a]? → 𝔹
+#  $ -> 0
+#  0 -> 1 a
+#  1 -> $
+#  1 -> 2 a
+#  2 -> 2 a
+#''')
 
 # An automaton without initial state.
 check('''
-context = "lal(a), b"
+context = [a]? → 𝔹
 0 -> 0 a
 0 -> $
 ''', '''

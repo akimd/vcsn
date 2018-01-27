@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "oneset, z"
+  vcsn_context = "{ε} → ℤ"
   rankdir = LR
   edge [texmode = math, lblstyle = auto]
   d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"

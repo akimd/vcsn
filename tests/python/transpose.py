@@ -11,7 +11,7 @@ c = vcsn.context("lal(abc), expressionset<lal(xyz), q>")
 a = c.expression("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
-  vcsn_context = "letterset<char_letters(abc)>, expressionset<letterset<char_letters(xyz)>, q>"
+  vcsn_context = "[abc]? → RatE[[xyz]? → ℚ]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

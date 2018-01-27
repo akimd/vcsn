@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(abcdef)>, q"
+  vcsn_context = "[abcdef]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

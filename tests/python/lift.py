@@ -5,7 +5,7 @@ from test import *
 
 # Check lift result and cached value for is_proper.
 def check_lift(exp, aut):
-    CHECK_EQ(exp, aut)
+    CHECK_EQ(exp, aut.format('daut'))
     CHECK_EQ(False, aut.info('is proper'))
 
 ## ---------- ##
@@ -13,35 +13,19 @@ def check_lift(exp, aut):
 ## ---------- ##
 
 l4 = vcsn.context('lal(abc), b').ladybird(4)
-check_lift('''digraph
-{
-  vcsn_context = "oneset, expressionset<letterset<char_letters(abc)>, b>"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-    2
-    3
-  }
-  I0 -> 0
-  0 -> F0
-  0 -> 1 [label = "<a>"]
-  1 -> 0 [label = "<c>"]
-  1 -> 1 [label = "<b+c>"]
-  1 -> 2 [label = "<a>"]
-  2 -> 0 [label = "<c>"]
-  2 -> 2 [label = "<b+c>"]
-  2 -> 3 [label = "<a>"]
-  3 -> 0 [label = "<a+c>"]
-  3 -> 3 [label = "<b+c>"]
-}''',
+check_lift('''\
+context = {ε} → RatE[[abc]? → 𝔹]
+$ -> 0
+0 -> $
+0 -> 1 <a>
+1 -> 0 <c>
+1 -> 1 <b+c>
+1 -> 2 <a>
+2 -> 0 <c>
+2 -> 2 <b+c>
+2 -> 3 <a>
+3 -> 0 <a+c>
+3 -> 3 <b+c>''',
          l4.lift())
 
 
@@ -53,69 +37,24 @@ c = vcsn.context('lat<lal(abc), lal(def), law(ghi)>, q')
 a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).
-aref = '''digraph
-{
-  vcsn_context = "lat<letterset<char_letters(def)>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(abc)>>, q>"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-  }
-  I0 -> 0
-  0 -> 1 [label = "<<2>(a)>d|gh"]
-  1 -> F1
-}'''
+aref = '''context = [def]? × [ghi]* → RatE[[abc]? → ℚ]
+$ -> 0
+0 -> 1 <<2>(a)>d|gh
+1 -> $'''
 check_lift(aref, a.lift(0))
 
 # lift(1).
-aref = '''digraph
-{
-  vcsn_context = "lat<letterset<char_letters(abc)>, wordset<char_letters(ghi)>>, expressionset<lat<letterset<char_letters(def)>>, q>"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-  }
-  I0 -> 0
-  0 -> 1 [label = "<<2>(d)>a|gh"]
-  1 -> F1
-}'''
+aref = '''context = [abc]? × [ghi]* → RatE[[def]? → ℚ]
+$ -> 0
+0 -> 1 <<2>(d)>a|gh
+1 -> $'''
 check_lift(aref, a.lift(1))
 
 # lift(1, 2).
-aref = '''digraph
-{
-  vcsn_context = "lat<letterset<char_letters(abc)>>, expressionset<lat<letterset<char_letters(def)>, wordset<char_letters(ghi)>>, q>"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0
-    1
-  }
-  I0 -> 0
-  0 -> 1 [label = "<<2>(d|gh)>a"]
-  1 -> F1
-}'''
+aref = '''context = [abc]? → RatE[[def]? × [ghi]* → ℚ]
+$ -> 0
+0 -> 1 <<2>(d|gh)>a
+1 -> $'''
 check_lift(aref, a.lift(1, 2))
 check_lift(aref, a.lift([1, 2]))
 
