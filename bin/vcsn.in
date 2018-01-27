@@ -148,7 +148,7 @@ case $1 in
   (-v|--version) version;;
   (version) vcsn configuration configuration.version;;
 
-  (compile|demangle|ps|score|score-compare)
+  (compile|demangle|modernize|ps|score|score-compare)
       prog=$(command -v "vcsn-$1")
       shift
       exec "$PYTHON" "$prog" "$@";;

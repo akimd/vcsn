@@ -41,10 +41,12 @@ vcsn_tools_pythondir = $(pythondir)/vcsn_tools
 vcsn_tools_python_PYTHON =                      \
   %D%/vcsn_tools/__init__.py                    \
   %D%/vcsn_tools/demangle.py                    \
-  %D%/vcsn_tools/gdb-demangle.py
+  %D%/vcsn_tools/gdb-demangle.py                \
+  %D%/vcsn_tools/modernize.py                   \
+  %D%/vcsn_tools/taprunner.py
 
 # All our Python sources, installed or not.
-vcsn_python +=                                   \
+vcsn_python +=                                  \
   $(python_scripts)                             \
   $(vcsn_python_PYTHON)                         \
   $(vcsn_python_demo_PYTHON)                    \
@@ -80,3 +82,5 @@ VCSN_PYTHON_DEPS =                              \
 # A short-hand to update all the python dependencies.
 .PHONY: python
 python: $(VCSN_PYTHON_DEPS)
+
+unit_TESTS = %D%/vcsn_tools/modernize.py

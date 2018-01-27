@@ -14,6 +14,8 @@
 # Our scripts that are actually in Python.
 python_scripts =                                \
   %D%/vcsn-compile                              \
+  %D%/vcsn-demangle                             \
+  %D%/vcsn-modernize                            \
   %D%/vcsn-ps                                   \
   %D%/vcsn-score                                \
   %D%/vcsn-score-compare

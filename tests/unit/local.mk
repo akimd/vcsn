@@ -48,7 +48,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_transpose_LDADD           = $(unit_ldadd)
 %C%_weight_LDADD              = $(unit_ldadd)
 
-%C%_TESTS =                                     \
+unit_TESTS +=                                   \
   %D%/aut_lal_char_z.chk                        \
   %D%/aut_lao_z.chk                             \
   %D%/aut_law_char_z.chk                        \
@@ -69,7 +69,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/zip-maps.chk                              \
   %D%/zip.chk
 
-dist_TESTS += $(%C%_TESTS)
+dist_TESTS += $(unit_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/score-compare.dir/all.csv                 \
@@ -108,4 +108,4 @@ EXTRA_DIST +=                                   \
 
 .PHONY: check-unit
 check-unit:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(unit_TESTS)'

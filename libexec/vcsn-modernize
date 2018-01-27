@@ -1,0 +1,20 @@
+#! /usr/bin/env python3
+
+import argparse
+
+from pathlib import Path
+from vcsn_tools.modernize import modernize
+
+p = argparse.ArgumentParser(
+    description='''Modernize files using Vcsn''')
+p.add_argument('files', metavar='file', nargs='+', type=Path, default=None,
+               help='files to modernize')
+
+args = p.parse_args()
+
+for f in args.files:
+    s = modernize(f.read_text())
+    mod = f.stat().st_mode
+    f.rename(str(f)+'.bak')
+    f.write_text(s)
+    f.chmod(mod)
