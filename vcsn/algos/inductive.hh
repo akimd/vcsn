@@ -5,7 +5,6 @@
 #include <vcsn/core/rat/visitor.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/dyn/value.hh>
-#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -173,92 +172,72 @@ namespace vcsn
 
       VCSN_RAT_VISIT(compose, e)
       {
-        detail::static_if<has_compose_mem_fn<automatonset_t>()
-                          && num_tapes<context_t>() == 2>
-          ([this](const auto& e)
-           {
-             auto res = recurse(e.head());
-             for (const auto& c: e.tail())
-               res = as_.compose(res, recurse(c));
-             res_ = std::move(res);
-           },
-           [](const auto&)
-           {
-             raise("compose: context is not composable");
-           })
-          (e);
+        if constexpr (has_compose_mem_fn<automatonset_t>()
+                      && num_tapes<context_t>() == 2)
+          {
+            auto res = recurse(e.head());
+            for (const auto& c: e.tail())
+              res = as_.compose(res, recurse(c));
+            res_ = std::move(res);
+          }
+        else
+          raise("compose: context is not composable");
       }
 
       VCSN_RAT_VISIT(conjunction, e)
       {
-        detail::static_if<labelset_t::is_letterized()>
-          ([this](const auto& e)
-           {
-             auto res = recurse(e.head());
-             for (const auto& c: e.tail())
-               res = as_.conjunction(res, recurse(c));
-             res_ = std::move(res);
-           },
-           [this](const auto&)
-           {
-             raise("conjunction: labelset must be letterized: ",
-                   *rs_.labelset());
-           })
-          (e);
+        if constexpr (labelset_t::is_letterized())
+         {
+           auto res = recurse(e.head());
+           for (const auto& c: e.tail())
+             res = as_.conjunction(res, recurse(c));
+           res_ = std::move(res);
+         }
+        else
+          raise("conjunction: labelset must be letterized: ",
+                *rs_.labelset());
       }
 
       VCSN_RAT_VISIT(infiltrate, e)
       {
-        detail::static_if<labelset_t::is_letterized()>
-          ([this](const auto& e)
-           {
-             auto res = recurse(e.head());
-             for (const auto& c: e.tail())
-               res = as_.infiltrate(res, recurse(c));
-             res_ = std::move(res);
-           },
-           [this](const auto&)
-           {
-             raise("infiltrate: labelset must be letterized: ",
-                   *rs_.labelset());
-           })
-          (e);
+        if constexpr (labelset_t::is_letterized())
+         {
+           auto res = recurse(e.head());
+           for (const auto& c: e.tail())
+             res = as_.infiltrate(res, recurse(c));
+           res_ = std::move(res);
+         }
+        else
+          raise("infiltrate: labelset must be letterized: ",
+                *rs_.labelset());
       }
 
       VCSN_RAT_VISIT(ldivide, e)
       {
-        detail::static_if<labelset_t::is_letterized()>
-          ([this](const auto& e)
-           {
-             auto res = recurse(e.head());
-             for (const auto& c: e.tail())
-               res = as_.ldivide(res, recurse(c));
-             res_ = std::move(res);
-           },
-           [this](const auto&)
-           {
-             raise("ldivide: labelset must be letterized: ",
-                   *rs_.labelset());
-           })
-          (e);
+        if constexpr (labelset_t::is_letterized())
+         {
+           auto res = recurse(e.head());
+           for (const auto& c: e.tail())
+             res = as_.ldivide(res, recurse(c));
+           res_ = std::move(res);
+         }
+        else
+          raise("ldivide: labelset must be letterized: ",
+                *rs_.labelset());
       }
 
       VCSN_RAT_VISIT(shuffle, e)
       {
-        detail::static_if<labelset_t::is_letterized()>
-          ([this](const auto& e)
-           {
-             auto res = recurse(e.head());
-             for (const auto& c: e.tail())
-               res = as_.shuffle(res, recurse(c));
-             res_ = std::move(res);
-           },
-           [this](const auto&)
-           {
-             raise("shuffle: labelset must be letterized: ",
-                   *rs_.labelset());
-           })
-          (e);
+        if constexpr (labelset_t::is_letterized())
+         {
+           auto res = recurse(e.head());
+           for (const auto& c: e.tail())
+             res = as_.shuffle(res, recurse(c));
+           res_ = std::move(res);
+         }
+        else
+          raise("shuffle: labelset must be letterized: ",
+                *rs_.labelset());
       }
 
       VCSN_RAT_VISIT(add, e)
@@ -284,18 +263,16 @@ namespace vcsn
 
       VCSN_RAT_VISIT(complement, e)
       {
-        detail::static_if<labelset_t::is_letterized()>
-          ([this](const auto& e)
-           {
-             // Complement checks if it is really free.
-             res_ = as_.complement(recurse(e.sub()));
-           },
-           [this](const auto&)
-           {
-             raise("complement: labelset must be letterized: ",
-                   *rs_.labelset());
-           })
-          (e);
+        if constexpr (labelset_t::is_letterized())
+          {
+            // Complement checks if it is really free.
+            res_ = as_.complement(recurse(e.sub()));
+          }
+        else
+          {
+            raise("complement: labelset must be letterized: ",
+                  *rs_.labelset());
+          }
       }
 
       VCSN_RAT_VISIT(transposition, e)

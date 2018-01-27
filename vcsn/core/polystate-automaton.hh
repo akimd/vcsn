@@ -85,10 +85,10 @@ namespace vcsn
       /// The empty polynomial of states.
       state_name_t zero() const
       {
-        return static_if<Kind == wet_kind_t::bitset>
-          ([] (const auto& self) { return state_name_t(self.state_size_); },
-           [] (const auto& self) { return self.ns_.zero(); })
-        (*this);
+        if constexpr (Kind == wet_kind_t::bitset)
+          return state_name_t(state_size_);
+        else
+          return ns_.zero();
       }
 
       std::ostream&
