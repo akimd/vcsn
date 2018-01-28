@@ -130,9 +130,4 @@ namespace std
       return res;
     }
   };
-
-#if defined __clang__ and __clang_major__ == 3 and __clang_minor__ < 7
-  // For clang 3.5, this is needed for ADL
-  using vcsn::detail::hash_value;
-#endif
-};
+}

@@ -94,16 +94,10 @@ namespace vcsn
           auto states = input_->states();
           auto end = std::end(states);
           for (auto i1 = std::begin(states); i1 != end; ++i1)
-            {
-              // FIXME: cannot use i2 = std::next(i1) with clang 3.5
-              // and Boost 1.55.
-              // https://svn.boost.org/trac/boost/ticket/9984
-              auto i2 = i1;
-              for (++i2; i2 != end; ++i2)
-                // s1 < s2, no need for make_unordered_pair.
-                pair_states_.emplace(std::make_pair(*i1, *i2),
-                                     this->new_state());
-            }
+            for (auto i2 = std::next(i1); i2 != end; ++i2)
+              // s1 < s2, no need for make_unordered_pair.
+              pair_states_.emplace(std::make_pair(*i1, *i2),
+                                   this->new_state());
         }
 
         for (const auto& ps : pair_states_)

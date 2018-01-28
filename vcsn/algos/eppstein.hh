@@ -42,13 +42,7 @@ namespace vcsn
         auto res = std::vector<path<automaton_t>>{};
         auto queue = queue_t{};
         queue.emplace(aut_, aut_->null_transition(),
-                      // This `int()` hardly makes sense, as
-                      // `null_parent_path` is an `int`.  But actually
-                      // it's a `static constexpr int`, and clang-3.5
-                      // behaves incorrectly on this regard.  Remove
-                      // this `int()` once we drop support for clang
-                      // 3.5.
-                      int(implicit_path_t::null_parent_path),
+                      implicit_path_t::null_parent_path,
                       tree.get_weight_of(src));
 
         for (int k = 0; k < K && !queue.empty(); k++)

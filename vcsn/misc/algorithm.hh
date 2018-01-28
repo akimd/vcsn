@@ -15,17 +15,17 @@ namespace vcsn
     template <typename Range, typename Predicate>
     bool any_of(const Range &r, Predicate p)
     {
-      using std::begin;
-      using std::end;
-      return std::any_of(begin(r), end(r), p);
+      using std::cbegin;
+      using std::cend;
+      return std::any_of(cbegin(r), cend(r), p);
     }
 
     template <typename Range>
     bool any_of(const Range &r)
     {
-      using std::begin;
-      using std::end;
-      return std::any_of(begin(r), end(r),
+      using std::cbegin;
+      using std::cend;
+      return std::any_of(cbegin(r), cend(r),
                          [](const auto& p) -> bool { return p; });
     }
 
@@ -36,10 +36,10 @@ namespace vcsn
     typename Container::value_type
     back(const Container& container)
     {
-      using std::begin;
-      using std::end;
-      auto i = begin(container);
-      auto iend = end(container);
+      using std::cbegin;
+      using std::cend;
+      auto i = cbegin(container);
+      auto iend = cend(container);
       assert(i != iend);
       auto res = *i;
       for (++i; i != iend; ++i)
@@ -71,10 +71,10 @@ namespace vcsn
     typename Container::value_type
     front(const Container& container)
     {
-      using std::begin;
-      using std::end;
-      auto i = begin(container);
-      assert(i != end(container));
+      using std::cbegin;
+      using std::cend;
+      auto i = cbegin(container);
+      assert(i != cend(container));
       return *i;
     }
 
@@ -104,8 +104,8 @@ namespace vcsn
     template <typename Container, typename Compare>
     bool is_sorted_forward(const Container& container, Compare comp)
     {
-      auto i = std::begin(container);
-      auto end = std::end(container);
+      auto i = std::cbegin(container);
+      auto end = std::cend(container);
       if (i != end)
         {
           auto prev = *i;
@@ -148,11 +148,10 @@ namespace vcsn
                         const Cont2& cont2,
                         Compare comp)
     {
-      // FIXME: clang 3.5 does not feature cbegin/cend.
-      using std::begin;
-      using std::end;
-      return lexicographical_cmp(begin(cont1), end(cont1),
-                                 begin(cont2), end(cont2),
+      using std::cbegin;
+      using std::cend;
+      return lexicographical_cmp(cbegin(cont1), cend(cont1),
+                                 cbegin(cont2), cend(cont2),
                                  comp);
     }
 
@@ -162,8 +161,8 @@ namespace vcsn
     typename Container::value_type
     max_forward(const Container& container)
     {
-      auto i = std::begin(container);
-      auto end = std::end(container);
+      auto i = std::cbegin(container);
+      auto end = std::cend(container);
       assert(i != end);
       auto res = *i;
       for (++i; i != end; ++i)
@@ -178,8 +177,8 @@ namespace vcsn
     typename Container::value_type
     min_forward(const Container& container, Comp comp)
     {
-      auto i = std::begin(container);
-      auto end = std::end(container);
+      auto i = std::cbegin(container);
+      auto end = std::cend(container);
       assert(i != end);
       auto res = *i;
       for (++i; i != end; ++i)
@@ -192,9 +191,9 @@ namespace vcsn
     template <typename Range, typename Predicate>
     bool none_of(const Range &r, Predicate p)
     {
-      using std::begin;
-      using std::end;
-      return std::none_of(begin(r), end(r), p);
+      using std::cbegin;
+      using std::cend;
+      return std::none_of(cbegin(r), cend(r), p);
     }
 
     // Not in Boost 1.49.
@@ -210,9 +209,9 @@ namespace vcsn
     template <typename Container, typename Fun>
     auto transform(const Container& c, Fun&& fun)
     {
-      using value_t = decltype(std::forward<Fun>(fun)(*begin(c)));
+      using value_t = decltype(std::forward<Fun>(fun)(*cbegin(c)));
       auto res = std::vector<value_t>(c.size());
-      std::transform(begin(c), end(c), begin(res), std::forward<Fun>(fun));
+      std::transform(cbegin(c), cend(c), begin(res), std::forward<Fun>(fun));
       return res;
     }
   }
@@ -243,26 +242,6 @@ namespace vcsn
     return res;
   }
 
-  /// Check that two associative containers have the same keys.
-  template <typename Container>
-  bool
-  same_domain(const Container& x, const Container& y)
-  {
-    if (x.size() == y.size())
-      {
-        using std::begin; using std::end;
-        for (auto xi = begin(x), xend = end(x), yi = begin(y);
-             xi != xend;
-             ++xi, ++yi)
-          if (x.key_comp()(xi->first, yi->first)
-              || x.key_comp()(yi->first, xi->first))
-            return false;
-        return true;
-      }
-    else
-      return false;
-  }
-
   /// The union of two sets.
   template <typename Container,
             // SFINAE.
@@ -274,5 +253,25 @@ namespace vcsn
     auto i = std::insert_iterator<Container>{res, res.begin()};
     boost::set_union(s1, s2, i, s1.key_comp());
     return res;
+  }
+
+  /// Check that two associative containers have the same keys.
+  template <typename Container>
+  bool
+  same_domain(const Container& x, const Container& y)
+  {
+    if (x.size() == y.size())
+      {
+        using std::cbegin; using std::cend;
+        for (auto xi = cbegin(x), xend = cend(x), yi = cbegin(y);
+             xi != xend;
+             ++xi, ++yi)
+          if (x.key_comp()(xi->first, yi->first)
+              || x.key_comp()(yi->first, xi->first))
+            return false;
+        return true;
+      }
+    else
+      return false;
   }
 }

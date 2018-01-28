@@ -1229,16 +1229,10 @@ namespace vcsn
   template <typename T1, typename T2>
   struct concat_tupleset;
 
-  // Sure, we'd like to use tuple<> instead of
-  // weightset_mixin<tupleset_impl<>>, however then we hit a Clang
-  // 3.5.0 bug.
-  //
-  // https://llvm.org/bugs/show_bug.cgi?id=19372
   template <typename... T1, typename... T2>
-  struct concat_tupleset<weightset_mixin<tupleset_impl<T1...>>,
-                         weightset_mixin<tupleset_impl<T2...>>>
+  struct concat_tupleset<tupleset<T1...>, tupleset<T2...>>
   {
-    using type = weightset_mixin<tupleset_impl<T1..., T2...>>;
+    using type = tupleset<T1..., T2...>;
   };
 
   /// Conversion to letterized.

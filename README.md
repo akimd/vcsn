@@ -4,7 +4,7 @@ Vcsn
 [Vcsn](http://vcsn.lrde.epita.fr) is a platform for weighted automata and
 rational expressions.
 
-It consists of an efficient C++ generic library, shell tools, Python
+It consists of an efficient C++ 17 generic library, shell tools, Python
 bindings, and a graphical interactive environment on top of IPython.
 
 Copyright (C) 2012-2017 The Vcsn Group.
@@ -89,7 +89,7 @@ Vcsn is a very long process, also consider `-j3`.
 #### Packages needed
 
 Vcsn was tested with the [GNU Compiler Collection (GCC)](http://gcc.gnu.org)
-versions 5, 6 and [Clang](http://clang.llvm.org) 3.5, 3.6, 3.7, 3.8, 3.9.
+versions 7 and [Clang](http://clang.llvm.org) 4.
 
 [Boost](http://www.boost.org) is a C++ library which provides many useful
 features.  You must install this library on your system.  Vcsn should
