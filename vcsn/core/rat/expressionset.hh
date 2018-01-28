@@ -480,7 +480,7 @@ namespace vcsn
       typename project_t<I>::label_t as_label_(const tuple_t& v) const
       {
         if (std::get<I>(v.sub())->type() == type_t::one)
-          return detail::label_one(rs_.labelset()->template set<I>());
+          return rs_.labelset()->template set<I>().one();
         else
           return std::dynamic_pointer_cast<const typename project_t<I>::atom_t>
                  (std::get<I>(v.sub()))->value();

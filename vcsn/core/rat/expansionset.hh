@@ -563,7 +563,7 @@ namespace vcsn
         denormalize(lhs);
         denormalize(rhs);
         auto res = value_t{ws_.mul(lhs.constant, rhs.constant)};
-        auto one = detail::label_one(ls_);
+        auto one = ls_.one();
         auto& res_one = res.polynomials[one];
 
         // ε⊙[X_a \ Y_a + ...] for common firsts, included ε.
@@ -706,7 +706,7 @@ namespace vcsn
       ///     auto p0 = p0_t{{rs0.one(), e0.constant}};
       ///     for (const auto& p1: e1.polynomials)
       ///       {
-      ///         auto l = label_t{detail::label_one(*rs0.labelset()),
+      ///         auto l = label_t{*rs0.labelset().one(),
       ///                          p1.first};
       ///         ps_.add_here(res.polynomials[l],
       ///                      ps_.tuple(p0, p1.second));
@@ -720,7 +720,7 @@ namespace vcsn
       ///     for (const auto& p0: e0.polynomials)
       ///       {
       ///         auto l = label_t{p0.first,
-      ///                          detail::label_one(*rs1.labelset())};
+      ///                          *rs1.labelset().one()};
       ///         ps_.add_here(res.polynomials[l],
       ///                      ps_.tuple(p0.second, p1));
       ///       }

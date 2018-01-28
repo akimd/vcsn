@@ -38,36 +38,6 @@ namespace vcsn
     using has_one_mem_fn = detect<LabelSet, one_t>;
 
 
-    /*-------------.
-    | label_one.   |
-    `-------------*/
-
-#if defined __GNUC__ && !defined __clang__
- // GCC can't figure out that this one does return, because of the template
- // instanciation, where one of them doesn't return.
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
-#endif
-
-    /// Enjoy type inference.
-    template <typename LabelSet>
-    auto label_one(const LabelSet& ls)
-      -> typename LabelSet::value_t
-    {
-      return static_if<LabelSet::has_one()>
-        ([](const auto& ls) { return ls.one(); },
-         [](const auto& ls) -> typename LabelSet::value_t
-        {
-          raise(ls, ": does not feature a neutral");
-        })
-        (ls);
-    }
-
-#if defined __GNUC__ && !defined __clang__
-# pragma GCC diagnostic pop
-#endif
-
-
     /*-------------------.
     | make_letterized.   |
     `-------------------*/

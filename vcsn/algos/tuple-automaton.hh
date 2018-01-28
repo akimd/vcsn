@@ -160,7 +160,7 @@ namespace vcsn
 
         if (std::get<I>(srcn) == aut->post())
           {
-            std::get<I>(label) = label_one(ls.template set<I>());
+            std::get<I>(label) = ls.template set<I>().one();
             add(src, srcn, dstn, label, weight);
           }
         else
@@ -168,7 +168,7 @@ namespace vcsn
             {
               std::get<I>(label)
                 = aut->dst_of(t) == aut->post()
-                ? label_one(ls.template set<I>())
+                ? ls.template set<I>().one()
                 : aut->label_of(t);
               std::get<I>(dstn) = aut->dst_of(t);
               add(src, srcn, dstn, label, ws.mul(weight, aut->weight_of(t)));
