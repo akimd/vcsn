@@ -272,7 +272,7 @@ check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
           'star': 1,
           'transposition': 0,
           'tuple': 3,
-          'type': 'expressionset<lat<letterset<char_letters(abcxyz)>, letterset<char_letters(xyz)>>, q>',
+          'type': 'expressionset<lat<letterset<char_letters(abcxyz...)>, letterset<char_letters(xyz...)>>, q>',
           'width': 10,
           'zero': 0,
       })

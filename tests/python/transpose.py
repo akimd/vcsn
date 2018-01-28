@@ -71,14 +71,14 @@ CHECK_EQ({
            'number of states': 3,
            'number of transitions': 2,
            'number of useful states': 3,
-           'type': 'transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
+           'type': 'transpose_automaton<mutable_automaton<letterset<char_letters(ab...)>, b>>',
          },
          a.transpose().info())
 
 # Stripping a transposed automaton strips the inner automaton, but not
 # the transposition shell.
 a = vcsn.context('lal, b').expression('ab').derived_term().determinize()
-CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab)>, b>>',
+CHECK_EQ('transpose_automaton<mutable_automaton<letterset<char_letters(ab...)>, b>>',
          a.transpose().strip().info()['type'])
 
 ## ----------------------- ##

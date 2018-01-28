@@ -343,12 +343,16 @@ namespace vcsn
           break;
 
         case format::sname:
-          o << sname() << '(';
-          for (auto l: *this)
-            this->print(l, o, fmt);
-          // FIXME: Don't display openness here, as our "make()"
-          // parser is not ready for it.
-          o << ')';
+          o << sname();
+          if (!empty() || !open_)
+            {
+              o << '(';
+              for (auto l: *this)
+                this->print(l, o, fmt);
+              if (open_ && fmt.show_open())
+                o << "...";
+              o << ')';
+            }
           break;
 
         case format::text:

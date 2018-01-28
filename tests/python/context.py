@@ -91,8 +91,8 @@ check('lal(ab), q', '[ab]? → ℚ')
 ## LabelSet: wordset.  ##
 ## ------------------- ##
 
-# FIXME: we don't print string_letters.
-check('wordset<string_letters>, b', 'wordset<string_letters()>, b', 'sname')
+# FIXME: we don't print string_letters in UTF-8.
+check('wordset<string_letters>, b', 'wordset<string_letters>, b', 'sname')
 
 
 ## ------------------------- ##
@@ -132,9 +132,9 @@ CHECK_EQ(vcsn.context('lat<lal(abc), lal(xyz)>, q'), c1 | c2)
 # This one triggered a bug: shortest is not instantiable because we
 # fail to support label * word in this context.
 #
-# NB: cannot check with external syntax, as `lat<lal>` and `lal` are
+# Cannot check with external syntax, as `lat<lal>` and `lal` are
 # displayed the same way.
-check('lat<lal>, b', 'lat<letterset<char_letters()>>, b', fmt='sname')
+check('lat<lal>, b', 'lat<letterset<char_letters>>, b', fmt='sname')
 check('lat<lat<lal(a)>>, b', 'lat<lat<letterset<char_letters(a)>>>, b', fmt='sname')
 
 ctx = '''lat<lal(ba),lal(vu), law(x-z)>,
