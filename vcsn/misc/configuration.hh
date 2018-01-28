@@ -16,25 +16,26 @@ namespace vcsn LIBVCSN_API
 {
   namespace detail
   {
-    /// The YAML configuration (acts as the top of the configuration
-    /// tree).
+    /// A YAML configuration.
+    ///
+    /// Acts as the top of the configuration tree.
     class config
     {
     public:
       using Node = YAML::Node;
 
       /// The class returned by [] operators.
-      class config_value
+      class value
       {
       public:
         class BadNode {};
-        config_value(Node n);
-        config_value(const config&);
-        config_value(const config_value& other);
+        value(Node n);
+        value(const config&);
+        value(const value& other);
 
         /// Assign a new value to this key.
-        config_value&
-        operator=(config_value rhs);
+        value&
+        operator=(value rhs);
 
 
         template <typename T>
@@ -48,7 +49,7 @@ namespace vcsn LIBVCSN_API
         /// Get the node value as a string.
         std::string str() const;
 
-        config_value operator[](const std::string& key) const;
+        value operator[](const std::string& key) const;
         std::vector<std::string> keys() const;
 
         /// Check that this node refers to a key that exists in the tree.
@@ -61,10 +62,10 @@ namespace vcsn LIBVCSN_API
         iterator end();
 
         /// Merge a value into another one - and modify the first.
-        void merge(const config_value& from);
+        void merge(const value& from);
 
         std::ostream& print(std::ostream& out) const;
-        friend void swap(config_value& first, config_value& second);
+        friend void swap(value& first, value& second);
 
       private:
         std::unique_ptr<std::vector<std::string>> gen_keys() const;
@@ -77,14 +78,14 @@ namespace vcsn LIBVCSN_API
       config();
 
       /// Access a subkey.
-      config_value operator[](const std::string& key);
+      value operator[](const std::string& key);
 
     private:
       Node config_tree_;
     };
 
     inline
-    std::ostream& operator<<(std::ostream& out, const config::config_value& v)
+    std::ostream& operator<<(std::ostream& out, const config::value& v)
     {
       return v.print(out);
     }
@@ -98,8 +99,7 @@ namespace vcsn LIBVCSN_API
     return conf;
   }
 
-  /// Main interface to the configuration function
-  /// key it the 'path' to the desired key using periofs
-  /// as a separator.
+  /// Get the string mapped by key (e.g., "configuration.version",
+  /// "dot.styles").
   std::string configuration(const std::string& key);
 }
