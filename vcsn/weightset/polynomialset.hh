@@ -48,10 +48,10 @@ namespace vcsn
     template <typename LabelSet>
     auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t& l)
     {
-      return detail::static_if<has_zero_mem_fn<LabelSet>{}>
-        ([](const auto& ls, const auto& l){ return ls.is_zero(l);},
-         [](const auto&,    const auto&)  { return false; })
-        (ls, l);
+      if constexpr (has_zero_mem_fn<LabelSet>{})
+        return ls.is_zero(l);
+      else
+        return false;
     }
 
     /*--------------------.
@@ -551,24 +551,20 @@ namespace vcsn
       if (weightset()->is_one(w))
         res = v;
       else if (!weightset()->is_zero(w))
-        for (const auto& m: v)
-          // Beware that if the labelset supports weights (e.g.,
-          // polynomial of expressions), we do not multiply the weight
-          // here, but the label.
-          static_if<has_rweight_fn<context_t>{}>
-            ([this, &res] (const auto& ls, const auto& m, const auto& w)
-             {
-               add_here(res,
-                        ls.rweight(label_of(m), w),
-                        weight_of(m));
-             },
-             [this, &res] (const auto&, const auto& m, const auto& w)
-             {
-               add_here(res,
-                        label_of(m),
-                        weightset()->mul(w, weight_of(m)));
-             })
-            (*labelset(), m, w);
+        {
+          for (const auto& m: v)
+            // Beware that if the labelset supports weights (e.g.,
+            // polynomial of expressions), we do not multiply the weight
+            // here, but the label.
+            if constexpr (has_rweight_fn<context_t>{})
+              add_here(res,
+                       labelset()->rweight(label_of(m), w),
+                       weight_of(m));
+            else
+              add_here(res,
+                       label_of(m),
+                       weightset()->mul(w, weight_of(m)));
+        }
       return res;
     }
 

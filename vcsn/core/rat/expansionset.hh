@@ -5,7 +5,6 @@
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/algorithm.hh>
 #include <vcsn/misc/map.hh>
-#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -528,18 +527,15 @@ namespace vcsn
                 to_string(*this, v));
 
         // Turn the polynomials into expressions, and complement them.
-        // The static-if is made of oneset.
-        detail::static_if<detail::has_generators_mem_fn<labelset_t>{}>
-          ([this, &res](const auto& v, const auto& ls)
+        // The if constexpr is made for oneset.
+        if constexpr (detail::has_generators_mem_fn<labelset_t>{})
+         for (auto l: ls_.generators())
            {
-             for (auto l: ls.generators())
-               {
-                 auto i = v.polynomials.find(l);
-                 res.polynomials[l] =
-                   ps_.complement(i == end(v.polynomials)
-                                  ? ps_.zero() : i->second);
-               }
-           })(v, ls_);
+             auto i = v.polynomials.find(l);
+             res.polynomials[l] =
+               ps_.complement(i == end(v.polynomials)
+                              ? ps_.zero() : i->second);
+           }
         return res;
       }
 

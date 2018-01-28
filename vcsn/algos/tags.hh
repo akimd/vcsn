@@ -90,9 +90,9 @@ namespace vcsn
         {
           using res_t = decltype(op(standard_tag{}));
           res_t res = nullptr;
-          if (algo == "deterministic")
-            static_if<are_letterized>([&res](auto&& op)
-                                { res = op(deterministic_tag{}); })(op);
+          if constexpr (are_letterized)
+            if (algo == "deterministic")
+              res = op(deterministic_tag{});
           require(res, "invalid algorithm: ", str_escape(algo));
           return res;
         }

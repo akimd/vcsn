@@ -12,7 +12,6 @@
 #include <vcsn/misc/builtins.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/format.hh>
-#include <vcsn/misc/static-if.hh>
 
 namespace vcsn
 {
@@ -178,9 +177,8 @@ namespace vcsn
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        detail::static_if<context_t::is_lat>
-          ([this](auto&& v){ visit_tuple<decltype(v)>{*this}(v); })
-          (v);
+        if constexpr (context_t::is_lat)
+          visit_tuple<decltype(v)>{*this}(v);
       }
 
 

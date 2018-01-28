@@ -78,21 +78,17 @@ namespace vcsn
   auto
   add(const Aut1& lhs, const Aut2& rhs, deterministic_tag)
   {
-    constexpr bool bb = (std::is_same<weightset_t_of<Aut1>, b>::value
-                        && std::is_same<weightset_t_of<Aut2>, b>::value);
-    return detail::static_if<bb>(
-      [] (const auto& lhs, const auto& rhs)
+    if constexpr (std::is_same_v<weightset_t_of<Aut1>, b>
+                  && std::is_same_v<weightset_t_of<Aut2>, b>)
       {
         auto prod
           = detail::make_product_automaton<false>(join_automata(lhs, rhs),
                                                   lhs, rhs);
         prod->add();
         return prod->strip();
-      },
-      [] (const auto& lhs, const auto& rhs)
-      {
-        return determinize(add(lhs, rhs, general_tag{}))->strip();
-      })(lhs, rhs);
+      }
+    else
+      return determinize(add(lhs, rhs, general_tag{}))->strip();
   }
 
   /// Merge transitions of \a b into those of \a res.

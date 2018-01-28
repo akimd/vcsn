@@ -666,17 +666,11 @@ namespace vcsn
   auto
   ldivide(const Aut1& lhs, const Aut2& rhs, auto_tag = {})
   {
-    return detail::static_if<std::is_same<weightset_t_of<Aut1>, b>::value
-                             && std::is_same<weightset_t_of<Aut2>, b>::value>
-             ([] (const auto& lhs, const auto& rhs)
-              {
-                return ldivide(lhs, rhs, boolean_tag{});
-              },
-              [] (const auto& lhs, const auto& rhs)
-              {
-                return ldivide(lhs, rhs, weighted_tag{});
-              }
-             )(lhs, rhs);
+    if constexpr (std::is_same_v<weightset_t_of<Aut1>, b>
+                  && std::is_same_v<weightset_t_of<Aut2>, b>)
+      return ldivide(lhs, rhs, boolean_tag{});
+    else
+      return ldivide(lhs, rhs, weighted_tag{});
   }
 
   template <Automaton Aut1, Automaton Aut2>

@@ -97,13 +97,11 @@ namespace vcsn
 
       void visit(const tuple_t& v, std::true_type) override
       {
-        detail::static_if<context_t::is_lat>
-          ([this](auto&& v)
-           {
-             combine_type_(v);
-             combine_(visit_tuple<decltype(v)>{}(v));
-           })
-          (v);
+        if constexpr (context_t::is_lat)
+          {
+            combine_type_(v);
+            combine_(visit_tuple<decltype(v)>{}(v));
+          }
       }
 
       /// Traverse a nullary node.

@@ -215,45 +215,34 @@ namespace vcsn
 
 
       /// Print a tuple operator.
-      ///
-      /// GCC5 crashes on the equivalent code with static_if.
       template <typename ExpSet = expressionset_t>
       auto
       print_tuple_(std::ostream& out, unsigned length,
                    const std::string& op, const format& fmt) const
-        -> std::enable_if_t<context_t_of<ExpSet>::is_lat,
-                            void>
+        -> void
       {
         assert(op == "|");
-        const auto len = length / es_.labelset()->size();
-        const auto param = make_param_(std::max(size_t{1}, len));
-        out << '(';
-        const auto* sep = "";
-        es_.as_tupleset().map([&out, &param, &sep](const auto& subes)
-           {
-             out << sep
-                 << '('
-                 << vcsn::random_expression_string(subes, param)
-                 << ')';
-             sep = "|";
-             // Please make_tuple.
-             return 0;
-           });
-        out << ')';
+        if constexpr (context_t_of<ExpSet>::is_lat)
+          {
+            const auto len = length / es_.labelset()->size();
+            const auto param = make_param_(std::max(size_t{1}, len));
+            out << '(';
+            const auto* sep = "";
+            es_.as_tupleset().map([&out, &param, &sep](const auto& subes)
+               {
+                 out << sep
+                     << '('
+                     << vcsn::random_expression_string(subes, param)
+                     << ')';
+                 sep = "|";
+                 // Please make_tuple.
+                 return 0;
+               });
+            out << ')';
+          }
+        else
+          raise(es_, "random_expression: invalid use of '|'");
       }
-
-      /// Print a tuple operator.
-      template <typename ExpSet = expressionset_t>
-      auto
-      print_tuple_(std::ostream& out, unsigned length,
-                   const std::string& op, const format& fmt) const
-        -> std::enable_if_t<!context_t_of<ExpSet>::is_lat,
-                            void>
-      {
-        assert(op == "|");
-        raise(es_, "random_expression: invalid use of '|'");
-      }
-
 
       std::ostream&
       print_random_expression_(std::ostream& out, unsigned length,

@@ -246,18 +246,14 @@ namespace vcsn
         // "is_graduated".
         constexpr auto valid
           = (ctx_t::is_lal || ctx_t::is_lao || ctx_t::is_lat || ctx_t::is_law);
-        return vcsn::detail::static_if<valid>
-          ([](const auto& a, const auto& l) -> weight
-           {
-             auto res = ::vcsn::evaluate(a, l);
-             return {*a->weightset(), res};
-           },
-           [](const auto& a, const auto&) -> weight
-           {
-             raise("evaluate: unsupported labelset: ",
-                   *a->labelset());
-           })
-          (aut->as<Aut>(), lbl->as<LabelSet>().value());
+        const auto& a= aut->as<Aut>();
+        if constexpr (valid)
+          {
+            auto res = ::vcsn::evaluate(a, lbl->as<LabelSet>().value());
+            return {*a->weightset(), res};
+          }
+        else
+            raise("evaluate: unsupported labelset: ", *a->labelset());
       }
     }
   }

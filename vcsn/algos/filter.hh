@@ -95,10 +95,9 @@ namespace vcsn
           }
         else
           unhide_all_states();
-        static_if<Trans>([&ts](auto& self) {
-            if (!ts)
-              self.unhide_all_transitions();
-          })(*this);
+        if constexpr (Trans)
+          if (!ts)
+            unhide_all_transitions();
         properties_.update(filter_ftag{});
       }
 
