@@ -10,6 +10,9 @@ def check(ctx, exp=None, fmt="utf8"):
     if exp is None:
         exp = ctx
     CHECK_EQ(exp, c.format(fmt))
+    # Round-trip.
+    if fmt in ['utf8', 'sname', 'text']:
+        CHECK_EQ(c, vcsn.context(exp))
 
 # Invalid context: invalid weightset.
 XFAIL(lambda: vcsn.context("lal(a)_UNKNOWN"),
@@ -88,7 +91,8 @@ check('lal(ab), q', '[ab]? → ℚ')
 ## LabelSet: wordset.  ##
 ## ------------------- ##
 
-check('wordset<string_letters>, b', '[...]* → 𝔹')
+# FIXME: we don't print string_letters.
+check('wordset<string_letters>, b', 'wordset<string_letters()>, b', 'sname')
 
 
 ## ------------------------- ##
@@ -127,16 +131,18 @@ CHECK_EQ(vcsn.context('lat<lal(abc), lal(xyz)>, q'), c1 | c2)
 
 # This one triggered a bug: shortest is not instantiable because we
 # fail to support label * word in this context.
-check('lat<lal>, b',
-      '[...]? → 𝔹')
-
-check('lat<lat<lal(a)>>, b',
-      '([a]?) → 𝔹')
+#
+# NB: cannot check with external syntax, as `lat<lal>` and `lal` are
+# displayed the same way.
+check('lat<lal>, b', 'lat<letterset<char_letters()>>, b', fmt='sname')
+check('lat<lat<lal(a)>>, b', 'lat<lat<letterset<char_letters(a)>>>, b', fmt='sname')
 
 ctx = '''lat<lal(ba),lal(vu), law(x-z)>,
          lat<expressionset<lat<lal(fe), lal(hg)>, q>, r, q>'''
 check(ctx,
-      'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>, lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>', 'sname')
+      'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>'
+      ', lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>',
+      'sname')
 check(ctx,
       '[ab]? x [uv]? x [xyz]* -> RatE[[ef]? x [gh]? -> Q] x R x Q', 'text')
 check(ctx,

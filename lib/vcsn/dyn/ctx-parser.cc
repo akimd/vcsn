@@ -220,9 +220,10 @@ namespace vcsn::dyn::parser
     = oneset
     | letterset
     | wordset
-    | lit("lat") > lit('<') > (labelset % ',') > lit('>')
     | expressionset
     | polynomialset
+    | lit("lat") > lit('<') > (labelset % ',') > lit('>')
+    | lit('(') >> labelset > lit(')')
     ;
 
   // Cartesian product.
@@ -240,11 +241,12 @@ namespace vcsn::dyn::parser
     | expressionset
     | polynomialset
     | lit("lat") > lit('<') > (weightset % ',') > lit('>')
+    | lit('(') >> weightset > lit(')')
     ;
 
   // One or more weightsets.
   const auto weightset_def
-    = as<ast::weightsets>[weightset_basic >> x >> (weightset_basic % x)]
+    = as<ast::weightsets>[weightset_basic >> x > (weightset_basic % x)]
     | weightset_basic
     ;
 

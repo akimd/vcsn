@@ -110,7 +110,13 @@ check_translate_context()
   // Using the UTF8 characters '×' and '→' instead of 'x' and '->'.
   CHECK("[a] × [b] × [c] → nmin × zmin × rmin",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, "
-	"lat<nmin, zmin, rmin>");
+        "lat<nmin, zmin, rmin>");
+
+  // Parens.
+  CHECK("([a] × [b]) × ([c] x [d]) → (b x q) x (nmin × zmin)",
+        "lat<lat<letterset<char_letters(a)>, letterset<char_letters(b)>>"
+        """"", lat<letterset<char_letters(c)>, letterset<char_letters(d)>>>"
+        ", lat<lat<b, q>, lat<nmin, zmin>>");
 
 #undef CHECK
   return nerrs;
