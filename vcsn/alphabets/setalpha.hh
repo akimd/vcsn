@@ -336,7 +336,7 @@ namespace vcsn
                   o << '}';
                 sep = ", ";
               }
-            if (open_)
+            if (open_ && fmt.show_open())
               o << sep << "\\ldots";
             o << "\\}";
           }
@@ -356,7 +356,7 @@ namespace vcsn
           o << '[';
           for (auto l: *this)
             this->print(l, o, fmt);
-          if (open_)
+          if (open_ && fmt.show_open())
             o << "...";
           o << ']';
           break;

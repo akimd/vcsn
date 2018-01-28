@@ -680,7 +680,7 @@ check('(?@lal(ab), q)(<2>a)*',
 check(vcsn.Q.expression('<2>a*<3>', 'associative'),
 '''digraph
 {
-  vcsn_context = "[ab...]? → ℚ"
+  vcsn_context = "[ab]? → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -105,7 +105,7 @@ namespace vcsn
           "{\n"
           "  vcsn_context = \"";
         enable_();
-        aut_->context().print_set(bos_, format::utf8);
+        aut_->context().print_set(bos_, format(format::utf8).show_open(false));
         disable_();
         bos_ << "\"\n"
           "  rankdir = LR\n"

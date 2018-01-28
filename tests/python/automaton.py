@@ -453,7 +453,7 @@ CHECK_EQ('''digraph
 # Empty set.
 CHECK_EQ('''digraph
 {
-  vcsn_context = "[...]? → 𝔹"
+  vcsn_context = "[]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

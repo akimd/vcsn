@@ -36,16 +36,15 @@ $ -> 0
 3 -> 3 a, b, c, d
 ''')
 
-# FIXME: See #201.
 # An automaton with an open context.
-#check(vcsn.b.expression('a').standard(), '''
-#context = [a]? → 𝔹
-#  $ -> 0
-#  0 -> 1 a
-#  1 -> $
-#  1 -> 2 a
-#  2 -> 2 a
-#''')
+check(vcsn.b.expression('a').standard(), '''
+context = [a]? → 𝔹
+  $ -> 0
+  0 -> 1 a
+  1 -> $
+  1 -> 2 a
+  2 -> 2 a
+''')
 
 # An automaton without initial state.
 check('''

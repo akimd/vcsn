@@ -115,7 +115,7 @@ cz = vcsn.context('lat<lal, lal>, z')
 aut = cz.expression('[ab]|[ab]').automaton()
 b = r'''digraph
 {
-  vcsn_context = "[ab...]? × [ab...]? → ℤ"
+  vcsn_context = "[ab]? × [ab]? → ℤ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

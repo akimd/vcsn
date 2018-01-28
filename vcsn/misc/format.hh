@@ -83,6 +83,20 @@ namespace vcsn LIBVCSN_API
       return res;
     }
 
+    /// Whether to display openness.
+    bool show_open() const
+    {
+      return show_open_;
+    }
+
+    /// Set whether to display openness.
+    format show_open(bool o) const
+    {
+      auto res = *this;
+      res.show_open_ = o;
+      return res;
+    }
+
     /// Whether to use the syntax for labels (e.g., "a|x").
     bool is_for_labels() const
     {
@@ -124,6 +138,8 @@ namespace vcsn LIBVCSN_API
     bool delimit_ = false;
     /// Additional characters to escape.
     const char* meta_ = nullptr;
+    /// Whether to print if open or not.
+    bool show_open_ = true;
   };
 
   /// Wrapper around operator<<.

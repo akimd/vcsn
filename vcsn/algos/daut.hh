@@ -48,7 +48,7 @@ namespace vcsn
       void print_context_()
       {
         os_ << "context = ";
-        aut_->context().print_set(os_, format::utf8);
+        aut_->context().print_set(os_, format(format::utf8).show_open(false));
       }
 
       /// Print the transitions between state \a src and state \a dst.
