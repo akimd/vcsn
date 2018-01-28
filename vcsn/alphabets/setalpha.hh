@@ -49,6 +49,7 @@ namespace vcsn
       return res;
     }
 
+    /// Build from a specification in this stream.
     static set_alphabet make(std::istream& is)
     {
       // name: char_letters(abc)
@@ -59,18 +60,21 @@ namespace vcsn
       // The result.
       auto res = set_alphabet{};
 
-      // This labelset might be open: no initial letter is given, they
-      // will be discovered afterwards.
+      // No parens: empty open set.  With parens explicit letters,
+      // possibly ranges, and `...` means open.
       if (is.peek() == '(')
         {
           is.ignore();
           // Previously read character, for intervals.  We don't
-          // immediately add the letters: on 'a-z' we would firsts add
+          // immediately add the letters: on 'a-z' we would first add
           // 'a', and then ask for the interval from 'a' to 'z', which
           // would add 'a' twice uselessly.
           //
           // Rather, keep the 'a' in \a prev, and flush prev when needed.
           auto prev = boost::optional<letter_t>{};
+          // The number of consecutive dots we saw.  Used to recognize
+          // `...` which means that the set is open.
+          int dots = 0;
           while (true)
             switch (is.peek())
               {
@@ -83,29 +87,41 @@ namespace vcsn
                 goto done;
 
               case '-':
+                dots = 0;
                 if (prev)
                   {
-                    eat(is, '-');
+                    is.ignore();
                     res.add_range(*prev, L::get_letter(is));
                     prev = boost::none;
-                    break;
                   }
                 else
                   goto insert;
+                break;
+
+              case '.':
+                ++dots;
+                if (dots == 1 && prev)
+                  res.add_letter(*prev);
+                prev = L::get_letter(is);
+                if (dots == 3)
+                  {
+                    res.open_ = true;
+                    prev = boost::none;
+                    dots = 0;
+                  }
+                break;
 
               insert:
               default:
-                {
-                  if (prev)
-                    res.add_letter(*prev);
-                  prev = L::get_letter(is);
-                  break;
-                }
+                if (prev)
+                  res.add_letter(*prev);
+                prev = L::get_letter(is);
+                dots = 0;
+                break;
               }
     done:
           if (prev)
             res.add_letter(*prev);
-          ;
         }
       else // is.peek() != '('
         res.open_ = true;

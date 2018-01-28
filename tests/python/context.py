@@ -40,16 +40,28 @@ for c in ['lal<char(abc)>, b', 'lal(abc), b']:
 for c in ['lal<char>, b', 'lal, b']:
     check(c, '[...]? → 𝔹')
 
-# An open context is printed as open in LaTeX.
 check('lal, b',      r'\{\ldots\}^?\to\mathbb{B}', 'latex')
 check('lal, b',      r'[...]? -> B',               'text')
-check('lal, b',      r'[...]? → 𝔹',               'utf8')
+check('lal, b',      r'[...]? → 𝔹',                'utf8')
 check('lal(abc), b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
-check('lal(abc), b', r'[abc]? -> B',          'text')
-check('lal(abc), b', r'[abc]? → 𝔹',          'utf8')
-check('lal(), b',    r'\{\}^?\to\mathbb{B}',  'latex')
-check('lal(), b',    r'[]? -> B',             'text')
+check('lal(abc), b', r'[abc]? -> B',                'text')
+check('lal(abc), b', r'[abc]? → 𝔹',                 'utf8')
+check('lal(), b',    r'\{\}^?\to\mathbb{B}', 'latex')
+check('lal(), b',    r'[]? -> B',            'text')
 check('lal(), b',    r'[]? → 𝔹',             'utf8')
+
+# Check open/close.
+check('[a] -> b', '[a]? → 𝔹')
+check('[a.] -> b', '[.a]? → 𝔹')
+check('[a..] -> b', '[.a]? → 𝔹')
+check('[a...] -> b', '[a...]? → 𝔹')
+check('[a...b] -> b', '[ab...]? → 𝔹')
+# In ASCII: 44 ,  45 -  46 .  47 /  48 0
+check('[,-...] -> b', '[\,\-.]? → 𝔹')
+check('[,-....] -> b', '[\,\-....]? → 𝔹')
+check('[.-0] -> b', '[./0]? → 𝔹')
+check('[...-0] -> b', '[\-0...]? → 𝔹')
+
 
 # letterset and different char_letters.
 check(r'lal(), b',       r'[]? → 𝔹')

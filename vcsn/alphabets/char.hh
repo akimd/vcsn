@@ -290,5 +290,4 @@ namespace vcsn
   {
     return {special_letter()};
   }
-
 }
