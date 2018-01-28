@@ -315,7 +315,7 @@ namespace vcsn
       /// Eliminate state s in the case of labels are one.
       template <typename Kind = typename context_t_of<automaton_t>::kind_t>
       auto eliminate_state_(state_t s)
-        -> std::enable_if_t<std::is_same<Kind, labels_are_one>::value,
+        -> std::enable_if_t<std::is_same_v<Kind, labels_are_one>,
                        void>
       {
         neighbors_.clear();
@@ -374,7 +374,7 @@ namespace vcsn
       // relationship in Vcsn.
       template <typename Kind>
       auto eliminate_state_impl_(state_t s)
-        -> std::enable_if_t<std::is_same<Kind, labels_are_expressions>::value,
+        -> std::enable_if_t<std::is_same_v<Kind, labels_are_expressions>,
                        void>
       {
         neighbors_.clear();

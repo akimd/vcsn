@@ -25,8 +25,8 @@ namespace vcsn
   template <Automaton Aut1, Automaton Aut2>
   auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
-    -> std::enable_if_t<(std::is_same<weightset_t_of<Aut1>, b>::value
-                          && std::is_same<weightset_t_of<Aut2>, b>::value),
+    -> std::enable_if_t<(std::is_same_v<weightset_t_of<Aut1>, b>
+                          && std::is_same_v<weightset_t_of<Aut2>, b>),
                          bool>
   {
     const auto& l = realtime(a1);

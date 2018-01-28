@@ -39,7 +39,7 @@ namespace vcsn
 
   /// Minimization for Boolean automata: auto_tag.
   template <Automaton Aut>
-  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<std::is_same_v<weightset_t_of<Aut>, b>,
                     quotient_t<Aut>>
   minimize(const Aut& a, auto_tag = {})
   {
@@ -48,7 +48,7 @@ namespace vcsn
 
   /// Minimization for non Boolean automata: auto_tag..
   template <Automaton Aut>
-  std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<!std::is_same_v<weightset_t_of<Aut>, b>,
                     quotient_t<Aut>>
   minimize(const Aut& a, auto_tag = {})
   {
@@ -60,7 +60,7 @@ namespace vcsn
   /// \param a     the automaton
   /// \param algo  the algorithm to run.
   template <Automaton Aut>
-  std::enable_if_t<std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<std::is_same_v<weightset_t_of<Aut>, b>,
                    quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {
@@ -118,7 +118,7 @@ namespace vcsn
   /// \param a     the automaton
   /// \param algo  the algorithm to run.
   template <Automaton Aut>
-  std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+  std::enable_if_t<!std::is_same_v<weightset_t_of<Aut>, b>,
                     quotient_t<Aut>>
   minimize(const Aut& a, const std::string& algo)
   {

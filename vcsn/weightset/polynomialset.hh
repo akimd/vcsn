@@ -237,7 +237,7 @@ namespace vcsn
     auto
     add_here_impl_(value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
-                           && std::is_same<WS, b>::value),
+                           && std::is_same_v<WS, b>),
                      value_t&>
     {
       l.set() |= r.set();
@@ -249,7 +249,7 @@ namespace vcsn
     auto
     add_here_impl_(value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
-                           && std::is_same<WS, f2>::value),
+                           && std::is_same_v<WS, f2>),
                           value_t&>
     {
       l.set() ^= r.set();
@@ -449,7 +449,7 @@ namespace vcsn
     auto
     scalar_product(const value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
-                           && std::is_same<WS, b>::value),
+                           && std::is_same_v<WS, b>),
                      weight_t>
     {
       return l.set().intersects(r.set());
@@ -461,7 +461,7 @@ namespace vcsn
     auto
     scalar_product(const value_t& l, const value_t& r) const
       -> std::enable_if_t<(WetType == wet_kind_t::bitset
-                           && std::is_same<WS, f2>::value),
+                           && std::is_same_v<WS, f2>),
                           weight_t>
     {
       return (l.set() & r.set()).count() % 2;

@@ -33,7 +33,7 @@ namespace vcsn
       using expression_t = typename expressionset_t::value_t;
       using context_t = context_t_of<expressionset_t>;
       using weightset_t = weightset_t_of<context_t>;
-      static_assert(std::is_same<weightset_t, b>::value,
+      static_assert(std::is_same_v<weightset_t, b>,
                     "star_normal_form: requires Boolean weights");
 
       using weight_t = typename weightset_t::value_t;

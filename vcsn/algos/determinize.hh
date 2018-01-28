@@ -165,7 +165,7 @@ namespace vcsn
       auto complete_(state_t src, const state_name_t& ss)
         -> std::enable_if_t<K == wet_kind_t::bitset>
       {
-        static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+        static_assert(std::is_same_v<weight_t_of<Aut>, bool>,
                       "determinize: boolean: requires B or F2 weights");
         if (Lazy)
           aut_->set_lazy(src, false);
@@ -281,7 +281,7 @@ namespace vcsn
   determinize(const Aut& a, Tag = {}, bool_constant<Lazy> = {})
   {
     constexpr auto kind =
-      std::is_same<Tag, boolean_tag>::value
+      std::is_same_v<Tag, boolean_tag>
       ? wet_kind_t::bitset
       : detail::wet_kind<labelset_t_of<Aut>, weightset_t_of<Aut>>();
     auto res = make_shared_ptr<determinized_automaton<Aut, kind, Lazy>>(a);
@@ -296,7 +296,7 @@ namespace vcsn
     /// The best tag depending on the type of Aut.
     template <Automaton Aut>
     using determinization_tag
-      = std::conditional_t<std::is_same<weight_t_of<Aut>, bool>::value,
+      = std::conditional_t<std::is_same_v<weight_t_of<Aut>, bool>,
                            boolean_tag,
                            weighted_tag>;
   }
@@ -329,12 +329,12 @@ namespace vcsn
       /// Enable if Aut is over Booleans.
       template <Automaton Aut, typename Type = void>
       using enable_if_boolean_t
-        = std::enable_if_t<std::is_same<weight_t_of<Aut>, bool>::value, Type>;
+        = std::enable_if_t<std::is_same_v<weight_t_of<Aut>, bool>, Type>;
 
       /// Enable if Aut is not over Booleans.
       template <Automaton Aut, typename Type = void>
       using enable_if_not_boolean_t
-        = std::enable_if_t<!std::is_same<weight_t_of<Aut>, bool>::value, Type>;
+        = std::enable_if_t<!std::is_same_v<weight_t_of<Aut>, bool>, Type>;
 
       /// Helper function to facilitate dispatch below.
       template <Automaton Aut, typename Tag, bool Lazy = false>

@@ -142,8 +142,8 @@ namespace vcsn
       {
         using lhs_t = input_automaton_t<0>;
         using rhs_t = input_automaton_t<1>;
-        constexpr bool bb = (std::is_same<weightset_t_of<lhs_t>, b>::value
-                             && std::is_same<weightset_t_of<rhs_t>, b>::value);
+        constexpr bool bb = (std::is_same_v<weightset_t_of<lhs_t>, b>
+                             && std::is_same_v<weightset_t_of<rhs_t>, b>);
         static_assert(bb, "add: requires Boolean weightset");
         initialize_conjunction();
 

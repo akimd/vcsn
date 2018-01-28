@@ -27,7 +27,7 @@ namespace vcsn
     template <Automaton Aut>
     class minimizer<Aut, moore_tag>
     {
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+      static_assert(std::is_same_v<weightset_t_of<Aut>, b>,
                     "minimize: moore: requires Boolean weights");
       static_assert(labelset_t_of<Aut>::is_letterized(),
                     "minimize: moore: requires letterized labelset");

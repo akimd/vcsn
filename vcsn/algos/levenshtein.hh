@@ -17,7 +17,7 @@ namespace vcsn
                   "levenshtein: labelset must be a tupleset");
     static_assert(Context::labelset_t::size() == 2,
                   "levenshtein: labelset must have 2 tapes");
-    static_assert(std::is_same<typename Context::weightset_t, nmin>::value,
+    static_assert(std::is_same_v<typename Context::weightset_t, nmin>,
                   "levenshtein: weightset must be nmin");
     using label_t = typename Context::labelset_t::value_t;
     const auto& ls = *ctx.labelset();

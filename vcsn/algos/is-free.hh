@@ -65,6 +65,6 @@ namespace vcsn
   constexpr bool is_letterized_boolean()
   {
     return labelset_t_of<Aut>::is_letterized()
-      && std::is_same<vcsn::weightset_t_of<Aut>, vcsn::b>::value;
+      && std::is_same_v<vcsn::weightset_t_of<Aut>, vcsn::b>;
   }
 }

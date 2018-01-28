@@ -27,7 +27,7 @@ namespace vcsn
     template <Automaton Aut>
     class minimizer<Aut, signature_tag>
     {
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+      static_assert(std::is_same_v<weightset_t_of<Aut>, b>,
                     "minimize: signature: requires Boolean weights");
 
       using automaton_t = Aut;
@@ -288,7 +288,7 @@ namespace vcsn
     {
       template <Automaton Aut>
       ATTRIBUTE_NORETURN
-      std::enable_if_t<!std::is_same<weightset_t_of<Aut>, b>::value,
+      std::enable_if_t<!std::is_same_v<weightset_t_of<Aut>, b>,
                         quotient_t<Aut>>
       minimize(const Aut&, signature_tag)
       {

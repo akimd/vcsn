@@ -23,7 +23,7 @@ namespace vcsn
     public:
       static_assert(labelset_t_of<Aut>::is_letterized(),
                     "universal: requires letterized labelset");
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+      static_assert(std::is_same_v<weightset_t_of<Aut>, b>,
                     "universal: requires Boolean weights");
 
       using automaton_t = Aut;

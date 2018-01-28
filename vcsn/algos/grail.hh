@@ -22,7 +22,7 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lat,
                     "fado: requires tuple or letter labels");
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+      static_assert(std::is_same_v<weightset_t_of<Aut>, b>,
                     "fado: requires Boolean weights");
 
       using super_t = printer<Aut>;
@@ -135,7 +135,7 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lal,
                     "grail: requires letter labels");
-      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
+      static_assert(std::is_same_v<weightset_t_of<Aut>, b>,
                     "grail: requires Boolean weights");
 
       using super_t = printer<Aut>;

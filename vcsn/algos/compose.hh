@@ -94,8 +94,8 @@ namespace vcsn
       static_assert(full_context_t_of<Rhs>::is_lat,
                     "compose: rhs labelset must be a tupleset");
 
-      static_assert(std::is_same<labelset_t_of<Lhs>,
-                                 labelset_t_of<Rhs>>::value,
+      static_assert(std::is_same_v<labelset_t_of<Lhs>,
+                                 labelset_t_of<Rhs>>,
                     "compose: common tape must be of same type");
 
       /// A static list of integers.
