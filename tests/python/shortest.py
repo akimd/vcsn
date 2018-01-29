@@ -76,7 +76,7 @@ check_enumerate(r'(\e|x + a|\e)*', 2,
                 r'\e|\e + \e|x + a|\e + <2>a|x + \e|xx + <3>a|xx + aa|\e + <3>aa|x + <6>aa|xx')
 
 aut = vcsn.automaton('''
-context = "letterset<char_letters(a)>, q"
+context = [a]? → ℚ
 $ -> 0
 0 -> 1 <2>a
 0 -> 2 <-1>a
@@ -88,7 +88,7 @@ $ -> 0
 check_one(aut, 1, '\z')
 
 aut = vcsn.automaton('''
-context = "letterset<char_letters(ab)>, q"
+context = [ab]? → ℚ
 $ -> 0
 0 -> 1 <2>a
 0 -> 2 <-1>a

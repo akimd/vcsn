@@ -5,7 +5,7 @@ from test import *
 
 g = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   {
     node [shape = circle]
@@ -67,7 +67,7 @@ CHECK_EQ('''digraph
 not_synchronizing = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -109,7 +109,7 @@ for i in [3, 5, 7]:
 not_deterministic = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -150,7 +150,7 @@ else:
 synchro_regression = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   {
     node [shape = point, width = 0]

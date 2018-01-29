@@ -111,7 +111,7 @@ check(metext('lan-z.in.gv'), metext('lan-z.out.gv'))
 
 check_fail(r'''digraph
 {
-  vcsn_context = "law(ab), zmin"
+  vcsn_context = "[ab]* → ℤmin"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -156,7 +156,7 @@ check(metext('lan-qr.in.gv'), metext('lan-qr.out.gv'),
 # FIXME(ap): with distance, inaccessible states get pruned
 check(r'''digraph
 {
-  vcsn_context = "lal(z), expressionset<lal(abcdefgh), q>"
+  vcsn_context = "[z]? → RatE[[abcdefgh]? → ℚ]"
   rankdir = LR
   node [shape = circle]
   {
@@ -181,7 +181,7 @@ check(r'''digraph
   9 -> F
 }''', '''digraph
 {
-  vcsn_context = "letterset<char_letters(z)>, expressionset<letterset<char_letters(abcdefgh)>, q>"
+  vcsn_context = "[z]? → RatE[[abcdefgh]? → ℚ]"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -215,7 +215,7 @@ check(metext('lan-b.in.gv'), metext('lan-b.out.gv'))
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lal(ab),lal(xy)>, b"
+  vcsn_context = "[ab]? × [xy]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(\\e,\\e)"]
   0 -> 1 [label = "(a,x)"]
@@ -225,7 +225,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(xy)>>, b"
+  vcsn_context = "[ab]? × [xy]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -257,7 +257,7 @@ check(r'''digraph
 
 check(r'''digraph
 {
-  vcsn_context = "lat<lal(ab),lal(xy)>, b"
+  vcsn_context = "[ab]? × [xy]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a,x)"]
   0 -> 2 [label = "(b,y)"]
@@ -266,7 +266,7 @@ check(r'''digraph
   2 -> F2
 }''', r'''digraph
 {
-  vcsn_context = "lat<letterset<char_letters(ab)>, letterset<char_letters(xy)>>, b"
+  vcsn_context = "[ab]? × [xy]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

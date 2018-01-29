@@ -6,7 +6,7 @@ from test import *
 aut1 = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal(abcd), zmin"
+  vcsn_context = "[abcd]? → ℤmin"
 
   I0 -> 0
   0 -> 1 [label = "<1>a"]
@@ -24,7 +24,7 @@ CHECK(aut1.has_twins_property())
 aut2 = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal(abcd), zmin"
+  vcsn_context = "[abcd]? → ℤmin"
 
   I0 -> 0
   0 -> 1 [label = "<1>a"]
@@ -41,7 +41,7 @@ CHECK(not aut2.has_twins_property())
 
 aut3 = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal(abcd), zmin"
+  vcsn_context = "[abcd]? → ℤmin"
   I0 -> 0
   0 -> 1 [label = "<2>a"]
   0 -> 2 [label = "<3>a"]
@@ -60,7 +60,7 @@ CHECK(aut3.has_twins_property())
 
 aut4 = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal(abcd), zmin"
+  vcsn_context = "[abcd]? → ℤmin"
   I0 -> 0
   0 -> 1 [label = "<2>a"]
   0 -> 2 [label = "<3>a"]
@@ -79,7 +79,7 @@ CHECK(not aut4.has_twins_property())
 
 aut5 = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal(abcd), q"
+  vcsn_context = "[abcd]? → ℚ"
   I0 -> 0
   0 -> 1 [label = "<2/3>a"]
   0 -> 2 [label = "<3/5>a"]
@@ -96,7 +96,7 @@ CHECK(aut5.has_twins_property())
 
 aut6 = vcsn.automaton('''digraph
 {
-  vcsn_context = "lal(abcd), q"
+  vcsn_context = "[abcd]? → ℚ"
   I0 -> 0
   0 -> 1 [label = "<2/3>a"]
   0 -> 2 [label = "<3/5>a"]
@@ -112,7 +112,7 @@ CHECK(not aut6.has_twins_property())
 
 
 aut7 = vcsn.automaton('''digraph {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   I0 -> 0
   0 -> 1 [label ="<3>a"]
   0 -> 2 [label = "<5>a"]
@@ -127,7 +127,7 @@ CHECK(aut7.has_twins_property())
 
 
 aut8 = vcsn.automaton('''digraph {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   I0 -> 0
   0 -> 1 [label ="<3>a"]
   0 -> 2 [label = "<5>a"]

@@ -66,7 +66,7 @@ check(True, vcsn.automaton('''
 check(True, vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
 }
 '''))
 
@@ -96,7 +96,7 @@ check(False, vcsn.automaton('''
 
 # A word transition.
 check(False, vcsn.automaton('''
-  context = law, b
+  context = [...]* → 𝔹
   $ -> 0
   0 -> 1 ab
   1 -> $
@@ -104,7 +104,7 @@ check(False, vcsn.automaton('''
 
 # Wordset, but deterministic.
 check(True, vcsn.automaton('''
-  context = law, b
+  context = [...]* → 𝔹
   $ -> 0
   0 -> 1 a, b
   1 -> $

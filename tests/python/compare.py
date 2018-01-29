@@ -17,44 +17,44 @@ def check_lt(a1, a2):
 
 ctx = vcsn.context('lal, q')
 # First, comparison on source state numbers.
-a1 = vcsn.automaton('''context = lal, z
+a1 = vcsn.automaton('''context = [...]? → ℤ
 0 -> 0 a
 0 -> 1 a
 ''')
-a2 = vcsn.automaton('''context = lal, z
+a2 = vcsn.automaton('''context = [...]? → ℤ
 0 -> 0 a
 1 -> 0 a
 ''')
 check_lt(a1, a2)
 
 # Second, comparison on labels.
-a1 = vcsn.automaton('''context = lal, z
+a1 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 0 a
 0 -> $''')
-a2 = vcsn.automaton('''context = lal, z
+a2 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 0 b
 0 -> $''')
 check_lt(a1, a2)
 
 # Third, comparison on weights.
-a1 = vcsn.automaton('''context = lal, z
+a1 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 0 <1>a
 0 -> $''')
-a2 = vcsn.automaton('''context = lal, z
+a2 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 0 <2>a
 0 -> $''')
 check_lt(a1, a2)
 
 # Last, comparison on destination state number.
-a1 = vcsn.automaton('''context = lal, z
+a1 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 0 a
 1 -> $''')
-a2 = vcsn.automaton('''context = lal, z
+a2 = vcsn.automaton('''context = [...]? → ℤ
 $ -> 0
 0 -> 1 a
 2 -> $''')

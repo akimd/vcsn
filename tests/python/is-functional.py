@@ -8,7 +8,7 @@ from test import *
 ## ----- ##
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal(abc), lal(xyz)>, z"
+  vcsn_context = "[abc]? × [xyz]? → ℤ"
   I0 -> 0
   0 -> 1 [label = "<2>(a, x)"]
   1 -> 2 [label = "<3>(b, y)"]
@@ -17,7 +17,7 @@ a = vcsn.automaton('''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<lal(abc),lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(a, x)"]
@@ -28,7 +28,7 @@ a = vcsn.automaton(r'''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal(abc),lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(a, y)"]
@@ -39,7 +39,7 @@ a = vcsn.automaton('''digraph {
 CHECK(not a.is_functional())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal(abc),lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
   1 -> 2 [label = "(b, y)"]
@@ -51,7 +51,7 @@ a = vcsn.automaton('''digraph {
 CHECK(not a.is_functional())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal(abc),lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
   1 -> 2 [label = "(b, y)"]
@@ -63,7 +63,7 @@ a = vcsn.automaton('''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal(ab), lal(xy)>, z"
+  vcsn_context = "[ab]? × [xy]? → ℤ"
   I0 -> 0
   0 -> 1 [label = "<2>(a, x), <3>(b, y)"]
   1 -> F1
@@ -75,7 +75,7 @@ CHECK(a.is_functional())
 ## ----- ##
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<lal(abc),lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, \\e)"]
   0 -> 2 [label = "(a, x)"]
@@ -86,7 +86,7 @@ a = vcsn.automaton(r'''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<lal(xy),lal(ab)>, b"
+  vcsn_context = "[xy]? × [ab]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   0 -> 2 [label = "(x, a)"]
@@ -99,7 +99,7 @@ CHECK(not a.is_functional())
 
 # states non coaccessible
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<lal(abc), lal(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(a, x), (b, y)"]
   1 -> F1
@@ -115,7 +115,7 @@ CHECK(a.is_functional())
 ## ----- ##
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law(abc),law(xyz)>, b"
+  vcsn_context = "[abc]* × [xyz]* → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(aaa, x)"]
   1 -> 2 [label = "(a, x)"]
@@ -127,7 +127,7 @@ a = vcsn.automaton(r'''digraph {
 CHECK(a.is_functional())
 
 a = vcsn.automaton(r'''digraph {
-  vcsn_context = "lat<law(abc),law(xyz)>, b"
+  vcsn_context = "[abc]* × [xyz]* → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(aaa, xx)"]
   1 -> 2 [label = "(a, x)"]

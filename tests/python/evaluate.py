@@ -24,7 +24,7 @@ for c in ["lal(ab), z", "lal, z", "law(ab), z"]:
     simple = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal(ab), z"
+      vcsn_context = "[ab]? → ℤ"
       rankdir = LR
       node [shape = circle]
       {
@@ -49,7 +49,7 @@ for c in ["lal(ab), z", "lal, z", "law(ab), z"]:
     initial_weight = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal(ab), z"
+      vcsn_context = "[ab]? → ℤ"
       rankdir = LR
       node [shape = circle]
       {
@@ -73,7 +73,7 @@ for c in ["lal(abc), z", "law(abc), z"]:
     more_letters = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal(abc), z"
+      vcsn_context = "[abc]? → ℤ"
       rankdir = LR
       node [shape = circle]
       {
@@ -96,7 +96,7 @@ for c in ["lal(abc), z", "law(abc), z"]:
     prod = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal(abc), z"
+      vcsn_context = "[abc]? → ℤ"
       rankdir = LR
       node [shape = circle]
       {
@@ -119,7 +119,7 @@ for c in ["lal(abc), z", "law(abc), z"]:
     cmplex = vcsn.automaton('''
     digraph
     {
-      vcsn_context = "lal(abc), z"
+      vcsn_context = "[abc]? → ℤ"
       rankdir = LR
       node [shape = circle]
       {
@@ -201,7 +201,7 @@ ctx = vcsn.context('law(abcdef), q')
 a_epsilon = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "wordset<char_letters(abcdef)>, q"
+  vcsn_context = "[abcdef]* → ℚ"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

@@ -17,6 +17,10 @@ def modernize(s: str) -> str:
     s = re.sub(r'(?<=\bvcsn_context = \\")(.*)(?=\\"\\n)',
                lambda m: vcsn.context(m.group(1)).format('utf8'),
                s)
+    # Dot contexts.
+    s = re.sub(r'(?<=\bvcsn_context = ")(.*)(?=")',
+               lambda m: vcsn.context(m.group(1)).format('utf8'),
+               s)
     # Daut context: strip quotes.
     s = re.sub(r'(?<=\bcontext = )"(.*)"',
                lambda m: re.sub(r'\\(.)', r'\1', m.group(1)),
@@ -36,6 +40,8 @@ class Test(unittest.TestCase):
                    r'vcsn_context = \"[...]? → 𝔹\"\n')
         self.check(r'vcsn_context = \"lal(abc), b\"\n',
                    r'vcsn_context = \"[abc]? → 𝔹\"\n')
+        self.check(r'vcsn_context = "lal(abc), b"',
+                   r'vcsn_context = "[abc]? → 𝔹"')
         self.check(r'context = "lal(\"), b"',
                    r'context = ["]? → 𝔹')
 

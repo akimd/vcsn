@@ -198,7 +198,7 @@ check(c_ratb.expression("<o>(a|x)").standard(),
 
 a1 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal(xyz), lal(abc)>, b"
+  vcsn_context = "[xyz]? × [abc]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
@@ -209,7 +209,7 @@ a1 = vcsn.automaton(r'''digraph
 
 a2 = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal(abc), lal(def)>, b"
+  vcsn_context = "[abc]? × [def]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(\\e, d)"]
   1 -> 2 [label = "(a, e)"]

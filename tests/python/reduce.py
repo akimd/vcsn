@@ -105,7 +105,7 @@ check_reduce(a, '''digraph
 
 a = vcsn.automaton('''
 digraph {
-    vcsn_context = "lal(abc), z"
+    vcsn_context = "[abc]? → ℤ"
     I -> 0
     1 -> F
     0 -> 0 [label = "a, b"]

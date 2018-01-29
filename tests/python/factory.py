@@ -89,7 +89,7 @@ CHECK_EQ(ctx.double_ring(0, []),
          vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abcd), b"
+  vcsn_context = "[abcd]? → 𝔹"
   rankdir = LR
 }
 '''))

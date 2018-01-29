@@ -126,7 +126,7 @@ CHECK(not a.is_deterministic())
 ## -------------------- ##
 
 aut1 = vcsn.automaton('''digraph {
-  vcsn_context = "lal(abc), b"
+  vcsn_context = "[abc]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -140,7 +140,7 @@ aut1 = vcsn.automaton('''digraph {
 CHECK(aut1.is_cycle_ambiguous())
 
 aut2 = vcsn.automaton('''digraph {
-  vcsn_context = "lal(abc), b"
+  vcsn_context = "[abc]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
@@ -156,7 +156,7 @@ CHECK(not aut2.is_cycle_ambiguous())
 aut3 = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abc), b"
+  vcsn_context = "[abc]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "c"]
   1 -> 2 [label = "a"]

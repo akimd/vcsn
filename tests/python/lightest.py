@@ -28,7 +28,7 @@ check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb',
 check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c', k_algos)
 
 aut = vcsn.automaton('''
-context = "lal, nmin"
+context = [...]? → ℕmin
 $ -> 0
 0 -> 1 <6>a
 0 -> 2 <1>a

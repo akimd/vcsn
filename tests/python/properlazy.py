@@ -10,7 +10,7 @@ from test import *
 #
 
 aut = vcsn.automaton(r'''
-context = "lal(a), b"
+context = [a]? → 𝔹
 $ -> 0
 0 -> 1 a
 1 -> 2 \e

@@ -13,8 +13,11 @@ p.add_argument('files', metavar='file', nargs='+', type=Path, default=None,
 args = p.parse_args()
 
 for f in args.files:
-    s = modernize(f.read_text())
-    mod = f.stat().st_mode
-    f.rename(str(f)+'.bak')
-    f.write_text(s)
-    f.chmod(mod)
+    try:
+        s = modernize(f.read_text())
+        mod = f.stat().st_mode
+        f.rename(str(f)+'.bak')
+        f.write_text(s)
+        f.chmod(mod)
+    except RuntimeError as e:
+        print('{}: cannot modernize: {}'.format(f, e))

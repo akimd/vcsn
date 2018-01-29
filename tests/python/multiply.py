@@ -51,7 +51,7 @@ bc = vcsn.context('lal(bc), b').expression('(b+c)*')
 result = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abc), b"
+  vcsn_context = "[abc]? → 𝔹"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -101,7 +101,7 @@ CHECK_EQ(vcsn.context('lal(abc), b').expression('[ab]*[bc]*'), ab * bc)
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -125,7 +125,7 @@ digraph
 CHECK_EQ(vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]

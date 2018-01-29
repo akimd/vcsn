@@ -36,7 +36,7 @@ CHECK_EQ(z.weight('128'), binary7('10'))
 
 # Check that only the accessible part is kept using binary.gv,
 # modified with an inaccessible part.
-inacc = binary + vcsn.automaton('''context = lal, z
+inacc = binary + vcsn.automaton('''context = [...]? → ℤ
 0 -> 1 0''')
 for i in [0, 1, 4, 7]:
     CHECK_EQ(binary & i, (inacc & i).__value__())

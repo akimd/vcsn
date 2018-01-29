@@ -15,7 +15,7 @@ def check(input, exp):
 
 a = vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal(a-e), b"
+  vcsn_context = "[abcde]? → 𝔹"
   I -> 0
   2 -> F
   0 -> 1 -> 2 -> 0 [label = b]

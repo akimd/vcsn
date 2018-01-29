@@ -23,7 +23,7 @@ CHECK_EQ('<2>((<2>a)*ba*b)', str(a1.shuffle(a1).expression()))
 abs = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -45,7 +45,7 @@ digraph
 mabs = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), z"
+  vcsn_context = "[ab]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]

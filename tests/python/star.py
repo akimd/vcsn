@@ -53,7 +53,7 @@ check(l_br.expression('<y>a(<x>a)*').automaton('derived_term'),
 '''
 digraph
 {
-  vcsn_context = "lal(a), expressionset<lal(xy), b>"
+  vcsn_context = "[a]? → RatE[[xy]? → 𝔹]"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -75,7 +75,7 @@ digraph
 ''')
 
 check('''
-context = "lal(ab), b"
+context = [ab]? → 𝔹
 $ -> 0
 0 -> 1 a
 0 -> 2 b
@@ -85,7 +85,7 @@ $ -> 0
 '''
 digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -117,7 +117,7 @@ digraph
 check('''
 digraph
 {
-  vcsn_context = "lal(ab), expressionset<lal(xyz), b>"
+  vcsn_context = "[ab]? → RatE[[xyz]? → 𝔹]"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -141,7 +141,7 @@ digraph
 '''
 digraph
 {
-  vcsn_context = "lal(ab), expressionset<lal(xyz), b>"
+  vcsn_context = "[ab]? → RatE[[xyz]? → 𝔹]"
   rankdir = LR
   {
     node [shape = point, width = 0]

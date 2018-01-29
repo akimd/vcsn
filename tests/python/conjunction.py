@@ -113,7 +113,7 @@ CHECK_EQ(r'''digraph
 lhs = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -145,7 +145,7 @@ digraph
 rhs = vcsn.automaton(r'''
 digraph
 {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -269,7 +269,7 @@ CHECK_EQ('''digraph
 }''', vcsn.automaton('''
 digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   I -> 0
   0 -> 1 [label = "a"]
   1 -> 2 [label = "a"]
@@ -639,12 +639,12 @@ CHECK_EQUIV(vcsn.automaton(res),
 # Simple micro-optimization: don't build states which have no possible
 # outgoing transitions.
 a1 = vcsn.automaton(r'''
-context = "lal, b"
+context = [...]? → 𝔹
 $ -> 0
 ''')
 
 a2 = vcsn.automaton(r'''
-context = "lal, b"
+context = [...]? → 𝔹
 $ -> 0
 0 -> 1 \e
 1 -> $
@@ -672,7 +672,7 @@ CHECK_EQ(res, a1 & a2)
 # Because of stupid implementation details, we used to _not_ insplit
 # the automaton in repeated conjunction, yielding an incorrect result.
 a = vcsn.automaton(r'''
-context = "lal, q"
+context = [...]? → ℚ
 $ -> 0
 0 -> 0 <1/2>\e, <2>a
 0 -> $
@@ -684,7 +684,7 @@ CHECK_EQ((a & a & a).strip(), a & 3)
 # An automaton such that the insplit-based and the rank-based
 # algorithm give different results.
 a = vcsn.automaton(r'''
-context = "lal, q"
+context = [...]? → ℚ
 $ -> 0
 0 -> 0 <1/2>\e, a
 0 -> $
@@ -737,7 +737,7 @@ CHECK_EQ(insplit_res, a & a & a)
 ###############################################
 
 a1 = vcsn.automaton(r'''
-context = "lal(abc), b"
+context = [abc]? → 𝔹
   $ -> 0
   0 -> 1 a
   1 -> $
@@ -746,7 +746,7 @@ context = "lal(abc), b"
 ''')
 
 a2 = vcsn.automaton(r'''
-context = "lal(abc), b"
+context = [abc]? → 𝔹
   $ -> 0
   0 -> 1 \e
   1 -> 2 a

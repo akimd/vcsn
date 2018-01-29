@@ -21,7 +21,7 @@ CHECK_EQ(meaut('abc.gv'), union(ab, bc))
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -53,7 +53,7 @@ digraph
 b = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -75,7 +75,7 @@ digraph
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(abc), z"
+  vcsn_context = "[abc]? → ℤ"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -118,7 +118,7 @@ a2 = vcsn.context('lal(b), expressionset<lal(y), b>').expression('<y>b*').standa
 exp = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal(ab), expressionset<lal(xy), b>"
+  vcsn_context = "[ab]? → RatE[[xy]? → 𝔹]"
   rankdir = LR
   {
     node [shape = point, width = 0]

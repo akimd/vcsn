@@ -42,7 +42,7 @@ check(a, 5, '''digraph
 a = vcsn.automaton('''
 digraph
 {
-  vcsn_context = "letterset<char_letters(ab)>, b"
+  vcsn_context = "[ab]? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
