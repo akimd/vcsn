@@ -10,13 +10,19 @@ namespace vcsn
 {
   namespace rat
   {
-
     /// Copy/convert a rational expression.
     ///
     /// \tparam InExpSet   the input expressionset type.
     /// \tparam OutExpSet  the output expressionset type.
-    template <typename InExpSet, typename OutExpSet = InExpSet>
-    typename OutExpSet::value_t
+    template <typename InExpSet, typename OutExpSet>
+    std::enable_if_t<std::is_same<InExpSet, OutExpSet>{},
+                     typename OutExpSet::value_t>
+    copy(const InExpSet& in_rs, const OutExpSet& out_rs,
+         const typename InExpSet::value_t& v);
+
+    template <typename InExpSet, typename OutExpSet>
+    std::enable_if_t<!std::is_same<InExpSet, OutExpSet>{},
+                     typename OutExpSet::value_t>
     copy(const InExpSet& in_rs, const OutExpSet& out_rs,
          const typename InExpSet::value_t& v);
 
@@ -175,8 +181,36 @@ namespace vcsn
       out_expression_t res_;
     };
 
+
+    // If possible, avoid useless copies.
     template <typename InExpSet, typename OutExpSet>
-    typename OutExpSet::value_t
+    std::enable_if_t<std::is_same<InExpSet, OutExpSet>{},
+                     typename OutExpSet::value_t>
+    copy(const InExpSet& in_rs, const OutExpSet& out_rs,
+         const typename InExpSet::value_t& v)
+    {
+      // This should be enough: we don't need to check the context
+      // as its dynamic value for the labelset and weightset do
+      // not have any influence on the expression itself.
+      if (in_rs.identities() == out_rs.identities())
+        return v;
+      auto copy = copy_impl<InExpSet, OutExpSet>{in_rs, out_rs};
+      try
+        {
+          return copy(v);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e,
+                "  while converting expression ",
+                str_quote(to_string(in_rs, v)),
+                " to ", to_string(out_rs));
+        }
+    }
+
+    template <typename InExpSet, typename OutExpSet>
+    std::enable_if_t<!std::is_same<InExpSet, OutExpSet>{},
+                     typename OutExpSet::value_t>
     copy(const InExpSet& in_rs, const OutExpSet& out_rs,
          const typename InExpSet::value_t& v)
     {
@@ -193,5 +227,5 @@ namespace vcsn
                 " to ", to_string(out_rs));
         }
     }
-  } // namespace rat
-} // namespace vcsn
+  }
+}
