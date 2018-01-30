@@ -213,9 +213,20 @@ input:
     // FIXME: a better comparison would be nice.
     if (dyn::format(dyn::context_of($1.exp), "sname")
         == dyn::format(driver_.ctx_, "sname"))
-      $$ = $1;
+      {
+        if (0 < driver_.debug_level())
+          std::cerr << "kept the expression as it\n";
+        $$ = $1;
+      }
     else
-      TRY(@$, $$ = copy($1.exp, driver_.ctx_, driver_.ids_));
+      {
+        TRY(@$, $$ = copy($1.exp, driver_.ctx_, driver_.ids_));
+        if (0 < driver_.debug_level())
+          std::cerr
+            << "converted the expression\n"
+            << "  from: " << $1.exp << '\n'
+            << "    to: " << $$.exp << '\n';
+      }
     driver_.result_ = $$.exp;
     YYACCEPT;
   }

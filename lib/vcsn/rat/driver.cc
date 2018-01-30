@@ -85,16 +85,14 @@ namespace vcsn
       throw parser::syntax_error(l, "invalid input: " + s);
     }
 
-    /// The nesting limit for parser traces, as specified per
-    /// $YYDEBUG.
-    static int
-    debug_level_()
+    int
+    driver::debug_level()
     {
       int res = 0;
       if (const char* cp = getenv("YYDEBUG"))
         {
           res = 1;
-          std::istringstream s{cp};
+          auto s = std::istringstream{cp};
           s >> res;
         }
       return res;
@@ -107,13 +105,13 @@ namespace vcsn
       scanner_->scan_open_(is);
       location_ = l;
       // Parser.
-      parser p(*this);
+      auto&& p = parser{*this};
       // If the number of nested parser invocations is less than
       // $YYDEBUG, be verbose.  Recursive parsings are used for
       // weights; for instance "<<a>b>c" uses three (nested) parsers.
-      static int debug_level = debug_level_();
+      static int level = debug_level();
       static int nesting = 0;
-      p.set_debug_level(debug_level && nesting < debug_level);
+      p.set_debug_level(level && nesting < level);
       ++nesting;
       if (p.parse())
         result_ = nullptr;
