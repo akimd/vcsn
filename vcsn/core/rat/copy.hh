@@ -6,10 +6,8 @@
 
 #include <vcsn/algos/project.hh> // project.
 
-namespace vcsn
+namespace vcsn::rat
 {
-  namespace rat
-  {
 
     /// Copy/convert a rational expression.
     ///
@@ -178,6 +176,15 @@ namespace vcsn
          const typename InExpSet::value_t& v)
     {
       auto copy = copy_impl<InExpSet, OutExpSet>{in_rs, out_rs};
+      // If possible, avoid useless copies.
+      if constexpr (std::is_same_v<InExpSet, OutExpSet>)
+        {
+          // This should be enough: we don't need to check the context
+          // as its dynamic value for the labelset and weightset do
+          // not have any influence on the expression itself.
+          if (in_rs.identities() == out_rs.identities())
+            return v;
+        }
       try
         {
           return copy(v);
@@ -190,5 +197,4 @@ namespace vcsn
                 " to ", to_string(out_rs));
         }
     }
-  } // namespace rat
-} // namespace vcsn
+}

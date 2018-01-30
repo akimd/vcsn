@@ -246,6 +246,7 @@ namespace vcsn
         REGISTER(concatenate_expression, rs_t, rs_t);
         REGISTER(conjunction_expression, rs_t, rs_t);
         REGISTER(context_of_expression, rs_t);
+        REGISTER(copy_expression, rs_t, rs_t, rat::identities);
         REGISTER(expression_one, ctx_t, rat::identities);
         REGISTER(expression_zero, ctx_t, rat::identities);
         REGISTER(identities_of, rs_t);
