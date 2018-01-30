@@ -70,7 +70,11 @@ namespace vcsn
       /// From a string, generate a weight.
       dyn::weight make_weight(const location& loc, const std::string& s);
 
-    private:
+      /// The nesting limit for parser traces, as specified per
+      /// $YYDEBUG.
+      static int debug_level();
+
+      private:
       friend class parser;
 
       /// The inital location.
