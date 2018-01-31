@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 import timeit
 import warnings
 
@@ -125,6 +126,12 @@ def log(*logs):
     'Print logs to stderr.'
     if args.verbose:
         print(*logs, file=sys.stderr)
+
+
+def comment(title, lines):
+    'Output metadata to the output file.'
+    lines = re.sub('^', '# {}: '.format(title), lines.rstrip(), flags=re.M)
+    print(lines, flush=True, file=args.out)
 
 
 # Number of the next bench report.  Because we are using a process
@@ -903,7 +910,17 @@ if args.list:
 
 print('vcsn version: {}'.format(vcsn.version))
 if args.out is not None:
-    print('# vcsn: {}'.format(vcsn.version), flush=True, file=args.out)
+    cxx = vcsn.config('configuration.cxx')
+    comment('vcsn', vcsn.version)
+    comment('date', time.strftime("%Y-%m-%d %H:%M:%S"))
+    comment('compiler', cxx)
+    comment('compiler', subprocess.check_output([cxx, '--version'],
+                                                universal_newlines=True))
+    uname = os.uname()
+    comment('sysname', uname.sysname)
+    comment('nodename', uname.nodename)
+    comment('release', uname.release)
+    comment('machine', uname.machine)
 if args.jobs == 0:
     for b in benches:
         Bench.run(b)
