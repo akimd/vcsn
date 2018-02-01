@@ -22,10 +22,8 @@
 #include <vcsn/misc/stream.hh>
 #include <vcsn/misc/tuple.hh>
 
-namespace vcsn
+namespace vcsn::rat
 {
-  namespace rat
-  {
 
   template <typename Context>
   expressionset_impl<Context>::expressionset_impl(const context_t& ctx,
@@ -1238,5 +1236,4 @@ namespace vcsn
 
 #undef DEFINE
 
-} // namespace rat
-} // namespace vcsn
+}
