@@ -41,7 +41,7 @@ run 0 2 -/bin/sh -c "vcsn thompson -Ee -ab |
                      vcsn evaluate -L -e-ab"
 
 run 1 - -"vcsn evaluate" </dev/null
-sed -e 's,^.*/vcsn-tools:,vcsn-tools:,' err.eff >error-message
+sed -Ee 's,^.*/(lt-)?vcsn-tools:,vcsn-tools:,' err.eff >error-message
 run 0 - -cat error-message <<EOF
 vcsn-tools: error: evaluate: no matching algorithm
   candidates are:
