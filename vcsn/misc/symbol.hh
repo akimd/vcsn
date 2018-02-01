@@ -59,7 +59,7 @@ namespace std
     size_t operator()(const vcsn::symbol& ss) const
     {
       // http://lists.boost.org/boost-users/2013/03/78007.php
-      hash<const void*> hasher;
+      auto hasher = hash<const void*>{};
       return hasher(&ss.get());
     }
   };
