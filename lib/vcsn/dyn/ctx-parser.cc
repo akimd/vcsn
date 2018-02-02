@@ -1,3 +1,5 @@
+#include <lib/vcsn/dyn/ctx-parser.hh>
+
 #include <iostream>
 #include <string>
 
@@ -125,12 +127,15 @@ namespace vcsn::dyn::parser
       weightset_basic = "weightset_basic";
 
   // An identifier must be separated from other alnum
-  auto ident(const std::string& id)
+  namespace
   {
-    // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
-    // `b x b` (standing for Cartesian product) would reject the first
-    // `b` as it is followed (after skipping spaces) by an alnum.
-    return lexeme[string(id) >> ! alnum];
+    auto ident(const std::string& id)
+    {
+      // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
+      // `b x b` (standing for Cartesian product) would reject the first
+      // `b` as it is followed (after skipping spaces) by an alnum.
+      return lexeme[string(id) >> ! alnum];
+    }
   }
 
   auto mkseriesset = [](auto& ctx) {
@@ -280,9 +285,12 @@ namespace vcsn::dyn::parser
 
 namespace vcsn::dyn
 {
-  parser::ConText_type const& context_parser()
+  namespace
   {
-    return parser::ConText;
+    parser::ConText_type const& context_parser()
+    {
+      return parser::ConText;
+    }
   }
 }
 
