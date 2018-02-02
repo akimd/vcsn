@@ -60,8 +60,7 @@ namespace vcsn
       void
       rec_(const unary_t<Type>& v, Fun&& fun)
       {
-        // FIXME: C++17: invoke.
-        res_ = (out_rs_.*fun)(rec_(v.sub()));
+        res_ = std::invoke(fun, out_rs_, rec_(v.sub()));
       }
 
       /// Factor the handling of n-ary operations.
@@ -73,8 +72,7 @@ namespace vcsn
         // 0 in `a|b+a|c` would result in `a+a`.
         auto res = rec_(v.head());
         for (const auto& c: v.tail())
-          // FIXME: C++17: invoke.
-          res = (out_rs_.*fun)(res, rec_(c));
+          res = std::invoke(fun, out_rs_, res, rec_(c));
         res_ = std::move(res);
       }
 
