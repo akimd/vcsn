@@ -389,10 +389,6 @@ Uniform initialization is badly supported, so we have useless ctors to
 please GCC (e.g., see minimize-signature), and also places where we use
 parens instead of braces.  At some point, we want to rule out 4.9.
 
-** Boost
-Boost.Optional 1.56 moves from opt.get_value_or to opt.value_or.  However,
-moving to C++17 should suffice: use std::optional.
-
 ** Copy
 There are numerous opportunities for an improved copy.  For instance when
 computing the square automaton (see has_twins_property), we would like to

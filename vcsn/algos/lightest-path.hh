@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vcsn/algos/k-lightest-path.hh>
 #include <vcsn/algos/a-star.hh>
@@ -70,14 +70,14 @@ namespace vcsn
   /// Given a path (typically computed by lightest_path), the
   /// corresponding monomial (label, weight).
   ///
-  /// \returns boost::none if there is no path from src to dst.
+  /// \returns std::nullopt if there is no path from src to dst.
   template <Automaton Aut>
   auto
   path_monomial(const Aut& aut,
                 const predecessors_t_of<Aut>& path,
                 state_t_of<Aut> src = Aut::element_type::pre(),
                 state_t_of<Aut> dst = Aut::element_type::post())
-    -> boost::optional<typename detail::word_polynomialset_t<context_t_of<Aut>>::monomial_t>
+    -> std::optional<typename detail::word_polynomialset_t<context_t_of<Aut>>::monomial_t>
   {
     auto ps = make_word_polynomialset(aut->context());
     const auto& pls = *ps.labelset();
@@ -95,6 +95,6 @@ namespace vcsn
         if (aut->src_of(t) == src)
           return {{l, w}};
       }
-    return boost::none;
+    return std::nullopt;
   }
 }

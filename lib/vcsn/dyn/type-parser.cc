@@ -138,7 +138,7 @@ namespace vcsn::ast
         else
           // int,
           // std::integral_constant<unsigned, 2>,
-          // boost::optional<unsigned>,
+          // std::optional<unsigned>,
           // std::vector<unsigned>,
           // const std::set<std::pair<std::string, std::string>>,
           // etc.

@@ -2,10 +2,10 @@
 
 #include <cassert>
 #include <initializer_list>
+#include <optional>
 #include <stdexcept>
 
 #include <boost/container/flat_set.hpp>
-#include <boost/optional.hpp>
 #include <boost/range/iterator_range_core.hpp>
 #include <boost/version.hpp>
 
@@ -71,7 +71,7 @@ namespace vcsn
           // would add 'a' twice uselessly.
           //
           // Rather, keep the 'a' in \a prev, and flush prev when needed.
-          auto prev = boost::optional<letter_t>{};
+          auto prev = std::optional<letter_t>{};
           // The number of consecutive dots we saw.  Used to recognize
           // `...` which means that the set is open.
           int dots = 0;
@@ -92,7 +92,7 @@ namespace vcsn
                   {
                     is.ignore();
                     res.add_range(*prev, L::get_letter(is));
-                    prev = boost::none;
+                    prev = std::nullopt;
                   }
                 else
                   goto insert;
@@ -106,7 +106,7 @@ namespace vcsn
                 if (dots == 3)
                   {
                     res.open_ = true;
-                    prev = boost::none;
+                    prev = std::nullopt;
                     dots = 0;
                   }
                 break;

@@ -2,11 +2,11 @@
 
 #include <algorithm>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <type_traits>
 #include <vector>
 
-#include <boost/optional.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/lexicographical_compare.hpp>
@@ -1249,7 +1249,7 @@ namespace vcsn
     /// Does not handle `\\z`, nor letter classes.
     ///
     /// \returns  none if there is no label.
-    boost::optional<label_t>
+    std::optional<label_t>
     conv_label(std::istream& i, bool weighted, const char sep = '+') const
     {
       int peek = i.peek();
@@ -1260,7 +1260,7 @@ namespace vcsn
           if (i.peek() == 'z')
             {
               i.ignore();
-              return boost::none;
+              return std::nullopt;
             }
           else
             i.unget();
@@ -1332,8 +1332,8 @@ namespace vcsn
     /// \param i    the stream to parse
     /// \param sep  the separator between monomials.
     ///
-    /// \returns boost::none on EOF
-    boost::optional<monomial_t>
+    /// \returns std::nullopt on EOF
+    std::optional<monomial_t>
     conv_monomial(std::istream& i, const char sep = '+') const
     {
 #define SKIP_SPACES()                           \
@@ -1343,7 +1343,7 @@ namespace vcsn
       // Nothing to read: signal EOF as an empty result.
       SKIP_SPACES();
       if (i.peek() == EOF)
-        return boost::none;
+        return std::nullopt;
 
       // Possibly a weight in braces.
       bool weighted = i.peek() == langle;

@@ -1,8 +1,7 @@
 #pragma once
 
 #include <map>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vcsn/core/automaton.hh> // all_transitions
 #include <vcsn/core/mutable-automaton.hh> // fresh_automaton_t_of
@@ -317,10 +316,9 @@ namespace vcsn
     template <typename Context>
     lifted_expressionset_t<expressionset<Context>>
     lift_expressionset(const expressionset<Context>& rs,
-                       boost::optional<vcsn::rat::identities> ids = {})
+                       std::optional<vcsn::rat::identities> ids = {})
     {
-      // FIXME: Boost 1.56 deprecates get_value_or in favor of value_or.
-      return {lift_context(rs.context()), ids.get_value_or(rs.identities())};
+      return {lift_context(rs.context()), ids.value_or(rs.identities())};
     }
   }
 

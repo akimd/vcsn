@@ -1,10 +1,9 @@
 #pragma once
 
 #include <iosfwd>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <vcsn/algos/fwd.hh>
 #include <vcsn/ctx/fwd.hh>
@@ -865,7 +864,7 @@ namespace vcsn
                                float density = 0.1,
                                unsigned num_initial = 1,
                                unsigned num_final = 1,
-                               boost::optional<unsigned> max_labels = {},
+                               std::optional<unsigned> max_labels = {},
                                float loop_chance = 0.0,
                                const std::string& weights = "");
 
@@ -1017,8 +1016,8 @@ namespace vcsn
     /// \param num   number of words looked for.
     /// \param len   maximum length of words looked for.
     polynomial shortest(const automaton& aut,
-                        boost::optional<unsigned> num = {},
-                        boost::optional<unsigned> len = {});
+                        std::optional<unsigned> num = {},
+                        std::optional<unsigned> len = {});
 
     /// The shuffle product of automata \a lhs and \a rhs.
     /// Performs the join of their type.

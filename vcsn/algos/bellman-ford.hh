@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vcsn/core/automaton.hh> // states_size
 #include <vcsn/misc/set.hh>
@@ -25,7 +25,7 @@ namespace vcsn
     /// given as parameter. Return the array of lightest 'in'
     /// transition of each state.
     template <Automaton Aut>
-    boost::optional<predecessors_t_of<Aut>>
+    std::optional<predecessors_t_of<Aut>>
     bellman_ford_impl(const Aut& aut, state_t_of<Aut> source)
     {
       auto size = states_size(aut);
@@ -67,7 +67,7 @@ namespace vcsn
                                  dist[dst])));
         });
       if (has_lightening_cycle)
-        return boost::none;
+        return std::nullopt;
       else
         return res;
     }

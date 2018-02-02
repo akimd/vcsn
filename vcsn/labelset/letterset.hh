@@ -1,8 +1,7 @@
 #pragma once
 
 #include <memory>
-
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vcsn/alphabets/setalpha.hh> // intersection
 #include <vcsn/core/kind.hh>
@@ -279,7 +278,7 @@ namespace vcsn
               to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    boost::optional<value_t>
+    std::optional<value_t>
     maybe_ldivide(const value_t l, const value_t r) const
     {
       if (equal(l, r))
@@ -287,7 +286,7 @@ namespace vcsn
       else if (is_one(l))
         return r;
       else if (is_one(r))
-        return boost::none;
+        return std::nullopt;
       else
         raise(*this, ": maybe_ldivide: invalid arguments: ",
               to_string(*this, l), ", ", to_string(*this, r));
@@ -303,13 +302,13 @@ namespace vcsn
               to_string(*this, l), ", ", to_string(*this, r));
     }
 
-    boost::optional<value_t>
+    std::optional<value_t>
     maybe_rdivide(const value_t l, const value_t r) const
     {
       if (equal(l, r))
         return one();
       else if (is_one(l))
-        return boost::none;
+        return std::nullopt;
       else if (is_one(r))
         return l;
       else

@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <set>
+#include <optional>
 
-#include <boost/optional.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 
 #include <vcsn/core/kind.hh>

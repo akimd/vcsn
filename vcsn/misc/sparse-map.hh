@@ -1,7 +1,6 @@
 #pragma once
 
-#include <boost/optional.hpp>
-
+#include <optional>
 #include <vector>
 
 namespace vcsn

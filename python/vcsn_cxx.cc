@@ -209,7 +209,7 @@ struct python_optional
   struct conversion
     : public boost::python::converter::expected_from_python_type<T>
   {
-    static PyObject* convert(boost::optional<T> const& value)
+    static PyObject* convert(std::optional<T> const& value)
     {
       using namespace boost::python;
       return incref((value ? object(*value) : object()).ptr());
@@ -227,24 +227,24 @@ struct python_optional
               boost::python::converter::rvalue_from_python_stage1_data *data)
   {
     using namespace boost::python;
-    using data_t = converter::rvalue_from_python_storage<boost::optional<T>>;
+    using data_t = converter::rvalue_from_python_storage<std::optional<T>>;
     void *const storage = reinterpret_cast<data_t*>(data)->storage.bytes;
     if (obj == Py_None)
-      new (storage) boost::optional<T>();
+      new (storage) std::optional<T>();
     else
-      new (storage) boost::optional<T>(extract<T>(obj));
+      new (storage) std::optional<T>(extract<T>(obj));
     data->convertible = storage;
   }
 
   explicit python_optional()
   {
     using namespace boost::python;
-    if (!extract<boost::optional<T>>(object()).check())
+    if (!extract<std::optional<T>>(object()).check())
       {
-        to_python_converter<boost::optional<T>, conversion, true>();
+        to_python_converter<std::optional<T>, conversion, true>();
         converter::registry::push_back(&convertible,
                                        &constructor,
-                                       type_id<boost::optional<T> >(),
+                                       type_id<std::optional<T> >(),
                                        &conversion::get_pytype);
       }
   }
@@ -326,7 +326,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   namespace bp = boost::python;
   using bp::arg;
 
-  // Activate support for boost::optional and identities.
+  // Activate support for std::optional and identities.
   python_optional<unsigned>();
   python_string__enum<automaton::direction>();
   python_string__enum<identities>();
@@ -445,8 +445,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
          (arg("weight"), arg("algo") = "auto"))
     .def("scc", &automaton::scc, (arg("algo") = "auto"))
     .def("shortest", &automaton::shortest,
-         (arg("num") = boost::optional<unsigned>(),
-          arg("len") = boost::optional<unsigned>()))
+         (arg("num") = std::optional<unsigned>(),
+          arg("len") = std::optional<unsigned>()))
     .def("_shuffle", &automaton_shuffle).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)
@@ -485,7 +485,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random_automaton", &context::random_automaton,
          (arg("num_states"), arg("density") = 0.1,
           arg("num_initial") = 1, arg("num_final") = 1,
-          arg("max_labels") = boost::optional<unsigned>(),
+          arg("max_labels") = std::optional<unsigned>(),
           arg("loop_chance") = 0,
           arg("weights") = std::string("")))
     .def("random_deterministic", &context::random_automaton_deterministic)

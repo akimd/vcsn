@@ -2,10 +2,10 @@
 
 #include <iosfwd>
 #include <istream>
+#include <optional>
 #include <set>
 #include <tuple>
 
-#include <boost/optional.hpp>
 #include <boost/range/join.hpp>
 
 #include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
@@ -439,7 +439,7 @@ namespace vcsn
                   });
     }
 
-    boost::optional<value_t>
+    std::optional<value_t>
     maybe_rdivide(const value_t& l, const value_t& r) const
     {
       bool valid = true;
@@ -458,7 +458,7 @@ namespace vcsn
       if (valid)
         return res;
       else
-        return boost::none;
+        return std::nullopt;
     }
 
     /// Pointwise left division (l \ r).
@@ -472,7 +472,7 @@ namespace vcsn
                   });
     }
 
-    boost::optional<value_t>
+    std::optional<value_t>
     maybe_ldivide(const value_t& l, const value_t& r) const
     {
       bool valid = true;
@@ -491,7 +491,7 @@ namespace vcsn
       if (valid)
         return res;
       else
-        return boost::none;
+        return std::nullopt;
     }
 
     /// Eliminate the LGCD between all the tapes.  E.g., `(abc, abd)

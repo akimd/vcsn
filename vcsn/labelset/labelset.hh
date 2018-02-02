@@ -1,6 +1,7 @@
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
+
 #include <boost/range/algorithm/find.hpp>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/range/algorithm_ext/is_sorted.hpp>
@@ -265,7 +266,7 @@ namespace vcsn
       else
         {
           // The last letter we read, for intervals.
-          auto prev = boost::optional<letter_t>{};
+          auto prev = std::optional<letter_t>{};
           while (i.peek() != EOF && i.peek() != ']')
             if (i.peek() == '-')
               {
@@ -298,7 +299,7 @@ namespace vcsn
                 if (ls.less(*prev, l2))
                   fun(l2);
 
-                prev = boost::none;
+                prev = std::nullopt;
               }
             else
               {

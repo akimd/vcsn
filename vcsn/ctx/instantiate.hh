@@ -197,7 +197,7 @@ namespace vcsn
         REGISTER(pair, aut_t, bool);
         REGISTER(push_weights, aut_t);
         REGISTER(rweight, aut_t, ws_t, const std::string);
-        REGISTER(shortest, aut_t, boost::optional<unsigned>, boost::optional<unsigned>);
+        REGISTER(shortest, aut_t, std::optional<unsigned>, std::optional<unsigned>);
         REGISTER(shuffle, std::tuple<aut_t, aut_t>);
         REGISTER(sort, aut_t);
         REGISTER(standard, aut_t);

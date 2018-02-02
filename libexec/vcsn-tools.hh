@@ -2,10 +2,9 @@
 
 #include <functional>
 #include <map>
+#include <optional>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -183,10 +182,10 @@ namespace vcsn
     }
 
     template <>
-    inline boost::optional<unsigned>
-    convert<boost::optional<unsigned>>(const std::string& str,
-                                       const dyn::context&,
-                                       const std::string&)
+    inline std::optional<unsigned>
+    convert<std::optional<unsigned>>(const std::string& str,
+                                     const dyn::context&,
+                                     const std::string&)
     {
       std::istringstream stream{str};
       unsigned res;

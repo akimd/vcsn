@@ -1,8 +1,7 @@
 #pragma once
 
+#include <optional>
 #include <unordered_map>
-
-#include <boost/optional.hpp>
 
 #include <vcsn/core/automaton.hh>
 #include <vcsn/core/fwd.hh>
@@ -25,7 +24,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
 
       is_acyclic_impl(const automaton_t& aut,
-                      boost::optional<label_t> label = {})
+                      std::optional<label_t> label = {})
         : aut_(aut)
         , one_(label)
       {}
@@ -101,7 +100,7 @@ namespace vcsn
       std::unordered_map<state_t, status> tag_;
 
       automaton_t aut_;
-      boost::optional<label_t> one_;
+      std::optional<label_t> one_;
     };
   }
 

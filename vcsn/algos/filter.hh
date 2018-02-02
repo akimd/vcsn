@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm> // std::max
+#include <optional>
 
 #include <boost/range/irange.hpp>
-#include <boost/optional.hpp>
 
 #include <vcsn/algos/copy.hh>
 #include <vcsn/core/automaton-decorator.hh>
@@ -80,8 +80,8 @@ namespace vcsn
       /// \param ss     set of states to reveal.  If {}, hide none.
       /// \param ts     set of transitions to reveal.  If {}, hide none.
       filter_automaton_impl(const automaton_t& input,
-                            const boost::optional<states_t>& ss = {},
-                            const boost::optional<transitions_t>& ts = {})
+                            const std::optional<states_t>& ss = {},
+                            const std::optional<transitions_t>& ts = {})
         : super_t(input)
           // FIXME: wasting space allocating the transition vector,
           // even if we don't use it.
@@ -333,8 +333,8 @@ namespace vcsn
   template <Automaton Aut, bool Trans = false>
   filter_automaton<Aut, Trans>
   filter(const Aut& aut,
-         boost::optional<dynamic_bitset> ss = {},
-         boost::optional<dynamic_bitset> ts = {})
+         std::optional<dynamic_bitset> ss = {},
+         std::optional<dynamic_bitset> ts = {})
   {
     return make_shared_ptr<filter_automaton<Aut, Trans>>(aut, ss, ts);
   }

@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <deque>
 #include <fstream>
+#include <optional>
 
 #include <boost/heap/binomial_heap.hpp>
-#include <boost/optional.hpp>
 
 #include <vcsn/algos/is-acyclic.hh>
 #include <vcsn/algos/is-free.hh>
@@ -72,8 +72,8 @@ namespace vcsn
       ///
       /// \param num   number of words looked for.
       /// \param len   maximum length of words looked for.
-      polynomial_t operator()(boost::optional<unsigned> num,
-                              boost::optional<unsigned> len)
+      polynomial_t operator()(std::optional<unsigned> num,
+                              std::optional<unsigned> len)
       {
         if (!num)
           num = !len ? 1 : std::numeric_limits<unsigned>::max();
@@ -284,8 +284,8 @@ namespace vcsn
   template <Automaton Aut>
   typename detail::enumerater<Aut>::polynomial_t
   shortest(const Aut& aut,
-           boost::optional<unsigned> num = {},
-           boost::optional<unsigned> len = {})
+           std::optional<unsigned> num = {},
+           std::optional<unsigned> len = {})
   {
     auto enumerater = detail::enumerater<Aut>{aut};
     return enumerater(num, len);
@@ -314,7 +314,7 @@ namespace vcsn
   typename detail::enumerater<Aut>::polynomial_t
   enumerate(const Aut& aut, unsigned len)
   {
-    return shortest(aut, boost::none, len);
+    return shortest(aut, std::nullopt, len);
   }
 
 
@@ -326,8 +326,8 @@ namespace vcsn
       template <Automaton Aut, typename Num, typename Len>
       polynomial
       shortest(const automaton& aut,
-               boost::optional<unsigned> num,
-               boost::optional<unsigned> len)
+               std::optional<unsigned> num,
+               std::optional<unsigned> len)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a->context());

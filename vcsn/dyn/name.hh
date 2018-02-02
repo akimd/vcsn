@@ -3,11 +3,10 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 #include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/automaton.hh>
@@ -143,7 +142,7 @@ namespace vcsn
   DEFINE(const std::set<std::pair<std::string, std::string>>);
   DEFINE(std::ostream);
 
-  DEFINE(boost::optional<unsigned>);
+  DEFINE(std::optional<unsigned>);
 
   DEFINE(vcsn::rat::identities);
   DEFINE(vcsn::direction);

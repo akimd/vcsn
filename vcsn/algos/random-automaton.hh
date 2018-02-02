@@ -46,7 +46,7 @@ namespace vcsn
   random_automaton(const Ctx& ctx,
                    unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1,
-                   boost::optional<unsigned> max_labels = {},
+                   std::optional<unsigned> max_labels = {},
                    float loop_chance = 0.0, const std::string& weights = "")
   {
     require(0 <= density && density <= 1,
@@ -221,7 +221,7 @@ namespace vcsn
       random_automaton(const context& ctx,
                        unsigned num_states, float density,
                        unsigned num_initial, unsigned num_final,
-                       boost::optional<unsigned> max_labels,
+                       std::optional<unsigned> max_labels,
                        float loop_chance,
                        const std::string& weights)
       {
