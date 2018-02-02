@@ -44,55 +44,55 @@ namespace vcsn
       }
     }
 
-    config::config_value::config_value(Node n)
+    config::value::value(Node n)
       : node_{n}
     {}
 
-    config::config_value::config_value(const config_value& other)
+    config::value::value(const value& other)
       : node_{other.node_}
     {}
 
-    config::config_value::config_value(const config& c)
+    config::value::value(const config& c)
         : node_{c.config_tree_}
       {}
 
-    config::config_value&
-    config::config_value::operator=(config_value rhs)
+    config::value&
+    config::value::operator=(value rhs)
     {
       swap(*this, rhs);
       return *this;
     }
 
-    std::string config::config_value::str() const
+    std::string config::value::str() const
     {
       return as<std::string>();
     }
 
-    config::config_value
-    config::config_value::operator[](const std::string& key) const
+    config::value
+    config::value::operator[](const std::string& key) const
     {
       require(node_.IsMap(),
               "configuration: requesting a key (", key,
               ") in a leaf");
       require(node_[key].IsDefined(),
               "configuration: invalid key: ", key);
-      return config_value(node_[key]);
+      return value(node_[key]);
     }
 
-    std::vector<std::string> config::config_value::keys() const
+    std::vector<std::string> config::value::keys() const
     {
-      // We generate the key only once for each config_value
+      // We generate the key only once for each value
       if (!keys_)
         keys_ = gen_keys();
       return *keys_;
     }
 
-    bool config::config_value::is_valid(const std::string& key) const
+    bool config::value::is_valid(const std::string& key) const
     {
       return node_[key].IsDefined();
     }
 
-    void config::config_value::remove(const std::string& key)
+    void config::value::remove(const std::string& key)
     {
 #if VCSN_YAML_CPP_REMOVE_WORKS
       node_.remove(key);
@@ -101,31 +101,31 @@ namespace vcsn
 #endif
     }
 
-    auto config::config_value::begin() -> iterator
+    auto config::value::begin() -> iterator
     {
       require(node_.IsSequence(), "configuration: node is not a sequence");
       return node_.begin();
     }
 
-    auto config::config_value::end() -> iterator
+    auto config::value::end() -> iterator
     {
       return node_.end();
     }
 
-    void config::config_value::merge(const config_value& from)
+    void config::value::merge(const value& from)
     {
       auto dest_node = Clone(from.node_);
       merge_recurse(node_, dest_node);
       node_ = dest_node;
     }
 
-    std::ostream& config::config_value::print(std::ostream& out) const
+    std::ostream& config::value::print(std::ostream& out) const
     {
       return out << node_;
     }
 
     std::unique_ptr<std::vector<std::string>>
-    config::config_value::gen_keys() const
+    config::value::gen_keys() const
     {
       auto res = std::make_unique<std::vector<std::string>>();
       require(node_.IsMap(), "configuration: node is not a map");
@@ -138,7 +138,7 @@ namespace vcsn
       return res;
     }
 
-    void swap(config::config_value& first, config::config_value& second)
+    void swap(config::value& first, config::value& second)
     {
       using std::swap;
       swap(first.node_, second.node_);
@@ -164,18 +164,18 @@ namespace vcsn
         }
     }
 
-    config::config_value config::operator[](const std::string& key)
+    config::value config::operator[](const std::string& key)
     {
       // We don't return the YAML node directly to make sure to be
       // able to change the underlying library.
-      return config_value(config_tree_)[key];
+      return value(config_tree_)[key];
     }
   }
 
   std::string configuration(const std::string& key)
   {
     // We need a unique_pointers because subscripting returns rvalues.
-    auto config = std::make_unique<detail::config::config_value>(get_config());
+    auto config = std::make_unique<detail::config::value>(get_config());
     auto subkeys = std::vector<std::string>{};
     boost::split(subkeys, key, boost::is_any_of("."));
 
@@ -188,7 +188,7 @@ namespace vcsn
 
     for (const auto& subkey : subkeys)
       config =
-        std::make_unique<detail::config::config_value>((*config)[subkey]);
+        std::make_unique<detail::config::value>((*config)[subkey]);
 
     return config->str();
   }

@@ -80,11 +80,13 @@ else:
 
 def git_summary(desc):
     'From a git describe string, recover the commit title.'
-    m = re.match(r'^v(?:.*)-\d+-g([\da-f]+)(?:\.\d+)?$', desc)
-    if m and repo:
+    m = re.match(r'^v(?:.*)-\d+-g([\da-f]+)(?:\.\d+)?(?:-dirty)?$', desc)
+    if repo:
         try:
             return repo.commit(m.group(1)).summary
         except gitdb.exc.BadName:
+            return 'error'
+        except AttributeError:
             return '???'
     else:
         return ''

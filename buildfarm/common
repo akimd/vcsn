@@ -75,10 +75,10 @@ find_prog ()
 quote_for_eval_arg ()
 {
   case $1 in
-    *[\\\`\"\$]*)
+    (*[\\\`\"\$]*)
       local quote_subst='s/\([`"$\\]\)/\\\1/g'
       quote_for_eval_arg_unquoted_result=`echo "$1" | sed -e "$quote_subst"`;;
-    *)
+    (*)
       quote_for_eval_arg_unquoted_result="$1";;
   esac
 
@@ -88,9 +88,9 @@ quote_for_eval_arg ()
     # expansion for a subsequent eval.
     # Many Bourne shells cannot handle close brackets correctly
     # in scan sets, so we specify it separately.
-    *[\[\~\#\^\&\*\(\)\{\}\|\;\<\>\?\'\ \	]*|*]*|"")
+    (*[\[\~\#\^\&\*\(\)\{\}\|\;\<\>\?\'\ \	]*|*]*|"")
       quote_for_eval_arg_result="\"$quote_for_eval_arg_unquoted_result\"";;
-    *)
+    (*)
       quote_for_eval_arg_result="$quote_for_eval_arg_unquoted_result";;
   esac
 }
@@ -206,6 +206,9 @@ export DIR_SOURCE=$DIR_ROOT
 export DIR_ROOT_BUILD=$DIR_ROOT/build
 
 export DIR_BUILD=$DIR_ROOT_BUILD/$BUILDDIR
+# Make sure it exists even if ./configure is not run.
+mkdir -p $DIR_BUILD
+
 
 # The DESTDIR to use for the fake install.
 export DIR_INSTALL=$DIR_ROOT/install

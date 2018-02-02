@@ -3,8 +3,8 @@
 import os
 import re
 import sys
-import vcsn
 from test import *
+import vcsn
 
 # The name of the current context.
 context = 'lal(abcd), b'

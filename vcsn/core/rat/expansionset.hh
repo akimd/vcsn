@@ -148,7 +148,7 @@ namespace vcsn
       bool is_normal(const value_t& x) const
       {
         return detail::static_if<context_t::has_one()>
-          ([this](const auto& ls, const value_t& x)
+          ([](const auto& ls, const value_t& x)
            {
              return !has(x.polynomials, ls.one());
            },
