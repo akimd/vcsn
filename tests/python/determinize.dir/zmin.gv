@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal(abcd), zmin"
+  vcsn_context = "[abcd]? → ℤmin"
   I0 -> 0
   0 -> 1 [label = "<1>a"]
   0 -> 2 [label = "<2>a"]

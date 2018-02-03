@@ -1,7 +1,7 @@
 // Based on http://www.graphviz.org/doc/info/html2.gv.
 
 digraph G {
-  vcsn_context = "lal, q"
+  vcsn_context = "[...]? → ℚ"
 rankdir=LR
   node [shape=plaintext]
   a [

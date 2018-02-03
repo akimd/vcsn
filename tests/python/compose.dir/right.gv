@@ -1,5 +1,5 @@
 digraph {
-  vcsn_context = "lat<lal(ab),lal(ab)>, b"
+  vcsn_context = "[ab]? × [ab]? → 𝔹"
   I0 -> 0
   0 -> 1 [label = "(\\e, b)"]
   1 -> 2 [label = "(\\e, b)"]

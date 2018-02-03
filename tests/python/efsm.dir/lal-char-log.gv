@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, log"
+  vcsn_context = "[a]? → Log"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

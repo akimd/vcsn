@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lat<lal(abc), lal(xyz)>, q"
+  vcsn_context = "[abc]? × [xyz]? → ℚ"
   I -> 0 [label = "<3>"]
   0 -> 1 [label = "[a|x-c|z]"]
   1 -> 2 [label = "<2>[a|x-a|z], <3>[b|x-b|z], <4>[c|x-c|z]"]

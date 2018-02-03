@@ -1,4 +1,4 @@
 digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
 }

@@ -1,5 +1,5 @@
 digraph
 {
-  vcsn_context = "lal(abcde), b"
+  vcsn_context = "[abcde]? → 𝔹"
   rankdir = LR
 }

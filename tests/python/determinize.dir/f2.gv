@@ -3,7 +3,7 @@
 // vcsn.context('lal, f2').expression('aa*+a*a').standard()
 digraph
 {
-  vcsn_context = "letterset<char_letters(a)>, f2"
+  vcsn_context = "[a]? → 𝔽₂"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {

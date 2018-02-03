@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal(abc), zmin"
+  vcsn_context = "[abc]? → ℤmin"
   rankdir = LR
   {
     node [shape = point, width = 0]
