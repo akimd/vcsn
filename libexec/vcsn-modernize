@@ -1,23 +1,42 @@
 #! /usr/bin/env python3
 
 import argparse
-
 from pathlib import Path
-from vcsn_tools.modernize import modernize
+import multiprocessing
+from vcsn_tools.modernize import modernize as vcsn_modernize
 
-p = argparse.ArgumentParser(
-    description='''Modernize files using Vcsn''')
-p.add_argument('files', metavar='file', nargs='+', type=Path, default=None,
-               help='files to modernize')
 
-args = p.parse_args()
+def getargs():
+    p = argparse.ArgumentParser(
+        description='''Modernize files using Vcsn''')
+    opt = p.add_argument
+    opt('files', metavar='file', nargs='+', type=Path, default=None,
+        help='files to modernize')
+    opt('--safe', action='store_true',
+        help='''Parse and pretty-print the context, rather than performing regex
+        substitutions.  This is much slower (especially with complex
+        contexts), but more precise.  However, range are expanded.''')
+    opt('-j', '--jobs', metavar='NUM', type=int, default='0',
+        help='''number of jobs to run concurrently.  Especially useful with --safe
+        when contexts have to be compiled.''')
+    return p.parse_args()
 
-for f in args.files:
+args = getargs()
+
+
+def modernize(f):
     try:
-        s = modernize(f.read_text())
+        s = vcsn_modernize(f.read_text(), args.safe)
         mod = f.stat().st_mode
-        f.rename(str(f)+'.bak')
+        f.rename(str(f) + '.bak')
         f.write_text(s)
         f.chmod(mod)
     except RuntimeError as e:
         print('{}: cannot modernize: {}'.format(f, e))
+
+if args.jobs == 0:
+    for f in args.files:
+        modernize(f)
+else:
+    with multiprocessing.Pool(args.jobs) as pool:
+        pool.map(modernize, args.files)

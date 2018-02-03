@@ -12,6 +12,7 @@ except ImportError:
     has_regex = False
     import re
 
+
 def labelset(ls: str) -> str:
     return ls
 
@@ -28,10 +29,12 @@ weightsets = {
     "zmin": "ℤmin",
 }
 
+
 def weightset(ws: str) -> str:
     return weightsets.get(ws.lower(), ws)
 
-def context(ctx: str) -> str:
+
+def context_regex(ctx: str) -> str:
     '''Convert ctx to the modern syntax.'''
     def s(pattern, subst):
         nonlocal ctx
@@ -66,26 +69,41 @@ def context(ctx: str) -> str:
                                  weightset(m.group(2))))
     return ctx
 
-def modernize(s: str) -> str:
+
+def context_parse(ctx: str) -> str:
+    return vcsn.context(ctx).format('utf8')
+
+
+def context(ctx: str, parse=False) -> str:
+    if parse:
+        return context_parse(ctx)
+    else:
+        return context_regex(ctx)
+
+
+def modernize(s: str, parse=False) -> str:
     # Dot context in notebooks.
+    ctx = lambda s: context(s, parse)
     s = re.sub(r'(?<=\bvcsn_context = \\")(.*)(?=\\"\\n)',
-               lambda m: context(m.group(1)),
+               lambda m: ctx(m.group(1)),
                s)
     # Dot contexts.
     s = re.sub(r'(?<=\bvcsn_context = ")(.*)(?=")',
-               lambda m: context(m.group(1)),
+               lambda m: ctx(m.group(1)),
                s)
     # Daut context: strip quotes.
     s = re.sub(r'(?<=\bcontext = )"(.*)"',
-               lambda m: re.sub(r'\\(.)', r'\1', context(m.group(1))),
+               lambda m: re.sub(r'\\(.)', r'\1', ctx(m.group(1))),
                s)
     # Daut context.
     s = re.sub(r'(?<=\bcontext = )(.*)$',
-               lambda m: context(m.group(1)),
+               lambda m: ctx(m.group(1)),
                s, flags=re.MULTILINE)
     return s
 
+
 class Test(unittest.TestCase):
+
     def test_context(self):
         def check(i, o):
             self.assertEqual(o, context(i))
@@ -108,4 +126,4 @@ class Test(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(testRunner=taprunner.TAPTestRunner(stream=sys.stdout)) # output='test-reports'
+    unittest.main(testRunner=taprunner.TAPTestRunner(stream=sys.stdout))
