@@ -15,10 +15,10 @@ static void print_fw(std::vector<std::vector<weight_t_of<Aut>>> fw)
     {
       for (auto d : ve)
         {
-          std::cout << " " << std::setw(5);
+          std::cout << ' ' << std::setw(5);
           ws_t::print(d, std::cout);
         }
-      std::cout << std::endl;
+      std::cout << '\n';
     }
 }
 
@@ -27,11 +27,11 @@ static unsigned check_basic()
   using automaton_t = mutable_automaton<ctx::lal_char_z>;
   using state_t = state_t_of<automaton_t>;
 
-  std::cout << "** CHECK_BASIC **" << std::endl;
+  std::cout << "** CHECK_BASIC **\n";
 
-  set_alphabet<char_letters> al{'a', 'b'};
-  ctx::lal_char_z ctx{al};
-  automaton_t aut = make_shared_ptr<automaton_t>(ctx);
+  auto al = set_alphabet<char_letters>{'a', 'b'};
+  auto ctx = ctx::lal_char_z{al};
+  auto aut = make_shared_ptr<automaton_t>(ctx);
 
   state_t s[3];
   for(int i = 0; i < 3; i++)
@@ -50,11 +50,11 @@ static unsigned check_zmin()
   using automaton_t = mutable_automaton<lal_char_zmin>;
   using state_t = state_t_of<automaton_t>;
 
-  std::cout << "** CHECK_ZMIN **" << std::endl;
+  std::cout << "** CHECK_ZMIN **\n";
 
-  set_alphabet<char_letters> al{'a','b'};
-  lal_char_zmin ctx{al};
-  automaton_t aut = make_shared_ptr<automaton_t>(ctx);
+  auto al = set_alphabet<char_letters>{'a','b'};
+  auto ctx = lal_char_zmin{al};
+  auto aut = make_shared_ptr<automaton_t>(ctx);
 
   state_t s[6];
   for(int i = 0; i < 6; i++)
@@ -83,11 +83,11 @@ static unsigned check_r_loop()
   using automaton_t = mutable_automaton<lal_char_r>;
   using state_t = state_t_of<automaton_t>;
 
-  std::cout << "** CHECK_R_LOOP **" << std::endl;
+  std::cout << "** CHECK_R_LOOP **\n";
 
-  lal_char_r c{set_alphabet<char_letters>{'a'}};
-  automaton_t aut = make_shared_ptr<automaton_t>(c);
-  state_t s = aut->new_state();
+  auto c = lal_char_r{set_alphabet<char_letters>{'a'}};
+  auto aut = make_shared_ptr<automaton_t>(c);
+  auto s = aut->new_state();
   aut->set_transition(s, s, 'a', 0.5);
 
   auto fw = all_distances(aut);
@@ -97,9 +97,9 @@ static unsigned check_r_loop()
 
 int main()
 {
-  unsigned nb_errors = 0;
-  nb_errors += check_basic();
-  nb_errors += check_zmin();
-  nb_errors += check_r_loop();
-  return !!nb_errors;
+  unsigned nerrs = 0;
+  nerrs += check_basic();
+  nerrs += check_zmin();
+  nerrs += check_r_loop();
+  return !!nerrs;
 }
