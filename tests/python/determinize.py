@@ -97,7 +97,7 @@ for name in ['b', 'f2']:
 # same state with opposite weights.
 def null_state(weightset, weight):
     return vcsn.automaton('''
-context = "lal, {ws}"
+context = [...]? → {ws}
 $ -> 0
 0 -> 1 a
 0 -> 2 <{w}>a
@@ -109,7 +109,7 @@ def null_state_det(weightset, weight):
     return vcsn.automaton('''
 digraph
 {{
-  vcsn_context = "letterset<char_letters(ab)>, {ws}"
+  vcsn_context = "[ab]? → {ws}"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {{

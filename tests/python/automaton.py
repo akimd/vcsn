@@ -15,7 +15,7 @@ def xfail(a, *args):
 # Syntax error: missing }.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
 ''', r'''4.1: syntax error, unexpected end
 
 ^
@@ -24,17 +24,17 @@ xfail(r'''digraph
 # Syntax error: string not closed.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b
+  vcsn_context = "[a]?, b
 }
 ''', r'''3.18-5.0: unexpected end of file in a string
-  vcsn_context = "lal(a), b
-                 ^^^^^^^^^^
+  vcsn_context = "[a]?, b
+                 ^^^^^^^^
   while reading automaton''')
 
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   a [attribute]
 }
 ''', r'''4.15: syntax error, unexpected ], expecting =
@@ -45,7 +45,7 @@ xfail(r'''digraph
 # Syntax error: attributes are assignments.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   a [attribute =]
 }
 ''', r'''4.17: syntax error, unexpected ], expecting identifier
@@ -56,7 +56,7 @@ xfail(r'''digraph
 # Syntax error: comma used after empty attribute.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   a [,a=a]
 }
 ''', r'''4.6: syntax error, unexpected ",", expecting ] or identifier
@@ -67,7 +67,7 @@ xfail(r'''digraph
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   a [;a=a]
 }
 ''', r'''4.6: syntax error, unexpected ;, expecting ] or identifier
@@ -78,7 +78,7 @@ xfail(r'''digraph
 # Syntax error: semicolon used after empty attribute
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   a [a=a,;]
 }
 ''', r'''4.10: syntax error, unexpected ;, expecting ] or identifier
@@ -89,7 +89,7 @@ xfail(r'''digraph
 # Invalid label: letter not in alphabet.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(), b"
+  vcsn_context = "[]? → 𝔹"
   0 -> 1 [label = a]
   1 -> F1
   I0 -> 0
@@ -103,7 +103,7 @@ xfail(r'''digraph
 # Invalid label: aa is not valid in LAL.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), b"
+  vcsn_context = "[a]? → 𝔹"
   0 -> 1 [label = "aa"]
   1 -> F1
   I0 -> 0
@@ -117,7 +117,7 @@ xfail(r'''digraph
 # Invalid label: missing '>'.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(a), z"
+  vcsn_context = "[a]? → ℤ"
   0 -> 1 [label = "<2"]
   1 -> F1
   I0 -> 0
@@ -162,19 +162,19 @@ unknown
 # Invalid context.
 xfail(r'''digraph
 {
-  vcsn_context = "lal, unknown"
+  vcsn_context = "[...]? → unknown"
 }
-''', r'''3.18-31: expected weightset here:
-lal, unknown
-     ^_
-  vcsn_context = "lal, unknown"
-                 ^^^^^^^^^^^^^^
+''', r'''3.18-37: expected weightset here:
+[...]? → unknown
+           ^_
+  vcsn_context = "[...]? → unknown"
+                 ^^^^^^^^^^^^^^^^^^^^
   while reading automaton''')
 
 # Invalid initial label.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   0 -> 1 [label = a]
   1 -> F1
   I0 -> 0 [label = a]
@@ -187,7 +187,7 @@ xfail(r'''digraph
 # Invalid final label.
 xfail(r'''digraph
 {
-  vcsn_context = "lal(ab), b"
+  vcsn_context = "[ab]? → 𝔹"
   0 -> 1 [label = a]
   1 -> F1 [label = a]
   I0 -> 0
@@ -200,13 +200,13 @@ xfail(r'''digraph
 # There are spaces before 'digraph'.
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal(abcd), b"
+  vcsn_context = "[abcd]? → 𝔹"
   0 -> 0 [label="a, b, c, d"]
 }'''),
 vcsn.automaton('''
 \t  digraph
 \t  {
-\t    vcsn_context = "lal(abcd), b"
+\t    vcsn_context = "[abcd]? → 𝔹"
 \t    0 -> 0 [label="a, b, c, d"]
 \t  }
 '''))
@@ -214,31 +214,31 @@ vcsn.automaton('''
 # An open context (letters are not specified).
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal(abcd), b"
+  vcsn_context = "[abcd]? → 𝔹"
   0 -> 0 [label="a, b, c, d"]
 }'''),
 vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal, b"
+  vcsn_context = "[...]? → 𝔹"
   0 -> 0 [label="a, b, c, d"]
 }'''))
 
 # An open tuple context.
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal,law>, b"
+  vcsn_context = "[...]? × [...]* → 𝔹"
   0 -> 0 [label="(a|x),(b|xyz),(c|\\e)"]
 }'''),
 vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lat<lal(abc),law(xyz)>, b"
+  vcsn_context = "[abc]? × [xyz]* → 𝔹"
   0 -> 0 [label="(a,x),(b,xyz),(c,\\e)"]
 }'''))
 
 # Coverage: different rarely used features.
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal(), b"
+  vcsn_context = "[]? → 𝔹"
   {
     node [shape = circle]
     0 [color = DimGray]
@@ -262,12 +262,12 @@ vcsn.automaton(r'''digraph "a graph
 # A context string with ".
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal(\"\\'), b"
+  vcsn_context = "[\"\\']? → 𝔹"
   0 -> 0 [label="\", \\'"]
 }'''),
 vcsn.automaton(r'''digraph
 {
-  vcsn_context = "lal, b"
+  vcsn_context = "[...]? → 𝔹"
   0 -> 0 [label="\", \\'"]
 }'''))
 
@@ -587,7 +587,7 @@ CHECK_EQ(r'''digraph
 1-1 ->$''', strip=False))
 
 # Invalid transitions
-XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <a>
 0 -> $ <1/2>'''),
       '''2.1-10: Q: invalid numerator: "a"
@@ -597,7 +597,7 @@ $ -> 0 <a>
 ^^^^^^^^^^
   while reading automaton''')
 
-XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <1/2>
 0 -> $ <a>'''),
       '''3.1-10: Q: invalid numerator: "a"
@@ -607,7 +607,7 @@ $ -> 0 <1/2>
 ^^^^^^^^^^
   while reading automaton''')
 
-XFAIL(lambda: vcsn.automaton('''context = letterset<char_letters(abc)>, q
+XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
 1 -> $ <2>'''),
@@ -715,27 +715,27 @@ for fn in glob.glob(os.path.join(medir, '*.grail')):
 ## ------------ ##
 
 # Convert an automaton from lal, b to law, z.
-CHECK_EQ(vcsn.automaton('''context = "law, z"
+CHECK_EQ(vcsn.automaton('''context = [...]* → ℤ
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
   1 -> $'''),
-         vcsn.automaton('''context = "lal(abc), b"
+         vcsn.automaton('''context = [abc]? → 𝔹
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
   1 -> $''').automaton(vcsn.context("law(abc), z")))
 
 # Convert an automaton to a smaller, valid, alphabet.
-CHECK_EQ(vcsn.automaton('''context = "law(abc), z"
+CHECK_EQ(vcsn.automaton('''context = [abc]* → ℤ
   0 -> 1 a, b'''),
-         vcsn.automaton('''context = "lal(a-z), b"
+         vcsn.automaton('''context = [a-z]? → 𝔹
   0 -> 1 a, b''').automaton(vcsn.context("law(abc), z")))
 
 # Convert an automaton to a smaller, invalid, alphabet.
-XFAIL(lambda: vcsn.automaton('''context = "lal(abc), b"
+XFAIL(lambda: vcsn.automaton('''context = [abc]? → 𝔹
   0 -> 1 a, b''').automaton(vcsn.context("law(xy), z")))
 
 # Convert to an invalid smaller weightset.
-XFAIL(lambda: vcsn.automaton('''context = "lal(abc), z"
+XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℤ
   0 -> 1 <3>a, b''').automaton(vcsn.context("lal(xy), b")))

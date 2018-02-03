@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal(\\(\\),\"\\'<|>{}[]a-z), b"
+  vcsn_context = "[\"\\'()\\,\\<\\>\\[\\]a-z{\\|}]? → 𝔹"
   0 -> 1 [label = a]
   0 -> 2 [label = "[\"\\']"]
   0 -> 3 [label = "[|,]"]
