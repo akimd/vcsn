@@ -12,6 +12,9 @@ except ImportError:
     has_regex = False
     import re
 
+def labelset(ls: str) -> str:
+    return ls
+
 weightsets = {
     "b": "𝔹",
     "f2": "𝔽₂",
@@ -34,19 +37,19 @@ def context(ctx: str) -> str:
         nonlocal ctx
         ctx = re.sub(pattern, subst, ctx)
     # letterset<char_letters(01)>
-    s(r'letterset<char_letters\((.*?)\)>',
+    s(r'letterset<char_letters\(((\\.|[^)])*)\)>',
       r'[\1]?')
     # lal(a), lal_char(a)
-    s(r'lal(?:_char)?\((.*?)\)',
+    s(r'lal(?:_char)?\(((\\.|[^)])*)\)',
       r'[\1]?')
     # lal, letterset<char_letters>
     s('lal|letterset<char_letters>', '[...]?')
 
     # wordset<char_letters(01)>
-    s(r'wordset<char_letters\((.*?)\)>',
+    s(r'wordset<char_letters\(((\\.|[^)])*)\)>',
       r'[\1]*')
     # law(a), law_char(a)
-    s(r'law(?:_char)?\((.*?)\)',
+    s(r'law(?:_char)?\(((\\.|[^)])*)\)',
       r'[\1]*')
     # law, wordset<char_letters>
     s('law|wordset<char_letters>', '[...]*')
@@ -87,6 +90,7 @@ class Test(unittest.TestCase):
         def check(i, o):
             self.assertEqual(o, context(i))
         check(r'lao, b', '{ε} → 𝔹')
+        check(r'lal(\(\)), b', r'[\(\)]? → 𝔹')
 
     def test_modernize(self):
         def check(i, o):
