@@ -13,6 +13,10 @@ except ImportError:
     import re
 
 
+def log(s):
+    print(s, file=sys.stderr)
+
+
 def labelset(ls: str) -> str:
     return ls
 
@@ -40,7 +44,7 @@ def context_regex(ctx: str) -> str:
         nonlocal ctx
         ctx = re.sub(pattern, subst, ctx)
     # letterset<char_letters(01)>
-    s(r'letterset<char_letters\(((\\.|[^)])*)\)>',
+    s(r'letterset<char_letters\(((\\.|[^\\)])*)\)>',
       r'[\1]?')
     # lal(a), lal_char(a)
     s(r'lal(?:_char)?\(((\\.|[^)])*)\)',
@@ -71,29 +75,45 @@ def context_regex(ctx: str) -> str:
 
 
 def context_parse(ctx: str) -> str:
+    log("parse: {} -> ...".format(ctx))
     return vcsn.context(ctx).format('utf8')
 
 
-def context(ctx: str, parse=False) -> str:
-    if parse:
-        return context_parse(ctx)
+def strip_escapes(s: str) -> str:
+    return re.sub(r'\\(.)', r'\1', s)
+
+
+def context(ctx: str, safe=False) -> str:
+    log("{} -> ...".format(ctx))
+    syntax = 'raw'
+    if ctx.startswith('"'):
+        syntax = 'quoted'
+        ctx = ctx[1:-1]
+        ctx = strip_escapes(ctx)
+    if safe:
+        res = context_parse(ctx)
     else:
-        return context_regex(ctx)
+        res = context_regex(ctx)
+    if syntax == 'quoted':
+        res = '"{}"'.format(re.sub(r'(\\|")', r'\\\1', res))
+    log("... -> {}".format(res))
+    return res
 
 
-def modernize(s: str, parse=False) -> str:
+
+def modernize(s: str, safe=False) -> str:
     # Dot context in notebooks.
-    ctx = lambda s: context(s, parse)
-    s = re.sub(r'(?<=\bvcsn_context = \\")(.*)(?=\\"\\n)',
+    ctx = lambda s: context(s, safe)
+    s = re.sub(r'(?<=\bvcsn_context = \\")((\\.|[^"])*)(?=\\"\\n)',
                lambda m: ctx(m.group(1)),
                s)
     # Dot contexts.
-    s = re.sub(r'(?<=\bvcsn_context = ")(.*)(?=")',
+    s = re.sub(r'(?<=\bvcsn_context = )("(\\.|[^"])*")',
                lambda m: ctx(m.group(1)),
                s)
-    # Daut context: strip quotes.
-    s = re.sub(r'(?<=\bcontext = )"(.*)"',
-               lambda m: re.sub(r'\\(.)', r'\1', ctx(m.group(1))),
+    # Daut context in double quotes.
+    s = re.sub(r'(?<=\bcontext = )"((\\.|[^"])*)"',
+               lambda m: re.sub(r'\\(.)', r'\1', ctx(strip_escapes(m.group(1)))),
                s)
     # Daut context.
     s = re.sub(r'(?<=\bcontext = )(.*)$',
@@ -102,23 +122,28 @@ def modernize(s: str, parse=False) -> str:
     return s
 
 
+# pylint: disable=line-too-long
 class Test(unittest.TestCase):
 
     def test_context(self):
         def check(i, o):
             self.assertEqual(o, context(i))
         check(r'lao, b', '{ε} → 𝔹')
+        check(r'lal(a-z), b', '[a-z]? → 𝔹')
         check(r'lal(\(\)), b', r'[\(\)]? → 𝔹')
 
     def test_modernize(self):
-        def check(i, o):
-            self.assertEqual(o, modernize(i))
+        def check(i, o, safe=False):
+            self.assertEqual(o, modernize(i, safe))
         check(r'vcsn_context = \"lal, b\"\n',
               r'vcsn_context = \"[...]? → 𝔹\"\n')
         check(r'vcsn_context = \"lal(abc), b\"\n',
               r'vcsn_context = \"[abc]? → 𝔹\"\n')
         check(r'vcsn_context = "lal(abc), b"',
               r'vcsn_context = "[abc]? → 𝔹"')
+        check(r'''vcsn_context = "lat<letterset<char_letters(!\"#$%&\\'\\(\\)*+\,-./:;\\<=\\>?@\\[\\\\\\]^_`{\\|}~)>, letterset<char_letters()>>, b"''',
+              r'''vcsn_context = "[!\"#$%&\\'()*+\\,\\-./:;\\<=\\>?@\\[\\\\\\]^_`{\\|}~]? × []? → 𝔹"''',
+              safe=True)
         check(r'context = "lal(\"), b"',
               r'context = ["]? → 𝔹')
         check(r'context = "lat<letterset<char_letters(01)>, letterset<char_letters(01)>>, b"',
