@@ -1,7 +1,7 @@
 // This is the Q3 automaton (Fig. 2) in "The validity of weighted
 // automata" by Sylvain Lombardy Jacques Sakarovitch: we need to
 // convert it to absolute value first to see that it is invalid.
-context = "lal, polynomialset<law, q>"
+context = [...]? → Poly[[...]* → ℚ]
 $ -> 0
 0 -> 0 <<-1/2>\e>\e
 0 -> 1 <<1/2>\e>\e

@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "lal(z), expressionset<lal(abcd), q>"
+  vcsn_context = "[z]? → RatE[[abcd]? → ℚ]"
   rankdir = LR
   node [shape = circle]
   {
