@@ -1,5 +1,4 @@
-#ifdef VCSN_FWD_HH
-# define VCSN_FWD_HH
+#pragma once
 
 /// Everything about Vcsn is in this namespace.
 namespace vcsn
@@ -8,5 +7,3 @@ namespace vcsn
   namespace detail
   {}
 }
-
-#endif // !VCSN_FWD_HH

@@ -40,16 +40,15 @@ namespace vcsn
       /// with a single weight.
       bool check(const component_t& component, const Aut& aut)
       {
-        // FIXME: check ordered_map, or even polynomial of state.
-        std::unordered_map<state_t, weight_t> wm;
         // Double-tape weightset.
         const auto& ws = *aut->weightset();
         // Single-tape weightset.
         auto ws1 = ws.template set<0>();
         auto s0 = *component.begin();
-        std::stack<state_t> todo;
+        // FIXME: check ordered_map, or even polynomial of state.
+        auto wm = std::unordered_map<state_t, weight_t>{{s0, ws.one()}};
+        auto todo = std::stack<state_t>{};
         todo.push(s0);
-        wm[s0] = ws.one();
         while (!todo.empty())
           {
             auto s = todo.top();
@@ -103,10 +102,11 @@ namespace vcsn
                                 AutOut& naut1, AutOut& naut2)
   {
     using state_t = state_t_of<AutIn>;
-    std::unordered_map<state_t, state_t_of<AutOut>> ms;
-
-    ms[aut->pre()] = naut1->pre();
-    ms[aut->post()] = naut1->post();
+    auto ms = std::unordered_map<state_t, state_t_of<AutOut>>
+      {
+        {aut->pre(),  naut1->pre()},
+        {aut->post(), naut1->post()},
+      };
     for (auto s : aut->states())
       {
         ms[s] = naut1->new_state();
@@ -137,7 +137,7 @@ namespace vcsn
     // Create new weightset lat<ws, ws> from weightset ws of aut.
     auto ws = *aut->weightset();
     auto nt = std::make_tuple(ws, ws);
-    tupleset<decltype(ws), decltype(ws)> nws(nt);
+    auto nws = tupleset<decltype(ws), decltype(ws)>{nt};
 
     auto nctx = make_context(*aut->labelset(), nws);
     auto naut1 = make_mutable_automaton(nctx);
