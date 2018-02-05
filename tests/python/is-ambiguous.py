@@ -160,6 +160,11 @@ $ -> 0
 CHECK(aut.is_cycle_ambiguous())
 
 
+# Regression: broke when we fused lan and lal.
+a = ctx.expression('a{4}*+a{4}*', "associative").standard()
+CHECK(not a.is_cycle_ambiguous())
+
+
 CHECK(ctx.ladybird(5).is_cycle_ambiguous())
 CHECK(not ctx.de_bruijn(5).is_cycle_ambiguous())
 CHECK(ctx.ladybird(20).is_cycle_ambiguous())

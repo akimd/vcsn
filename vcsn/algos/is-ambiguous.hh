@@ -192,7 +192,6 @@ namespace vcsn
     auto conj = conjunction(aut, aut);
     const auto& coms = strong_components(conj,
                                          scc_algo_t::tarjan_iterative);
-    const auto& origins = conj->origins();
     // In one SCC of conj = aut & aut, if there exist two states (s0,
     // s0) (on the diagonal) and (s1, s2) with s1 != s2 (off the
     // diagonal) then aut has two cycles with the same label:
@@ -201,10 +200,9 @@ namespace vcsn
       {
         bool on = false;
         bool off = false;
-        for (auto s : c)
+        for (const auto s : c)
           {
-            auto p = origins.at(s);
-            if (std::get<0>(p) == std::get<1>(p))
+            if (on_diagonal(conj, s))
               on = true;
             else
               off = true;
