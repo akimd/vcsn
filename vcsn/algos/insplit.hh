@@ -34,9 +34,6 @@ namespace vcsn
     class insplit_automaton_impl
       : public automaton_decorator<fresh_automaton_t_of<Aut>>
     {
-      static_assert(labelset_t_of<Aut>::has_one(),
-                    "insplit: the labelset must have a one label");
-
     public:
       using automaton_t = Aut;
       using out_automaton_t = fresh_automaton_t_of<Aut>;

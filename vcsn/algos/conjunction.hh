@@ -38,6 +38,8 @@ namespace vcsn
 
   namespace detail
   {
+    using namespace std::literals;
+
     /*---------------------------------.
     | product_automaton_impl<Aut...>.  |
     `---------------------------------*/
@@ -72,7 +74,7 @@ namespace vcsn
       static symbol sname()
       {
         static symbol res("product_automaton"
-                          + super_t::sname_(std::string{Lazy ? "true" : "false"}));
+                          + super_t::sname_(Lazy ? "true"s : "false"s));
         return res;
       }
 

@@ -22,12 +22,12 @@ namespace vcsn
     {
       using automaton_t = Aut;
       using conjunction_t
-      = decltype(conjunction(std::declval<automaton_t>(),
-                             std::declval<automaton_t>()));
+        = decltype(conjunction(std::declval<automaton_t>(),
+                               std::declval<automaton_t>()));
       using word_t = word_t_of<automaton_t>;
 
       /// Constructor
-      /// \param[in] aut the automaton to study.
+      /// \param aut the automaton to study.
       is_ambiguous_impl(const automaton_t& aut)
         // FIXME: this product should not take weights into account!
         : conj_{conjunction(aut, aut)}
@@ -55,7 +55,9 @@ namespace vcsn
         return false;
       }
 
-      word_t ambiguous_word()
+      /// A witness of ambiguity.
+      /// \pre this object proved that the automaton is ambiguous.
+      word_t ambiguous_word() const
       {
         require(witness_ != conj_->null_state(),
                 "ambiguous_word: automaton is unambiguous, "
@@ -69,7 +71,6 @@ namespace vcsn
                || !"ambiguous_word: did not find an ambiguous word");
         return ls.mul(p1.empty() ? ls.one() : p1.begin()->first,
                       p2.empty() ? ls.one() : p2.begin()->first);
-
       }
 
       /// The self-conjunction of the input automaton.
@@ -98,7 +99,7 @@ namespace vcsn
 
   /// Whether an automaton is ambiguous.
   ///
-  /// \param[in] aut        the automaton.
+  /// \param  aut        the automaton.
   /// \returns whether ambiguous.
   template <Automaton Aut>
   bool is_ambiguous(const Aut& aut)
@@ -180,11 +181,11 @@ namespace vcsn
   template <Automaton Aut>
   bool is_cycle_ambiguous_scc(const Aut& aut)
   {
-    auto prod = conjunction(aut, aut);
-    const auto& coms = strong_components(prod,
+    auto conj = conjunction(aut, aut);
+    const auto& coms = strong_components(conj,
                                          scc_algo_t::tarjan_iterative);
-    const auto& origins = prod->origins();
-    // In one SCC of prod = aut & aut, if there exist two states (s0,
+    const auto& origins = conj->origins();
+    // In one SCC of conj = aut & aut, if there exist two states (s0,
     // s0) (on the diagonal) and (s1, s2) with s1 != s2 (off the
     // diagonal) then aut has two cycles with the same label:
     // s0->s1->s0 and s0->s2->s0.
