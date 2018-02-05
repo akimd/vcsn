@@ -16,6 +16,31 @@ namespace vcsn
 
   namespace detail
   {
+    /// Retrieve the original state in case of insplit automaton.
+    template <Automaton Aut2>
+    auto real_state(const insplit_automaton<Aut2>& aut,
+                     state_t_of<insplit_automaton<Aut2>> s)
+    {
+      return aut->origins().find(s)->second.first;
+    }
+
+    template <Automaton Aut2>
+    auto real_state(const Aut2&, state_t_of<Aut2> s)
+    {
+      return s;
+    }
+
+    /// Whether the two states composing this state are the same.
+    /// \param  aut  an automaton which is a self-conjunction
+    /// \param  s    the state whose origin is checked for being (r, r).
+    template <Automaton Conjunction>
+    bool on_diagonal(const Conjunction& aut, state_t_of<Conjunction> s)
+    {
+      auto p = aut->origins().find(s)->second;
+      return std::get<0>(p)
+        == real_state(std::get<1>(aut->auts_), std::get<1>(p));
+    }
+
     /// Whether an automaton is ambiguous.
     template <Automaton Aut>
     struct is_ambiguous_impl
@@ -32,7 +57,8 @@ namespace vcsn
         // FIXME: this product should not take weights into account!
         : conj_{conjunction(aut, aut)}
       {
-        // FIXME: check is_free?
+        // FIXME: the notebook says it needs a free labelset but there
+        // is no check on it from the algorithm. Do we keep this test?
       }
 
       /// Whether an automaton is ambiguous.
@@ -44,12 +70,10 @@ namespace vcsn
         // Since the conjunction is accessible, check only for
         // coaccessibles states.
         auto coaccessible = coaccessible_states(conj_);
-        for (const auto& o: conj_->origins())
-          if (std::get<0>(o.second) != real_state_(std::get<1>(conj_->auts_),
-                                                   std::get<1>(o.second))
-              && has(coaccessible, o.first))
+        for (const auto s: conj_->states())
+          if (!on_diagonal(conj_, s) && has(coaccessible, s))
             {
-              witness_ = o.first;
+              witness_ = s;
               return true;
             }
         return false;
@@ -78,22 +102,6 @@ namespace vcsn
       /// State index in the conjunction of a state that is not on the
       /// diagonal.
       state_t_of<conjunction_t> witness_ = conj_->null_state();
-
-    private:
-      /// Retrieve the original state in case of insplit automaton.
-      template <Automaton Aut2>
-      auto real_state_(const insplit_automaton<Aut2>& aut,
-                       state_t_of<insplit_automaton<Aut2>> s)
-      {
-        auto origins = aut->origins();
-        return origins.find(s)->second.first;
-      }
-
-      template <Automaton Aut2>
-      auto real_state_(const Aut2&, state_t_of<Aut2> s)
-      {
-        return s;
-      }
     };
   }
 
