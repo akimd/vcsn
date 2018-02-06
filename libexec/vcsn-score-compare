@@ -257,129 +257,128 @@ def lcm(numbers):
 def normalize(k):
     '''Fix a bench fix, i.e., fix errors, update APIs etc.
     '''
+    def r(pattern, repl):
+        nonlocal k
+        k = k.replace(pattern, repl)
+    def s(pattern, repl):
+        nonlocal k
+        k = re.sub(pattern, repl, k)
     # Separate with ' # ' only.
     k = ' # '.join([str.strip(x) for x in k.split('#', 2)])
 
     # The right symbol for repeated &.
-    k = re.sub(r'a\*\*(\d+) ', r'a & \1', k)
+    s(r'a\*\*(\d+) ', r'a & \1')
     # Fix: spello.
-    k = re.sub(r'de_buijn', 'de_bruijn', k)
+    s(r'de_buijn', 'de_bruijn')
     # Fix: extraneous paren.
-    k = re.sub(r'ladybird\(21\)\)', 'ladybird(21)', k)
+    s(r'ladybird\(21\)\)', 'ladybird(21)')
     # Fix: Incorrect use of .format.
-    k = re.sub(r'(a.(?:product|shuffle)\(a\) # a = std\(\{\}\).format\(r\))',
-               lambda m: m.group(1).replace('{}', '[a-e]?{50})'),
-               k)
+    s(r'(a.(?:product|shuffle)\(a\) # a = std\(\{\}\).format\(r\))',
+      lambda m: m.group(1).replace('{}', '[a-e]?{50})'))
     # Fix: now use 's' to denote a string, instead of 'a'.
-    k = re.sub(r'read\(a\) # a =',
-               r'read(s) # s =', k)
+    s(r'read\(a\) # a =',
+      r'read(s) # s =')
     # Now we display the number of repetitions.
-    k = re.sub(r'(# a = de_bruijn\(150\))$', r'\1, 1000x', k)
-    k = re.sub(r'(# e = "\(\\e\+a\)" \* 500)$', r'\1, 100x', k)
-    k = re.sub(
-        r'(# r = b\.expression\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x', k)
+    s(r'(# a = de_bruijn\(150\))$', r'\1, 1000x')
+    s(r'(# e = "\(\\e\+a\)" \* 500)$', r'\1, 100x')
+    s(r'(# r = b\.expression\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x')
     # Now, instead of "   on [a-z]  -> Z", ", c = [a-z] -> Z".
-    k = re.sub(r' +on (\[.*?\][?*]?) *-> *([BQZ])',
-               r', c = \1 -> \2', k)
-    k = re.sub(r'a = lal\(a-zA-Z0-9\).ladybird\(18\)',
-               r'a = ladybird(18), c = [a-zA-Z0-9] -> B', k)
+    s(r' +on (\[.*?\][?*]?) *-> *([BQZ])',
+      r', c = \1 -> \2')
+    s(r'a = lal\(a-zA-Z0-9\).ladybird\(18\)',
+      r'a = ladybird(18), c = [a-zA-Z0-9] -> B')
     # We never worked on Q in score, it was a typo.  And working with
     # B is good enough anyway and more relevant.
-    k = re.sub(r'(determinize.*de_bruijn\(\d+\)), c = \[abc\] -> [BQ]',
-               r'\1', k)
+    s(r'(determinize.*de_bruijn\(\d+\)), c = \[abc\] -> [BQ]',
+      r'\1')
 
     # derived_term.
-    k = k.replace('derived_term()', 'derived_term("derivation")')
-    k = k.replace('linear()', 'derived_term("expansion")')
+    r('derived_term()', 'derived_term("derivation")')
+    r('linear()', 'derived_term("expansion")')
 
     # For a while we displayed 'a.sort() # a = std([a-e]?{600})' but
     # were actually running 'a.shortest(5)'.
-    k = re.sub(r'a.sort\(\) (# a = std\(\[a-e\]\?\{600\}\))',
-               r'a.shortest(5) \1', k)
+    s(r'a.sort\(\) (# a = std\(\[a-e\]\?\{600\}\))',
+      r'a.shortest(5) \1')
     # and we were not reporting the context, although it's not B.
-    k = re.sub(r'(a\.shortest\(5\) # a = std\(\[a-e\]\?\{600\}\))$',
-               r'\1, c = [a-e] -> Z',
-               k)
+    s(r'(a\.shortest\(5\) # a = std\(\[a-e\]\?\{600\}\))$',
+      r'\1, c = [a-e] -> Z')
 
     # The syntax of contexts has changed.
-    k = re.sub(r'lal_char\(abc\)(_|, )b', '[abc] -> B', k)
+    s(r'lal_char\(abc\)(_|, )b', '[abc] -> B')
 
-    k = k.replace('ratexp', 'expression')
+    r('ratexp', 'expression')
 
-    k = k.replace('a.num_sccs', 'a.scc')
+    r('a.num_sccs', 'a.scc')
 
-    k = k.replace('a.accessible ', 'a.accessible() ')
+    r('a.accessible ', 'a.accessible() ')
 
     # Now we display the context.
-    k = re.sub(r'(a.minimize\("(moore|signature)"\) # a = std\(.*?\))$',
-               r'\1, c = [a-k] -> B',
-               k)
+    s(r'(a.minimize\("(moore|signature)"\) # a = std\(.*?\))$',
+      r'\1, c = [a-k] -> B')
 
-    k = k.replace('product', 'conjunction')
+    r('product', 'conjunction')
 
-    k = k.replace('a.expression()', 'a.expression("associative")')
-    k = re.sub(r'(a\.expression\("\w+")\)',
-               r'\1, "naive")',
-               k)
+    r('a.expression()', 'a.expression("associative")')
+    s(r'(a\.expression\("\w+")\)',
+      r'\1, "naive")')
 
     # has_twins_property is benched on an expression using the
     # associative identities.
-    k = re.sub(r'(a.has_twins_property.* # a = std\([^,]*?)\)',
-               r'\1, "associative")', k)
+    s(r'(a.has_twins_property.* # a = std\([^,]*?)\)',
+      r'\1, "associative")')
 
     # has_twins_property was run on Zmin, but with Q displayed.
-    k = re.sub(r'(a.has_twins_property.* # .*)Q,',
-               r'\1Zmin,', k)
+    s(r'(a.has_twins_property.* # .*)Q,',
+      r'\1Zmin,')
 
     # is_ambiguous and is_cycle_ambiguous run on Z, but with B
     # displayed.
-    k = re.sub(r'(a.is_(cycle_)?ambiguous.* # .*)B,',
-               r'\1Z,', k)
+    s(r'(a.is_(cycle_)?ambiguous.* # .*)B,',
+      r'\1Z,')
 
     # ZMIN -> Zmin.
-    k = re.sub(r'([NRZ])MIN', r'\1min', k)
+    s(r'([NRZ])MIN', r'\1min')
 
     # Nicer notation for tuples.
-    k = k.replace("'(a, x)'{2000}'(b, y)'", "(a|x){2000}(b|y)")
+    r("'(a, x)'{2000}'(b, y)'", "(a|x){2000}(b|y)")
 
     # Useless parens.
-    k = k.replace("(['(a,x)'-'(b,y)']*){600}", "['(a,x)'-'(b,y)']*{600}")
-    k = k.replace("(['(a,x)'-'(b,y)']{1000})*", "['(a,x)'-'(b,y)']{1000}*")
+    r("(['(a,x)'-'(b,y)']*){600}", "['(a,x)'-'(b,y)']*{600}")
+    r("(['(a,x)'-'(b,y)']{1000})*", "['(a,x)'-'(b,y)']{1000}*")
 
     # Use of `;` instead of `,`.
-    k = re.sub(r'(a\.compose\(a2\).*);', r'\1,', k)
+    s(r'(a\.compose\(a2\).*);', r'\1,')
 
     # It makes more sense to run these algos on Nmin, because we can
     # use the fastest implementations without having to check for
     # preconditions.  In the past, we used the fastest implementations
     # blindly.
-    k = re.sub(r'(lightest_automaton.* ->) Zmin', r'\1 Nmin', k)
+    s(r'(lightest_automaton.* ->) Zmin', r'\1 Nmin')
 
     # For a while, we thought we were working on a different
     # expression, but it was reusing the previous one.  Easy to see
     # since the context is wrong: it does not go up to `z`.  And use
     # Nmin now.
-    k = k.replace('a.lightest() # a = std([a-z]?{300}), c = [a-e] -> Z',
-                  'a.lightest() # a = std([a-e]?{150}), c = [a-e] -> Nmin')
+    r('a.lightest() # a = std([a-z]?{300}), c = [a-e] -> Z',
+      'a.lightest() # a = std([a-e]?{150}), c = [a-e] -> Nmin')
 
     # Now we display the context.
-    k = re.sub(r'thompson(\([^\)])', r'thm\1', k)
-    k = re.sub(r"std\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
-               "std(['(a,a)'-'(i,z)']{4}), c = [a-z]x[a-z] -> B",
-               k)
-    k = re.sub(r"thm\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
-               "thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B",
-               k)
+    s(r'thompson(\([^\)])', r'thm\1')
+    s(r"std\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
+      "std(['(a,a)'-'(i,z)']{4}), c = [a-z]x[a-z] -> B")
+    s(r"thm\(\['\(a,a\)'-'\(i,z\)'\]\{4\}\)$",
+      "thm(['(a,a)'-'(i,z)']{4}), c = [a-z]?x[a-z]? -> B")
 
     # a.lightest_automaton("a-star") -> a.lightest_automaton(1, "a-star")
-    k = re.sub(r'(a.lightest_automaton)\("', r'\1(1, ', k)
-    k = k.replace('a.lightest(5)', 'a.lightest(5, "auto")')
+    s(r'(a.lightest_automaton)\("', r'\1(1, ')
+    r('a.lightest(5)', 'a.lightest(5, "auto")')
 
-    k = k.replace('infiltration', 'infiltrate')
+    r('infiltration', 'infiltrate')
 
-    k = k.replace('proper(False)', 'proper(prune=False)')
+    r('proper(False)', 'proper(prune=False)')
 
-    k = re.sub(r'\beval\b', 'evaluate', k)
+    s(r'\beval\b', 'evaluate')
 
     # Final format.
     k = '{:20s} # {}'.format(*[str.strip(x) for x in k.split('#', 2)])
