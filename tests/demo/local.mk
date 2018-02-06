@@ -14,6 +14,9 @@
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
   %D%/compose                                   \
+  %D%/conjunction                               \
+  %D%/generators                                \
+  %D%/minimize                                  \
   %D%/operators                                 \
   %D%/prod-eval                                 \
   %D%/sms2fr-static                             \
@@ -22,6 +25,9 @@ EXTRA_PROGRAMS +=                               \
 EXTRA_DIST += %D%/sms2fr.py %D%/sms2fr-tests.py
 
 %C%_compose_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_conjunction_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_generators_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_minimize_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_operators_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_prod_eval_LDADD = $(all_libctx) $(unit_ldadd)
 %C%_sms2fr_static_LDADD = $(all_libctx) $(unit_ldadd)
@@ -29,6 +35,9 @@ EXTRA_DIST += %D%/sms2fr.py %D%/sms2fr-tests.py
 
 %C%_TESTS =                                     \
   %D%/compose.chk                               \
+  %D%/conjunction.chk                           \
+  %D%/generators.chk                            \
+  %D%/minimize.chk                              \
   %D%/operators.chk                             \
   %D%/prod-eval.chk                             \
   %D%/sms2fr.chk
@@ -39,6 +48,9 @@ dist_TESTS += $(%C%_TESTS)
 # the dependencies, so that the test suite does not make useless
 # compilations.
 %D%/compose.log: %D%/compose
+%D%/conjunction.log: %D%/conjunction
+%D%/generators.log: %D%/generators
+%D%/minimize.log: %D%/minimize
 %D%/operators.log: %D%/operators
 %D%/prod-eval.log: %D%/prod-eval libexec/vcsn-tools
 %D%/sms2fr.log: %D%/sms2fr-static %D%/sms2fr-dyn %D%/sms2fr.py %D%/sms2fr-tests.py

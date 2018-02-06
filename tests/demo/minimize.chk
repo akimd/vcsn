@@ -1,0 +1,20 @@
+#! /bin/sh
+vcsn_env
+
+cat > input.daut <<EOF
+context = letterset<char_letters(ab)>, q
+$ -> 0
+0 -> 1 a
+0 -> 2 a
+0 -> 3 b
+1 -> $
+2 -> $
+3 -> $
+EOF
+
+run 0 - tests/demo/minimize input.daut <<EOF
+context = letterset<char_letters(ab)>, q
+$ -> 0
+0 -> 1 <2>a, b
+1 -> $
+EOF
