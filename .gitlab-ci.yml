@@ -1,11 +1,20 @@
 .vcsn_template: &vcsn_template
+  cache:
+    key: "$CI_JOB_NAME"
+    paths:
+      - /root/.ccache
   script:
+    - pwd
+    - ccache -s
+    - ccache -M 20GB
+    - ccache -s
     - ./bootstrap
     - mkdir build
     - cd build
     - ../configure
     - make
     - make check
+    - ccache -s
   artifacts:
     when: always
     paths:
