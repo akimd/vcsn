@@ -23,7 +23,7 @@ namespace
   {
     using namespace vcsn::dyn;
     // A simple automaton.
-    auto a1 = make_automaton("context = lal, q\n"
+    auto a1 = make_automaton("context = [ab] -> Q\n"
                              "$ 0 <1/2>\n"
                              "0 1 <2>a, <6>b\n"
                              "1 $\n");
@@ -52,7 +52,7 @@ namespace
   {
     using namespace vcsn::dyn;
     // A simple context.
-    auto ctx = make_context("lal, q");
+    auto ctx = make_context("[...] -> Q");
 
     // Create an expression, and pretty-print it.
     auto e1 = make_expression(ctx, "<2>a");
@@ -74,7 +74,7 @@ namespace
   {
     using namespace vcsn::dyn;
     // Labels are words, not letters.
-    auto ctx = make_context("law, q");
+    auto ctx = make_context("[...]* -> Q");
 
     auto a = make_label(ctx, "a");
     auto b = make_label(ctx, "b");
@@ -106,7 +106,7 @@ namespace
     using namespace vcsn::dyn;
 
     // This context specifies that weights are rational numbers (ℚ).
-    auto ctx = make_context("lal, q");
+    auto ctx = make_context("[...] -> Q");
 
     auto one = make_weight(ctx, "1");
     auto two = make_weight(ctx, "2");
