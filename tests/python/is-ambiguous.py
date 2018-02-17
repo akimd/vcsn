@@ -32,10 +32,9 @@ CHECK(not a.is_deterministic())
 CHECK_EQ('introABCDEFoutro',
          vcsn.B.expression('intro (ABC + DEF + AB + CD + E + F)* outro').standard()
          .ambiguous_word())
-# Another type of ambiguity.
-CHECK_EQ('introAoutro',
-         vcsn.B.expression('intro A{+}{+} outro').thompson()
-         .ambiguous_word())
+# Not free.
+XFAIL(lambda: vcsn.B.expression('intro A{+}{+} outro').thompson().ambiguous_word(),
+      'is_ambiguous: requires free automaton')
 
 # Test ambiguous word on automata with two ambiguous parts. Hence,
 # test monomial_path with states different from pre and post.

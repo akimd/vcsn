@@ -57,8 +57,8 @@ namespace vcsn
         // FIXME: this product should not take weights into account!
         : conj_{conjunction(aut, aut)}
       {
-        // FIXME: the notebook says it needs a free labelset but there
-        // is no check on it from the algorithm. Do we keep this test?
+        require(is_free(aut),
+                "is_ambiguous: requires free automaton");
       }
 
       /// Whether an automaton is ambiguous.
@@ -168,6 +168,8 @@ namespace vcsn
   template <Automaton Aut>
   bool is_cycle_ambiguous(const Aut& aut)
   {
+    require(is_free(aut),
+            "is_cycle_ambiguous: requires free automaton");
     // Find all strongly connected components.
     const auto& coms = strong_components(aut,
                                          scc_algo_t::tarjan_iterative);
