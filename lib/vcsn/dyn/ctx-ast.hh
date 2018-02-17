@@ -7,6 +7,7 @@
 
 namespace vcsn::dyn::ast
 {
+  using namespace std::literals;
   namespace x3 = boost::spirit::x3;
 
   struct printer
@@ -122,7 +123,7 @@ namespace vcsn::dyn::ast
   struct ConText
   {
     labelset ls;
-    weightset ws;
+    weightset ws = weightset{"b"s};
     friend std::ostream& operator <<(std::ostream& o, const ConText& ctx)
     {
       return o << ctx.ls << ", " << ctx.ws;

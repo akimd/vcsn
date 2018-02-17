@@ -142,15 +142,17 @@ namespace vcsn::dyn::parser
     _val(ctx) = ast::expressionset{ast::ConText{_attr(ctx)}, "series"};
   };
 
+  /*-----------.
+  | Grammar.   |
+  `-----------*/
+
   const auto arrow
     = x3::rule<struct _>{"arrow"}
     = lit("->") | lit(',') | lit("→");
 
-  // Grammar.
   const auto ConText_def = eps
     > labelset
-    > arrow
-    > weightset
+    > -(arrow > weightset)
   ;
 
   const auto append = [](auto& ctx) {

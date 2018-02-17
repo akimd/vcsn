@@ -16,7 +16,7 @@ def check(ctx, exp=None, fmt="utf8"):
 
 # Invalid context: invalid weightset.
 XFAIL(lambda: vcsn.context("lal(a)_UNKNOWN"),
-      '''expected "->" here:
+      '''expected end of input here:
 lal(a)_UNKNOWN
       ^_''')
 
@@ -26,11 +26,11 @@ XFAIL(lambda: vcsn.context("lal(a), b_z"),
 lal(a), b_z
          ^_''')
 
-# Invalid context: missing comma.
-XFAIL(lambda: vcsn.context("lal"),
-      '''expected "->" here:
-lal
-   ^_''')
+# Invalid context: missing weightset.
+XFAIL(lambda: vcsn.context("lal ->"),
+      '''expected weightset here:
+lal ->
+      ^_''')
 
 ## --------------------- ##
 ## LabelSet: letterset.  ##

@@ -22,6 +22,9 @@ check_translate_context()
       ++nerrs;                                          \
     }
 
+  /*------------------------------.
+  | Check the basic weightsets.   |
+  `------------------------------*/
 #define CHECK_WS(Ref, A, B)                     \
   CHECK("lao, " Ref,  "oneset, " Ref);          \
   CHECK("lao, " A,    "oneset, " Ref);          \
@@ -38,6 +41,11 @@ check_translate_context()
   CHECK_WS("z",    "ℤ",    "Z");
   CHECK_WS("zmin", "ℤmin", "Zmin");
 #undef CHECK_WS
+
+
+  /*-------------------.
+  | Check labelsets.   |
+  `-------------------*/
 
   // lal.  No gens, open.
   CHECK("lal, b",          "letterset<char_letters>, b");
@@ -63,6 +71,18 @@ check_translate_context()
 
   CHECK("lal<string>, b",  "letterset<string_letters>, b");
 
+  // No weightset: defaults to B.
+  CHECK("lal",          "letterset<char_letters>, b");
+  CHECK("lal<char>",    "letterset<char_letters>, b");
+  CHECK("[...]",        "letterset<char_letters>, b");
+  CHECK("[a]",          "letterset<char_letters(a)>, b");
+
+
+
+  /*-----------------.
+  | Expressionset.   |
+  `-----------------*/
+
   // Expressionset as a weightset.
   CHECK("lao, RatE[[x] -> b]",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
@@ -79,6 +99,11 @@ check_translate_context()
   CHECK("lao, seriesset <[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
 
+
+  /*-----------------.
+  | Polynomialset.   |
+  `-----------------*/
+
   // Polynomialset as a weightset.
   CHECK("lao, Poly[[x] -> b]",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
@@ -92,6 +117,11 @@ check_translate_context()
   CHECK("law, zmin",     "wordset<char_letters>, zmin");
   CHECK("law(a), zmin",  "wordset<char_letters(a)>, zmin");
   CHECK("[a-z]*-> zmin", "wordset<char_letters(a-z)>, zmin");
+
+
+  /*----------------------.
+  | Cartesian products.   |
+  `----------------------*/
 
   CHECK("lat<[a], [b], [c]> -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
