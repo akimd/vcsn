@@ -130,6 +130,10 @@ check_translate_context()
   CHECK("[a] x [b] x [c] -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
 
+  CHECK("lal x lal -> B",
+        "lat<letterset<char_letters>, letterset<char_letters>>, b")
+  CHECK("lal<string> x lal<char> -> B",
+        "lat<letterset<string_letters>, letterset<char_letters>>, b")
   CHECK("[a] -> lat<nmin, zmin, rmin>",
         "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
   CHECK("[a] -> lat < nmin , zmin , rmin >",
