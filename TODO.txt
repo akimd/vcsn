@@ -139,7 +139,7 @@ asked for the graphical rendering of a huge automaton, and decides to kill
 vcsn realizing her error, the dot process will continue to waste cpu.
 
 ** lift
-When we lift a single tape from a lat<lal, lal>, we produce a single-tape
+When we lift a single tape from a [...] x [...] -> we produce a single-tape
 labelset and a single-tape weightset.  This is uselessly heavy on the system.
 That's why we have weird parens in the result:
 

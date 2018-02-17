@@ -46,7 +46,7 @@ check('([ab]a){c}', '(aa+ba){c}')
 check('([ab]a){T}', '(aa+ba){T}')
 check(r'([ab]a){\}(a[ab])', r'(aa+ba){\}(aa+ab)')
 
-ctx = vcsn.context('lat<lal, lal>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('(a|b)(x|x+y|y)', '(a|b)(x|x) + (a|b)(y|y)')
 check('(a|b*)(x|x*+y|y*)', '(a|b*)(x|x*)+(a|b*)(y|y*)')
 check('(a|a + b|b)(c|c) @ (a|a)(b|b + c|c)',

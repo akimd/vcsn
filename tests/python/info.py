@@ -251,7 +251,7 @@ check(q.expression(r'(\z<2>(\e+a+b)<3>)&(a:b)a*{c}{T}'),
           'zero': 1,
       })
 
-c = vcsn.context('lat<lal, lal>, q')
+c = vcsn.context('[...] x [...] -> q')
 check(c.expression(r'a|x + b|y* + (c|[xyz] @ [xyz]|\e)'),
       {
           'add': 3,

@@ -335,6 +335,6 @@ check('\e{2}+\z{2}+a{2}',
       'labels', ['none'])
 
 
-ctx = vcsn.context('lat<lal, lal>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('([ab]{3}|x* + [cd]{2}|y*){2}',
       'lan-lan')

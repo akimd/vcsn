@@ -12,4 +12,4 @@ def check(n, ctx):
 
 check(0, 'lal, b')
 check(1, 'lat<lal>, b')
-check(2, 'lat<lal, lal>, b')
+check(2, '[...] x [...] -> b')

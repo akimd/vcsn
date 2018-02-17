@@ -30,7 +30,7 @@ check(law, '(ab+cd)*de', lal)
 # transducers might need padding.
 #
 latw = vcsn.context("lat<law, lal>, z")
-latl = vcsn.context("lat<lal, lal>, z")
+latl = vcsn.context("[...] x [...] -> z")
 
 check(latw, "(a|b)", latl)
 check(latw, "<2>(abc|x)", latl, r"<2>(a|x)(b|\e)(c|\e)")

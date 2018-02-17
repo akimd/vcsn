@@ -137,7 +137,7 @@ CHECK_EQ('<10>a|x + <14>a|y + <15>b|x + <21>b|y',
 ## Compose.  ##
 ## --------- ##
 
-poly = vcsn.context('lat<lal, lal>, q').polynomial
+poly = vcsn.context('[...] x [...] -> q').polynomial
 CHECK_EQ('a|A + b|B', poly('a|x + b|y').compose(poly('x|A + y|B')))
 CHECK_EQ('<10>a|A + <21>b|B',
          poly('<2>a|x + <3>b|y + c|z').compose(poly('<5>x|A + <7>y|B + c|C')))

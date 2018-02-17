@@ -862,7 +862,7 @@ def qexp(e, gens=None):
     return exp(e, c)
 
 def q2(e):
-    return exp(e, vcsn.context('lat<lal, lal>, q'))
+    return exp(e, vcsn.context('[...] x [...] -> q'))
 
 def zero(gens):
     return qexp(r'\z', gens).standard()
@@ -906,7 +906,7 @@ check(tuple('ab*', 'cd*', 'ef*'), file='tuple-3')
 
 # Compose.
 def q2(e):
-    return exp(e, vcsn.context('lat<lal, lal>, q'))
+    return exp(e, vcsn.context('[...] x [...] -> q'))
 check(q2('[abc]|[xyz] @ [xz]|Y'), file='compose-1')
 
 # Transpose.

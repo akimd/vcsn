@@ -232,10 +232,10 @@ check(a_epsilon, 'abc', '0')
 check(a_epsilon, 'abcd', '0')
 
 ## -------------------- ##
-## lat<lal, lal>, zmin  ##
+## [...] x [...] -> zmin  ##
 ## -------------------- ##
 
-ctx = vcsn.context('lat<lal, lal>, zmin')
+ctx = vcsn.context('[...] x [...] -> zmin')
 e = ctx.expression(r'(<0>(a|a+b|b))* (<1>[^]|\e + <1>\e|[^] + <2>(a|[^a]+b|[^b])){*}')
 a = e.automaton()
 

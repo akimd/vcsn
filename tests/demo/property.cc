@@ -221,7 +221,7 @@ namespace
      * Automaton creation.
      */
 
-    // Context of the automaton: lat<lal, lal>, b.
+    // Context of the automaton: [...] x [...] -> b.
     using letterset_t = letterset<set_alphabet<char_letters>>;
     using labelset_t = tupleset<letterset_t, letterset_t>;
     auto ls = letterset_t{'a', 'b'};

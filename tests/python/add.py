@@ -29,9 +29,9 @@ CHECK_EQ(metext('join.gv'), a.add(b))
 
 
 # lal x lal + lal x lal = lal x lal.
-a = std('lat<lal, lal>, b', r"\e|x")
-b = std('lat<lal, lal>, b', r"a|\e")
-c = std('lat<lal, lal>, b', r"\e|x+a|\e")
+a = std('[...] x [...] -> b', r"\e|x")
+b = std('[...] x [...] -> b', r"a|\e")
+c = std('[...] x [...] -> b', r"\e|x+a|\e")
 # Not the same states numbers, so not CHECK_EQ.
 CHECK_ISOMORPHIC(c, a + b)
 

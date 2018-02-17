@@ -111,7 +111,7 @@ check(c1.expression("(a|x)*").standard(),
 
 # Check that weights are added, not replaced
 
-cz = vcsn.context('lat<lal, lal>, z')
+cz = vcsn.context('[...] x [...] -> z')
 aut = cz.expression('[ab]|[ab]').automaton()
 b = r'''digraph
 {

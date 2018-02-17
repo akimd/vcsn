@@ -31,7 +31,7 @@ int main()
   auto ls = labelset_t{ls1, ls1};
 
 
-  // Context of the automaton: lat<lal, lal>, b.
+  // Context of the automaton: [...] x [...] -> b.
   using context_t = context<labelset_t, b>;
 
   // Create the context from the labelset.

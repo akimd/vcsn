@@ -124,5 +124,5 @@ ctx = vcsn.context('law(abcd), expressionset<law(efgh), expressionset<law(xyz), 
 check('<<<2>(xy)>(ef)>(abcd)', '<<<2>(yx)>(fe)>(dcba)')
 check('<(ef)>(abcd)*<(gh)>', '<(hg)>(dcba)*<(fe)>')
 
-ctx = vcsn.context('lat<lal, lal>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('a(bc)*d | uvw*yz', 'd(cb)*a | zyw*vu')
