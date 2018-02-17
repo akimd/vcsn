@@ -36,7 +36,7 @@ namespace
     std::vector<parsed_arg> args;
     std::string output_file = "";
     std::string output_format = "default";
-    std::string context_string = "lal, b";
+    std::string context_string = "[...] -> B";
   };
 
   options parse_arguments(int argc, char** argv)
@@ -284,9 +284,9 @@ namespace
          "\n"
          "Input/Output:\n"
          "  -C CONTEXT    the context to use\n"
-         "                'lal, b', 'law, q', 'lal(abc), zmin', etc.\n"
+         "                '[...]', '[a-z]* -> q', '[abc] × [abc] → ℤmin', etc.\n"
          "  -A            input is an automaton\n"
-         "  -B            input is a boolean\n"
+         "  -B            input is a Boolean\n"
          "  -D            input is an identity\n"
          "  -E            input is a rational expression\n"
          "  -F            input is a float\n"
@@ -328,7 +328,7 @@ namespace
          "      vcsn determinize -f - |\n"
          "      vcsn evaluate -f - -L 'abba'\n"
          "\n"
-         "  $ vcsn derived-term -C 'lat<lal, lal>, q' -Ee 'a*|b*' |\n"
+         "  $ vcsn derived-term -C '[...] x [...] -> Q' -Ee 'a*|b*' |\n"
          "      vcsn shortest 10\n";
     }
     return 0;
