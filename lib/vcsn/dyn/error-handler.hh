@@ -28,8 +28,7 @@ namespace vcsn::dyn::parser
              Exception const& x, Context const& context)
     {
       std::string which = x.which();
-      auto iter = id_map.find(which);
-      if (iter != id_map.end())
+      if (auto iter = id_map.find(which); iter != id_map.end())
 	which = iter->second;
 
       const auto message = "expected " + which + " here:";

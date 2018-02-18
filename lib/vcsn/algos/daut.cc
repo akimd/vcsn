@@ -119,9 +119,10 @@ namespace vcsn
           {
             if (isspace(c) && res.empty())
               continue;
-            if (is_comment(is, c))
+            else if (is_comment(is, c))
               break;
-            res += c;
+            else
+              res += c;
           }
         return string_t{res};
       }

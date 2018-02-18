@@ -160,17 +160,19 @@ unknown
   ^
   while reading automaton''')
 
+
 # Invalid context.
 xfail(r'''digraph
 {
   vcsn_context = "[...]? → unknown"
-}
-''', r'''3.18-35: expected weightset here:
+}''',
+      r'''3.18-35: expected weightset here:
 [...]? → unknown
          ^_
   vcsn_context = "[...]? → unknown"
                  ^^^^^^^^^^^^^^^^^^
   while reading automaton''')
+
 
 # Invalid initial label.
 xfail(r'''digraph
@@ -185,6 +187,7 @@ xfail(r'''digraph
           ^^^^^^^^^^^
   while reading automaton''')
 
+
 # Invalid final label.
 xfail(r'''digraph
 {
@@ -197,6 +200,7 @@ xfail(r'''digraph
   1 -> F1 [label = a]
           ^^^^^^^^^^^
   while reading automaton''')
+
 
 # There are spaces before 'digraph'.
 CHECK_EQ(vcsn.automaton(r'''digraph
