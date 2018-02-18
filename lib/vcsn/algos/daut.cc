@@ -12,6 +12,7 @@
 #include <vcsn/misc/location.hh>
 #include <vcsn/misc/regex.hh>
 #include <vcsn/misc/stream.hh>
+#include <vcsn/misc/string.hh>
 #include <vcsn/misc/symbol.hh>
 
 namespace vcsn
@@ -156,12 +157,12 @@ namespace vcsn
           loc.step();
           loc.lines(1);
           std::getline(is, line, '\n');
-          auto locline = location{loc.begin, loc.begin + line.size()};
           // Trim here to handle line full of blanks.
           boost::algorithm::trim_right(line);
           if (line.empty() || boost::starts_with(line, "//"))
             continue;
 
+          const auto locline = location{loc.begin, loc.begin + length(line)};
           if (first)
             {
               auto ctx = read_context(line);

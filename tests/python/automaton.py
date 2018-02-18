@@ -174,6 +174,16 @@ xfail(r'''digraph
   while reading automaton''')
 
 
+# Invalid context.
+xfail('context = "RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹"',
+      r'''1.1-37: expected ']' here:
+RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹
+               ^_
+context = "RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  while reading automaton''')
+
+
 # Invalid initial label.
 xfail(r'''digraph
 {
@@ -543,6 +553,19 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(a, vcsn.automaton(ref, 'daut'))
     CHECK_EQ(a, vcsn.automaton(ref, 'auto'))
     CHECK_EQ(a, vcsn.automaton(ref))
+
+
+# Invalid context.  It took me quite a while to acknowlegde that the
+# following is correct: if you feel that the number of carets is
+# incorrect, it might be because of the font!  Check from the terminal
+# for instance.
+xfail('context = "RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹"',
+      r'''1.1-37: expected ']' here:
+RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹
+               ^_
+context = "RatE[[...]? → 𝔹𝔹]  →  𝔹𝔹𝔹"
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  while reading automaton''')
 
 
 # A daut file whose names have quotes: beware of building "Ifoo" and
