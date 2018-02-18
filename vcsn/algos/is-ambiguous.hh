@@ -20,6 +20,8 @@ namespace vcsn
     template <Automaton Aut>
     struct is_ambiguous_impl
     {
+      static_assert(labelset_t_of<Aut>::is_free(),
+                    "is_ambiguous: requires free labelset");
       using automaton_t = Aut;
       using conjunction_t
         = decltype(conjunction(std::declval<automaton_t>(),
@@ -141,6 +143,8 @@ namespace vcsn
   template <Automaton Aut>
   bool is_cycle_ambiguous(const Aut& aut)
   {
+    static_assert(labelset_t_of<Aut>::is_free(),
+                  "is_cycle_ambiguous: requires free labelset");
     // Find all strongly connected components.
     const auto& coms = strong_components(aut,
                                          scc_algo_t::tarjan_iterative);
