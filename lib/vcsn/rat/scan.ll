@@ -20,6 +20,7 @@
 
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/regex.hh>
+#include <vcsn/misc/string.hh>
 
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
@@ -31,7 +32,7 @@
  } while (false)
 
 #define YY_USER_ACTION                          \
-  loc.columns(yyleng);
+  loc.columns(length(yytext, yytext+yyleng));
 
 #define TOK(Token)                              \
   parser::make_ ## Token (loc)

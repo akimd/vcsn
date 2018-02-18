@@ -1,0 +1,4 @@
+#! /bin/sh
+
+run 0 '' tests/unit/length
+

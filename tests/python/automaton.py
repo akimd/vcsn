@@ -141,6 +141,7 @@ xfail(r'''digraph
   ^
   while reading automaton''')
 
+
 # Invalid context.
 xfail(r'''digraph
 {
@@ -164,11 +165,11 @@ xfail(r'''digraph
 {
   vcsn_context = "[...]? → unknown"
 }
-''', r'''3.18-37: expected weightset here:
+''', r'''3.18-35: expected weightset here:
 [...]? → unknown
-           ^_
+         ^_
   vcsn_context = "[...]? → unknown"
-                 ^^^^^^^^^^^^^^^^^^^^
+                 ^^^^^^^^^^^^^^^^^^
   while reading automaton''')
 
 # Invalid initial label.

@@ -23,6 +23,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/dyn                                       \
   %D%/function_property                         \
   %D%/label                                     \
+  %D%/length                                    \
   %D%/polynomialset                             \
   %D%/proper                                    \
   %D%/transpose                                 \
@@ -43,6 +44,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_dyn_LDADD                 = $(unit_ldadd)
 %C%_function_property_LDADD   = $(unit_ldadd)
 %C%_label_LDADD               = $(unit_ldadd)
+%C%_length_LDADD              = $(unit_ldadd)
 %C%_polynomialset_LDADD       = $(unit_ldadd)
 %C%_proper_LDADD              = $(unit_ldadd)
 %C%_transpose_LDADD           = $(unit_ldadd)
@@ -59,6 +61,7 @@ unit_TESTS +=                                   \
   %D%/function_property.chk                     \
   %D%/ipython.chk                               \
   %D%/label.chk                                 \
+  %D%/length.chk                                \
   %D%/polynomialset.chk                         \
   %D%/proper.chk                                \
   %D%/pylint.chk                                \
@@ -96,6 +99,7 @@ EXTRA_DIST +=                                   \
 %D%/function_property.log: %D%/function_property
 %D%/ipython.log:           $(vcsn_python)
 %D%/label.log:             %D%/label
+%D%/length.log:            %D%/length
 %D%/polynomialset.log:     %D%/polynomialset
 %D%/proper.log:            %D%/proper
 %D%/pylint.log:            $(vcsn_python) $(vcsn_python_pylint)

@@ -14,6 +14,8 @@
 #include <string>
 #include <iostream>
 
+#include <vcsn/misc/string.hh>
+
 #define LINE(Line)                              \
   do {                                          \
     loc.end.column = 1;                         \
@@ -21,7 +23,7 @@
  } while (false)
 
 #define YY_USER_ACTION                          \
-  loc.columns(yyleng);
+  loc.columns(length(yytext, yytext+yyleng));
 
 #define TOK(Token)                              \
   parser::make_ ## Token (loc)

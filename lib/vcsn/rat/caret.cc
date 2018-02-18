@@ -20,9 +20,8 @@ namespace vcsn
         is.seekg(0);
         // Look for the right line.
         auto buf = std::string{};
-        auto line = 1u;
-        while (getline(is, buf) && line != loc.begin.line)
-          ++line;
+        for (auto line = 1u; getline(is, buf) && line != loc.begin.line; ++line)
+          continue;
         // If it's on several lines, just display the first one.
         auto end_col
           = loc.begin.line == loc.end.line
@@ -46,7 +45,7 @@ namespace vcsn
 
     std::string caret(std::istream& is, const rat::location& loc)
     {
-      std::ostringstream os;
+      auto os = std::ostringstream{};
       print_caret_impl(is, os, loc);
       return os.str();
     }

@@ -9,6 +9,8 @@
 #include <boost/locale/encoding_utf.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 
+#include <vcsn/misc/string.hh>
+
 namespace vcsn::dyn::parser
 {
   // Tag used to get our error handler from the context.
@@ -107,7 +109,8 @@ namespace vcsn::dyn::parser
         else if (c == '\t')
           for (int i = 0; i < tabs; ++i)
             err_out << ind;
-        else
+        // Skip UTF-8 continuation.
+        else if (!iscont(c))
           err_out << ind;
       }
   }
