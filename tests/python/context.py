@@ -32,6 +32,17 @@ XFAIL(lambda: vcsn.context("lal ->"),
 lal ->
       ^_''')
 
+# Errors on several lines.
+XFAIL(lambda: vcsn.context("RatE[[...]? → BU]"),
+      '''expected weightset here:
+RatE[[...]? → BU]
+              ^_
+expected context here:
+RatE[[...]? → BU]
+     ^_''')
+
+
+
 ## --------------------- ##
 ## LabelSet: letterset.  ##
 ## --------------------- ##

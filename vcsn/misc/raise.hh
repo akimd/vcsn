@@ -76,7 +76,11 @@ namespace vcsn
       {
         (detail::print_(o, args, 0), 0)...
       };
-    throw std::runtime_error{o.str()};
+    // Remove last \n for exceptions.
+    auto msg = o.str();
+    if (0 < msg.size() && msg[msg.size() - 1] == '\n')
+      msg.pop_back();
+    throw std::runtime_error{msg};
   }
 
   /// If \a b is not verified, raise an error with \a args as message.

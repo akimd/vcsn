@@ -197,7 +197,7 @@ namespace vcsn::dyn::parser
       ++start;
     print_line(start, last);
     print_indicator(start, err_pos, ' ');
-    err_out << "^_";
+    err_out << "^_\n";
   }
 
   template <typename Iterator>
@@ -219,6 +219,6 @@ namespace vcsn::dyn::parser
     print_line(start, last);
     print_indicator(start, err_first, ' ');
     print_indicator(start, err_last, '~');
-    err_out << " <<-- Here";
+    err_out << " <<-- Here\n";
   }
 }
