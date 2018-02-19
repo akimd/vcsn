@@ -487,19 +487,6 @@ namespace vcsn
     return detail::and_<bool_constant<B>...>::value;
   }
 
-  /// Whether all the `values` evaluate as true.
-  template <typename... Bool>
-  bool all(Bool&&... values)
-  {
-    bool res = true;
-    using swallow = int[];
-    (void) swallow
-    {
-      (res = res && values, 0)...
-    };
-    return res;
-  }
-
   /// Whether some of the `values` evaluate as true.
   ///
   /// Made a functor to be easily composable with unpack.

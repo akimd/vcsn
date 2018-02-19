@@ -55,13 +55,15 @@ namespace vcsn
 
       if (algo == "auto")
         {
-          if (all(is_standard(std::forward<Aut>(auts))...))
+          if ((is_standard(std::forward<Aut>(auts)) && ...))
             algo = "standard";
-          else if (static_if<are_letterized>
-                   ([](auto&&... as){ return all(is_deterministic(as)...); },
-                     [](auto&&...){ return false; })
-                   (std::forward<Aut>(auts)...))
-            algo = "deterministic";
+          else if constexpr (are_letterized)
+            {
+              if ((is_deterministic(std::forward<Aut>(auts)) && ...))
+                algo = "deterministic";
+              else
+                algo = "general";
+            }
           else
             algo = "general";
         }

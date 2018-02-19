@@ -107,7 +107,8 @@ namespace vcsn
                                   seq<I...>)
       {
         // If this is post, we are done.
-        if (!all((std::get<I>(psrc) == std::get<I>(aut_->auts_)->post())...))
+        if (((std::get<I>(psrc) != std::get<I>(aut_->auts_)->post())
+             || ...))
           {
             const auto& ls = *aut_->labelset();
             const auto& ws = *aut_->weightset();

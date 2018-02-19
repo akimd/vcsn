@@ -387,7 +387,7 @@ namespace vcsn
       template <std::size_t... I>
       bool are_proper_in(const state_name_t& psrc, seq<I...>) const
       {
-        return all(is_proper_in<I>(psrc)...);
+        return (is_proper_in<I>(psrc) && ...);
       }
 
       /// Whether the state has only proper incoming transitions.
@@ -427,7 +427,7 @@ namespace vcsn
       template <std::size_t... I>
       bool have_proper_out(const state_name_t& psrc, seq<I...>)
       {
-        return all(has_proper_out<I>(psrc)...);
+        return (has_proper_out<I>(psrc) && ...);
       }
 
       /// Whether the Ith state of \a psrc in the Ith input automaton
