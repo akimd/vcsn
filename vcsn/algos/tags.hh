@@ -55,31 +55,15 @@ namespace vcsn
 
       if (algo == "auto")
         {
-          // Applies to both GCC and Clang.  Cannot be done inside a
-          // statement.
-#if defined __GNUC__
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
           if (all(is_standard(std::forward<Aut>(auts))...))
             algo = "standard";
           else if (static_if<are_letterized>
                    ([](auto&&... as){ return all(is_deterministic(as)...); },
-#if (defined __clang__ && __clang_major__ == 3 && __clang_minor__ < 6   \
-     || defined __GNUC__ && !defined __clang__ && __GNUC__ < 5)
-                     // Clang 3.5 and GCC 4.9 require that we name the argument.
-                     [](auto&&... as){ return false; }
-#else
-                     [](auto&&...){ return false; }
-#endif
-                     )
+                     [](auto&&...){ return false; })
                    (std::forward<Aut>(auts)...))
             algo = "deterministic";
           else
             algo = "general";
-#if defined __GNUC__
-# pragma GCC diagnostic pop
-#endif
         }
 
       if (algo == "general")

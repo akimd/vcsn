@@ -259,19 +259,18 @@ namespace vcsn
     template <std::size_t... I>
     const_iterator cbegin_(seq<I...>) const
     {
-      // FIXME: clang-3.5: std::cbegin/cend are not supported, yet.
-      using std::begin;
-      using std::end;
-      return {const_iterators_t{begin(std::get<I>(sequences_))...},
-              const_iterators_t{end(std::get<I>(sequences_))...}};
+      using std::cbegin;
+      using std::cend;
+      return {const_iterators_t{cbegin(std::get<I>(sequences_))...},
+              const_iterators_t{cend(std::get<I>(sequences_))...}};
     }
 
     template <std::size_t... I>
     const_iterator cend_(seq<I...>) const
     {
-      using std::end;
-      return {const_iterators_t{end(std::get<I>(sequences_))...},
-              const_iterators_t{end(std::get<I>(sequences_))...}};
+      using std::cend;
+      return {const_iterators_t{cend(std::get<I>(sequences_))...},
+              const_iterators_t{cend(std::get<I>(sequences_))...}};
     }
 
     template <std::size_t... I>
