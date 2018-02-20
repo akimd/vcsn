@@ -446,19 +446,6 @@ namespace vcsn
     template <typename C, typename F1, typename F2>
     struct eval_if : if_<C, F1, F2>::type {};
 
-    /// And condition on several typenames.
-    template <typename... F>
-    struct and_;
-
-    template <typename F1, typename... F>
-    struct and_<F1, F...> : eval_if<F1, and_<F...>, std::false_type>::type {};
-
-    template <typename F1>
-    struct and_<F1> : eval_if<F1, std::true_type, std::false_type>::type {};
-
-    template <>
-    struct and_<> : std::true_type::type {};
-
     /// Or condition on several typenames.
     template <typename... F>
     struct or_;
@@ -478,13 +465,6 @@ namespace vcsn
   constexpr bool any_()
   {
     return detail::or_<bool_constant<B>...>::value;
-  }
-
-  // Static evaluation of the 'and' of the template parameters
-  template <bool... B>
-  constexpr bool all_()
-  {
-    return detail::and_<bool_constant<B>...>::value;
   }
 
   /// Whether some of the `values` evaluate as true.

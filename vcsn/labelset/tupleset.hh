@@ -646,14 +646,14 @@ namespace vcsn
     static constexpr bool
     is_commutative_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_commutative()...>();
+      return (valueset_t<I>::is_commutative() && ...);
     }
 
     template <std::size_t... I>
     static constexpr bool
     is_idempotent_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_idempotent()...>();
+      return (valueset_t<I>::is_idempotent() && ...);
     }
 
     template <std::size_t... I>
@@ -827,28 +827,28 @@ namespace vcsn
     static constexpr bool
     has_lightening_weights_(seq<I...>)
     {
-      return all_<valueset_t<I>::has_lightening_weights()...>();
+      return (valueset_t<I>::has_lightening_weights() && ...);
     }
 
     template <std::size_t... I>
     static constexpr bool
     has_one_(seq<I...>)
     {
-      return all_<valueset_t<I>::has_one()...>();
+      return (valueset_t<I>::has_one() && ...);
     }
 
     template <std::size_t... I>
     static constexpr bool
     is_expressionset_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_expressionset()...>();
+      return (valueset_t<I>::is_expressionset() && ...);
     }
 
     template <std::size_t... I>
     static constexpr bool
     is_letterized_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_letterized()...>();
+      return (valueset_t<I>::is_letterized() && ...);
     }
 
     template <std::size_t... I>
@@ -1250,7 +1250,7 @@ namespace vcsn
     template <std::size_t... I>
     static constexpr bool is_letterized_(seq<I...>)
     {
-      return all_<letterized_traits_t<I>::is_letterized...>();
+      return (letterized_traits_t<I>::is_letterized && ...);
     }
     static constexpr bool is_letterized = is_letterized_(indices_t{});
 

@@ -51,7 +51,7 @@ namespace vcsn
       // automaton. It could be wrong to use deterministic_tag this way.
       // At least, keep check on is_letterized for the moment.
       constexpr bool are_letterized
-        = all_<labelset_t_of<decltype(auts)>::is_letterized()...>();
+        = (labelset_t_of<decltype(auts)>::is_letterized() && ...);
 
       if (algo == "auto")
         {

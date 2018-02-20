@@ -50,7 +50,7 @@ namespace vcsn
       : public lazy_tuple_automaton<product_automaton_impl<Lazy, Aut, Auts...>,
                                     false, Lazy, Aut, Auts...>
     {
-      static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
+      static_assert((labelset_t_of<Auts>::is_letterized() && ...),
                     "product: requires letterized labels");
 
       /// The type of the resulting automaton.
