@@ -20,7 +20,7 @@
 #include <vcsn/misc/set.hh> // has
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/to.hh>
-#include <vcsn/misc/tuple.hh> // tuple_element_t, cross_tuple
+#include <vcsn/misc/tuple.hh> // std::tuple_element_t, cross_tuple
 #include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
@@ -97,7 +97,7 @@ namespace vcsn
 
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
-      using input_automaton_t = base_t<tuple_element_t<I, automata_t>>;
+      using input_automaton_t = base_t<std::tuple_element_t<I, automata_t>>;
 
       using super_t::aut_;
 
@@ -638,9 +638,9 @@ namespace vcsn
                    vcsn::detail::index_sequence<I...>)
       {
         if (lazy)
-          return conjunction_lazy(as[I]->as<tuple_element_t<I, Auts>>()...);
+          return conjunction_lazy(as[I]->as<std::tuple_element_t<I, Auts>>()...);
         else
-          return conjunction(as[I]->as<tuple_element_t<I, Auts>>()...);
+          return conjunction(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge (conjunction).
@@ -783,7 +783,7 @@ namespace vcsn
       shuffle_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        return vcsn::shuffle(as[I]->as<tuple_element_t<I, Auts>>()...);
+        return vcsn::shuffle(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge (shuffle).
@@ -836,7 +836,7 @@ namespace vcsn
       infiltrate_(const std::vector<automaton>& as,
                     vcsn::detail::index_sequence<I...>)
       {
-        return vcsn::infiltrate(as[I]->as<tuple_element_t<I, Auts>>()...);
+        return vcsn::infiltrate(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge (infiltrate).

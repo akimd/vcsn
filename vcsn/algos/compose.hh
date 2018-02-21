@@ -132,7 +132,7 @@ namespace vcsn
 
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
-      using input_automaton_t = base_t<tuple_element_t<I, automata_t>>;
+      using input_automaton_t = base_t<std::tuple_element_t<I, automata_t>>;
 
       /// The number of input automata.
       enum { Rank = 2 };

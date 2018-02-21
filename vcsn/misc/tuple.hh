@@ -8,11 +8,6 @@
 
 namespace vcsn
 {
-
-  /// C++14.
-  template <size_t I, typename T>
-  using tuple_element_t = typename std::tuple_element<I, T>::type;
-
   // These definitions come in handy every time we define variadic tuples.
   namespace detail
   {

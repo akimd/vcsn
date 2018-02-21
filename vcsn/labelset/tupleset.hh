@@ -19,7 +19,7 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/stream.hh>
-#include <vcsn/misc/tuple.hh> // tuple_element_t
+#include <vcsn/misc/tuple.hh> // std::tuple_element_t
 #include <vcsn/misc/zip.hh>
 #include <vcsn/weightset/b.hh>
 
@@ -79,7 +79,7 @@ namespace vcsn
 
     /// The Ith valueset type.
     template <std::size_t I>
-    using valueset_t = tuple_element_t<I, valuesets_t>;
+    using valueset_t = std::tuple_element_t<I, valuesets_t>;
 
   public:
     using self_t = tupleset<ValueSets...>;
@@ -1246,7 +1246,7 @@ namespace vcsn
 
     template <size_t I>
     using letterized_traits_t =
-      letterized_traits<tuple_element_t<I, std::tuple<LabelSets...>>>;
+      letterized_traits<std::tuple_element_t<I, std::tuple<LabelSets...>>>;
     template <std::size_t... I>
     static constexpr bool is_letterized_(seq<I...>)
     {

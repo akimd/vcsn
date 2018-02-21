@@ -36,7 +36,7 @@ namespace vcsn
       tuple_(const std::vector<context>& cs,
              vcsn::detail::index_sequence<I...>)
       {
-        return tuple_context(cs[I]->template as<tuple_element_t<I, Contexts>>()
+        return tuple_context(cs[I]->template as<std::tuple_element_t<I, Contexts>>()
                              ...);
       }
 
@@ -107,13 +107,13 @@ namespace vcsn
         auto xs
           = vcsn::tuple_expansionset
           (es[I]
-           ->template as<tuple_element_t<I, ExpansionSets>>()
+           ->template as<std::tuple_element_t<I, ExpansionSets>>()
            .valueset()...);
         return
           {xs,
-           vcsn::tuple<decltype(xs), tuple_element_t<I, ExpansionSets>...>
+           vcsn::tuple<decltype(xs), std::tuple_element_t<I, ExpansionSets>...>
            (xs,
-            es[I]->template as<tuple_element_t<I, ExpansionSets>>()
+            es[I]->template as<std::tuple_element_t<I, ExpansionSets>>()
             .value()...)};
       }
 
@@ -145,13 +145,13 @@ namespace vcsn
       {
         auto rs
           = vcsn::tuple_expressionset
-          (es[I]->template as<tuple_element_t<I, ExpSets>>().valueset()...);
+          (es[I]->template as<std::tuple_element_t<I, ExpSets>>().valueset()...);
         return
           {rs,
-           vcsn::tuple<decltype(rs), tuple_element_t<I, ExpSets>...>
+           vcsn::tuple<decltype(rs), std::tuple_element_t<I, ExpSets>...>
            (rs,
             es[I]
-            ->template as<tuple_element_t<I, ExpSets>>().value()...)};
+            ->template as<std::tuple_element_t<I, ExpSets>>().value()...)};
       }
 
       /// Bridge (tuple).
@@ -197,13 +197,13 @@ namespace vcsn
       {
         auto ps
           = vcsn::tuple_polynomialset
-          (polys[I]->template as<tuple_element_t<I, PolynomialSet>>().valueset()...);
+          (polys[I]->template as<std::tuple_element_t<I, PolynomialSet>>().valueset()...);
         return
           {ps,
-           vcsn::tuple<decltype(ps), tuple_element_t<I, PolynomialSet>...>
+           vcsn::tuple<decltype(ps), std::tuple_element_t<I, PolynomialSet>...>
            (ps,
             polys[I]
-            ->template as<tuple_element_t<I, PolynomialSet>>().value()...)};
+            ->template as<std::tuple_element_t<I, PolynomialSet>>().value()...)};
       }
 
       /// Bridge (tuple).

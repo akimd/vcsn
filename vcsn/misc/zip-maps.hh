@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include <vcsn/misc/raise.hh> // pass
-#include <vcsn/misc/tuple.hh> // tuple_element_t
+#include <vcsn/misc/tuple.hh> // std::tuple_element_t
 #include <vcsn/misc/type_traits.hh>
 
 namespace vcsn
@@ -55,7 +55,7 @@ namespace vcsn
 
       /// Common key type.
       using key_t
-        = std::remove_const_t<typename tuple_element_t<0, values_t>::first_type>;
+        = std::remove_const_t<typename std::tuple_element_t<0, values_t>::first_type>;
       /// Tuple of mapped types.
       using mapped_t
         = std::tuple<const typename std::remove_reference_t<Maps>::mapped_type&...>;

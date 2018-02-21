@@ -59,7 +59,7 @@ namespace vcsn
 
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
-      using input_automaton_t = base_t<tuple_element_t<I, automata_t>>;
+      using input_automaton_t = base_t<std::tuple_element_t<I, automata_t>>;
 
       using super_t::aut_;
 
@@ -208,7 +208,7 @@ namespace vcsn
       tuple_(const std::vector<automaton>& as,
              vcsn::detail::index_sequence<I...>)
       {
-        return tuple(as[I]->as<tuple_element_t<I, Auts>>()...);
+        return tuple(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
 
       /// Bridge.
