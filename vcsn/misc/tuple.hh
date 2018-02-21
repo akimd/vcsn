@@ -419,66 +419,18 @@ namespace vcsn
       return o << ')';
     }
 
-
-    // Compile-time logic
-    // See:
-    // http://stillmoreperfect.blogspot.fr/2010/03/template-metaprogramming-compile-time.html
-
-    // Test if (c) then T1 else T2
-    template <bool c, typename T1, typename T2>
-    struct if_c { typedef T1 type; };
-
-    template <typename T1, typename T2>
-    struct if_c<false, T1, T2> { typedef T2 type; };
-
-    template <typename C, typename T1, typename T2>
-    struct if_ : if_c<C::value, T1, T2> {};
-
-    /// Test if (c) then F1 else F2 and get the value.
-    template <bool c, typename F1, typename F2>
-    struct eval_if_c : if_c<c, F1, F2>::type {};
-
-    template <typename C, typename F1, typename F2>
-    struct eval_if : if_<C, F1, F2>::type {};
-
-    /// Or condition on several typenames.
-    template <typename... F>
-    struct or_;
-
-    template <typename F1, typename... F>
-    struct or_<F1, F...> : eval_if<F1, std::true_type, or_<F...>>::type { };
-
-    template <typename F1>
-    struct or_<F1> : eval_if<F1, std::true_type, std::false_type>::type { };
-
-    template <>
-    struct or_<> : std::true_type::type {};
-  }
-
-  /// Static evaluation of the 'or' of the template parameters
-  template <bool... B>
-  constexpr bool any_()
-  {
-    return detail::or_<bool_constant<B>...>::value;
-  }
-
-  /// Whether some of the `values` evaluate as true.
-  ///
-  /// Made a functor to be easily composable with unpack.
-  struct any
-  {
-    template <typename... Bool>
-    bool operator()(Bool&&... values)
+    /// Whether some of the `values` evaluate as true.
+    ///
+    /// Made a functor to be easily composable with unpack.
+    struct any
     {
-      bool res = false;
-      using swallow = int[];
-      (void) swallow
-        {
-          (res = res || values, 0)...
-        };
-      return res;
-    }
-  };
+      template <typename... Bool>
+      bool operator()(Bool&&... values)
+      {
+        return (values || ...);
+      }
+    };
+  }
 }
 
 namespace std

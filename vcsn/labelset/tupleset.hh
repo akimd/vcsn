@@ -875,7 +875,7 @@ namespace vcsn
     static bool
     show_one_(const value_t& v, seq<I...>)
     {
-      return any{}(valueset_t<I>::is_one(std::get<I>(v))...);
+      return (valueset_t<I>::is_one(std::get<I>(v)) || ...);
     }
 
     /// Run a nullary function pointwise, and return the tuple of results.

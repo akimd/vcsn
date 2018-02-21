@@ -611,11 +611,8 @@ namespace vcsn::rat
       return one();
 
     // \z | E => \z.
-    //
-    // FIXME: maybe we should introduce a short-circuiting version
-    // that would not make useless invocation when a \z was found.
     else if (ids_.is_trivial()
-             && detail::apply(any{},
+             && detail::apply(detail::any{},
                               detail::apply(([](const auto& rs, const auto& r)
                                              { return rs.is_zero(r); }),
                                             ts.sets(), t)))
