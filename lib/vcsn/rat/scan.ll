@@ -257,22 +257,19 @@ namespace
   /// The value of s, a decimal number, or -1 if empty.
   int arity(driver& d, const location& loc, const std::string& s)
   {
-    if (s.empty())
-      return -1;
-    else
-      return lexical_cast<int>(d, loc, s);
+    return s.empty() ? -1 : lexical_cast<int>(d, loc, s);
   }
 
   /// Decode a quantifier's value: "1,2" etc.
   ///
-  /// We used to include the braces in \a, but a libc++ bug in
-  /// regex made the following regex unportable.
+  /// We used to include the braces in \a s, but a libc++ bug in regex
+  /// made the following regex unportable.
   /// http://llvm.org/bugs/show_bug.cgi?id=16135
   irange_type
   quantifier(driver& d, const location& loc, const std::string& s)
   {
     auto arity_re = std::regex{"([0-9]*)(,?)([0-9]*)", std::regex::extended};
-    std::smatch minmax;
+    auto minmax = std::smatch{};
     if (!std::regex_match(s, minmax, arity_re))
       throw std::runtime_error("cannot match arity: " + s);
     auto res = irange_type{arity(d, loc, minmax[1].str()),
@@ -286,8 +283,7 @@ namespace
 
 // Do not use %option noyywrap, because then flex generates the
 // same definition of yywrap, but outside the namespaces, so it
-// defines it for ::yyFlexLexer instead of
-// ::vcsn::rat::yyFlexLexer.
+// defines it for ::yyFlexLexer instead of ::vcsn::rat::yyFlexLexer.
 int yyFlexLexer::yywrap() { return 1; }
 
 // Beware of the dummy Flex interface.  One would like to use:
