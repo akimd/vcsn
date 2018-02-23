@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcsn/misc/map.hh>
-#include <vcsn/algos/dijkstra-node.hh>
+#include <vcsn/algos/detail/dijkstra-node.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/misc/fibonacci_heap.hh>
 

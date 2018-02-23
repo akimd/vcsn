@@ -35,10 +35,10 @@ algo_headers =                                  \
   %D%/algos/de-bruijn.hh                        \
   %D%/algos/derivation.hh                       \
   %D%/algos/derived-term.hh                     \
+  %D%/algos/detail/dijkstra-node.hh             \
   %D%/algos/detail/printer.hh                   \
   %D%/algos/determinize-expansion.hh            \
   %D%/algos/determinize.hh                      \
-  %D%/algos/dijkstra-node.hh                    \
   %D%/algos/dijkstra.hh                         \
   %D%/algos/distance.hh                         \
   %D%/algos/divide.hh                           \
