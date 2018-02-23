@@ -44,6 +44,7 @@ namespace vcsn
 
       struct profile
       {
+        /// Needed by Boost.Heap.
         profile(state_t state, const self_t& a_star)
           : state_(state)
           , a_star_(a_star)
@@ -51,7 +52,7 @@ namespace vcsn
 
         bool operator<(const profile& rhs) const
         {
-          auto ws = *a_star_.aut_->weightset();
+          const auto& ws = *a_star_.aut_->weightset();
           if (a_star_.res_[rhs.state_] == a_star_.aut_->null_transition())
             return true;
           else if (a_star_.res_[state_] == a_star_.aut_->null_transition())
@@ -63,8 +64,8 @@ namespace vcsn
 
         friend std::ostream& operator<<(std::ostream& o, const profile& p)
         {
-          auto a = p.a_star_;
-          auto ws = *a.aut_->weightset();
+          const auto& a = p.a_star_;
+          const auto& ws = *a.aut_->weightset();
           a.aut_->print_state_name(p.state_, o) << ':';
           if (a.res_[p.state_] != a.aut_->null_transition())
             return ws.print(a.heuristic_dist_[p.state_], o);
@@ -82,8 +83,8 @@ namespace vcsn
       predecessors_t_of<automaton_t>
       operator()(state_t source, state_t dest, Heuristic heuristic)
       {
-        auto ws = *aut_->weightset();
-        auto size = states_size(aut_);
+        const auto& ws = *aut_->weightset();
+        const auto size = states_size(aut_);
 
         auto done = std::set<state_t>();
 
@@ -104,12 +105,12 @@ namespace vcsn
               return std::move(res_);
             todo.pop();
             done.insert(s);
-            for (auto t: all_out(aut_, s))
+            for (const auto t: all_out(aut_, s))
               {
-                auto dst = aut_->dst_of(t);
+                const auto dst = aut_->dst_of(t);
                 if (!has(done, dst))
                   {
-                    auto nw = ws.mul(dist[s], aut_->weight_of(t));
+                    const auto nw = ws.mul(dist[s], aut_->weight_of(t));
                     if (res_[dst] == aut_->null_transition()
                         || ws.less(nw, dist[dst]))
                       {
