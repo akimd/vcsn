@@ -85,7 +85,8 @@ namespace vcsn
   class automaton_editor;
 }
 
-namespace vcsn { namespace dyn { namespace detail {
+namespace vcsn::dyn::detail
+{
 
 #define REGISTRY_DECLARE(Name, Signature)                       \
   using Name ## _t = auto Signature;                            \
@@ -96,9 +97,9 @@ namespace vcsn { namespace dyn { namespace detail {
     for f in sorted(bridges):
         res += register.format_map(bridges[f])
 
-    res += '''
+    res += '''\
 #undef REGISTRY_DECLARE
-}}}'''
+}'''
     return res
 
 # Generate the implementation file.
