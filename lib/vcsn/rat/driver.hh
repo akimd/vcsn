@@ -11,11 +11,18 @@
 
 namespace vcsn::rat
 {
+  /// Syntax of the expression.
+  enum class format
+  {
+    vcsn,  // native syntax
+  };
+
   /// State and public interface for rational expression parsing.
   class LIBVCSN_API driver
   {
   public:
-    driver(const dyn::context& ctx, rat::identities ids);
+    driver(const dyn::context& ctx, rat::identities ids,
+           const std::string& format);
     ~driver();
 
     /// Set the expressionset to use from this context.
@@ -81,6 +88,8 @@ namespace vcsn::rat
     dyn::context ctx_;
     /// The identities to apply.
     rat::identities ids_;
+    /// The syntax to parse;
+    format fmt_;
     /// The parsed expression.
     dyn::expression result_;
     /// The stack of tape numbers.

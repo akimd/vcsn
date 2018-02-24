@@ -14,10 +14,12 @@ namespace vcsn
     /// \param ctx    the context of the expression
     /// \param ids    the identities of the expression
     /// \param is     the stream
+    /// \param format the syntax: "ere", "vcsn", "default"...
     /// \param l      the initial location
     dyn::expression
-    read(const dyn::context& ctx, rat::identities ids,
+    read(const dyn::context& ctx, identities ids,
          std::istream& is,
+         const std::string& format = "default",
          const location& l = location{});
   }
 }

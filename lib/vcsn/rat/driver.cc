@@ -1,21 +1,41 @@
+#include <lib/vcsn/rat/driver.hh>
+
 #include <sstream>
 
 #include <boost/algorithm/string/predicate.hpp> // boost::algorithm::contains
 
 #include <lib/vcsn/rat/caret.hh>
-#include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 #include <lib/vcsn/rat/scan.hh>
 #include <vcsn/dyn/algos.hh> // make_context
 #include <vcsn/dyn/value.hh>
+#include <vcsn/misc/getargs.hh>
 #include <vcsn/misc/stream.hh> // fail_reading
 
 namespace vcsn::rat
 {
+  namespace
+  {
+    format syntax(const std::string& fmt)
+    {
+      static const auto map = getarg<format>
+        {
+          "rational expression format",
+          {
+            {"default", "vcsn"},
+            {"text",    "vcsn"},
+            {"vcsn",    format::vcsn},
+          }
+        };
+      return map[fmt];
+    }
+  }
 
-  driver::driver(const dyn::context& ctx, rat::identities ids)
-    : scanner_(new yyFlexLexer)
-    , ids_(ids)
+  driver::driver(const dyn::context& ctx, rat::identities ids,
+                 const std::string& format)
+    : scanner_{new yyFlexLexer}
+    , ids_{ids}
+    , fmt_{syntax(format)}
   {
     context(ctx);
   }
