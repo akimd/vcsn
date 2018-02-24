@@ -31,11 +31,11 @@ namespace vcsn
       Value
       infiltrate_value(const Value& lhs, const Value& rhs)
       {
-        auto join_elts = join<ValueSetLhs, ValueSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::infiltrate(std::get<0>(join_elts),
-                                   std::get<1>(join_elts),
-                                   std::get<2>(join_elts))};
+        auto joined = join<ValueSetLhs, ValueSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ::vcsn::infiltrate(joined.valueset,
+                                   joined.lhs,
+                                   joined.rhs)};
       }
     }
   }

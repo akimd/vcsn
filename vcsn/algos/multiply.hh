@@ -306,11 +306,9 @@ namespace vcsn
       expression
       multiply_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::multiply(std::get<0>(join_elts),
-                                 std::get<1>(join_elts),
-                                 std::get<2>(join_elts))};
+        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ::vcsn::multiply(joined.valueset, joined.lhs, joined.rhs)};
       }
     }
   }
@@ -324,10 +322,9 @@ namespace vcsn
       expression
       concatenate_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        auto res = std::get<0>(join_elts).concat(std::get<1>(join_elts),
-                                                 std::get<2>(join_elts));
-        return {std::get<0>(join_elts), res};
+        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                joined.valueset.concat(joined.lhs, joined.rhs)};
       }
     }
   }
@@ -475,10 +472,9 @@ namespace vcsn
       polynomial
       multiply_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), multiply(std::get<0>(join_elts),
-                                                 std::get<1>(join_elts),
-                                                 std::get<2>(join_elts))};
+        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                multiply(joined.valueset, joined.lhs, joined.rhs)};
       }
     }
   }

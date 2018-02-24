@@ -29,10 +29,10 @@ namespace vcsn
       expansion
       ldivide_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto join_elts = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ldivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (ldivide).
@@ -40,10 +40,10 @@ namespace vcsn
       expression
       ldivide_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ldivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (ldivide).
@@ -51,10 +51,10 @@ namespace vcsn
       label
       ldivide_label(const label& lhs, const label& rhs)
       {
-        auto join_elts = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ldivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (ldivide).
@@ -62,10 +62,10 @@ namespace vcsn
       polynomial
       ldivide_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ldivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (ldivide).
@@ -73,10 +73,10 @@ namespace vcsn
       weight
       ldivide_weight(const weight& lhs, const weight& rhs)
       {
-        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), ldivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ldivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
     }
   }
@@ -105,10 +105,10 @@ namespace vcsn
       polynomial
       lgcd_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), lgcd(std::get<0>(join_elts),
-                                             std::get<1>(join_elts),
-                                             std::get<2>(join_elts))};
+        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                lgcd(joined.valueset,
+                     joined.lhs, joined.rhs)};
       }
     }
   }
@@ -136,10 +136,10 @@ namespace vcsn
       label
       rdivide_label(const label& lhs, const label& rhs)
       {
-        auto join_elts = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                rdivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (rdivide).
@@ -147,10 +147,10 @@ namespace vcsn
       expression
       rdivide_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                rdivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
 
       /// Bridge (rdivide).
@@ -158,10 +158,10 @@ namespace vcsn
       weight
       rdivide_weight(const weight& lhs, const weight& rhs)
       {
-        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts), rdivide(std::get<0>(join_elts),
-                                                std::get<1>(join_elts),
-                                                std::get<2>(join_elts))};
+        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                rdivide(joined.valueset,
+                        joined.lhs, joined.rhs)};
       }
     }
   }

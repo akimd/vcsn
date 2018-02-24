@@ -169,10 +169,10 @@ namespace vcsn
       expansion
       add_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto join_elts = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::add(std::get<0>(join_elts),
-                            std::get<1>(join_elts), std::get<2>(join_elts))};
+        auto joined = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ::vcsn::add(joined.valueset,
+                            joined.lhs, joined.rhs)};
       }
     }
   }
@@ -190,10 +190,10 @@ namespace vcsn
       expression
       add_expression(const expression& lhs, const expression& rhs)
       {
-        auto join_elts = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                ::vcsn::add(std::get<0>(join_elts),
-                            std::get<1>(join_elts), std::get<2>(join_elts))};
+        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                ::vcsn::add(joined.valueset,
+                            joined.lhs, joined.rhs)};
       }
     }
   }
@@ -212,10 +212,10 @@ namespace vcsn
       polynomial
       add_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto join_elts = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                add(std::get<0>(join_elts),
-                    std::get<1>(join_elts), std::get<2>(join_elts))};
+        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                add(joined.valueset,
+                    joined.lhs, joined.rhs)};
       }
     }
   }
@@ -234,10 +234,10 @@ namespace vcsn
       weight
       add_weight(const weight& lhs, const weight& rhs)
       {
-        auto join_elts = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {std::get<0>(join_elts),
-                add(std::get<0>(join_elts),
-                    std::get<1>(join_elts), std::get<2>(join_elts))};
+        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {joined.valueset,
+                add(joined.valueset,
+                    joined.lhs, joined.rhs)};
       }
     }
   }

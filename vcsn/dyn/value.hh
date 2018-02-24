@@ -116,6 +116,31 @@ namespace vcsn::dyn
     std::shared_ptr<base> self_ = nullptr;
   };
 
+  /// The join of the valuesets of two dyn values and their values
+  /// in this new valueset.
+  namespace detail
+  {
+    template <typename L, typename R>
+    struct joined
+    {
+      using valueset_t =
+        decltype(join(std::declval<L>().valueset(),
+                      std::declval<R>().valueset()));
+      using value_t = typename valueset_t::value_t;
+      joined(const L& l, const R& r)
+        : valueset{join(l.valueset(), r.valueset())}
+        , lhs{valueset.conv(l.valueset(), l.value())}
+        , rhs{valueset.conv(r.valueset(), r.value())}
+      {}
+      valueset_t valueset;
+      value_t lhs;
+      value_t rhs;
+    };
+    // FIXME: C++17: Clang 4 does not support deduction guides.
+    // template <typename L, typename R>
+    // joined(L, R) -> joined<L, R>;
+  }
+
   /// Return the join of the valuesets of two dyn values and their
   /// values in this new valueset.
   template <typename ValueSetLhs, typename ValueSetRhs, typename Tag>
@@ -124,10 +149,7 @@ namespace vcsn::dyn
   {
     const auto& l = lhs->template as<ValueSetLhs>();
     const auto& r = rhs->template as<ValueSetRhs>();
-    auto rs = join(l.valueset(), r.valueset());
-    auto lr = rs.conv(l.valueset(), l.value());
-    auto rr = rs.conv(r.valueset(), r.value());
-    return std::make_tuple(rs, lr , rr);
+    return detail::joined<decltype(l), decltype(r)>{l, r};
   }
 
 
