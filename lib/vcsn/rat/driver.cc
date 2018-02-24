@@ -20,8 +20,7 @@ namespace vcsn::rat
     context(ctx);
   }
 
-  driver::~driver()
-  {}
+  driver::~driver() = default;
 
   dyn::context driver::context() const
   {
@@ -32,8 +31,7 @@ namespace vcsn::rat
   {
     ctx_ = ctx;
     tape_ctx_.clear();
-    auto n = dyn::num_tapes(ctx_);
-    if (n)
+    if (auto n = dyn::num_tapes(ctx_))
       for (size_t t = 0; t < n; ++t)
         tape_ctx_.emplace_back(dyn::project(ctx_, t));
     else

@@ -11,6 +11,9 @@ namespace vcsn::detail
     using location = vcsn::rat::location;
 
     /// The automaton in dot in stream \a is.
+    ///
+    /// \param is     the stream
+    /// \param l      the initial location
     dyn::automaton
     read(std::istream& is, const location& l = location{});
   }
