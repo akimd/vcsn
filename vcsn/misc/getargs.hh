@@ -23,8 +23,11 @@ namespace vcsn LIBVCSN_API
       std::ostringstream o;
       // Retrieve all keys
       boost::copy(map | boost::adaptors::map_keys,
-                  std::ostream_iterator<std::string>(o, " "));
-      raise("invalid ", kind, ": ", key, ", expected: ", o.str());
+                  std::ostream_iterator<std::string>(o, ", "));
+      auto keys = o.str();
+      keys.pop_back();
+      keys.pop_back();
+      raise("invalid ", kind, ": ", key, ", expected: ", keys);
     }
   }
 
