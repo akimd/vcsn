@@ -11,24 +11,6 @@
 
 namespace vcsn::dyn
 {
-  namespace detail
-  {
-    /// Tag for expansion/expansionset.
-    struct expansion_tag {};
-
-    /// Tag for expression/expressionset.
-    struct expression_tag {};
-
-    /// Tag for label/labelset.
-    struct label_tag {};
-
-    /// Tag for polynomial/polynomialset.
-    struct polynomial_tag {};
-
-    /// Tag for weight/weightset.
-    struct weight_tag {};
-  }
-
   /// A dyn Value/ValueSet.
   template <typename Tag>
   class LIBVCSN_API value_impl
@@ -146,6 +128,29 @@ namespace vcsn::dyn
     auto lr = rs.conv(l.valueset(), l.value());
     auto rr = rs.conv(r.valueset(), r.value());
     return std::make_tuple(rs, lr , rr);
+  }
+
+
+  /*------------------.
+  | Concrete types.   |
+  `------------------*/
+
+  namespace detail
+  {
+    /// Tag for expansion/expansionset.
+    struct expansion_tag {};
+
+    /// Tag for expression/expressionset.
+    struct expression_tag {};
+
+    /// Tag for label/labelset.
+    struct label_tag {};
+
+    /// Tag for polynomial/polynomialset.
+    struct polynomial_tag {};
+
+    /// Tag for weight/weightset.
+    struct weight_tag {};
   }
 
   // A class representing an expansion/expansionset.
