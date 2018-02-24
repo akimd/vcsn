@@ -129,6 +129,9 @@ public:
   void scan_close_();
 
   location loc;
+  // A reference would be better, but we can't modify the ctors
+  // emitted by flex.
+  driver* driver_ = nullptr;
 
   virtual void switch_streams(std::istream* new_in,
                               std::ostream* new_out = nullptr );

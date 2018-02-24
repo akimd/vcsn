@@ -22,6 +22,8 @@ namespace vcsn::rat
         {
           "rational expression format",
           {
+            {"ere",     format::ere},
+            {"grep",    "ere"},
             {"default", "vcsn"},
             {"text",    "vcsn"},
             {"vcsn",    format::vcsn},
@@ -37,6 +39,7 @@ namespace vcsn::rat
     , ids_{ids}
     , fmt_{syntax(format)}
   {
+    scanner_->driver_ = this;
     context(ctx);
   }
 

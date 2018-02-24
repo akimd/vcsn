@@ -44,7 +44,7 @@ namespace
 }
 %}
 
-%x SC_CLASS SC_CONTEXT SC_EXPONENT SC_WEIGHT
+%x SC_CLASS SC_CONTEXT SC_ERE SC_EXPONENT SC_WEIGHT
 
  /* Abbreviations. */
 id   [a-zA-Z][a-zA-Z_0-9]*
@@ -111,7 +111,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
     return parser::make_LPAREN(symbol{yytext + 3, yyleng - 4},
                                loc);
   }
-  "(?#"[^)]*")"  continue;
+  "(?#"[^\)]*")"  continue;
 
   /* Weights. */
   "<"|"⟨"     yy_push_state(SC_WEIGHT);
@@ -127,6 +127,35 @@ id   [a-zA-Z][a-zA-Z_0-9]*
     throw parser::syntax_error(loc,
                                std::string{"unexpected character: "} + yytext);
   }
+}
+
+<SC_ERE>{ /* Syntax of grep -E.  */
+  "("         return parser::make_LPAREN({}, loc);
+  ")"         return TOK(RPAREN);
+  "]"         return TOK(RBRACKET);
+
+  "|"         return TOK(PLUS);
+
+  /* Quantifiers.  */
+  "?"        return parser::make_STAR({0, 1}, loc);
+  "*"        return parser::make_STAR({-1, -1}, loc);
+  "+"        return parser::make_STAR({1, -1}, loc);
+  "{"[0-9]*,?[0-9]*"}" {
+    return parser::make_STAR(quantifier(driver_, loc,
+                                        {yytext+1, static_cast<size_t>(yyleng)-2}),
+                             loc);
+  }
+
+  /* Special constructs.  */
+  "(?#"[^\)]*")"  continue;
+
+  /* Character classes.  */
+  "["     yy_push_state(SC_CLASS); return TOK(LBRACKET);
+
+  \\[0-7]{3}        |
+  \\x[0-9a-fA-F]{2} |
+  "\\"[\\()\[\]]    |
+  .                 return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -306,6 +335,8 @@ void yyFlexLexer::scan_open_(std::istream& f)
 {
   set_debug(!!getenv("YYSCAN"));
   yypush_buffer_state(YY_CURRENT_BUFFER);
+  if (driver_->fmt_ == format::ere)
+    yy_push_state(SC_ERE);
   yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
 }
 

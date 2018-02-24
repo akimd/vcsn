@@ -14,6 +14,7 @@ namespace vcsn::rat
   /// Syntax of the expression.
   enum class format
   {
+    ere,   // grep
     vcsn,  // native syntax
   };
 
@@ -81,6 +82,7 @@ namespace vcsn::rat
 
   private:
     friend class parser;
+    friend class yyFlexLexer;
 
     /// The inital location.
     location location_;
