@@ -527,8 +527,11 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
    ;
 
   bp::class_<expression>("expression", bp::no_init)
-    .def(bp::init<const context&, const std::string&, const std::string&>
-         ((arg("context"), arg("data"), arg("identities") = "default")))
+    .def(bp::init<const context&, const std::string&, const std::string&,
+                  const std::string&>
+         ((arg("context"), arg("data"),
+           arg("identities") = "default",
+           arg("format") = "default")))
     // `expression.automaton` is redefined to be a native Python function
     .def("_automaton", &expression::to_automaton, (arg("algo") = "auto"))
     .def("add", &expression::add)

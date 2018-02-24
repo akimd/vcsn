@@ -92,8 +92,14 @@ classes_prologue_header = {
 
     'expression':
     r'''
-  expression(const struct context& ctx, const std::string& r,
-             identities ids = {});
+  /// Parse an expression.
+  ///
+  /// \param ctx    the context of the expression
+  /// \param s      the string to parse
+  /// \param ids    the identities of the expression
+  /// \param format the syntax: "ere", "vcsn", "default"...
+  expression(const struct context& ctx, const std::string& s,
+             identities ids = {}, const std::string& format = "default");
 
   /// Convert \a this to \a ctx, using \a ids.
   expression as(const struct context& ctx = {},
@@ -187,8 +193,8 @@ automaton context::trie(const std::string& data,
     'expression':
     r'''
 expression::expression(const struct context& ctx, const std::string& e,
-                       identities ids)
-  : val_{make_expression(ctx.val_, e, ids)}
+                       identities ids, const std::string& format)
+  : val_{make_expression(ctx.val_, e, ids, format)}
 {}
 
 expression expression::as(const struct context& ctx,

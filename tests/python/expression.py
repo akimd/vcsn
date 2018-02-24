@@ -5,12 +5,21 @@
 import vcsn
 from test import *
 
+ctx = vcsn.context("[...] -> b")
+
+## -------- ##
+## Format.  ##
+## -------- ##
+
+XFAIL(lambda: ctx.expression('a', format='foo'),
+      '''invalid rational expression format: foo, expected: default, text, vcsn
+  while reading expression: "a"''')
+
 
 ## --------- ##
 ## Escapes.  ##
 ## --------- ##
 
-ctx = vcsn.context("lal, b")
 def check(n):
     e = r'\x{:02x}'.format(n)
     print(e)
