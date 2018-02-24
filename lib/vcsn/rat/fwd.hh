@@ -3,22 +3,17 @@
 #include <set>
 #include <string>
 
-namespace vcsn
+namespace vcsn::rat
 {
-  namespace rat
-  {
+  /// A set of label ranges.
+  using class_t = std::set<std::pair<std::string, std::string>>;
 
-    /// A set of label ranges.
-    using class_t = std::set<std::pair<std::string, std::string>>;
+  // lib/vcsn/rat/driver.hh.
+  class driver;
 
-    // lib/vcsn/rat/driver.hh.
-    class driver;
+  // lib/vcsn/rat/scan.hh.
+  class yyFlexLexer;
 
-    // lib/vcsn/rat/scan.hh.
-    class yyFlexLexer;
-
-    // lib/vcsn/rat/location.hh.
-    class location;
-
-  }
+  // lib/vcsn/rat/location.hh.
+  class location;
 }

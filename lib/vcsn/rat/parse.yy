@@ -212,9 +212,9 @@ input:
     TRY(@$, $$ = copy($1.exp, driver_.ctx_, driver_.ids_));
     if (0 < driver_.debug_level())
       std::cerr
-        << "converted the expression\n"
-      << "  from: " << $1.exp << " (" << context_of($1.exp) << ")\n"
-      << "    to: " << $$.exp << " (" << context_of($$.exp) << ")\n";
+        << "expression converted\n"
+        << "  from: " << $1.exp << " (" << context_of($1.exp) << ")\n"
+        << "    to: " << $$.exp << " (" << context_of($$.exp) << ")\n";
     driver_.result_ = $$.exp;
     YYACCEPT;
   }
