@@ -101,8 +101,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false)
-                      const
+                       format fmt = {}) const
       {
         const auto& orig = origins();
         auto i = orig.find(s);
@@ -110,9 +109,9 @@ namespace vcsn
           this->print_state(s, o);
         else
           {
-            if (delimit)
+            if (fmt.delimit())
               o << '(';
-            in_->print_state_name(i->second.first, o, fmt, true);
+            in_->print_state_name(i->second.first, o, fmt.delimit(true));
             o << ", ";
             if (fmt == format::latex)
               o << (i->second.second ? "" : "\\not ") << "\\varepsilon";
@@ -120,7 +119,7 @@ namespace vcsn
               o << (i->second.second ? "ε" : "!ε");
             else
               o << (i->second.second ? "\\e" : "!\\e");
-            if (delimit)
+            if (fmt.delimit())
               o << ')';
           }
         return o;

@@ -654,11 +654,10 @@ namespace vcsn
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
-                                     format fmt = {},
-                                     bool = false) const
+                                     format fmt = {}) const
       {
         o << component_.at(s) << '.';
-        aut_->print_state_name(s, o, fmt, true);
+        aut_->print_state_name(s, o, fmt.delimit(true));
         return o;
       }
 

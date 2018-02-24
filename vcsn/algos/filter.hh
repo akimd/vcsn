@@ -144,11 +144,10 @@ namespace vcsn
       }
 
       std::ostream& print_state_name(state_t s, std::ostream& o,
-                                     format fmt = {},
-                                     bool delimit = false) const
+                                     format fmt = {}) const
       {
         assert(has(ss_, s));
-        return aut_->print_state_name(s, o, fmt, delimit);
+        return aut_->print_state_name(s, o, fmt);
       }
 
       size_t num_states() const

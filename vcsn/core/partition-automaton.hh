@@ -80,20 +80,19 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {},
-                       bool delimit = false) const
+                       format fmt = {}) const
       {
         const auto& set = origins_.at(s);
         const char* separator = "";
-        if (delimit)
+        if (fmt.delimit())
           o << '{';
         for (auto s : set)
           {
             o << separator;
-            input_->print_state_name(s, o, fmt, true);
+            input_->print_state_name(s, o, fmt.delimit(true));
             separator = ", ";
           }
-        if (delimit)
+        if (fmt.delimit())
           o << '}';
         return o;
       }

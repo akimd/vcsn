@@ -96,17 +96,17 @@ namespace vcsn
       /// Print a state name from its state index.
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false) const
+                       format fmt = {}) const
       {
-        return print_state_name_(s, o, fmt, delimit, indices);
+        return print_state_name_(s, o, fmt, indices);
       }
 
       /// Print a state name from its state name.
       std::ostream&
       print_state_name(const state_name_t& sn, std::ostream& o,
-                       format fmt = {}, bool delimit = false) const
+                       format fmt = {}) const
       {
-        return print_state_name_(sn, o, fmt, delimit, indices);
+        return print_state_name_(sn, o, fmt, indices);
       }
 
       using bimap_t
@@ -235,23 +235,23 @@ namespace vcsn
       template <size_t... I>
       std::ostream&
       print_state_name_(state_t s, std::ostream& o, format fmt,
-                        bool delimit, seq<I...> indices) const
+                        seq<I...> indices) const
       {
         const auto& origs = origins();
         auto i = origs.find(s);
         if (i == std::end(origs))
           this->print_state(s, o);
         else
-          print_state_name_(i->second, o, fmt, delimit, indices);
+          print_state_name_(i->second, o, fmt, indices);
         return o;
       }
 
       template <size_t... I>
       std::ostream&
       print_state_name_(const state_name_t& sn, std::ostream& o,
-                        format fmt, bool delimit, seq<I...>) const
+                        format fmt, seq<I...>) const
       {
-        if (delimit)
+        if (fmt.delimit())
           o << '(';
         const char* sep = "";
         using swallow = int[];
@@ -259,11 +259,11 @@ namespace vcsn
           {
             (o << sep,
              std::get<I>(auts_)->print_state_name(std::get<I>(sn),
-                                                  o, fmt, true),
+                                                  o, fmt.delimit(true)),
              sep = ", ",
              0)...
           };
-        if (delimit)
+        if (fmt.delimit())
           o << ')';
         return o;
       }

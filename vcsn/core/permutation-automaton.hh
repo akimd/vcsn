@@ -68,10 +68,9 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {},
-                       bool delimit = false) const
+                       format fmt = {}) const
       {
-        return input_->print_state_name(origins().at(s), o, fmt, delimit);
+        return input_->print_state_name(origins().at(s), o, fmt);
       }
 
       state_t

@@ -93,7 +93,7 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       format fmt = {}, bool delimit = false) const
+                       format fmt = {}) const
       {
         const auto& origs = this->origins();
         auto i = origs.find(s);
@@ -101,10 +101,10 @@ namespace vcsn
           this->print_state(s, o);
         else
           {
-            if (delimit)
+            if (fmt.delimit())
               o << '{';
             ns_.print(i->second, o, fmt, ", ");
-            if (delimit)
+            if (fmt.delimit())
               o << '}';
           }
         return o;

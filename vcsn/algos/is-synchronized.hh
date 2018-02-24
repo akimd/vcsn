@@ -122,12 +122,10 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(state_t s, std::ostream& o,
-                       format fmt = {},
-                       bool = false) const
+      print_state_name(state_t s, std::ostream& o, format fmt = {}) const
       {
         auto ns = origins().at(s);
-        aut_->print_state_name(ns.first, o, fmt, true);
+        aut_->print_state_name(ns.first, o, fmt.delimit(true));
         o << ":(";
         auto a = ns.second;
         for (int i = 0; i < a.size() - 1; i++)

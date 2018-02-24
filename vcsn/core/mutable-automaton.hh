@@ -416,8 +416,7 @@ namespace vcsn
 
     std::ostream&
     print_state_name(state_t s, std::ostream& o = std::cout,
-                     format = {},
-                     bool = false) const
+                     format = {}) const
     {
       return print_state(s, o);
     }
