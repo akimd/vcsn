@@ -47,7 +47,7 @@ namespace vcsn::rat
     void error(const location& l, const std::string& m);
     /// The string \a s is invalid at \a l.
     ATTRIBUTE_NORETURN
-      void invalid(const location& l, const std::string& s);
+    void invalid(const location& l, const std::string& s);
 
     /// The error messages.
     std::string errors;

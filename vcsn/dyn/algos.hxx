@@ -72,7 +72,7 @@ namespace vcsn
                                const std::string& s, identities ids,
                                const std::string& format)
     {
-      std::istringstream is{s};
+      auto is = std::istringstream{s};
       try
         {
           auto res = read_expression(ctx, ids, is, format);

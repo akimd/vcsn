@@ -340,14 +340,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
 
   bp::class_<automaton>("automaton", bp::no_init)
     .def(bp::init<const std::string&, const std::string&,
-         const std::string&, bool>
+                  const std::string&, bool>
          ((arg("data") = "", arg("format") = "default",
            arg("filename") = "", arg("strip") = true)))
     .def("accessible", &automaton::accessible)
     .def("add", &automaton::add, (arg("algo") = "auto"))
     .def("ambiguous_word", &automaton::ambiguous_word)
     .def("automaton", static_cast<automaton_copy_t>(&automaton::copy))
-    .def("focus", &automaton::focus)
     .def("coaccessible", &automaton::coaccessible)
     .def("codeterminize", &automaton::codeterminize, (arg("algo") = "auto"))
     .def("cominimize", &automaton::cominimize, (arg("algo") = "auto"))
@@ -373,6 +372,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_evaluate", static_cast<evaluate_polynomial_t>(&automaton::evaluate))
     .def("factor", &automaton::factor)
     .def("filter", &automaton_filter)
+    .def("focus", &automaton::focus)
     .def("_format", &format<automaton>)
     .def("has_bounded_lag", &automaton::has_bounded_lag)
     .def("has_lightening_cycle", &automaton::has_lightening_cycle)

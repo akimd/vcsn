@@ -389,12 +389,12 @@ namespace vcsn
         // expression polynomialset.
         using rps_t = rat::expression_polynomialset_t<rs_t>;
         // expansionset.
-        using es_t = rat::expansionset<rs_t>;
+        using xs_t = rat::expansionset<rs_t>;
 
         REGISTER(add_weight, ws_t, ws_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(multiply_weight, ws_t, ws_t);
-        REGISTER(print_expansion, es_t, std::ostream, const std::string);
+        REGISTER(print_expansion, xs_t, std::ostream, const std::string);
         REGISTER(print_label, ls_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
 #endif

@@ -42,15 +42,15 @@ def check(e, ctx=None, ids=None, exp=None):
         ctx = vcsn.context(ctx)
     CHECK_EQ(exp, e.expression(ctx, ids))
 
-q = vcsn.context('lal, q')
+q = vcsn.context('[...] -> q')
 qexp = q.expression
 
 e = qexp('a+b+<1/2>a', 'none')
 check(e, q, 'none', e)
 check(e, q, 'linear', '<3/2>a+b')
-check(e, 'law, q', 'none', '(a+b)+<1/2>a')
-check(e, 'lal, r', 'none', '(a+b)+<0.5>a')
-check(e, 'law, r', 'linear', '<1.5>a+b')
+check(e, '[...]* -> q', 'none', '(a+b)+<1/2>a')
+check(e, '[...] -> r', 'none', '(a+b)+<0.5>a')
+check(e, '[...]*, r', 'linear', '<1.5>a+b')
 
 check(qexp(r'\z*', 'none'), q, 'none', r'\z*')
 check(qexp(r'\z*', 'none'), q, 'linear', r'\e')
@@ -81,7 +81,7 @@ check(qexp('abc'),  q3, exp='(a|a|a)(b|b|b)(c|c|c)')
 ## Complement.  ##
 ## ------------ ##
 
-ctx = vcsn.context("lal(abcd), b")
+ctx = vcsn.context("[abcd] -> b")
 
 def check_complement(r1):
     '''Check that `complement` on a rational expression corresponds to
@@ -192,7 +192,7 @@ check_transposition('ab')
 def xfail(r):
     XFAIL(lambda: ctx.expression(r))
 
-ctx = vcsn.context('lal(abc), b')
+ctx = vcsn.context('[abc] -> b')
 xfail('')
 xfail('<2>a')
 xfail('x')
@@ -204,7 +204,7 @@ xfail('&a')
 xfail('a&')
 xfail(r'\a')
 
-ctx = vcsn.context('lal(abc), q')
+ctx = vcsn.context('[abc] -> q')
 xfail('(?@lal(abc), b)<2>a')
 xfail('(?@lal(abc), b')
 xfail('(?@foobar)foo')

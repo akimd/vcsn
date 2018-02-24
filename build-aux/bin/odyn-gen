@@ -76,6 +76,7 @@ classes_prologue_header = {
     r'''
   context();
 
+  /// Parse a context.
   context(const std::string& ctx);
 
   explicit operator bool() const;
@@ -101,16 +102,19 @@ classes_prologue_header = {
 
     'label':
     r'''
+  /// Parse a label.
   label(const context& ctx, const std::string& s);
 ''',
 
     'polynomial':
     r'''
+  /// Parse a polynomial.
   polynomial(const struct context& ctx, const std::string& s);
 ''',
 
     'weight':
     r'''
+  /// Parse a weight.
   weight(const context& ctx, const std::string& s);
 ''',
 }
@@ -190,7 +194,7 @@ expression::expression(const struct context& ctx, const std::string& e,
 expression expression::as(const struct context& ctx,
                           identities ids) const
 {
-  return copy((ctx ? ctx : context()), ids);
+  return copy(ctx ? ctx : context(), ids);
 }
 ''',
 

@@ -619,6 +619,7 @@ namespace vcsn
     /// \param ctx     the context.
     /// \param s       the input string.
     /// \param ids     the identities to apply.
+    /// \param format  its format.
     expression make_expression(const context& ctx,
                                const std::string& s, identities ids = {},
                                const std::string& format = "default");
