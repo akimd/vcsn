@@ -1,17 +1,11 @@
 #pragma once
 
-namespace vcsn
+/// Implementation details of the dot parser.
+namespace vcsn::detail::dot
 {
-  namespace detail
-  {
-    /// Implementation details of the dot parser.
-    namespace dot
-    {
-      // lib/vcsn/dot/driver.hh.
-      class driver;
+  // lib/vcsn/dot/driver.hh.
+  class driver;
 
-      // lib/vcsn/dot/scan.hh.
-      class yyFlexLexer;
-    }
-  }
+  // lib/vcsn/dot/scan.hh.
+  class yyFlexLexer;
 }
