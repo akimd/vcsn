@@ -3,7 +3,7 @@
 
 #include <lib/vcsn/algos/fwd.hh>
 #include <lib/vcsn/algos/registry.hh>
-#include <lib/vcsn/dot/driver.hh>
+#include <lib/vcsn/dot/read.hh> // detail::dot::read
 #include <lib/vcsn/rat/read.hh> // rat::read
 #include <vcsn/algos/read.hh>
 #include <vcsn/algos/guess-automaton-format.hh>
@@ -59,12 +59,6 @@ namespace vcsn
       {
         return read_automaton(is, guess_automaton_format(is), false, loc);
       }
-
-      automaton read_dot(std::istream& is, const location&)
-      {
-        vcsn::detail::dot::driver d{};
-        return d.parse(is);
-      }
     }
 
     automaton
@@ -79,7 +73,7 @@ namespace vcsn
             {"auto",    read_auto},
             {"default", "auto"},
             {"daut",    read_daut},
-            {"dot",     read_dot},
+            {"dot",     ::vcsn::detail::dot::read},
             {"efsm",    read_efsm},
             {"fado",    read_fado},
           }

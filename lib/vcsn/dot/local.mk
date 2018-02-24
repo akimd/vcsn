@@ -101,4 +101,5 @@ lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_%C%_SCAN_LL)			\
   %D%/driver.hh  %D%/driver.cc                  \
   %D%/fwd.hh                                    \
+  %D%/read.hh  %D%/read.cc                      \
   %D%/scan.hh
