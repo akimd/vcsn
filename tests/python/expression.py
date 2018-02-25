@@ -19,14 +19,15 @@ def check(e, exp):
     CHECK_EQ(exp, ctx.expression(e, format='ere'))
 def xfail(e):
     XFAIL(lambda: ctx.expression(e, format='ere'))
-#check('', r'\e')
+
+check('', r'\e')
+check('()', r'\e')
 check('a', 'a')
 check('ab', 'ab')
 check('a+', 'aa*')
 check('a|b', 'a+b')
 check('[ab]', 'a+b')
 check('!a', r'\!a')
-
 
 ## --------- ##
 ## Escapes.  ##

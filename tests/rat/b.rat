@@ -19,9 +19,12 @@
 a|x   ! 1.2: too many tapes\n! a|x\n!  ^\n!   while reading expression: "a|x"
 a{x}  ! 1.2: unexpected character: {\n! a{x}\n!  ^\n!   while reading expression: "a{x}"
 }a{   ! 1.1: unexpected character: }\n! }a{\n! ^\n!   while reading expression: "}a{"
-]a[   ! 1.1: syntax error, unexpected ]\n! ]a[\n! ^\n!   while reading expression: "]a["
+# Thit message is a regression compared to what we used to have.
+]a[   ! 1.1: invalid empty expression, use "\e", or "?"\n! ]a[\n! ^\n!   while reading expression: "]a["
 >a<   ! 1.1: unexpected character: >\n! >a<\n! ^\n!   while reading expression: ">a<"
 ⟩a⟨   ! 1.1: unexpected character: ⟩\n! ⟩a⟨\n! ^\n!   while reading expression: "\xe2\x9f\xa9a\xe2\x9f\xa8"
+()    ! 1.2: invalid empty expression, use "\e", or "?"\n! ()\n!  ^\n!   while reading expression: "()"
+
 
 [^] => [^]
 [^] == [a-h]

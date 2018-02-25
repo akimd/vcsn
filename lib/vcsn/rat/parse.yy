@@ -179,7 +179,7 @@
 %token <std::string> WEIGHT "weight";
 %token <symbol>      LPAREN "(";
 
-%type <braced_expression> exp input add tuple;
+%type <braced_expression> add empty exp input tuple;
 %type <std::vector<vcsn::dyn::expression>> tuple.1;
 %type <dyn::weight> weights;
 %type <class_t> class;
@@ -228,9 +228,21 @@ terminator.opt:
 ;
 
 add:
-  tuple           { $$ = $1; }
+  empty           { $$ = $1; }
+| tuple           { $$ = $1; }
 | add "+" add     { $$ = dyn::add($1.exp, $3.exp); }
 | add "@" add     { $$ = dyn::compose($1.exp, $3.exp); }
+;
+
+empty:
+  %empty
+  {
+    if (driver_.fmt_ == format::ere)
+      $$ = dyn::expression_one(ctx(driver_), ids(driver_));
+    else
+      throw syntax_error(@$,
+                         "invalid empty expression, use \"\\e\", or \"?\"");
+  }
 ;
 
 // Deal with `|`: a* | (b+c) | \e.
