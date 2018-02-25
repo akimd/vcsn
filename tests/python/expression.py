@@ -5,11 +5,11 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("[...] -> b")
+## ------------- ##
+## Format: ERE.  ##
+## ------------- ##
 
-## -------- ##
-## Format.  ##
-## -------- ##
+ctx = vcsn.context("[a-z...] -> b")
 
 XFAIL(lambda: ctx.expression('a', format='foo'),
       '''invalid rational expression format: foo, expected: default, ere, grep, text, vcsn
@@ -27,11 +27,16 @@ check('ab', 'ab')
 check('a+', 'aa*')
 check('a|b', 'a+b')
 check('[ab]', 'a+b')
+check('[abcd]', '[a-d]')
 check('!a', r'\!a')
+check('.', '[^]')
+
 
 ## --------- ##
 ## Escapes.  ##
 ## --------- ##
+
+ctx = vcsn.context("[...] -> b")
 
 def check(n):
     e = r'\x{:02x}'.format(n)

@@ -151,6 +151,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
 
   /* Character classes.  */
   "["     yy_push_state(SC_CLASS); return TOK(LBRACKET);
+  "."     return TOK(ANY);
 
   \\[0-7]{3}        |
   \\x[0-9a-fA-F]{2} |

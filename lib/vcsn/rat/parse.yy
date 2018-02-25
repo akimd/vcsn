@@ -150,6 +150,7 @@
 %token
   AMPERSAND       "&"
   AMPERSAND_COLON "&:"
+  ANY             "any"
   AT              "@"
   BACKSLASH       "{\\}"
   BANG            "!"
@@ -169,8 +170,8 @@
   RBRACKET        "]"
   RPAREN          ")"
   SLASH           "{/}"
-  TRANSPOSITION   "{T}"
   TRANSPOSE       "{t}"
+  TRANSPOSITION   "{T}"
   ZERO            "\\z"
 ;
 
@@ -196,7 +197,7 @@
 %precedence CONCAT // exp exp . "(": reduce
 %right "weight" // Match longest series of "weight".
 %precedence RWEIGHT
-%precedence "letter" "\\z" "\\e" "[" "(" // RWEIGHT < LETTER: a <x> . b => shift
+%precedence "letter" "\\z" "\\e" "[" "(" "any" // RWEIGHT < LETTER: a <x> . b => shift
 %precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence "*" "{c}" "{T}" "{t}"
 
@@ -311,6 +312,7 @@ exp:
 | "\\z"             { $$ = dyn::expression_zero(ctx(driver_), ids(driver_)); }
 | "\\e"             { $$ = dyn::expression_one(ctx(driver_), ids(driver_)); }
 | "letter"          { $$ = driver_.make_atom(@1, $1); }
+| "any"             { $$ = driver_.make_expression(@$, {}, false); }
 | "[" class "]"     { $$ = driver_.make_expression(@$, $2, true); }
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
 | "(" add ")"
