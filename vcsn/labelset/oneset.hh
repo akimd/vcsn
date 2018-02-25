@@ -195,7 +195,9 @@ namespace vcsn
         case format::utf8:
           o << "{ε}";
           break;
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(0);
           break;
         }

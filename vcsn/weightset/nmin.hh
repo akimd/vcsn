@@ -67,7 +67,9 @@ namespace vcsn
           case format::utf8:
             o << "ℕmin";
             break;
-          case format::raw:
+          case format::ere:
+        case format::raw:
+        case format::redgrep:
             assert(0);
             break;
           }

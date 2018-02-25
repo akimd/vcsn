@@ -298,7 +298,9 @@ namespace vcsn
         case format::utf8:
           o << "ℚ";
           break;
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(0);
           break;
         }

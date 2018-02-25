@@ -217,7 +217,9 @@ namespace vcsn::detail
         case format::utf8:
           o << "ℤ";
           break;
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(0);
           break;
         }

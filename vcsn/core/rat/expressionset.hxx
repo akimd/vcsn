@@ -101,7 +101,9 @@ namespace vcsn::rat
         if (identities() != vcsn::rat::identities{})
           o << '(' << identities() << ')';
         break;
+      case format::ere:
       case format::raw:
+      case format::redgrep:
         assert(!"expressionset::print_set: invalid format: rat");
         break;
       }
@@ -1128,8 +1130,7 @@ namespace vcsn::rat
     return res.value();
   }
 
-  DEFINE::print(const value_t& v, std::ostream& o,
-                format fmt) const
+  DEFINE::print(const value_t& v, std::ostream& o, format fmt) const
     -> std::ostream&
   {
     auto print = make_printer(self(), o);

@@ -14,9 +14,11 @@ namespace vcsn
         "format",
         {
           {"auto",       "default"},
-          {"default",    deflt},
+          {"default",    default_},
+          {"ere",        ere},
           {"latex",      latex},
           {"raw",        raw},
+          {"redgrep",    redgrep},
           {"sname",      sname},
           {"text",       text},
           {"utf8",       utf8},
@@ -29,10 +31,14 @@ namespace vcsn
   {
     switch (f.kind())
       {
+      case format::ere:
+        return "ere";
       case format::latex:
         return "latex";
       case format::raw:
         return "raw";
+      case format::redgrep:
+        return "redgrep";
       case format::sname:
         return "sname";
       case format::text:

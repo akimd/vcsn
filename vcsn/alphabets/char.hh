@@ -234,6 +234,8 @@ namespace vcsn
             o << l;
             break;
 
+          case format::ere:
+          case format::redgrep:
           case format::text:
           case format::utf8:
             if (l == '\\')

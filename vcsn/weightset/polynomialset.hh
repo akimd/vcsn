@@ -1237,7 +1237,9 @@ namespace vcsn
           context().print_set(o, fmt);
           o << ']';
           break;
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(0);
           break;
         }

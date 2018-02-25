@@ -68,7 +68,9 @@ namespace vcsn
           ctx_.print_set(o, fmt);
           o << ", " << tag_t::sname() << ']';
           break;
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(!"automatonset::print_set: invalid format: rat");
           break;
         }

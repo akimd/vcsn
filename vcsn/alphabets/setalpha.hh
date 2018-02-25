@@ -365,7 +365,9 @@ namespace vcsn
           o << ']';
           break;
 
+        case format::ere:
         case format::raw:
+        case format::redgrep:
           assert(0);
           break;
         }

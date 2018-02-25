@@ -18,10 +18,14 @@ namespace vcsn LIBVCSN_API
     /// Type of format.
     enum format_t
       {
+        /// Print for grep -E.
+        ere,
         /// Print for LaTeX.
         latex,
         /// Print as is.  For instance, don't try to escape labels.
         raw,
+        /// Print for redgrep.
+        redgrep,
         /// Print as a parsable type string.
         sname,
         /// Print as plain (ASCII) text, escaped.
@@ -29,10 +33,10 @@ namespace vcsn LIBVCSN_API
         /// Print as rich UTF-8 text, escaped.
         utf8,
         /// By default, print for text.
-        deflt = text,
+        default_ = text,
       };
 
-    format(format_t f = deflt)
+    format(format_t f = default_)
       : format_{f}
     {}
 
