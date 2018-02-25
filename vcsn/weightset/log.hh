@@ -15,10 +15,8 @@
 #include <vcsn/weightset/fwd.hh>
 #include <vcsn/weightset/weightset.hh>
 
-namespace vcsn
+namespace vcsn::detail
 {
-  namespace detail
-  {
   class log_impl
   {
   public:
@@ -218,31 +216,30 @@ namespace vcsn
     }
   };
 
-    // Random generation.
-    template <typename RandomGenerator>
-    class random_weight<log, RandomGenerator>
-      : public random_weight_base<log, RandomGenerator>
+  // Random generation.
+  template <typename RandomGenerator>
+  class random_weight<log, RandomGenerator>
+    : public random_weight_base<log, RandomGenerator>
+  {
+  public:
+    using super_t = random_weight_base<log, RandomGenerator>;
+    using value_t = typename super_t::weight_t;
+
+    using super_t::super_t;
+
+  private:
+    value_t pick_value_() const
     {
-    public:
-      using super_t = random_weight_base<log, RandomGenerator>;
-      using value_t = typename super_t::weight_t;
-
-      using super_t::super_t;
-
-    private:
-      value_t pick_value_() const
-      {
-        auto dis =
-          std::uniform_real_distribution<log::value_t>(super_t::min_, super_t::max_);
-        return dis(super_t::gen_);
-      }
-    };
+      auto dis =
+        std::uniform_real_distribution<log::value_t>(super_t::min_, super_t::max_);
+      return dis(super_t::gen_);
+    }
+  };
 
 
-    /*-------.
-    | join.  |
-    `-------*/
+  /*-------.
+  | join.  |
+  `-------*/
 
-    VCSN_JOIN_SIMPLE(log, log);
-  }// detail::
+  VCSN_JOIN_SIMPLE(log, log);
 }

@@ -15,10 +15,8 @@
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/weightset/z.hh>
 
-namespace vcsn
+namespace vcsn::detail
 {
-  namespace detail
-  {
   class r_impl
   {
   public:
@@ -246,28 +244,27 @@ namespace vcsn
     }
   };
 
-    // Random generation.
-    template <typename RandomGenerator>
-    class random_weight<r, RandomGenerator>
-      : public random_weight_base<r, RandomGenerator>
+  // Random generation.
+  template <typename RandomGenerator>
+  class random_weight<r, RandomGenerator>
+    : public random_weight_base<r, RandomGenerator>
+  {
+  public:
+    using super_t = random_weight_base<r, RandomGenerator>;
+    using value_t = typename super_t::weight_t;
+
+    using super_t::super_t;
+
+  private:
+    value_t pick_value_() const
     {
-    public:
-      using super_t = random_weight_base<r, RandomGenerator>;
-      using value_t = typename super_t::weight_t;
+      auto dis = std::uniform_real_distribution<>(super_t::min_, super_t::max_);
+      return dis(super_t::gen_);
+    }
+  };
 
-      using super_t::super_t;
-
-    private:
-      value_t pick_value_() const
-      {
-        auto dis = std::uniform_real_distribution<>(super_t::min_, super_t::max_);
-        return dis(super_t::gen_);
-      }
-    };
-
-    VCSN_JOIN_SIMPLE(b, r);
-    VCSN_JOIN_SIMPLE(z, r);
-    VCSN_JOIN_SIMPLE(q, r);
-    VCSN_JOIN_SIMPLE(r, r);
-  }
+  VCSN_JOIN_SIMPLE(b, r);
+  VCSN_JOIN_SIMPLE(z, r);
+  VCSN_JOIN_SIMPLE(q, r);
+  VCSN_JOIN_SIMPLE(r, r);
 }

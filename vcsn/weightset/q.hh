@@ -16,10 +16,8 @@
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/weightset/z.hh>
 
-namespace vcsn
+namespace vcsn::detail
 {
-  namespace detail
-  {
   class q_impl
   {
   public:
@@ -308,39 +306,38 @@ namespace vcsn
     }
   };
 
-    /// Random generation.
-    template <typename RandomGenerator>
-    class random_weight<q, RandomGenerator>
-      : public random_weight_base<q, RandomGenerator>
+  /// Random generation.
+  template <typename RandomGenerator>
+  class random_weight<q, RandomGenerator>
+    : public random_weight_base<q, RandomGenerator>
+  {
+  public:
+    using super_t = random_weight_base<q, RandomGenerator>;
+    using value_t = typename super_t::weight_t;
+
+    using super_t::super_t;
+
+  private:
+    value_t pick_value_() const
     {
-    public:
-      using super_t = random_weight_base<q, RandomGenerator>;
-      using value_t = typename super_t::weight_t;
-
-      using super_t::super_t;
-
-    private:
-      value_t pick_value_() const
-      {
-        auto dis_num
-          = std::uniform_int_distribution<>(super_t::min_.num,
-                                            super_t::max_.num);
-        auto dis_den
-          = std::uniform_int_distribution<unsigned>(super_t::min_.den,
-                                                    super_t::max_.num);
-        auto num = dis_num(super_t::gen_);
-        auto den = dis_den(super_t::gen_);
-        return super_t::ws_.value(num, den);
-      }
-    };
+      auto dis_num
+        = std::uniform_int_distribution<>(super_t::min_.num,
+                                          super_t::max_.num);
+      auto dis_den
+        = std::uniform_int_distribution<unsigned>(super_t::min_.den,
+                                                  super_t::max_.num);
+      auto num = dis_num(super_t::gen_);
+      auto den = dis_den(super_t::gen_);
+      return super_t::ws_.value(num, den);
+    }
+  };
 
 
-    /*-------.
-    | join.  |
-    `-------*/
+  /*-------.
+  | join.  |
+  `-------*/
 
-    VCSN_JOIN_SIMPLE(b, q);
-    VCSN_JOIN_SIMPLE(z, q);
-    VCSN_JOIN_SIMPLE(q, q);
-  }
+  VCSN_JOIN_SIMPLE(b, q);
+  VCSN_JOIN_SIMPLE(z, q);
+  VCSN_JOIN_SIMPLE(q, q);
 }

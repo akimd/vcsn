@@ -19,10 +19,8 @@
 #include <vcsn/weightset/weightset.hh>
 #include <vcsn/weightset/z.hh>
 
-namespace vcsn
+namespace vcsn::detail
 {
-  namespace detail
-  {
   class qmp_impl
   {
   public:
@@ -239,45 +237,44 @@ namespace vcsn
     }
   };
 
-    /// Random generation.
-    template <typename RandomGenerator>
-    class random_weight<qmp, RandomGenerator>
-      : public random_weight_base<qmp, RandomGenerator>
+  /// Random generation.
+  template <typename RandomGenerator>
+  class random_weight<qmp, RandomGenerator>
+    : public random_weight_base<qmp, RandomGenerator>
+  {
+  public:
+    using super_t = random_weight_base<qmp, RandomGenerator>;
+    using value_t = typename super_t::weight_t;
+
+    using super_t::super_t;
+
+  private:
+    value_t pick_value_() const
     {
-    public:
-      using super_t = random_weight_base<qmp, RandomGenerator>;
-      using value_t = typename super_t::weight_t;
-
-      using super_t::super_t;
-
-    private:
-      value_t pick_value_() const
-      {
-        auto dis_num =
-          std::uniform_int_distribution<>(super_t::min_.get_num().get_ui(),
-                                          super_t::max_.get_num().get_ui());
-        auto dis_den =
-          std::uniform_int_distribution<unsigned>
-          (super_t::min_.get_den().get_ui(),
-           super_t::max_.get_num().get_ui());
-        auto num = dis_num(super_t::gen_);
-        auto den = dis_den(super_t::gen_);
-        return super_t::ws_.value(num, den);
-      }
-    };
+      auto dis_num =
+        std::uniform_int_distribution<>(super_t::min_.get_num().get_ui(),
+                                        super_t::max_.get_num().get_ui());
+      auto dis_den =
+        std::uniform_int_distribution<unsigned>
+        (super_t::min_.get_den().get_ui(),
+         super_t::max_.get_num().get_ui());
+      auto num = dis_num(super_t::gen_);
+      auto den = dis_den(super_t::gen_);
+      return super_t::ws_.value(num, den);
+    }
+  };
 
 
-    /*-------.
-    | join.  |
-    `-------*/
+  /*-------.
+  | join.  |
+  `-------*/
 
-    VCSN_JOIN_SIMPLE(b, qmp);
-    VCSN_JOIN_SIMPLE(z, qmp);
-    VCSN_JOIN_SIMPLE(q, qmp);
-    VCSN_JOIN_SIMPLE(qmp, qmp);
+  VCSN_JOIN_SIMPLE(b, qmp);
+  VCSN_JOIN_SIMPLE(z, qmp);
+  VCSN_JOIN_SIMPLE(q, qmp);
+  VCSN_JOIN_SIMPLE(qmp, qmp);
 
-    // We don't want to force the inclusion of qmp.hh in r.hh, as it
-    // means that qmp.hh become a hard requirement.
-    VCSN_JOIN_SIMPLE(qmp, r);
-  }
+  // We don't want to force the inclusion of qmp.hh in r.hh, as it
+  // means that qmp.hh become a hard requirement.
+  VCSN_JOIN_SIMPLE(qmp, r);
 }
