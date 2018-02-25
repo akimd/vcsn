@@ -87,7 +87,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   "*"|"∗"|"{*}"        return parser::make_STAR({-1, -1}, loc);
   "{+}"                return parser::make_STAR({1, -1}, loc);
   "{"[0-9]*,?[0-9]*"}" {
-    return parser::make_STAR(quantifier(driver_, loc,
+    return parser::make_STAR(quantifier(*driver_, loc,
                                         {yytext+1, static_cast<size_t>(yyleng)-2}),
                              loc);
   }
@@ -141,7 +141,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   "*"        return parser::make_STAR({-1, -1}, loc);
   "+"        return parser::make_STAR({1, -1}, loc);
   "{"[0-9]*,?[0-9]*"}" {
-    return parser::make_STAR(quantifier(driver_, loc,
+    return parser::make_STAR(quantifier(*driver_, loc,
                                         {yytext+1, static_cast<size_t>(yyleng)-2}),
                              loc);
   }
@@ -167,7 +167,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   "-" return TOK(DASH);
 
   <<EOF>> {
-    driver_.error(loc, "unexpected end of file in a character-class");
+    driver_->error(loc, "unexpected end of file in a character-class");
     unput(']');
   }
 }
@@ -199,7 +199,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
     else
       {
         yy_pop_state();
-        driver_.context(context);
+        driver_->context(context);
         context.clear();
       }
   }
@@ -207,7 +207,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   \n+        LINE(yyleng); context.append(yytext, yyleng);
 
   <<EOF>> {
-    driver_.error(loc, "unexpected end of file in a context comment");
+    driver_->error(loc, "unexpected end of file in a context comment");
     unput(')');
   }
 }
@@ -259,7 +259,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   [^<>\xe2]+|"\xe2"      s.append(yytext, yyleng);
 
   <<EOF>> {
-    driver_.error(loc, "unexpected end of file in a weight");
+    driver_->error(loc, "unexpected end of file in a weight");
     unput('>');
   }
 }

@@ -55,7 +55,7 @@
 %code provides
 {
   #define YY_DECL_(Class) \
-    parser::symbol_type Class lex(driver& driver_)
+    parser::symbol_type Class lex()
   #define YY_DECL YY_DECL_(yyFlexLexer::)
 }
 
@@ -107,7 +107,7 @@
       static inline
       parser::symbol_type yylex(driver& d)
       {
-        return d.scanner_->lex(d);
+        return d.scanner_->lex();
       }
     }
   }
