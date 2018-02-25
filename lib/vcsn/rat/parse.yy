@@ -80,31 +80,31 @@
       }                                         \
   while (false)
 
-  namespace vcsn
+  namespace vcsn::rat
   {
-    namespace rat
+    namespace
     {
       /// Generate an expression for "e <+ f = e % f + f".
-      static inline
+      inline
       dyn::expression prefer(const dyn::expression& e,
                              const dyn::expression& f);
 
       /// Get the context of the driver.
-      static inline
+      inline
       dyn::context ctx(const driver& d)
       {
         return d.context();
       }
 
       /// Get the identities of the driver.
-      static inline
+      inline
       identities ids(const driver& d)
       {
         return d.identities();
       }
 
       /// Use our local scanner object.
-      static inline
+      inline
       parser::symbol_type yylex(driver& d)
       {
         return d.scanner_->lex();
@@ -337,21 +337,20 @@ class:
 
 %%
 
-namespace vcsn
+namespace vcsn::rat
 {
-  namespace rat
+  namespace
   {
     // "e <+ f = e + (f % e) = e + e{c} & f".
-    static
     dyn::expression prefer(const dyn::expression& e, const dyn::expression& f)
     {
       return dyn::add(e, dyn::conjunction(dyn::complement(e), f));
     }
+  }
 
-    void
-    vcsn::rat::parser::error(const location_type& l, const std::string& m)
-    {
-      driver_.error(l, m);
-    }
+  void
+  vcsn::rat::parser::error(const location_type& l, const std::string& m)
+  {
+    driver_.error(l, m);
   }
 }
