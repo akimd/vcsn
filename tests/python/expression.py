@@ -35,7 +35,7 @@ check('a|b', 'a+b')
 check('[ab]', 'a+b', 'a|b')
 check('[abcd]', '[a-d]', '[a-d]')
 check('!a', '\!a', r'\!a')
-check('.', '[^]', '[^]')
+check('.', '[^]', '.')
 
 
 

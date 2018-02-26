@@ -169,12 +169,12 @@ namespace vcsn
       for (auto it = std::begin(letters), letters_end = std::end(letters);
            it != letters_end; ++it)
         {
-          auto end = std::mismatch(it, letters_end,
-                                   boost::find(alphabet, *it),
-                                   alphabet.end()).first;
+          const auto end = std::mismatch(it, letters_end,
+                                         boost::find(alphabet, *it),
+                                         alphabet.end()).first;
           ls.print(*it, out, fmt);
           // No range for two letters or less.
-          auto width = std::distance(it, end);
+          const auto width = std::distance(it, end);
           if (2 < width)
             {
               it += width - 1;
@@ -201,31 +201,50 @@ namespace vcsn
     {
       using letters_t = std::vector<typename LabelSet::value_t>;
       // In alphabetical order.
-      auto alphabet = letters_t{};
-      for (auto l : ls.generators())
-        alphabet.emplace_back(ls.value(l));
+      const auto alphabet = [&]
+        {
+          auto res = letters_t{};
+          for (auto l : ls.generators())
+            res.emplace_back(ls.value(l));
+          return res;
+        }();
 
-      out << '[';
+      const auto letters_are_sorted
+        = boost::is_sorted(letters, vcsn::less_equal<LabelSet>{});
+
+      // If there are all the letters, and we print as a regex, use `.`.
+      if (letters_are_sorted
+          && (fmt == format::ere || fmt == format::redgrep)
+          && boost::distance(alphabet) == boost::distance(letters))
+        out << '.';
       // If the letters are strictly increasing (hence using
       // less_equal, not just less), and are many compared to the
       // alphabet (say, at least two thirds), then we should probably
       // use negated classes instead.
-      if (boost::is_sorted(letters, vcsn::less_equal<LabelSet>{})
-          && 2 * boost::distance(alphabet) < 3 * boost::distance(letters))
+      else if (letters_are_sorted
+               && 2 * boost::distance(alphabet) < 3 * boost::distance(letters))
         {
           // FIXME: we can certainly do better and avoid the
           // construction of this vector.
-          auto negated = letters_t{};
-          for (auto l: alphabet)
-            if (none_of_equal(letters, l))
-              negated.emplace_back(l);
-          out << (fmt == format::latex ? "\\hat{}" : "^");
+          const auto negated = [&]
+            {
+              auto res = letters_t{};
+              for (auto l: alphabet)
+                if (none_of_equal(letters, l))
+                  res.emplace_back(l);
+              return res;
+            }();
+          out << '['
+              << (fmt == format::latex ? "\\hat{}" : "^");
           print_label_ranges_(ls, negated, alphabet, out, fmt);
+          out << ']';
         }
       else
-        print_label_ranges_(ls, letters, alphabet, out, fmt);
-      out << ']';
-
+        {
+          out << '[';
+          print_label_ranges_(ls, letters, alphabet, out, fmt);
+          out << ']';
+        }
       return out;
     }
 
