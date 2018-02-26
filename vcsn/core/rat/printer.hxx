@@ -68,8 +68,10 @@ namespace vcsn::rat
   -> void
   {
     fmt_ = fmt;
-    if (fmt_ == format::latex)
+    const auto text = fmt_ == format::text;
+    switch (fmt_.kind())
       {
+      case format::latex:
         lgroup_        = "{";
         rgroup_        = "}";
         langle_        = " \\left\\langle ";
@@ -97,9 +99,10 @@ namespace vcsn::rat
         tuple_middle   = " \\middle| ";
         tuple_right    = " \\right. ";
         exponent_threshold_= 2;
-      }
-    else if (fmt_ == format::text)
-      {
+        break;
+      case format::ere:
+      case format::text:
+      case format::redgrep:
         lgroup_        = "";
         rgroup_        = "";
         langle_        = "<";
@@ -116,9 +119,9 @@ namespace vcsn::rat
         infiltrate_    = "&:";
         shuffle_       = ":";
         product_       = "";
-        add_           = "+";
+        add_           = text ? "+" : "|";
         zero_          = "\\z";
-        one_           = "\\e";
+        one_           = text ? "\\e" : "()";
         lweight_       = "";
         rweight_       = "";
         ldivide_       = "{\\}";
@@ -126,9 +129,8 @@ namespace vcsn::rat
         tuple_middle   = "|";
         tuple_right    = "";
         exponent_threshold_= 4;
-      }
-    else if (fmt_ == format::utf8)
-      {
+        break;
+      case format::utf8:
         lgroup_        = "";
         rgroup_        = "";
         langle_        = "⟨";
@@ -153,9 +155,11 @@ namespace vcsn::rat
         tuple_middle   = "|";
         tuple_right    = "";
         exponent_threshold_= 2;
+        break;
+      default:
+        raise("expression: invalid format: ", fmt_);
+        break;
       }
-    else
-      raise("expression: invalid format: ", fmt_);
   }
 
   DEFINE::precedence_(const node_t& v) const

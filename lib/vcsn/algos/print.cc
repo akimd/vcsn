@@ -56,12 +56,13 @@ namespace vcsn
                || format == "dot,logical" || format == "dot,physical"
                || format == "latex" || format == "utf8")
         detail::print_expression_registry().call(exp, out, format);
-      else if (format == "text" || format == "default" || format == "")
+      else if (format == "default" || format == "ere"
+               || format == "redgrep" || format == "text")
         {
           // FIXME: problem with rvalue if we pass 'std::string("text")'.
           // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_expression_registry().call(exp, out, format);
+          const std::string fmt = format;
+          detail::print_expression_registry().call(exp, out, fmt);
         }
       else
         raise("invalid output format for expression: ", str_escape(format));

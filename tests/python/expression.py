@@ -15,21 +15,28 @@ XFAIL(lambda: ctx.expression('a', format='foo'),
       '''invalid rational expression format: foo, expected: default, ere, grep, text, vcsn
   while reading expression: "a"''')
 
-def check(e, exp):
-    CHECK_EQ(exp, ctx.expression(e, format='ere'))
+def check(e, exp, ere = None):
+    '''Check that `e` parsed in ere is `exp` in Vcsn format,
+    and `ere` in ERE format (defaults to `e` itself).'''
+    if ere is None:
+        ere = e
+    e = ctx.expression(e, format='ere')
+    CHECK_EQ(exp, e)
+    CHECK_EQ(ere, e.format('ere'))
 def xfail(e):
     XFAIL(lambda: ctx.expression(e, format='ere'))
 
-check('', r'\e')
+check('', r'\e', '()')
 check('()', r'\e')
 check('a', 'a')
 check('ab', 'ab')
-check('a+', 'aa*')
+check('a+', 'aa*', 'aa*')
 check('a|b', 'a+b')
-check('[ab]', 'a+b')
-check('[abcd]', '[a-d]')
-check('!a', r'\!a')
-check('.', '[^]')
+check('[ab]', 'a+b', 'a|b')
+check('[abcd]', '[a-d]', '[a-d]')
+check('!a', '\!a', r'\!a')
+check('.', '[^]', '[^]')
+
 
 
 ## --------- ##

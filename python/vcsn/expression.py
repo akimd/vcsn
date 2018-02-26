@@ -121,7 +121,9 @@ class expression:
 
         - 'd': use Graphviz's Dot syntax to display logical tree
         - 'D': use Graphviz's Dot syntax to display implementation DAG
+        - 'e': use ERE's syntax (i.e., like grep -E)
         - 'i': print info
+        - 'r': use redgrep's syntax (i.e., ERE, with support for `&` and `!`)
         - 't': use text ASCII syntax (default)
         - 'u': use text UTF-8 syntax
         - 'x': use LaTeX syntax
@@ -133,7 +135,9 @@ class expression:
 
         syntaxes = {'d': 'dot',
                     'D': 'dot,physical',
+                    'e': 'ere',
                     'i': 'info',
+                    'r': 'redgrep',
                     't': 'text',
                     'u': 'utf8',
                     'x': 'latex',
