@@ -42,6 +42,10 @@ namespace
 {
   using namespace std::literals;
   irange_type quantifier(driver& d, const location& loc, const std::string& s);
+  void serror(const location& loc, const std::string& s)
+  {
+    throw parser::syntax_error(loc, s);
+  }
 }
 %}
 
@@ -124,10 +128,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   [ \t]+   loc.step(); continue;
   "\n"+    LINE(yyleng); loc.step(); continue;
 
-  [{}>]|"⟩"    {
-    throw parser::syntax_error(loc,
-                               "unexpected character: "s + yytext);
-  }
+  [{}>]|"⟩"    serror(loc, "unexpected character: "s + yytext);
 }
 
 <SC_ERE>{ /* Syntax of grep -E.  */
@@ -162,10 +163,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
     return parser::make_LETTER({yytext+1, size_t(yyleng)-1}, loc);
   }
 
-  [\^\$]|\\.    {
-    throw parser::syntax_error(loc,
-                               "unsupported operator: "s + yytext);
-  }
+  [\^\$]|\\.    serror(loc, "unsupported operator: "s + yytext);
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */

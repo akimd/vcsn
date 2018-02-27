@@ -29,7 +29,13 @@
   parser::make_ ## Token (loc)
 
 YY_FLEX_NAMESPACE_BEGIN
-
+namespace
+{
+  void serror(const location& loc, const std::string& s)
+  {
+    throw parser::syntax_error(loc, s);
+  }
+}
 %}
 
 %x SC_COMMENT SC_STRING SC_XML
@@ -79,7 +85,7 @@ ID      {IDENT}|{NUM}
              }
   [ \t]+     loc.step(); continue;
   \n+        LINE(yyleng); loc.step(); continue;
-  .          throw parser::syntax_error(loc, "invalid character: "s + yytext);
+  .          serror(loc, "invalid character: "s + yytext);
 }
 
 <SC_COMMENT>{
@@ -101,7 +107,7 @@ ID      {IDENT}|{NUM}
 
   <<EOF>> {
     BEGIN(INITIAL);
-    throw parser::syntax_error(loc, "unexpected end of file in a string");
+    serror(loc, "unexpected end of file in a string");
   }
 }
 
@@ -122,7 +128,7 @@ ID      {IDENT}|{NUM}
 
   <<EOF>> {
     BEGIN(INITIAL);
-    throw parser::syntax_error(loc, "unexpected end of file in a XML string");
+    serror(loc, "unexpected end of file in a XML string");
   }
 }
 
