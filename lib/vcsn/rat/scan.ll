@@ -156,8 +156,16 @@ id   [a-zA-Z][a-zA-Z_0-9]*
 
   \\[0-7]{3}        |
   \\x[0-9a-fA-F]{2} |
-  "\\"[\\()\[\]]    |
-  .                 return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
+  [^\\^$]           return parser::make_LETTER({yytext, size_t(yyleng)}, loc);
+
+  "\\"[\\()\[\]^$]  {
+    return parser::make_LETTER({yytext+1, size_t(yyleng)-1}, loc);
+  }
+
+  [\^\$]|\\.    {
+    throw parser::syntax_error(loc,
+                               "unsupported operator: "s + yytext);
+  }
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */

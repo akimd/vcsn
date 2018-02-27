@@ -238,10 +238,7 @@ namespace vcsn
           case format::redgrep:
           case format::text:
           case format::utf8:
-            if (l == '\\')
-              o << "\\\\";
-            else
-              str_escape(o, l, fmt.meta() ? fmt.meta() : "|',[-]<> ");
+            str_escape(o, l, fmt.meta() ? fmt.meta() : "\\|',[-]<> ");
           }
       return o;
     }

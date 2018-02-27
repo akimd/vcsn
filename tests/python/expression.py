@@ -15,29 +15,54 @@ XFAIL(lambda: ctx.expression('a', format='foo'),
       '''invalid rational expression format: foo, expected: default, ere, grep, text, vcsn
   while reading expression: "a"''')
 
-def check(e, exp, ere = None):
-    '''Check that `e` parsed in ere is `exp` in Vcsn format,
-    and `ere` in ERE format (defaults to `e` itself).'''
+def check(e, exp = None, ere = None, redgrep = None):
+    '''Check that `e` parsed in ere is `exp` (defaults to `e`) in Vcsn
+    format, and `ere` in ERE format (defaults to `e` itself).
+
+    '''
+    print("Check: {}".format(e))
+    if exp is None:
+        exp = e
     if ere is None:
         ere = e
+    if redgrep is None:
+        redgrep = ere
     e = ctx.expression(e, format='ere')
     CHECK_EQ(exp, e)
     CHECK_EQ(ere, e.format('ere'))
-def xfail(e):
-    XFAIL(lambda: ctx.expression(e, format='ere'))
+    CHECK_EQ(redgrep, e.format('redgrep'))
+def xfail(e, err, fmt=['ere']):
+    for f in fmt:
+        XFAIL(lambda: ctx.expression(e, format=f), err)
 
 check('', r'\e', '()')
 check('()', r'\e')
-check('a', 'a')
-check('ab', 'ab')
+check('a')
+check('ab')
 check('a+', 'aa*', 'aa*')
 check('a|b', 'a+b')
 check('[ab]', 'a+b', 'a|b')
 check('[abcd]', '[a-d]', '[a-d]')
-check('!a', '\!a', r'\!a')
+check('[a-d]')
+check('[^a-d]')
+check('!a', r'\!a', redgrep=r'\!a')
+check('a&b', r'a\&b', redgrep=r'a\&b')
 check('.', '[^]', '.')
 
-
+xfail('^a', '''1.1: unsupported operator: ^
+^a
+^
+  while reading expression: "^a"''')
+xfail('a$', '''1.2: unsupported operator: $
+a$
+ ^
+  while reading expression: "a$"''')
+check(r'\^\$', '^$')
+xfail(r'\b', r'''1.1-2: unsupported operator: \b
+\b
+^^
+  while reading expression: "\\b"''')
+check(r'\^\$', '^$')
 
 ## --------- ##
 ## Escapes.  ##

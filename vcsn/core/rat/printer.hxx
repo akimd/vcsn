@@ -229,8 +229,12 @@ namespace vcsn::rat
 
   VISIT(atom)
   {
+    const auto meta
+      = fmt_ == format::ere     ? "|[-](){}\\\n*+.?" "$^" ""
+      : fmt_ == format::redgrep ? "|[-](){}\\\n*+.?" "$^" "!&"
+      :                           "|[-](){}\\\n*+.?" "!&:% @',<>";
     rs_.labelset()->print(v.value(), out_,
-                          fmt_.for_labels().meta("!&%|@',[-]<> (){}\n*+:.?"));
+                          fmt_.for_labels().meta(meta));
   }
 
   /// Specific handling to using exponents as syntactic sugar.
