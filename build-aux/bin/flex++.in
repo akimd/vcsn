@@ -168,9 +168,10 @@ rm -f "$output.bak"
 # Extract the version information.
 perl -ne '/#define YY_FLEX_\w+_VERSION/ && print'       \
      <$output.tmp                                       \
-     >$output_version_header
+     >$output_version_header.tmp
+$move_if_change $output_version_header.tmp $output_version_header
 
 # Atomic validation of the whole process.
-mv $output.tmp $output
+$move_if_change $output.tmp $output
 
 exit $status
