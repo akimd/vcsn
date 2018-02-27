@@ -40,6 +40,7 @@
 YY_FLEX_NAMESPACE_BEGIN
 namespace
 {
+  using namespace std::literals;
   irange_type quantifier(driver& d, const location& loc, const std::string& s);
 }
 %}
@@ -125,7 +126,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
 
   [{}>]|"⟩"    {
     throw parser::syntax_error(loc,
-                               std::string{"unexpected character: "} + yytext);
+                               "unexpected character: "s + yytext);
   }
 }
 
