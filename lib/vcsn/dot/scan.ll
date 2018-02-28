@@ -2,6 +2,7 @@
 %option c++
 %option debug
 %option noinput nounput
+%option warn nodefault
 
 %top{
 // Define YY_DECL.
@@ -102,9 +103,10 @@ ID      {IDENT}|{NUM}
   }
 
   "\\".       s.push_back(yytext[1]);
-  [^\\""\n]+  s.append(yytext, yyleng);
+  [^\\\"\n]+  s.append(yytext, yyleng);
   "\n"+       LINE(yyleng); s.append(yytext, yyleng);
 
+  "\\"    |
   <<EOF>> {
     BEGIN(INITIAL);
     serror(loc, "unexpected end of file in a string");

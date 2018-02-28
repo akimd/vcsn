@@ -2,6 +2,7 @@
 %option debug
 %option noinput
 %option stack noyy_top_state
+%option warn nodefault
 
 %top{
 // Define YY_DECL.
@@ -163,7 +164,7 @@ id   [a-zA-Z][a-zA-Z_0-9]*
     return parser::make_LETTER({yytext+1, size_t(yyleng)-1}, loc);
   }
 
-  [\^\$]|\\.    serror(loc, "unsupported operator: "s + yytext);
+  [\^\$]|\\.|\\    serror(loc, "unsupported operator: "s + yytext);
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
@@ -173,6 +174,8 @@ id   [a-zA-Z][a-zA-Z_0-9]*
   }
   "^" return TOK(CARET);
   "-" return TOK(DASH);
+
+  "\n"  serror(loc, "invalid character in label class: "s + yytext);
 
   <<EOF>> {
     driver_->error(loc, "unexpected end of file in a character-class");
