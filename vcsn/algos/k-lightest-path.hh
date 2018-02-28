@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/range/algorithm/mismatch.hpp>
 #include <boost/range/iterator_range_core.hpp>
 
 #include <vcsn/algos/dijkstra.hh>

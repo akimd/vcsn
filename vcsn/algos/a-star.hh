@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <vcsn/misc/set.hh>
 #include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/misc/fibonacci_heap.hh>
