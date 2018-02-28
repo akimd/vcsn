@@ -142,10 +142,35 @@ namespace vcsn::rat
     VCSN_RAT_VISIT(rweight, v);
     VCSN_RAT_VISIT(shuffle, v)       { print_(v, shuffle_); }
     VCSN_RAT_VISIT(star, v)          { print_(v, star_); }
-    VCSN_RAT_VISIT(add, v)           { print_add_(v); }
     VCSN_RAT_VISIT(transposition, v) { print_(v, transposition_); }
     VCSN_RAT_VISIT(zero, v);
 
+    VCSN_RAT_VISIT(add, v)
+    {
+      // Do we print as an option (`E?`)?
+      if ((fmt_ == format::ere || fmt_ == format::redgrep)
+          && rs_.is_one(v[0]))
+        {
+          // Print as a child of an unary postfix operator (`?`) to
+          // get correct parens in the child.
+          if (v.size() == 2)
+            print_child_(*v[1], precedence_t::unary);
+          else
+            {
+              // The precedence of the child (of the imaginary `?`).
+              auto add_prec = precedence_t::add;
+              // `\e + abc`, or `\e + a*`, etc.
+              if (const auto range = letter_range(v.begin()+1, v.end());
+                  end(range) == v.end() && 3 < boost::distance(range))
+                add_prec = precedence_t::atom;
+              print_child_(add_prec, precedence_t::unary,
+                           [&]{ print_add_(v, true); });
+            }
+          out_ << '?';
+        }
+      else
+        print_add_(v);
+    }
     using tuple_t = typename super_t::tuple_t;
 
     template <typename Dummy = void>
@@ -240,11 +265,32 @@ namespace vcsn::rat
         return false;
     }
 
+    /// Whether displayed as `e?`.
+    bool is_option_(const node_t& v) const
+    {
+      if (const auto s = dynamic_cast<const add_t*>(&v))
+        return ((fmt_ == format::ere || fmt_ == format::redgrep)
+                && rs_.is_one((*s)[0]));
+      else
+        return false;
+    }
+
     /// The precedence of \a v (to decide when to print parens).
+    ///
+    /// This is the precedence as seen by the parent.  It usually
+    /// makes not difference, but in the case of options (`E?`) it
+    /// does make a difference: the printer of `E?` actually see a sum
+    /// (`\e+E`) in which case we return the precedence of `?`.
+    /// However when printing `E` (which is the same sum without the
+    /// `\e`), the precedence is precedence_t::add.
     precedence_t precedence_(const node_t& v) const
     {
       if (is_word_(v))
         return precedence_t::word;
+      else if (is_braced_(v))
+        return precedence_t::atom;
+      else if (is_option_(v))
+        return precedence_t::unary;
       else
         switch (v.type())
           {
@@ -273,31 +319,39 @@ namespace vcsn::rat
       abort(); // Unreachable.
     }
 
-    /// Print a child node, given its parent.
-    void print_child_(const node_t& child, const node_t& parent)
+    /// Invoke a function to print a child node, given its parent's
+    /// precedence (to decide whether to put parens).
+    template <typename PrintChild>
+    void print_child_(precedence_t child, precedence_t parent,
+                      PrintChild print)
     {
-      print_child_(child, precedence_(parent));
+      const auto parent_has_precedence = child <= parent;
+      const auto both_unaries = (parent == precedence_t::unary
+                                 && child == precedence_t::unary);
+      bool needs_parens = (parens_
+                           || (parent_has_precedence && ! both_unaries));
+      if (needs_parens)
+        out_ << lparen_;
+      else if (parent == precedence_t::unary)
+        out_ << lgroup_;
+      print();
+      if (needs_parens)
+        out_ << rparen_;
+      else if (parent == precedence_t::unary)
+        out_ << rgroup_;
     }
 
     /// Print a child node, given its parent's precedence (to decide
     /// whether to put parens).
     void print_child_(const node_t& child, precedence_t parent)
     {
-      bool parent_has_precedence = precedence_(child) <= parent;
-      bool needs_parens =
-        (parens_
-         || (parent_has_precedence
-             && ! (parent == precedence_t::unary && child.is_unary())
-             && ! is_braced_(child)));
-      if (needs_parens)
-        out_ << lparen_;
-      else if (parent == precedence_t::unary)
-        out_ << lgroup_;
-      print_(child);
-      if (needs_parens)
-        out_ << rparen_;
-      else if (parent == precedence_t::unary)
-        out_ << rgroup_;
+      print_child_(precedence_(child), parent, [&]{ print_(child); });
+    }
+
+    /// Print a child node, given its parent.
+    void print_child_(const node_t& child, const node_t& parent)
+    {
+      print_child_(child, precedence_(parent));
     }
 
     /// Print a unary node.
@@ -306,7 +360,8 @@ namespace vcsn::rat
 
     /// Print an n-ary node.
     template <rat::exp::type_t Type>
-    void print_(const variadic_t<Type>& n, const char* op);
+    void print_(const variadic_t<Type>& n, const char* op,
+                bool skip_first = false);
 
     /// Whether the left weight shows.
     ATTRIBUTE_PURE
@@ -363,12 +418,12 @@ namespace vcsn::rat
     /// Print a sum, when the labelset has a genset() function.
     /// \param v the sum to print
     template <typename LS = labelset_t>
-    auto print_add_(const add_t& v)
+    auto print_add_(const add_t& v, bool skip_first = false)
       -> std::enable_if_t<detail::has_generators_mem_fn<LS>{}, void>
     {
       bool first = true;
       // Use classes for sums of letters.
-      for (auto i = std::begin(v), end = std::end(v);
+      for (auto i = std::begin(v) + skip_first, end = std::end(v);
            i != end;
            /* nothing. */)
         {
@@ -390,7 +445,7 @@ namespace vcsn::rat
           else
             {
               // Otherwise, just print the child.
-              print_child_(**i, v);
+              print_child_(**i, precedence_t::add);
               ++i;
             }
         }
@@ -398,10 +453,10 @@ namespace vcsn::rat
 
     /// Print a sum, when the labelset does not have a genset() function.
     template <typename LS = labelset_t>
-    auto print_add_(const add_t& v)
+    auto print_add_(const add_t& v, bool skip_first = false)
       -> std::enable_if_t<!detail::has_generators_mem_fn<LS>{}, void>
     {
-      print_(v, add_);
+      print_(v, add_, skip_first);
     }
 
     /// Output stream.

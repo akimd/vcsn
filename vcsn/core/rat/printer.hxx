@@ -259,12 +259,18 @@ namespace vcsn::rat
   template <typename ExpSet>
   template <type_t Type>
   auto
-  printer<ExpSet>::print_(const variadic_t<Type>& n, const char* op)
+  printer<ExpSet>::print_(const variadic_t<Type>& n, const char* op,
+                          bool skip_first)
     -> void
   {
     bool first = true;
     for (const auto& i: n)
       {
+        if (skip_first)
+        {
+          skip_first = false;
+          continue;
+        }
         if (! first)
           out_ << op;
         print_child_(*i, n);

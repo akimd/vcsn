@@ -45,9 +45,19 @@ check('[ab]', 'a+b', 'a|b')
 check('[abcd]', '[a-d]', '[a-d]')
 check('[a-d]')
 check('[^a-d]')
-check('!a', r'\!a', redgrep=r'\!a')
+check('!a',  r'\!a',  redgrep=r'\!a')
 check('a&b', r'a\&b', redgrep=r'a\&b')
 check('.', '[^]', '.')
+
+check('a?', r'\e+a', 'a?')
+# This one is tricky: `*` needs need issue parens, although the real nature of
+# the child is a sum, which does require parens (as in `(\e+a)*`).
+check('a?*', r'(\e+a)*')
+check('(ab)?', r'\e+ab')
+check('(ab)*?', r'\e+(ab)*')
+check('(ab)?*', r'(\e+ab)*')
+# A sum partly printed as a label class.
+check('([a-d]|abcd)?', r'\e+[a-d]+abcd')
 
 xfail('^a', '''1.1: unsupported operator: ^
 ^a
