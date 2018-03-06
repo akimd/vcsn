@@ -171,4 +171,7 @@ perl -ne '/#define YY_FLEX_\w+_VERSION/ && print'       \
 # Atomic validation of the whole process.
 "$move_if_change" "$output.tmp" "$output"
 
+# Make it read only.
+chmod -w "$output"
+
 exit $status
