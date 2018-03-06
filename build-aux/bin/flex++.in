@@ -121,11 +121,13 @@ BEGIN
      $_ = <<EOF . $_;
 // Added by flex++.
 #pragma GCC diagnostic ignored "-Wsign-compare"
-// Check Clang first, as it does not support -Wzero... but it
-// defines __GNUC__.
+// Check Clang first, as it defines __GNUC__.
 #if defined __clang__
 # pragma clang diagnostic ignored "-Wdeprecated"
 # pragma clang diagnostic ignored "-Wnull-conversion"
+# if 5 <= __clang_major__
+#  pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+# endif
 #elif defined __GNUC__
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
