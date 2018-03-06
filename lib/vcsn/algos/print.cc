@@ -8,6 +8,8 @@
 #include <vcsn/misc/raise.hh>
 #include <vcsn/misc/xalloc.hh>
 
+using namespace std::literals;
+
 namespace vcsn
 {
   namespace dyn
@@ -29,7 +31,7 @@ namespace vcsn
         detail::print_expansion_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
-          // FIXME: problem with rvalue if we pass 'std::string("text")'.
+          // FIXME: problem with rvalue if we pass '"text"s'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
           detail::print_expansion_registry().call(w, out, format);
@@ -59,7 +61,7 @@ namespace vcsn
       else if (format == "default" || format == "ere"
                || format == "redgrep" || format == "text")
         {
-          // FIXME: problem with rvalue if we pass 'std::string("text")'.
+          // FIXME: problem with rvalue if we pass '"text"s'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string fmt = format;
           detail::print_expression_registry().call(exp, out, fmt);
@@ -85,7 +87,7 @@ namespace vcsn
         detail::print_label_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
-          // FIXME: problem with rvalue if we pass 'std::string("text")'.
+          // FIXME: problem with rvalue if we pass '"text"s'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
           detail::print_label_registry().call(w, out, format);
@@ -113,7 +115,7 @@ namespace vcsn
         detail::print_polynomial_registry().call(p, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
-          // FIXME: problem with rvalue if we pass 'std::string("text")'.
+          // FIXME: problem with rvalue if we pass '"text"s'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
           detail::print_polynomial_registry().call(p, out, format);
@@ -139,7 +141,7 @@ namespace vcsn
         detail::print_weight_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
-          // FIXME: problem with rvalue if we pass 'std::string("text")'.
+          // FIXME: problem with rvalue if we pass '"text"s'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
           detail::print_weight_registry().call(w, out, format);
@@ -166,7 +168,7 @@ namespace vcsn
     std::string
     get_format(std::ostream& o)
     {
-      return format_flag(o) ? *format_flag(o) : std::string{"default"};
+      return format_flag(o) ? *format_flag(o) : "default"s;
     }
 
 
