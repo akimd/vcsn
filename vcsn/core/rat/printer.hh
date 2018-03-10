@@ -53,11 +53,19 @@ namespace vcsn::rat
     name,
   };
 
-  /// Exponents in UTF-8.
-  constexpr static const char* const superscripts[] =
-    {
-      "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
-    };
+  /// Print a (positive) int in UTF-8 exponents.
+  inline void print_exponent_utf8(int n, std::ostream& o)
+  {
+    constexpr static const char* const superscripts[] =
+      {
+        "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"
+      };
+    if (n)
+      {
+        print_exponent_utf8(n / 10, o);
+        o << superscripts[n % 10];
+      }
+  }
 
   /// Pretty-printer for rational expressions.
   template <typename ExpSet>
@@ -102,7 +110,8 @@ namespace vcsn::rat
       return print_(*v);
     }
 
-    /// Print a child node, given its parent's precedence.
+    /// Print a child node, given its parent's precedence (to decide
+    /// whether to put parens).
     ///
     /// Public function, to support tuples.
     void print_child(const node_t& child, precedence_t parent);

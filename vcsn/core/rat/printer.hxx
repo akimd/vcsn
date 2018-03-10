@@ -257,19 +257,7 @@ namespace vcsn::rat
             // We can display an exponent.
             print_child(*i, precedence_t::exponent);
             if (fmt_ == format::utf8)
-              {
-                // Recursive lambda to display UTF-8 characters
-                // in the correct order.
-                std::function<void(int)> print = [this, &print](int n)
-                  {
-                    if (n)
-                      {
-                        print(n / 10);
-                        out_ << superscripts[n % 10];
-                      }
-                  };
-                print(count);
-              }
+              print_exponent_utf8(count, out_);
             else
               out_ << lexponent_ << count << rexponent_;
             it = next;
