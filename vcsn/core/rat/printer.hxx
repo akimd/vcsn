@@ -162,39 +162,6 @@ namespace vcsn::rat
       }
   }
 
-  DEFINE::precedence_(const node_t& v) const
-  -> precedence_t
-  {
-    if (is_word_(v))
-      return precedence_t::word;
-    else
-      switch (v.type())
-        {
-#define CASE(Type)                              \
-          case exp::type_t::Type:               \
-            return precedence_t::Type
-          CASE(add);
-          CASE(atom);
-          CASE(complement);
-          CASE(compose);
-          CASE(conjunction);
-          CASE(infiltrate);
-          CASE(ldivide);
-          CASE(lweight);
-          CASE(name);
-          CASE(one);
-          CASE(mul);
-          CASE(rweight);
-          CASE(shuffle);
-          CASE(star);
-          CASE(transposition);
-          CASE(tuple);
-          CASE(zero);
-#undef CASE
-        }
-    abort(); // Unreachable.
-  }
-
 #define VISIT(Type)                             \
   DEFINE::visit(const Type ## _t& v)            \
   -> void
@@ -274,35 +241,9 @@ namespace vcsn::rat
   VISIT(name)
   {
     if (fmt_ == format::latex)
-      out_ << "\\mathsf{" << v.name_get() << "}";
+      out_ << "\\mathsf{" << v.name_get() << '}';
     else
       out_ << v.name_get();
-  }
-
-  DEFINE::print_child(const node_t& child, precedence_t parent)
-  -> void
-  {
-    bool parent_has_precedence = precedence_(child) <= parent;
-    bool needs_parens =
-      (parens_
-       || (parent_has_precedence
-           && ! (parent == precedence_t::unary && child.is_unary())
-           && ! is_braced_(child)));
-    if (needs_parens)
-      out_ << lparen_;
-    else if (parent == precedence_t::unary)
-      out_ << lgroup_;
-    print_(child);
-    if (needs_parens)
-      out_ << rparen_;
-    else if (parent == precedence_t::unary)
-      out_ << rgroup_;
-  }
-
-  DEFINE::print_child_(const node_t& child, const node_t& parent)
-  -> void
-  {
-    print_child(child, precedence_(parent));
   }
 
   template <typename ExpSet>

@@ -114,7 +114,10 @@ namespace vcsn::rat
     /// whether to put parens).
     ///
     /// Public function, to support tuples.
-    void print_child(const node_t& child, precedence_t parent);
+    void print_child(const node_t& child, precedence_t parent)
+    {
+      print_child_(child, parent);
+    }
 
   private:
     /// Print \a v.
@@ -201,12 +204,12 @@ namespace vcsn::rat
 
     /// Whether \a v is an atom whose label is not a letter.
     ///
-    /// Used to decide when to issues parens via precedence
-    /// ("letter" and "word" have different precedence).  Actually,
-    /// this routine checks whether this node is a self-delimited
-    /// atom.  Letters are of course self-delimited, so we don't add
-    /// parens to "a" in "a*".  Tuples printed as labels are not, so
-    /// we need to add parens to "a|x" in "(a|x)*".
+    /// Used to decide when to issue parens via precedence ("letter"
+    /// and "word" have different precedence).  Actually, this routine
+    /// checks whether this node is a self-delimited atom.  Letters
+    /// are of course self-delimited, so we don't add parens to "a" in
+    /// "a*".  Tuples printed as labels are not, so we need to add
+    /// parens to "a|x" in "(a|x)*".
     ///
     /// Note that 1-tape tuple are self-delimited (well, if what
     /// they contain is self-delimited).  But then visually there is
@@ -227,9 +230,9 @@ namespace vcsn::rat
     /// want to print `[a-z]*`, not `([a-z])*`.
     bool is_braced_(const node_t& v) const
     {
-      if (auto s = dynamic_cast<const add_t*>(&v))
+      if (const auto s = dynamic_cast<const add_t*>(&v))
         {
-          auto range = letter_range(s->begin(), s->end());
+          const auto range = letter_range(s->begin(), s->end());
           return (end(range) == s->end()
                   && 3 < boost::distance(range));
         }
@@ -238,10 +241,64 @@ namespace vcsn::rat
     }
 
     /// The precedence of \a v (to decide when to print parens).
-    precedence_t precedence_(const node_t& v) const;
+    precedence_t precedence_(const node_t& v) const
+    {
+      if (is_word_(v))
+        return precedence_t::word;
+      else
+        switch (v.type())
+          {
+#define CASE(Type)                              \
+            case exp::type_t::Type:             \
+              return precedence_t::Type
+            CASE(add);
+            CASE(atom);
+            CASE(complement);
+            CASE(compose);
+            CASE(conjunction);
+            CASE(infiltrate);
+            CASE(ldivide);
+            CASE(lweight);
+            CASE(name);
+            CASE(one);
+            CASE(mul);
+            CASE(rweight);
+            CASE(shuffle);
+            CASE(star);
+            CASE(transposition);
+            CASE(tuple);
+            CASE(zero);
+#undef CASE
+          }
+      abort(); // Unreachable.
+    }
 
     /// Print a child node, given its parent.
-    void print_child_(const node_t& child, const node_t& parent);
+    void print_child_(const node_t& child, const node_t& parent)
+    {
+      print_child_(child, precedence_(parent));
+    }
+
+    /// Print a child node, given its parent's precedence (to decide
+    /// whether to put parens).
+    void print_child_(const node_t& child, precedence_t parent)
+    {
+      bool parent_has_precedence = precedence_(child) <= parent;
+      bool needs_parens =
+        (parens_
+         || (parent_has_precedence
+             && ! (parent == precedence_t::unary && child.is_unary())
+             && ! is_braced_(child)));
+      if (needs_parens)
+        out_ << lparen_;
+      else if (parent == precedence_t::unary)
+        out_ << lgroup_;
+      print_(child);
+      if (needs_parens)
+        out_ << rparen_;
+      else if (parent == precedence_t::unary)
+        out_ << rgroup_;
+    }
 
     /// Print a unary node.
     template <rat::exp::type_t Type>
@@ -278,6 +335,7 @@ namespace vcsn::rat
     }
 
     /// Print a sum, when the labelset has a genset() function.
+    /// \param v the sum to print
     template <typename LS = labelset_t>
     auto print_add_(const add_t& v)
       -> std::enable_if_t<detail::has_generators_mem_fn<LS>{}, void>
@@ -293,8 +351,7 @@ namespace vcsn::rat
           first = false;
           // If in front of a row of letters, in strictly increasing
           // order, issue a class.
-          auto r = letter_range(i, end);
-          if (3 < distance(r))
+          if (auto r = letter_range(i, end); 3 < distance(r))
             {
               // Gather the letters.
               auto letters = std::vector<label_t>{};
