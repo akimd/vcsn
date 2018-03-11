@@ -334,6 +334,32 @@ namespace vcsn::rat
          });
     }
 
+    /// Whether this is a power (a repeated `mul` of a single node),
+    /// and the exponent.
+    auto
+    is_power(const mul_t& n, const value_t& base) const
+    {
+      const auto first = n.begin();
+      const auto last =
+        std::find_if(first, n.end(),
+                     [&](const auto& e) { return !rs_.equal(e, base); });
+      if (last == n.end())
+        return std::make_tuple(true, n.size());
+      else
+        return std::make_tuple(false, size_t{0});
+    }
+
+    /// Whether this is a power (a repeated `mul` of a single node),
+    /// and the exponent.
+    auto
+    is_power(const value_t& v) const
+    {
+      if (auto s = std::dynamic_pointer_cast<const mul_t>(v))
+        return is_power(*s, *s->begin());
+      else
+        return std::make_tuple(false, size_t{0});
+    }
+
     /// Print a sum, when the labelset has a genset() function.
     /// \param v the sum to print
     template <typename LS = labelset_t>
