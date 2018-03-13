@@ -161,33 +161,6 @@ namespace vcsn
   | is_letterized(automaton).   |
   `----------------------------*/
 
-  namespace detail
-  {
-    template <Automaton Aut>
-    std::enable_if_t<!is_letterized_t<labelset_t_of<Aut>>{}, bool>
-    is_letterized(const Aut& aut)
-    {
-      auto ls = aut->labelset();
-      for (auto t : transitions(aut))
-      {
-        auto it = ls->letters_of_padded(aut->label_of(t),
-                                        letterized_ls<Aut>::labelset_t::one());
-        // size is not 0 or 1, then it's a word
-        // we can't use size, as it's not defined for zip_iterators
-        if (it.begin() != it.end() && ++(it.begin()) != it.end())
-          return false;
-      }
-      return true;
-    }
-
-    template <Automaton Aut>
-    std::enable_if_t<is_letterized_t<labelset_t_of<Aut>>{}, bool>
-    is_letterized(const Aut&)
-    {
-      return true;
-    }
-  }
-
   /// Check if the transitions are all letters.
   ///
   /// \param[in] aut        the automaton
@@ -196,7 +169,22 @@ namespace vcsn
   bool
   is_letterized(const Aut& aut)
   {
-    return detail::is_letterized(aut);
+    if constexpr (detail::is_letterized_t<labelset_t_of<Aut>>{})
+      return true;
+    else
+      {
+        const auto& ls = aut->labelset();
+        const auto one = detail::letterized_ls<Aut>::labelset_t::one();
+        for (const auto t : transitions(aut))
+        {
+          auto it = ls->letters_of_padded(aut->label_of(t), one);
+          // size is not 0 or 1, then it's a word
+          // we can't use size, as it's not defined for zip_iterators
+          if (it.begin() != it.end() && ++(it.begin()) != it.end())
+            return false;
+        }
+        return true;
+      }
   }
 
   namespace dyn
