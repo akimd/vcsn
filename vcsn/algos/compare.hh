@@ -7,9 +7,8 @@ namespace vcsn::dyn::detail
   int
   compare_bridge(const DynValue& lhs, const DynValue& rhs)
   {
-    auto joined = join<ValueSet1, ValueSet2>(lhs, rhs);
-    return joined.valueset.compare(joined.lhs,
-                                   joined.rhs);
+    auto [vs, l, r] = join<ValueSet1, ValueSet2>(lhs, rhs);
+    return vs.compare(l, r);
   }
 
   /// Bridge (compare).

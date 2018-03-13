@@ -30,11 +30,8 @@ namespace vcsn
       Value
       conjunction_value(const Value& lhs, const Value& rhs)
       {
-        auto joined = join<ValueSetLhs, ValueSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::conjunction(joined.valueset,
-                                    joined.lhs,
-                                    joined.rhs)};
+        auto [vs, l, r] = join<ValueSetLhs, ValueSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::conjunction(vs, l, r)};
       }
     }
   }

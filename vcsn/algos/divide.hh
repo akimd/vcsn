@@ -29,10 +29,8 @@ namespace vcsn
       expansion
       ldivide_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto joined = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ldivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {vs, ldivide(vs, l, r)};
       }
 
       /// Bridge (ldivide).
@@ -40,10 +38,8 @@ namespace vcsn
       expression
       ldivide_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ldivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
+        return {vs, ldivide(vs, l, r)};
       }
 
       /// Bridge (ldivide).
@@ -51,10 +47,8 @@ namespace vcsn
       label
       ldivide_label(const label& lhs, const label& rhs)
       {
-        auto joined = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ldivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {vs, ldivide(vs, l, r)};
       }
 
       /// Bridge (ldivide).
@@ -62,10 +56,8 @@ namespace vcsn
       polynomial
       ldivide_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ldivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {vs, ldivide(vs, l, r)};
       }
 
       /// Bridge (ldivide).
@@ -73,10 +65,8 @@ namespace vcsn
       weight
       ldivide_weight(const weight& lhs, const weight& rhs)
       {
-        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ldivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {vs, ldivide(vs, l, r)};
       }
     }
   }
@@ -105,10 +95,8 @@ namespace vcsn
       polynomial
       lgcd_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                lgcd(joined.valueset,
-                     joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {vs, lgcd(vs, l, r)};
       }
     }
   }
@@ -136,10 +124,8 @@ namespace vcsn
       label
       rdivide_label(const label& lhs, const label& rhs)
       {
-        auto joined = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                rdivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<LabelSetLhs, LabelSetRhs>(lhs, rhs);
+        return {vs, rdivide(vs, l, r)};
       }
 
       /// Bridge (rdivide).
@@ -147,10 +133,8 @@ namespace vcsn
       expression
       rdivide_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                rdivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpressionSetLhs, ExpressionSetRhs>(lhs, rhs);
+        return {vs, rdivide(vs, l, r)};
       }
 
       /// Bridge (rdivide).
@@ -158,10 +142,8 @@ namespace vcsn
       weight
       rdivide_weight(const weight& lhs, const weight& rhs)
       {
-        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                rdivide(joined.valueset,
-                        joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {vs, rdivide(vs, l, r)};
       }
     }
   }

@@ -169,10 +169,8 @@ namespace vcsn
       expansion
       add_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto joined = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::add(joined.valueset,
-                            joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpansionSetLhs, ExpansionSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::add(vs, l, r)};
       }
     }
   }
@@ -190,10 +188,8 @@ namespace vcsn
       expression
       add_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::add(joined.valueset,
-                            joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::add(vs, l, r)};
       }
     }
   }
@@ -212,10 +208,8 @@ namespace vcsn
       polynomial
       add_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                add(joined.valueset,
-                    joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {vs, add(vs, l, r)};
       }
     }
   }
@@ -234,10 +228,8 @@ namespace vcsn
       weight
       add_weight(const weight& lhs, const weight& rhs)
       {
-        auto joined = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                add(joined.valueset,
-                    joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<WeightSetLhs, WeightSetRhs>(lhs, rhs);
+        return {vs, add(vs, l, r)};
       }
     }
   }

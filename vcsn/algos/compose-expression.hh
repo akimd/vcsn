@@ -99,11 +99,8 @@ namespace vcsn
       expansion
       compose_expansion(const expansion& lhs, const expansion& rhs)
       {
-        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::compose(joined.valueset,
-                                joined.lhs,
-                                joined.rhs)};
+        auto [vs, l, r] = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::compose(vs, l, r)};
       }
     }
   }
@@ -121,11 +118,8 @@ namespace vcsn
       expression
       compose_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::compose(joined.valueset,
-                                joined.lhs,
-                                joined.rhs)};
+        auto [vs, l, r] = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::compose(vs, l, r)};
       }
     }
   }

@@ -306,9 +306,8 @@ namespace vcsn
       expression
       multiply_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                ::vcsn::multiply(joined.valueset, joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {vs, ::vcsn::multiply(vs, l, r)};
       }
     }
   }
@@ -322,9 +321,8 @@ namespace vcsn
       expression
       concatenate_expression(const expression& lhs, const expression& rhs)
       {
-        auto joined = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                joined.valueset.concat(joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<ExpSetLhs, ExpSetRhs>(lhs, rhs);
+        return {vs, vs.concat(l, r)};
       }
     }
   }
@@ -472,9 +470,8 @@ namespace vcsn
       polynomial
       multiply_polynomial(const polynomial& lhs, const polynomial& rhs)
       {
-        auto joined = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
-        return {joined.valueset,
-                multiply(joined.valueset, joined.lhs, joined.rhs)};
+        auto [vs, l, r] = join<PolynomialSetLhs, PolynomialSetRhs>(lhs, rhs);
+        return {vs, multiply(vs, l, r)};
       }
     }
   }
