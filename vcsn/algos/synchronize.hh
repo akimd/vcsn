@@ -270,10 +270,10 @@ namespace vcsn
                     out_aut_->labelset()->conv(*in_aut_->labelset(),
                                                in_aut_->label_of(tr)));
 
-            auto pre_suf = get_prefix(combined);
+            auto [pref, suff] = split(combined);
             out_aut_->new_transition(st,
-                                     {in_aut_->dst_of(tr), pre_suf.second},
-                                     pre_suf.first,
+                                     {in_aut_->dst_of(tr), suff},
+                                     pref,
                                      in_aut_->weight_of(tr));
           }
         }
@@ -282,37 +282,41 @@ namespace vcsn
       }
 
     private:
-
+      /// Split a multitape word in prefix/suffix.
+      ///
+      /// Make the prefix as long as possible (as long as the shortest
+      /// component of the input word).  Make prefix padded so that
+      /// all its elements have the same length, and likewise for the
+      /// suffix.
       std::pair<label_t, label_t>
-      get_prefix(const label_t& l)
+      split(const label_t& l)
       {
-        return get_prefix(get_min_length(l), l);
+        return split(l, get_min_length(l));
       }
 
       /// Split the label in prefix/suffix, with the prefix of size
       /// length.
       std::pair<label_t, label_t>
-      get_prefix(size_t length, const label_t& l)
+      split(const label_t& l, size_t length)
       {
-        auto ls = out_aut_->labelset();
-        auto prefix = labelset_t::one();
-        auto suffix = labelset_t::one();
+        const auto& ls = out_aut_->labelset();
+        const auto one = letterized_traits<labelset_t>::labelset_t::one();
+        auto pref = labelset_t::one();
+        auto suff = labelset_t::one();
 
         size_t i = 0;
-        for (auto letter :
-             ls->letters_of_padded(l,
-                        letterized_traits<labelset_t>::labelset_t::one()))
+        for (auto letter : ls->letters_of_padded(l, one))
         {
           if (i < length)
           {
             ++i;
-            prefix = ls->mul(prefix, letter);
+            pref = ls->mul(pref, letter);
           }
           else
-            suffix = ls->mul(suffix, letter);
+            suff = ls->mul(suff, letter);
         }
 
-        return {prefix, suffix};
+        return {pref, suff};
       }
 
       size_t
@@ -327,6 +331,7 @@ namespace vcsn
       {
         return std::min({tape_labelset_t<I>::size(std::get<I>(l))...});
       }
+
       automaton_t in_aut_;
       out_automaton_t out_aut_;
     };
