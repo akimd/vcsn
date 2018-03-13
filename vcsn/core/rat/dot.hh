@@ -219,16 +219,16 @@ namespace vcsn::rat
       /// Entry point.
       void operator()(const tuple_t& v)
       {
-        auto name = self_.name_(v);
-        if (name.second)
+        auto [name, traverse] = self_.name_(v);
+        if (traverse)
           {
-            name_ = name.first;
+            name_ = name;
             self_.out_ << vcsn::iendl
                        << name_
                        << " [label=\"" << self_.tuple_ << "\"]";
             print_(v, labelset_t::indices);
           }
-        self_.last_name_ = name.first;
+        self_.last_name_ = name;
       }
       self_t& self_;
       /// The name of the tuple node.
@@ -260,51 +260,51 @@ namespace vcsn::rat
     /// Print a name node.
     void print_(const name_t& n)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           auto sub = print_(n.sub());
           out_ << vcsn::iendl
-               << name.first << " [label=\"name=" << n.name_get() << "\"]"
+               << name << " [label=\"name=" << n.name_get() << "\"]"
                << vcsn::iendl
-               << name.first << " -> " << sub;
+               << name << " -> " << sub;
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Print a nullary node.
     template <rat::exp::type_t Type>
     void print_(const constant_t<Type>& n, const char* op)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         out_ << vcsn::iendl
-             << name.first << " [label=\"" << op << "\"]";
-      last_name_ = name.first;
+             << name << " [label=\"" << op << "\"]";
+      last_name_ = name;
     }
 
     /// Print a unary node.
     template <rat::exp::type_t Type>
     void print_(const unary_t<Type>& n, const char* op)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           auto sub = print_(n.sub());
           out_ << vcsn::iendl
-               << name.first << " [label=\"" << op << "\"]"
+               << name << " [label=\"" << op << "\"]"
                << vcsn::iendl
-               << name.first << " -> " << sub;
+               << name << " -> " << sub;
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Print a variadic node.
     template <rat::exp::type_t Type>
     void print_(const variadic_t<Type>& n, const char* op)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           auto subs
             = vcsn::detail::transform(n,
@@ -313,12 +313,12 @@ namespace vcsn::rat
                                         return this->print_(i);
                                       }) ;
           out_<< vcsn::iendl
-              << name.first << " [label=\"" << op << "\"]";
+              << name << " [label=\"" << op << "\"]";
           for (auto s: subs)
             out_ << vcsn::iendl
-                 << name.first << " -> " << s;
+                 << name << " -> " << s;
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Print a weight.
@@ -335,49 +335,49 @@ namespace vcsn::rat
     /// Print a left-weight.
     void print_(const lweight_t& n)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           auto weight = print_(n.weight());
           auto sub = print_(n.sub());
           out_
             << vcsn::iendl
-            << name.first << " [label=\"" << lweight_ << "\"]" << vcsn::iendl
-            << name.first << " -> " << weight << vcsn::iendl
-            << name.first << " -> " << sub;
+            << name << " [label=\"" << lweight_ << "\"]" << vcsn::iendl
+            << name << " -> " << weight << vcsn::iendl
+            << name << " -> " << sub;
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Print a right-weight.
     void print_(const rweight_t& n)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           auto sub = print_(n.sub());
           auto weight = print_(n.weight());
           out_
             << vcsn::iendl
-            << name.first << " [label=\"" << rweight_ << "\"]" << vcsn::iendl
-            << name.first << " -> " << sub << vcsn::iendl
-            << name.first << " -> " << weight;
+            << name << " [label=\"" << rweight_ << "\"]" << vcsn::iendl
+            << name << " -> " << sub << vcsn::iendl
+            << name << " -> " << weight;
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Print a label.
     void print_(const atom_t& n)
     {
-      auto name = name_(n);
-      if (name.second)
+      auto [name, traverse] = name_(n);
+      if (traverse)
         {
           out_ << vcsn::iendl
-               << name.first << " [label=\"";
+               << name << " [label=\"";
           rs_.labelset()->print(n.value(), out_, fmt_.for_labels());
           out_ << "\"]";
         }
-      last_name_ = name.first;
+      last_name_ = name;
     }
 
     /// Output stream.
