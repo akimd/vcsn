@@ -75,3 +75,7 @@ h+[bcdefg] => [^a]
 %identities: agressive
 a** => a*
 a*{T} => a*
+
+# Regression: signed comparison resulted in `[\x80-\xfe]+[\x01-\x7f]`.
+%context: lal(\x01-\xfe), b
+[^] => [^]

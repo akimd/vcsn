@@ -125,7 +125,7 @@ namespace vcsn
     /// Three-way comparison between two letters.
     static int compare(const letter_t l, const letter_t r)
     {
-      return int(l) - int(r);
+      return int(uint8_t(l)) - int(uint8_t(r));
     }
 
     /// Three-way comparison between two words.
