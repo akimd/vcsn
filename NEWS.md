@@ -23,6 +23,14 @@ useful to "warn" vcsn (have it compile the needed algorithms), or to get a
 nice approximation of the actual benches, however, sticking to a single bench
 at a time is recommended to get faithful measurements.
 
+## Bug fixes
+### Incorrect order for 8bit characters
+Calling `compare` on labels would lead to surprising results with 8bit
+characters (seen as negative ints).  This resulted in the incorrect display
+of the expression `[\x01-\xfe]` as `[\x80-\xfe] + [\x01-\x7f]`.
+
+Both are fixed, and 1 is less than 254 again.
+
 # Vcsn 2.6 (2017-11-13)
 
 The Vcsn team is happy to announce the long overdue release of Vcsn 2.6.
