@@ -89,6 +89,10 @@ def md5(fname):
         return ''
 
 
+def regex(exp):
+    return vcsn.context(r'[\x01-\xfe]').expression(exp, format='ere')
+
+
 def setenv(**vars):
     '''Set/unset environment variables for Vcsn.  Pass a list
     of assignments:

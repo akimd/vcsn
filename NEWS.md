@@ -10,6 +10,65 @@ the internal API may also be documented.
 # Vcsn 2.9.dev
 
 ## New features
+### Complete overhaul of the context syntax
+Forget about `lal`, `lat` and other `law_char`, write directly contexts as
+Vcsn has always displayed them!
+
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | Now                     | Before                                | Comment                               |
+    +=========================+=======================================+=======================================+
+    | - `[abc] -> B`          | - `lal(abc), b`                       | - Labels are letters, or empty word   |
+    | - `[abc]? -> B`         | - `lan(abc), b`                       | - [...]? and [...] are equivalent     |
+    | - `[abc] → 𝔹`           |                                       | - UTF-8 is supported                  |
+    | - `[abc]`               |                                       | - 𝔹 is the default                    |
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | - `[...]`               | - `lal, b`                            | - Open context (unconstrained labels) |
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | - `[abc...]`            | - N/A                                 | - Nonempty open context               |
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | - `[abc]* -> Z`         | - `law(abc), z`                       | - Labels are words                    |
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | - `[abc] x [xyz] -> Z`  | - `lat<lal(abc), lal(xyz)>, zmin`     | - Multitape labels                    |
+    | - `[abc] | [xyz] -> Z`  |                                       | - Multitape labels                    |
+    | - `[abc] × [xyz] → ℤ`   |                                       | - UTF-8 Cartesian product             |
+    +-------------------------+---------------------------------------+---------------------------------------+
+    | - `[a] → RatE[[x]] × ℤ` | - `lal(a),                            | - Light syntax for weightsets         |
+    |                         |     lat<expressionset<lal(x), b>, z>` |                                       |
+    +-------------------------+---------------------------------------+---------------------------------------+
+
+### Traditional Regular Expression support
+Yes, we do mean _regular_ expressions, not _rational_ expressions.
+
+Since its inception, Vcsn (and its predecessor Vaucanson) emphasize the
+mathematical notations of the _rational expressions_ such as `a + b.c` which
+denotes "`a` or `bc`" (indeed `.` denotes concatenation).  It also uses `|`
+for multitape expressions such as `a|b + b|a` which swaps `a` and `b`).
+
+This is in sharp contrast with tools such as grep where `+` denotes the
+one-of-more quantifier, `|` denotes alternation, and `.` denotes any
+character.  Vcsn now supports both syntaxes:
+
+    In [3]: vcsn.B.expression('a+b.c')
+    Out[3]: a+bc
+
+    In [4]: e = vcsn.regex('a+b.c')
+    In [5]: e
+    Out[5]: aa*b[^]c
+
+    In [6]: e.format('ere')
+    Out[6]: 'aa*b.c'
+
+In rational expressions, the empty-word must be explicit (`\e`).  In order
+to match existing practices, when printing as a regular expression we rather
+use `?` when possible.
+
+    In [7]: e = vcsn.B.expression('ab?c')
+    In [8]: e
+    Out[8]: a(\e+b)c
+
+    In [9]: e.format('ere')
+    Out[9]: 'ab?c'
+
 ### Nullableset removal
 Nullableset was merged with letterset.  This means that being free (labels
 being letters, not epsilon) is now a dynamic property of the automaton
