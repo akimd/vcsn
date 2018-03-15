@@ -57,8 +57,8 @@ NEWS_mw_deps =                                  \
   doc/NEWS.mw.patches/04-2.4.patch
 EXTRA_DIST += $(NEWS_mw_deps)
 NEWS.mw: NEWS.md $(NEWS_mw_deps)
-	src=$< dst=$@ patchdir=$(top_srcdir)/doc/NEWS.mw.patches	\
-	PANDOC=$(PANDOC)						\
+	src=$< dst=$@ srcdir=$(top_srcdir)	\
+	PANDOC=$(PANDOC)			\
 	  $(top_srcdir)/build-aux/bin/md-2-mw
 
 ## -------- ##
