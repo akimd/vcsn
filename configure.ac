@@ -1,5 +1,5 @@
 # Vcsn 2, a generic library for finite state machines.
-# Copyright (C) 2012-2017 Vcsn Group.
+# Copyright (C) 2012-2018 Vcsn Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
