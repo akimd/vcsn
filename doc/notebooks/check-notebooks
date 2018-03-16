@@ -5,32 +5,39 @@
 import os
 import re
 
-nbdir = os.environ['nbdir']
+from subprocess import check_output
 
-def referenced(nb):
-    '''A set of all the notebook that are referenced to from
-    this one.'''
-    return set(re.findall(r'(\w+\.\w+\.ipynb)',
+srcdir = os.environ['srcdir']
+nbdir = srcdir + '/doc/notebooks'
+
+# All the notebooks.
+all = set([os.path.basename(f)
+           for f in check_output(['git', '-C', srcdir, 'ls-files', 'doc/notebooks/*.ipynb'],
+                                 universal_newlines=True).splitlines()])
+
+def get_referenced(nb):
+    '''A set of all the notebooks referenced by this one.'''
+    return set(re.findall(r'([\w\.\-!+]+\.ipynb)',
                           open(nbdir + '/' + nb).read()))
 
 # All the documentation notebooks (<type>.<function>.ipynb) that
 # exist.
 existing = set([f
-                for f in os.listdir(path=nbdir)
+                for f in all
                 if re.match(r'(\w+\.\w+)\.ipynb$', f)])
 
 
 
 # Make sure that all the existing documentation about algorithms is in
 # Algorithm.ipynb.
-nb_referenced = referenced('Algorithms.ipynb')
+referenced = get_referenced('Algorithms.ipynb')
 
 status = 0
-dre = nb_referenced - existing
+dre = referenced - all
 if dre:
     print("error: referenced, not existing:", dre)
     status = 1
-der = existing - nb_referenced
+der = existing - referenced
 if der:
     print("error: existing, not referenced:", der)
     status = 1
@@ -39,11 +46,11 @@ if der:
 # Check that the notebooks we reference to, exist.
 #
 # We are not ready for this yet, so just warnings, for the time being.
-for nb in existing:
-    diff = referenced(nb) - existing
+for nb in all:
+    diff = get_referenced(nb) - all
     if diff:
         # Not yet an error.
-        print("warning: {} references {} which does not exist"
+        print("error: {} references {} which does not exist"
               .format(nb, diff))
-        # status = 1
+        status = 1
 exit(status)

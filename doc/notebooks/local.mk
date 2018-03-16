@@ -210,7 +210,7 @@ DISTCLEANFILES += abc.gv fr2en en2es words
 
 check-local: check-doc
 check-doc:
-	nbdir=$(srcdir)/%D% $(PYTHON) $(srcdir)/%D%/check-notebooks
+	srcdir=$(srcdir) $(PYTHON) $(srcdir)/%D%/check-notebooks
 EXTRA_DIST += %D%/check-notebooks
 
 # Check input/output in the notebooks.
