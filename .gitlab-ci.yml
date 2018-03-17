@@ -1,11 +1,20 @@
 .vcsn_template: &vcsn_template
+  cache:
+    key: "$CI_JOB_NAME"
+    paths:
+      - /root/.ccache
   script:
+    - pwd
+    - ccache -s
+    - ccache -M 20GB
+    - ccache -s
     - ./bootstrap
     - mkdir build
     - cd build
-    - ../configure
+    - ../configure CPPFLAGS="$CPPFLAGS" CC="$CC" CXX="$CXX" CXXFLAGS="$CXXFLAGS"
     - make
     - make check
+    - ccache -s
   artifacts:
     when: always
     paths:
@@ -13,30 +22,34 @@
       - build/*/*.log
       - build/*/*/*.log
 
-archlinux:gcc:
+archlinux:gcc:speed:
   <<: *vcsn_template
   image: registry.lrde.epita.fr/vcsn-build-arch
   variables:
+    CPPFLAGS: -DNDEBUG
     CC: gcc
     CXX: g++
+    CXXFLAGS: -O3
 
-archlinux:clang:
+archlinux:clang:debug:
   <<: *vcsn_template
   image: registry.lrde.epita.fr/vcsn-build-arch
   variables:
     CC: clang
     CXX: clang++
 
-debian:gcc:
+debian:gcc:debug:
   <<: *vcsn_template
   image: registry.lrde.epita.fr/vcsn-build-debian
   variables:
     CC: gcc
     CXX: g++
 
-debian:clang:
+debian:clang:speed:
   <<: *vcsn_template
   image: registry.lrde.epita.fr/vcsn-build-debian
   variables:
+    CPPFLAGS: -DNDEBUG
     CC: clang
     CXX: clang++
+    CXXFLAGS: -O3

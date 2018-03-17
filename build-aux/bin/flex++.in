@@ -16,7 +16,7 @@ status=0
 # Any tool failure is a failure of the script.
 set -e
 
-me=$(basename $0)
+me=$(basename "$0")
 
 stderr ()
 {
@@ -40,7 +40,7 @@ if test "x$FLEX" = x; then
          "install Flex and rerun configure."
 fi
 
-if ! $FLEX --version >/dev/null 2>&1; then
+if ! "$FLEX" --version >/dev/null 2>&1; then
    fatal "cannot run '$FLEX --version'." \
          "check that Flex is properly installed."
 fi
@@ -49,7 +49,6 @@ fi
 # flex++ INPUT OUTPUT OPTIONS
 # ---------------------------
 
-me=$(basename $0)
 move_if_change='@abs_srcdir@/move-if-change'
 
 # First, make sure Flex is recent enough (2.5.35 at least).  For
@@ -59,7 +58,7 @@ case $FLEX in
   (no) fatal "Flex is needed";;
 esac
 
-version=$($FLEX --version | perl -pe 's/.*? ([\d.]+)$/$1/')
+version=$("$FLEX" --version | perl -pe 's/.*? ([\d.]+)$/$1/')
 case $version in
   (1.*|2.[0-4].*|2.5.[0-2]*|2.5.3[0-4])
     fatal "Flex >= 2.5.35 is needed, have $version";;
@@ -83,10 +82,8 @@ output_version_header=$output_noext-version.hh
 
 options="$@"
 
-set +e
-$FLEX -+ -o"$output".tmp $options "$input" 2>$output_log
-status=$?
-set -e
+status=0
+$FLEX -+ -o"$output.tmp" $options "$input" 2>"$output_log" || status=$?
 
 # Normalize locations of Flex diagnostics:
 # "../../../src/parser/utoken.l", line 605: warning, rule cannot be matched
@@ -94,13 +91,13 @@ set -e
 perl >&2 -p                                     \
     -e 's/^"(.*)", line (\d+):/$1:$2:/;'        \
     -e 's/warning, //;'				\
-     $output_log
+     "$output_log"
 
-if test -s $output_log; then
-  rm -f $output_log
+if test -s "$output_log"; then
+  rm -f "$output_log"
   exit $status
 else
-  rm -f $output_log
+  rm -f "$output_log"
 fi
 
 # Address a number of shortcomings, and portability issues.  See
@@ -121,11 +118,13 @@ BEGIN
      $_ = <<EOF . $_;
 // Added by flex++.
 #pragma GCC diagnostic ignored "-Wsign-compare"
-// Check Clang first, as it does not support -Wzero... but it
-// defines __GNUC__.
+// Check Clang first, as it defines __GNUC__.
 #if defined __clang__
 # pragma clang diagnostic ignored "-Wdeprecated"
 # pragma clang diagnostic ignored "-Wnull-conversion"
+# if 5 <= __clang_major__
+#  pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+# endif
 #elif defined __GNUC__
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
@@ -165,10 +164,14 @@ rm -f "$output.bak"
 
 # Extract the version information.
 perl -ne '/#define YY_FLEX_\w+_VERSION/ && print'       \
-     <$output.tmp                                       \
-     >$output_version_header
+     <"$output.tmp"                                     \
+     >"$output_version_header.tmp"
+"$move_if_change" "$output_version_header.tmp" "$output_version_header"
 
 # Atomic validation of the whole process.
-mv $output.tmp $output
+"$move_if_change" "$output.tmp" "$output"
+
+# Make it read only.
+chmod -w "$output"
 
 exit $status

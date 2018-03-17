@@ -7,7 +7,7 @@ rational expressions.
 It consists of an efficient C++ 17 generic library, shell tools, Python
 bindings, and a graphical interactive environment on top of IPython.
 
-Copyright (C) 2012-2017 The Vcsn Group.
+Copyright (C) 2012-2018 The Vcsn Group.
 
 Overview
 --------

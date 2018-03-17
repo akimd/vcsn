@@ -198,7 +198,7 @@ class Text(Format):
 
     def score(self, score, avg):
         if score in ['N/A', 'FAIL']:
-            return '{:>5}'.format(score)
+            return '{}{:>5}{}'.format(color['blue'], score, color['std'])
         else:
             return '{}{:5.2f}{}'.format(color[self.color(score, avg)],
                                         score,
@@ -230,10 +230,11 @@ else:
 
 
 # Colors support.
-color = {'green': '', 'red': '', 'std': '', 'black': ''}
+color = {'green': '', 'red': '', 'std': '', 'black': '', 'blue': ''}
 if args.color == 'always' or args.color == 'auto' and sys.stdout.isatty():
     try:
         from colorama import Fore, Style
+        color['blue'] = Fore.BLUE
         color['green'] = Fore.GREEN + Style.BRIGHT
         color['red'] = Fore.RED + Style.BRIGHT
         color['std'] = Style.RESET_ALL

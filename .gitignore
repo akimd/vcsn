@@ -54,6 +54,8 @@
 /share/vcsn/notebook_profile/security/
 /share/vcsn/notebook_profile/startup/
 /share/vcsn/version.yaml
+/tests/benchmarks/*.cmd
+/tests/benchmarks/*.d
 /tests/demo/*.cmd
 /tests/demo/*.d
 /tests/demo/compose

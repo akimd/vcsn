@@ -38,10 +38,11 @@ namespace vcsn
   StoredType&
   xalloc<StoredType>::operator()(std::ostream& ostr) const
   {
-    // FIXME: Some meta programming to switch on pword or iword
-    // would make it possible to use a regular static_cast instead
-    // of this C-cast.
-    return (StoredType&)(ostr.pword(index()));
+    if constexpr (std::is_integral_v<StoredType>)
+      return static_cast<StoredType&>(ostr.iword(index()));
+    else
+      return reinterpret_cast<StoredType&>
+        (const_cast<const void*&>(ostr.pword(index())));
   }
 
 

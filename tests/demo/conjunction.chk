@@ -1,0 +1,22 @@
+#! /bin/sh
+vcsn_env
+
+run 0 - tests/demo/conjunction a+b <<EOF
+a+b
+context = [abcde]? → ℚ
+$ -> 0
+0 -> 1 a
+0 -> 2 b
+1 -> $
+2 -> $
+EOF
+
+run 0 - tests/demo/conjunction '<2>a+<1/2>b' <<EOF
+<2>a+<1/2>b
+context = [abcde]? → ℚ
+$ -> 0
+0 -> 1 <4>a
+0 -> 2 <1/4>b
+1 -> $
+2 -> $
+EOF

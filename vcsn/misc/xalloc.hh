@@ -117,7 +117,6 @@ namespace vcsn
     /// \param data value to exchange when the swapper is executed.
     swap_type swap(StoredType& data) const;
   };
-
 }
 
 #include <vcsn/misc/xalloc.hxx>

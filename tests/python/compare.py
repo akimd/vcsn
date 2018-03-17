@@ -15,7 +15,7 @@ def check_lt(a1, a2):
     CHECK_EQ(0, a1.compare(a1))
     CHECK_EQ(0, a2.compare(a2))
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> q')
 # First, comparison on source state numbers.
 a1 = vcsn.automaton('''context = [...]? → ℤ
 0 -> 0 a
@@ -78,7 +78,7 @@ def check_lt_(e1, e2):
 def check_lt(r1, r2):
     check_lt_(ctx.expression(r1), ctx.expression(r2))
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> q')
 check_lt(r'\z', r'\e')
 check_lt(r'\z', 'a')
 check_lt(r'\e', 'a')
@@ -133,7 +133,7 @@ def check_lt(w1, w2):
         p1, p2 = p2, p1
     check_lt_(ctx.polynomial(p1), ctx.polynomial(p2))
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> q')
 check_lt('0', '1')
 check_lt('-1', '0')
 

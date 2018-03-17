@@ -44,25 +44,34 @@ can be seen from the Python interface.  For example:
     In [5]: a.info('is deterministic')
     Out[5]: False
 
-# Vcsn 2.6.dev
+# Vcsn 2.7 (To be released)
 
 ## New features
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.
 
-The new option -o/--output allows to specify the output file name.
+The new option `-o`/`--output` allows to specify the output file name.
 
-Better yet: option -d/--dir specifies the directory in which the score file
-is saved; its name will be forged from `git describe`, something like
+Better yet: option `-d`/`--dir` specifies the directory in which the score
+file is saved; its name will be forged from `git describe`, something like
 `v2.5-050-g01dbf326`.  Such names are interpreted by `vcsn score-compare` to
 relate the benches to the git commit title.  Both features need that you run
 these commands from a git repository of Vcsn.
 
-Option -j/--job allows to run the benchmarks concurrently.  This can be very
-useful to "warn" vcsn (have it compile the needed algorithms), or to get a
-nice approximation of the actual benches, however, sticking to a single bench
-at a time is recommended to get faithful measurements.
+Option `-j`/`--job` allows to run the benchmarks concurrently.  This can be
+very useful to "warm" vcsn (have it compile the needed algorithms), or to
+get a nice approximation of the actual benches, however, sticking to a
+single bench at a time is recommended to get faithful measurements.
+
+## Bug fixes
+### Incorrect order for 8bit characters
+Calling `compare` on labels would lead to surprising results with 8bit
+characters (seen as negative ints).  This resulted in the incorrect display
+of the expression `[\x01-\xfe]` as `[\x80-\xfe] + [\x01-\x7f]`.
+
+Both are fixed, and 1 is less than 254 again.
+
 
 # Vcsn 2.6 (2017-11-13)
 
@@ -244,6 +253,7 @@ The Daut automaton format now treats `->` as a keyword, so `0->1 a` is now
 properly read instead of producing a weird error message because Vcsn
 thought your state was named `0->1`.
 
+
 # Vcsn 2.5 (2017-01-28)
 
 The Vcsners are proud to announce the release of Vcsn 2.5, aka the
@@ -420,6 +430,7 @@ Yen's algorithm requires the given automaton to have no cycles, while Eppstein
 supports any type of automaton. For small values of k, Yen's algorithm has better
 performances than Eppstein, but with increasing values of k, Eppstein is always
 more efficient.
+
 
 # Vcsn 2.4 (2016-11-16)
 
@@ -1289,23 +1300,23 @@ the common labels and multiply their weights.
 One may now use UTF-8 when entering expressions.  The negation may also be
 denoted by a prefix `!`, which binds weakly (less than concatenation).
 
-    +----------+---------------------+
-    |Sugar     |Plain ASCII          |
-    +==========+=====================+
-    |`∅`       |`\z`                 |
-    +----------+---------------------+
-    |`ε`       |`\e`                 |
-    +----------+---------------------+
-    |`⟨2⟩a`    |`<2>a`               |
-    +----------+---------------------+
-    |`a∗`      |`a*`                 |
-    +----------+---------------------+
-    |`!a`      |`a{c}`               |
-    |`¬a`      |                     |
-    |`aᶜ`      |                     |
-    +----------+---------------------+
-    |`aᵗ`      |`a{T}`               |
-    +----------+---------------------+
+    +--------+----------------+
+    | Sugar  | Plain ASCII    |
+    +========+================+
+    | `∅`    | `\z`           |
+    +--------+----------------+
+    | `ε`    | `\e`           |
+    +--------+----------------+
+    | `⟨2⟩a` | `<2>a`         |
+    +--------+----------------+
+    | `a∗`   | `a*`           |
+    +--------+----------------+
+    | `!a`   | `a{c}`         |
+    | `¬a`   |                |
+    | `aᶜ`   |                |
+    +--------+----------------+
+    | `aᵗ`   | `a{T}`         |
+    +--------+----------------+
 
 ## 2015-12-04
 ### weight_series: fix general case
@@ -1358,7 +1369,7 @@ labelset.  On many examples, this algorithm shows better performances than
 "signature" but is still less efficient than "moore".
 
 ## 2015-11-13
-### Automata: operations now works on all sorts of automata
+### Automata: operations now work on all sorts of automata
 Usual operations (`sum`, `multiply` --which includes the case for repeated
 multiplication--, `star`) used to apply only to standard automata.  In
 addition to `sum` (for standard automata), there was `union`, which applied
@@ -1457,6 +1468,7 @@ People who have influenced this release:
 - Alexandre Duret-Lutz
 - Jacques Sakarovitch
 - Luca Saiu
+
 
 ### Vcsn 2's repository has moved
 To update your existing repository, run a command similar to:
@@ -1594,18 +1606,18 @@ So, to enforce consistency, and to avoid bad surprises, these functions were
 renamed.
 
     +----------+---------------------+------------------------------------+
-    |Python    |dyn::                |Comment                             |
+    | Python   | dyn::               | Comment                            |
     +==========+=====================+====================================+
-    |`a * b`   |`multiply(a, b)`     |Multiplication for automata and     |
-    |          |                     |expressions (concatenation),        |
-    |          |                     |polynomials, weights, labels etc.   |
+    | `a * b`  | `multiply(a, b)`    | Multiplication for automata and    |
+    |          |                     | expressions (concatenation),       |
+    |          |                     | polynomials, weights, labels etc.  |
     +----------+---------------------+------------------------------------+
-    |`a ** n`  |`multiply(a, n)`     |Repeated multiplication.            |
+    | `a ** n` | `multiply(a, n)`    | Repeated multiplication.           |
     +----------+---------------------+------------------------------------+
-    |`a & b`   |`conjunction(a, b)`  |Conjunction for automata and        |
-    |          |                     |expressions.                        |
+    | `a & b`  | `conjunction(a, b)` | Conjunction for automata and       |
+    |          |                     | expressions.                       |
     +----------+---------------------+------------------------------------+
-    |`a & n`   |`conjunction(a, n)`  |Repeated conjunction.               |
+    | `a & n`  | `conjunction(a, n)` | Repeated conjunction.              |
     +----------+---------------------+------------------------------------+
 
 ## 2015-06-11
@@ -3115,11 +3127,13 @@ This Python API is object-oriented, contrary to dyn which is a list of types
 (context, ratexp, automaton, etc.) and functions (derived_term, determinize,
 etc.):
 
-     dyn:: functions                    |  Python methods
-    ------------------------------------+--------------------------------------
-    derived_term(ratexp) -> automaton   | ratexp.derived_term() -> automaton
-    determinize(automaton) -> automaton | automaton.determinize() -> automaton
-    etc.                                | etc.
+    +---------------------------------------+-----------------------------------------+
+    | dyn:: functions                       | Python methods                          |
+    +=======================================+=========================================+
+    | - derived_term(ratexp) -> automaton   | - ratexp.derived_term() -> automaton    |
+    | - determinize(automaton) -> automaton | - automaton.determinize() -> automaton  |
+    | - etc.                                | - etc.                                  |
+    +---------------------------------------+-----------------------------------------+
 
 Documentation is forthcoming, but for instance:
 
@@ -5611,7 +5625,7 @@ LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners
 LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused Harald
 LocalWords:  cxxflags Eppstein eppstein Soudière Schilly SageMathCloud prog
 LocalWords:  abcdefghijklmnopqrstuvwxyz macOS rpath Doxygen doxygen Tupling
-LocalWords:  tupleset dir dbf CoCalc
+LocalWords:  tupleset dir dbf CoCalc ints xfe
 
 Local Variables:
 coding: utf-8

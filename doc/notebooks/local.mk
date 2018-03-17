@@ -1,5 +1,5 @@
 ## Vcsn, a generic library for finite state machines.
-## Copyright (C) 2014-2017 Vcsn Group.
+## Copyright (C) 2014-2018 Vcsn Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -146,6 +146,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
+  %D%/expression.compose.ipynb                  \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.constant_term.ipynb            \
   %D%/expression.context.ipynb                  \
@@ -211,7 +212,7 @@ DISTCLEANFILES += abc.gv fr2en en2es words
 
 check-local: check-doc
 check-doc:
-	nbdir=$(srcdir)/%D% $(PYTHON) $(srcdir)/%D%/check-notebooks
+	srcdir=$(srcdir) $(PYTHON) $(srcdir)/%D%/check-notebooks
 EXTRA_DIST += %D%/check-notebooks
 
 # Check input/output in the notebooks.

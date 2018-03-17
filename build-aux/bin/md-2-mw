@@ -5,22 +5,45 @@
 
 set -e
 
-: ${PANDOC=pandoc}
+: "${PANDOC=pandoc}"
 
-: ${src=$1}
-: ${dst=$2}
-: ${patchdir=$3}
+: "${src=$1}"
+: "${dst=$2}"
+: "${srcdir=$3}"
+
+patchdir=$srcdir/doc/NEWS.mw.patches
+move_if_change=$srcdir/build-aux/bin/move-if-change
 
 tmp=$dst.tmp
 
-${PANDOC} -t mediawiki -o $tmp $src
-perl -pi -e 's/= Vcsn news =/{{TOC|limit=2}}/' $tmp
-perl -pi -0777 -e 's/<!--.*?-->//gs' $tmp
+# Unfortunately the syntax of the tables supported by GFM (Gitlab's Markdown)
+# is poor.  It does support <table>, but then the text file is hardly
+# readable.  We use the richer syntax supported by pandoc (in particular is is
+# possible to have multiline cells, something that GFM does not support), but
+# indent the tables so that Gitlab renders them as plain text.
+#
+# We could two NEWS: one for the human reader, and one for gitlab, but gitlab
+# does not allow us to specify the path to its news file, so there would be
+# two news files in the top-level.  That seems wrong.
+#
+# Expose the tables to pandoc.
+< "$src" \
+  perl -p -0777 -e '
+    s{(^    \+-----.*\n(^    .*\n)*)}
+     {
+       my $v = $1;
+       $v =~ s/^    //gm;
+       $v
+     }gem' |
+  "$PANDOC" --from markdown -t mediawiki -o "$tmp"
 
-for p in $patchdir/*.patch
+perl -pi -e 's/= Vcsn news =/{{TOC|limit=2}}/' "$tmp"
+perl -pi -0777 -e 's/<!--.*?-->//gs' "$tmp"
+
+for p in "$patchdir"/*.patch
 do
   echo "$0: applying $p"
-  patch <$p $tmp
+  patch <"$p" "$tmp"
 done
 
-mv $tmp $dst
+"$move_if_change" --verbose --color "$tmp" "$dst"

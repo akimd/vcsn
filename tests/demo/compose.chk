@@ -1,4 +1,5 @@
 #! /bin/sh
+vcsn_env
 
 cat >out.exp <<\EOF
 digraph
@@ -55,5 +56,4 @@ digraph
   1 -> F1
 }
 EOF
-vcsn_env
 run 0 out.exp tests/demo/compose
