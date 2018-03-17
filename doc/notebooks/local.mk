@@ -144,6 +144,7 @@ dist_notebooks_DATA =                           \
   %D%/expression.add.ipynb                      \
   %D%/expression.automaton.ipynb                \
   %D%/expression.complement.ipynb               \
+  %D%/expression.compose.ipynb                  \
   %D%/expression.conjunction.ipynb              \
   %D%/expression.constant_term.ipynb            \
   %D%/expression.context.ipynb                  \
