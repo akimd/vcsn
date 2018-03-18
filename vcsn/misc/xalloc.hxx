@@ -34,15 +34,33 @@ namespace vcsn
     return index_;
   }
 
+  namespace detail
+  {
+    // Case iword.
+    template <typename StoredType>
+    std::enable_if_t<std::is_integral<StoredType>{},
+                     StoredType&>
+    get_slot(std::ostream& ostr, int index)
+    {
+      return static_cast<StoredType&>(ostr.iword(index));
+    }
+
+    // Case pword.
+    template <typename StoredType>
+    std::enable_if_t<!std::is_integral<StoredType>{},
+                     StoredType&>
+    get_slot(std::ostream& ostr, int index)
+    {
+      return reinterpret_cast<StoredType&>
+        (const_cast<const void*&>(ostr.pword(index)));
+    }
+  }
+
   template <typename StoredType>
   StoredType&
   xalloc<StoredType>::operator()(std::ostream& ostr) const
   {
-    if constexpr (std::is_integral_v<StoredType>)
-      return static_cast<StoredType&>(ostr.iword(index()));
-    else
-      return reinterpret_cast<StoredType&>
-        (const_cast<const void*&>(ostr.pword(index())));
+    return detail::get_slot<StoredType>(ostr, index());
   }
 
 
