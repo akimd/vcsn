@@ -392,6 +392,12 @@ namespace vcsn
       return false;
     }
 
+    bool
+    is_valid(const value_t& l) const
+    {
+      return is_valid_(l, indices);
+    }
+
     /// Pointwise addition.
     value_t
     add(const value_t& l, const value_t& r) const
@@ -883,6 +889,16 @@ namespace vcsn
         if (n)
           return true;
       return false;
+    }
+
+    template <std::size_t... I>
+    bool
+    is_valid_(const value_t& l, seq<I...>) const
+    {
+      for (auto n: {set<I>().is_valid(std::get<I>(l))...})
+        if (!n)
+          return false;
+      return true;
     }
 
     /// Run a nullary function pointwise, and return the tuple of results.
