@@ -301,6 +301,8 @@ namespace vcsn
     value_t
     conv(self_t, value_t v) const
     {
+      VCSN_REQUIRE(is_special(v) || is_valid(v),
+                   *this, ": conv: invalid label: ", to_string(*this, v));
       return v;
     }
 
