@@ -8,9 +8,35 @@ the internal API may also be documented.
 # Vcsn 2.7 (To be released)
 
 ## New features
+### Improved compatibility between single- and multitape expressions
+The automatic promotion from single-tape to multitape is more general.  For
+instance:
+
+    In [2]: c = vcsn.context('lat<lan, lan>, b')
+
+    In [3]: c.expression('a')
+    Out[3]: a|a
+
+    In [4]: c.expression('a*b* @ (ab)*')
+    Out[4]: (a|a)*(b|b)*@((a|a)(b|b))*
+
+    In [5]: c.expression('a*b* @ (ab)*').shortest(10)
+    Out[5]: \e|\e + ab|ab
+
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.
+
+Benchmarks are now numbered, to give a hint of the progress:
+
+    $ vcsn score
+    vcsn version: 2.6-085-g6dcae17ef
+      1/116  0.25s : a.is_proper()      # a = "", 1000000x
+      2/116  0.11s : b.format("text")   # b = [abc] -> B, 100000x
+      3/116  0.35s : b.expression(e)    # e = [ab]{20000}, 1000x
+    ...
+    115/116  0.75s : a.weight_series()  # a = std(a{12000}+<1>[b-z]{12000}), c = [a-z] -> Nmin, 200x
+    116/116  0.89s : a.weight_series()  # a = std([a-z]{200}), c = [a-z] -> Z, 10x
 
 The new option `-o`/`--output` allows to specify the output file name.
 
@@ -24,6 +50,17 @@ Option `-j`/`--job` allows to run the benchmarks concurrently.  This can be
 very useful to "warm" vcsn (have it compile the needed algorithms), or to
 get a nice approximation of the actual benches, however, sticking to a
 single bench at a time is recommended to get faithful measurements.
+
+Option `-l`/`--list` lists the benches without running them.
+
+Option `-s`/`--sort` sorts the benchmarks before running them.
+
+### Documentation
+Several errors were fixed.  The page `expression.compose.ipynb` is new.
+
+### Examples of C++
+The directories `tests/demo` and `tests/benchmarks` contain more example of
+how to use Vcsn as a C++ library.
 
 ## Bug fixes
 ### Incorrect order for 8bit characters
