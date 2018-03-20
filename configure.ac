@@ -260,6 +260,7 @@ AC_SUBST([pkglibexecdir], ['${libexecdir}/${PACKAGE}'])
 
 AC_SUBST([BINDIR],     [`URBI_RESOLVE_DIR([$bindir])`])
 AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$pkgdatadir])`])
+AC_SUBST([DOCDIR],     [`URBI_RESOLVE_DIR([$docdir])`])
 AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
 AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([LIBEXECDIR], [`URBI_RESOLVE_DIR([$pkglibexecdir])`])

@@ -1,10 +1,23 @@
 #! /bin/sh
 
-: ${PYTHON='@PYTHON@'}
-export PYTHON
+fatal ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$i"
+  done
+  exit 1
+}
 
-: ${IPYTHON='@IPYTHON@'}
-export IPYTHON
+config ()
+{
+  # Call `vcsn-tools`, not `vcsn`, as `vcsn` is this very script...
+  exec vcsn-tools configuration "configuration.$1"
+}
+
+export PYTHON=$(config python)
+export IPYTHON=$(config ipython)
 
 # _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still
 # override this path via $PYTHONPATH.  Note in particular that the
@@ -83,6 +96,7 @@ COMMAND can be:
 
 - notebook: run Vcsn as an IPython Notebook.
 - python, ipython: run Python/IPython.
+- doc: open the documentation.
 - gdb: run gdb with a type pretty-printer.
 
 - compile: compile a C++ program using libvcsn.
@@ -115,9 +129,9 @@ EOF
 
 version ()
 {
-  authors=$(vcsn configuration configuration.authors)
-  version=$(vcsn configuration configuration.version)
-  url=$(vcsn configuration configuration.url)
+  authors=$(config authors)
+  version=$(config version)
+  url=$(config url)
 cat <<EOF
 vcsn (Vcsn $version)
 Copyright (C) 2017 Vcsn Group.
@@ -132,13 +146,57 @@ EOF
   exit 0
 }
 
+vcsn_doc_open ()
+{
+    jupyter=$(config jupyter)
+    docdir=$(config docdir)
+    nbdir=$docdir/notebooks
+    if [[ ! -f "$nbdir/$1.ipynb" ]]; then
+        fatal "vcsn doc: no documentation for $1"
+    fi
+    if "$jupyter" notebook --version >/dev/null; then
+        exec "$jupyter" notebook "$nbdir/$1.ipynb"
+    elif [[ -x /usr/bin/open ]]; then
+        open "$nbdir/$1.html"
+        exit 0
+    else
+        xdg-open "$nbdir/$1.html"
+        exit 0
+    fi
+    fatal "vcsn doc: cannot open $nbdir/$1.html"
+}
+
+vcsn_doc ()
+{
+    case $1 in
+        (-h|--help)
+            cat <<EOF
+Usage: vcsn doc [FUNCTION|PAGE]
+
+FUNCTION is the name of the Python function, for instance
+
+  \$ vcsn doc automaton.determinize
+
+PAGE is a chapter of the documentation, for instance
+
+  \$ vcsn doc Automata
+
+By default open the '!Read-me-first' page.
+
+If Jupyter notebook is installed, it will be used to display the
+documentation, otherwise the plain HTML documentation is opened.
+EOF
+            exit 0;;
+
+        (index) vcsn_doc_open 'Algorithms';;
+        ('')    vcsn_doc_open '!Read-me-first';;
+        (*)     vcsn_doc_open "$1";;
+    esac
+}
+
 
 if test $# = 0; then
-  cat >&2 <<EOF
-vcsn: missing file operand
-Try 'vcsn --help' for more information.
-EOF
-  exit 1
+    fatal 'vcsn: missing argument' "Try 'vcsn --help' for more information."
 fi
 
 case $1 in
@@ -146,12 +204,20 @@ case $1 in
   (run) shift 1; exec "$@";;
   (-h|--help) help;;
   (-v|--version) version;;
-  (version) vcsn configuration configuration.version;;
+  (version) config version;;
 
   (compile|demangle|ps|score|score-compare)
       prog=$(command -v "vcsn-$1")
       shift
       exec "$PYTHON" "$prog" "$@";;
+
+  (config)
+      shift
+      config "$@";;
+
+  (doc)
+      shift
+      vcsn_doc "$@";;
 
   (efstcompile|efstdecompile)
       exec "$@";;

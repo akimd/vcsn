@@ -23,6 +23,12 @@ instance:
     In [5]: c.expression('a*b* @ (ab)*').shortest(10)
     Out[5]: \e|\e + ab|ab
 
+### vcsn doc is a new tool
+Run `vcsn doc automaton.determinize`, or `vcsn doc Automata`, etc.  The
+special shortcuts `vcsn doc` opens the Read-me-first notebook, and `vcsn doc
+index` leads to Algorithms, the page that lists the existing documentation
+of algorithms (`automata.determinize`, etc.).
+
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.
