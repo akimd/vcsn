@@ -31,6 +31,8 @@ if ENABLE_DOXYGEN
 LAZY_html_DIR += %D%/vcsn.htmldir
 endif ENABLE_DOXYGEN
 
+.PHONY: doxygen
+doxygen: %D%/vcsn.htmldir
 
 ## ------------ ##
 ## upload-doc.  ##
