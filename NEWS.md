@@ -1,5 +1,7 @@
-Vcsn news
-=========
+![Vcsn Logo](share/vcsn/figs/vcsn.png)
+
+Vcsn Release Notes
+==================
 
 This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
@@ -76,6 +78,7 @@ of the expression `[\x01-\xfe]` as `[\x80-\xfe] + [\x01-\x7f]`.
 
 Both are fixed, and 1 is less than 254 again.
 
+----------------------------------------------------------------------
 
 # Vcsn 2.6 (2017-11-13)
 
@@ -257,6 +260,7 @@ The Daut automaton format now treats `->` as a keyword, so `0->1 a` is now
 properly read instead of producing a weird error message because Vcsn
 thought your state was named `0->1`.
 
+----------------------------------------------------------------------
 
 # Vcsn 2.5 (2017-01-28)
 
@@ -435,6 +439,8 @@ supports any type of automaton. For small values of k, Yen's algorithm has bette
 performances than Eppstein, but with increasing values of k, Eppstein is always
 more efficient.
 
+
+----------------------------------------------------------------------
 
 # Vcsn 2.4 (2016-11-16)
 
@@ -765,6 +771,8 @@ It is now possible from dyn and Python to tuple several contexts.  For
 instance `vcsn.B | vcsn.Q` is `lat<lal, lal>, q`.
 
 
+----------------------------------------------------------------------
+
 # Vcsn 2.3 (2016-07-08)
 
 About four hundred commits and five months after Vcsn 2.2, we are proud to
@@ -1024,6 +1032,7 @@ two automata.
     Out[3]: ab
 
 
+----------------------------------------------------------------------
 
 # Vcsn 2.2 (2016-02-19)
 
@@ -1420,6 +1429,7 @@ with negative weights.
   weights in ℤ ⨉ ℤ, instead of `<(1, 2)>a`, we display `<1, 2>a`.
 
 
+----------------------------------------------------------------------
 
 # Vcsn 2.1 (2015-10-11)
 
@@ -2271,6 +2281,7 @@ display failed preconditions.
 Blind is no longer limited to tape 0 or tape 1.
 
 
+----------------------------------------------------------------------
 
 # Vaucanson 2.0 (2014-07-25)
 
@@ -2894,6 +2905,8 @@ other properties.  Preliminary measures show performance to be close to
 "signature", or even clearly superior in the case of sparse automata such as
 dictionaries.
 
+----------------------------------------------------------------------
+
 # Vaucanson 2b.3 (2014-02-03)
 Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
 "vaucanson".
@@ -3023,6 +3036,8 @@ Python,
     vcsn.context('lal_char(a-zA-Z0-9_)_b')
 
 builds a context whose alphabet covers letters, digits, and underscore.
+
+----------------------------------------------------------------------
 
 # Vaucanson 2b.2 (2014-01-10)
 Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
@@ -3272,6 +3287,8 @@ with a B-automaton.
     $ vcsn product -f 2.gv 1.gv | vcsn aut-to-exp
     \e+<3>b.(<3>b)*
 
+----------------------------------------------------------------------
+
 # Vaucanson 2b.1 (2013-11-13)
 Release of our second beta, vaucanson-2b.1.  Available on MacPorts as
 "vaucanson".
@@ -3436,6 +3453,8 @@ under the starred subexpressions) group and sort the equal monomials.
 
     $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
     (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+
+----------------------------------------------------------------------
 
 # Vaucanson 2b.0 (2013-10-22)
 Release of our first beta, vaucanson-2b.0.
