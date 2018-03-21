@@ -278,6 +278,10 @@ ldflags=($LDFLAGS -L$LIBDIR -Wl,-rpath,$LIBDIR $RT_LIBS
          $BOOST_SYSTEM_LDFLAGS $BOOST_SYSTEM_LIBS
          $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS)
 AC_SUBST([VCSN_LDFLAGS], ["${ldflags[[@]]}"])
+AC_CHECK_HEADERS([boost/iostreams/filter/lzma.hpp],
+                 [HAVE_BOOST_LZMA=true],
+                 [HAVE_BOOST_LZMA=false])
+AC_SUBST([HAVE_BOOST_LZMA])
 
 # We compile C++ at runtime.
 VCSN_PROG_CCACHE

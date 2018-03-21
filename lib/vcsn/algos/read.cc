@@ -25,6 +25,7 @@ namespace vcsn
     const static auto probes = std::multimap<std::string, std::regex>
       {
         {"efsm,bzip2",  r{"^BZh"}},
+        {"efsm,lzma",   r{"\xFD""7zXZ""\x00"}},
         {"daut",  r{"^\\s*context *="}},
         {"daut",  r{"^\\s*(\\$|\\w+|\".*?\")\\s*->\\s*(\\$|\\w+|\".*?\")"}},
         {"dot",   r{"^\\s*digraph"}},
@@ -83,6 +84,7 @@ namespace vcsn
             {"dot",        read_dot},
             {"efsm",       read_efsm},
             {"efsm,bzip2", read_efsm_bzip2},
+            {"efsm,lzma",  read_efsm_lzma},
             {"fado",       read_fado},
           }
         };

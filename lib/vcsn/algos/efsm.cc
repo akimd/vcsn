@@ -1,10 +1,15 @@
 #include <fstream>
 #include <string>
 
+#include <vcsn/config.hh>
+
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
 #include <boost/algorithm/string/replace.hpp> // replace_all_copy
 #include <boost/iostreams/filter/bzip2.hpp>
+#if VCSN_HAVE_BOOST_IOSTREAMS_FILTER_LZMA_HPP
+# include <boost/iostreams/filter/lzma.hpp>
+#endif
 #include <boost/iostreams/filtering_stream.hpp>
 
 #include <lib/vcsn/algos/fwd.hh>
@@ -205,6 +210,20 @@ namespace vcsn
       in.push(io::bzip2_decompressor());
       in.push(is);
       return read_efsm(in, loc);
+    }
+
+    automaton
+    read_efsm_lzma(std::istream& is, const location& loc)
+    {
+#if VCSN_HAVE_BOOST_IOSTREAMS_FILTER_LZMA_HPP
+      namespace io = boost::iostreams;
+      auto&& in =io::filtering_stream<io::input>{};
+      in.push(io::lzma_decompressor());
+      in.push(is);
+      return read_efsm(in, loc);
+#else
+      raise("Boost is too old (", BOOST_LIB_VERSION, ") to support lzma");
+#endif
     }
   }
 }
