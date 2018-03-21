@@ -120,7 +120,9 @@ namespace vcsn
           // (which is atomic on any decent OS/FS).
           auto tmp = tmpname(base);
           {
-            std::ofstream o{tmp + ".cc"};
+            auto&& o = std::ofstream{tmp + ".cc"};
+            VCSN_REQUIRE(o.good(),
+                         "cannot create ", tmp+".cc", ": ", strerror(errno));
             printer_.print(o);
           }
           if (equal_files(tmp + ".cc", base + ".cc"))
@@ -198,7 +200,9 @@ namespace vcsn
           else
             {
               // At least we should see the warnings.
-              std::ifstream log{err};
+              auto&& log = std::ifstream{err};
+              VCSN_REQUIRE(log,
+                           "cannot read ", err, ": ", strerror(errno));
               std::cerr << log.rdbuf();
               // If the file is empty the previous instruction sets the state
               // of cerr to bad. We clear the error state flag to be able to
