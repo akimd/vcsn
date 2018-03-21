@@ -258,7 +258,7 @@ def demangle(s: str, color: str="auto") -> str:
             r'\1<\2>',
             s)
 
-    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(tupleset)_impl<({param})> >',
+    s = sub(r'(?:vcsn::)?weightset_mixin<(?:vcsn::detail::)?(polynomialset|tupleset)_impl<({param})> >',
             r'\1<\2>',
             s)
 
