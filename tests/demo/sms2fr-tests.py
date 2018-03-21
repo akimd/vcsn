@@ -5,7 +5,7 @@ from sms2fr import sms_to_fr
 import sys
 
 def datafile(f):
-    return '{datadir}/sms2fr/{file}.efsm'.format(
+    return '{datadir}/sms2fr/{file}.efsm.xz'.format(
         datadir=vcsn.config('configuration.datadir'),
         file=f)
 

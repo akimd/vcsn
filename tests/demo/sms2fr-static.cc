@@ -150,10 +150,10 @@ struct options
     };
 
     int opti;
-    char opt;
+    int opt;
 
     while ((opt = getopt_long(argc, argv, "g:s:", longopts, &opti)) != EOF)
-      switch(opt)
+      switch (opt)
         {
         case 'g': // --graphemic
           graphemic_file = optarg;
@@ -176,7 +176,7 @@ struct options
   std::string datafile(const std::string& f)
   {
     auto datadir = vcsn::dyn::configuration("configuration.datadir");
-    return datadir + "/sms2fr/" + f + ".efsm";
+    return datadir + "/sms2fr/" + f + ".efsm.xz";
   }
 
   std::string graphemic_file = datafile("graphemic");
