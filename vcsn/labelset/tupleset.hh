@@ -1032,7 +1032,13 @@ namespace vcsn
            const char* post,
            seq<I...>) const
     {
-      if (!is_special(l))
+      const auto skip = [&l]{
+        if constexpr (is_labelset)
+          return is_special(l);
+        else
+          return false;
+      }();
+      if (!skip)
         {
           using swallow = int[];
           (void) swallow
