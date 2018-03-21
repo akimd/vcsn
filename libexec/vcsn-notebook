@@ -24,7 +24,7 @@ else
   cat >&2 <<EOF
 $0: error: cannot find $IPYTHON
 
-  On Mac OS X, install these packages:
+  On Mac with MacPorts, install these packages:
 
   \$ sudo port install py34-ipython ipython_select
 

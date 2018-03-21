@@ -117,7 +117,9 @@ namespace vcsn::dyn
         // (which is atomic on any decent OS/FS).
         auto tmp = tmpname(base);
         {
-          std::ofstream o{tmp + ".cc"};
+          auto o = std::ofstream{tmp + ".cc"};
+          VCSN_REQUIRE(o.good(),
+                       "cannot create ", tmp+".cc", ": ", strerror(errno));
           printer_.print(o);
         }
         if (equal_files(tmp + ".cc", base + ".cc"))
@@ -195,7 +197,9 @@ namespace vcsn::dyn
         else
           {
             // At least we should see the warnings.
-            std::ifstream log{err};
+            auto log = std::ifstream{err};
+            VCSN_REQUIRE(log,
+                         "cannot read ", err, ": ", strerror(errno));
             std::cerr << log.rdbuf();
             // If the file is empty the previous instruction sets the state
             // of cerr to bad. We clear the error state flag to be able to
@@ -324,7 +328,7 @@ namespace vcsn::dyn
       }
 
       /// Compile, and load, a DSO with instantiations for \a ctx.
-      void compile(const std::string& ctx)
+      void operator()(const std::string& ctx)
       {
         printer_.header("vcsn/ctx/instantiate.hh");
         auto base = plugindir() + "contexts/" + split(ctx);
@@ -337,13 +341,13 @@ namespace vcsn::dyn
           "{\n"
           "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
           "}\n";
-        ;
         print(base);
         jit(base);
       }
 
       /// Compile, and load, a DSO which instantiates \a algos.
-      void compile(const std::set<std::pair<std::string, signature>>& algos)
+      void
+      operator()(const std::set<std::pair<std::string, signature>>& algos)
       {
         printer_.header("vcsn/misc/attributes.hh"); // ATTRIBUTE_USED
         printer_.header("vcsn/dyn/name.hh"); // ssignature
@@ -400,13 +404,19 @@ namespace vcsn::dyn
 
   void compile(const std::string& ctx)
   {
-    auto translate = translation{};
-    translate.compile(ctx);
+    try
+      {
+        auto translate = translation{};
+        translate(ctx);
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while compiling context ", ctx);
+      }
   }
 
   void compile(const std::string& algo, const signature& sig)
   {
-    auto translate = translation{};
     auto algos = std::set<std::pair<std::string, signature>>{{algo, sig}};
     if (algo == "delay_automaton"
         || algo == "is_synchronized")
@@ -414,6 +424,14 @@ namespace vcsn::dyn
         algos.emplace("delay_automaton", sig);
         algos.emplace("is_synchronized", sig);
       }
-    translate.compile(algos);
+    try
+      {
+        auto translate = translation{};
+        translate(algos);
+      }
+    catch (const std::runtime_error& e)
+      {
+        raise(e, "  while compiling ", algo, " for ", sig);
+      }
   }
 }

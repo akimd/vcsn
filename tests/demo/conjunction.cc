@@ -9,48 +9,51 @@
 #include <vcsn/labelset/letterset.hh> // letterset
 #include <vcsn/weightset/q.hh>        // weightset Q
 
-/// Example usage of Vcsn's static layer.
-///
-/// Creation of an automaton from an expression, self-conjunction, and
-/// display.
-void example(const std::string& expression)
+namespace
 {
-  using namespace vcsn;
+  /// Example usage of Vcsn's static layer.
+  ///
+  /// Creation of an automaton from an expression, self-conjunction, and
+  /// display.
+  void example(const std::string& expression)
+  {
+    using namespace vcsn;
 
-  /// Alphabet
-  using alphabet_t = set_alphabet<char_letters>;
+    // Alphabet
+    using alphabet_t = set_alphabet<char_letters>;
 
-  /// Letterset (labelset with a simple alphabet)
-  using letterset_t = letterset<alphabet_t>;
+    // Letterset (labelset with a simple alphabet)
+    using letterset_t = letterset<alphabet_t>;
 
-  /// Create the labelset.
-  auto ls = letterset_t{'a', 'b', 'c', 'd', 'e'};
+    // Create the labelset.
+    auto ls = letterset_t{'a', 'b', 'c', 'd', 'e'};
 
-  /// Context of the automaton: lat<lal_char, lal_char>, q
-  using context_t = context<letterset_t, q>;
+    // Context of the automaton: lat<lal_char, lal_char>, q
+    using context_t = context<letterset_t, q>;
 
-  /// Create the context from the labelset.
-  // no parameter for the weightset, as it's just B
-  auto ctx = context_t{ls};
+    // Create the context from the labelset.
+    // No argument for the weightset, as it's just B.
+    auto ctx = context_t{ls};
 
-  /// Create an expression from the user's argument.
-  auto es = vcsn::make_expressionset(ctx);
-  auto e = vcsn::conv(es, expression);
+    // Create an expression from the user's argument.
+    auto es = vcsn::make_expressionset(ctx);
+    auto e = vcsn::conv(es, expression);
 
-  /// Print it.
-  es.print(e, std::cout) << '\n';
+    // Print it.
+    es.print(e, std::cout) << '\n';
 
-  /// Type of the automaton
-  using automaton_t = mutable_automaton<context_t>;
+    // Type of the automaton
+    using automaton_t = mutable_automaton<context_t>;
 
-  /// Its standard automaton.
-  auto a = vcsn::standard<automaton_t>(es, e);
+    // Its standard automaton.
+    auto a = vcsn::standard<automaton_t>(es, e);
 
-  /// Its conjunction with itself.
-  auto c = vcsn::conjunction(a, a);
+    // Its conjunction with itself.
+    auto c = vcsn::conjunction(a, a);
 
-  /// print it.
-  vcsn::daut(c, std::cout) << '\n';
+    // print it.
+    vcsn::daut(c, std::cout) << '\n';
+  }
 }
 
 int

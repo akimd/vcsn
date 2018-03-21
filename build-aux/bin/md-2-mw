@@ -29,6 +29,7 @@ tmp=$dst.tmp
 # Expose the tables to pandoc.
 < "$src" \
   perl -p -0777 -e '
+    s{!\[Vcsn Logo\]\(share/vcsn/figs/vcsn.png\)\n\n}{};
     s{(^    \+-----.*\n(^    .*\n)*)}
      {
        my $v = $1;
@@ -37,8 +38,10 @@ tmp=$dst.tmp
      }gem' |
   "$PANDOC" --from markdown -t mediawiki -o "$tmp"
 
-perl -pi -e 's/= Vcsn news =/{{TOC|limit=2}}/' "$tmp"
-perl -pi -0777 -e 's/<!--.*?-->//gs' "$tmp"
+perl -pi -0777 -e '
+   s/= Vcsn Release Notes =/{{TOC|limit=2}}/;
+   s/<!--.*?-->//gs;
+' "$tmp"
 
 for p in "$patchdir"/*.patch
 do

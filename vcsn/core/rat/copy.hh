@@ -169,6 +169,7 @@ namespace vcsn::rat
     out_expression_t res_;
   };
 
+
   template <typename InExpSet, typename OutExpSet>
   typename OutExpSet::value_t
   copy(const InExpSet& in_rs, const OutExpSet& out_rs,

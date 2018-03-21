@@ -1,5 +1,7 @@
-Vcsn news
-=========
+![Vcsn Logo](share/vcsn/figs/vcsn.png)
+
+Vcsn Release Notes
+==================
 
 This file describes user visible changes in the course of the development of
 Vcsn, in reverse chronological order.  On occasions, significant changes in
@@ -47,9 +49,41 @@ can be seen from the Python interface.  For example:
 # Vcsn 2.7 (To be released)
 
 ## New features
+### Improved compatibility between single- and multitape expressions
+The automatic promotion from single-tape to multitape is more general.  For
+instance:
+
+    In [2]: c = vcsn.context('lat<lan, lan>, b')
+
+    In [3]: c.expression('a')
+    Out[3]: a|a
+
+    In [4]: c.expression('a*b* @ (ab)*')
+    Out[4]: (a|a)*(b|b)*@((a|a)(b|b))*
+
+    In [5]: c.expression('a*b* @ (ab)*').shortest(10)
+    Out[5]: \e|\e + ab|ab
+
+### vcsn doc is a new tool
+Run `vcsn doc automaton.determinize`, or `vcsn doc Automata`, etc.  The
+special shortcuts `vcsn doc` opens the Read-me-first notebook, and `vcsn doc
+index` leads to Algorithms, the page that lists the existing documentation
+of algorithms (`automata.determinize`, etc.).
+
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.
+
+Benchmarks are now numbered, to give a hint of the progress:
+
+    $ vcsn score
+    vcsn version: 2.6-085-g6dcae17ef
+      1/116  0.25s : a.is_proper()      # a = "", 1000000x
+      2/116  0.11s : b.format("text")   # b = [abc] -> B, 100000x
+      3/116  0.35s : b.expression(e)    # e = [ab]{20000}, 1000x
+    ...
+    115/116  0.75s : a.weight_series()  # a = std(a{12000}+<1>[b-z]{12000}), c = [a-z] -> Nmin, 200x
+    116/116  0.89s : a.weight_series()  # a = std([a-z]{200}), c = [a-z] -> Z, 10x
 
 The new option `-o`/`--output` allows to specify the output file name.
 
@@ -64,6 +98,17 @@ very useful to "warm" vcsn (have it compile the needed algorithms), or to
 get a nice approximation of the actual benches, however, sticking to a
 single bench at a time is recommended to get faithful measurements.
 
+Option `-l`/`--list` lists the benches without running them.
+
+Option `-s`/`--sort` sorts the benchmarks before running them.
+
+### Documentation
+Several errors were fixed.  The page `expression.compose.ipynb` is new.
+
+### Examples of C++
+The directories `tests/demo` and `tests/benchmarks` contain more example of
+how to use Vcsn as a C++ library.
+
 ## Bug fixes
 ### Incorrect order for 8bit characters
 Calling `compare` on labels would lead to surprising results with 8bit
@@ -72,6 +117,7 @@ of the expression `[\x01-\xfe]` as `[\x80-\xfe] + [\x01-\x7f]`.
 
 Both are fixed, and 1 is less than 254 again.
 
+----------------------------------------------------------------------
 
 # Vcsn 2.6 (2017-11-13)
 
@@ -253,6 +299,7 @@ The Daut automaton format now treats `->` as a keyword, so `0->1 a` is now
 properly read instead of producing a weird error message because Vcsn
 thought your state was named `0->1`.
 
+----------------------------------------------------------------------
 
 # Vcsn 2.5 (2017-01-28)
 
@@ -431,6 +478,8 @@ supports any type of automaton. For small values of k, Yen's algorithm has bette
 performances than Eppstein, but with increasing values of k, Eppstein is always
 more efficient.
 
+
+----------------------------------------------------------------------
 
 # Vcsn 2.4 (2016-11-16)
 
@@ -761,6 +810,8 @@ It is now possible from dyn and Python to tuple several contexts.  For
 instance `vcsn.B | vcsn.Q` is `lat<lal, lal>, q`.
 
 
+----------------------------------------------------------------------
+
 # Vcsn 2.3 (2016-07-08)
 
 About four hundred commits and five months after Vcsn 2.2, we are proud to
@@ -1020,6 +1071,7 @@ two automata.
     Out[3]: ab
 
 
+----------------------------------------------------------------------
 
 # Vcsn 2.2 (2016-02-19)
 
@@ -1416,6 +1468,7 @@ with negative weights.
   weights in ℤ ⨉ ℤ, instead of `<(1, 2)>a`, we display `<1, 2>a`.
 
 
+----------------------------------------------------------------------
 
 # Vcsn 2.1 (2015-10-11)
 
@@ -2267,6 +2320,7 @@ display failed preconditions.
 Blind is no longer limited to tape 0 or tape 1.
 
 
+----------------------------------------------------------------------
 
 # Vaucanson 2.0 (2014-07-25)
 
@@ -2890,6 +2944,8 @@ other properties.  Preliminary measures show performance to be close to
 "signature", or even clearly superior in the case of sparse automata such as
 dictionaries.
 
+----------------------------------------------------------------------
+
 # Vaucanson 2b.3 (2014-02-03)
 Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
 "vaucanson".
@@ -3019,6 +3075,8 @@ Python,
     vcsn.context('lal_char(a-zA-Z0-9_)_b')
 
 builds a context whose alphabet covers letters, digits, and underscore.
+
+----------------------------------------------------------------------
 
 # Vaucanson 2b.2 (2014-01-10)
 Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
@@ -3268,6 +3326,8 @@ with a B-automaton.
     $ vcsn product -f 2.gv 1.gv | vcsn aut-to-exp
     \e+<3>b.(<3>b)*
 
+----------------------------------------------------------------------
+
 # Vaucanson 2b.1 (2013-11-13)
 Release of our second beta, vaucanson-2b.1.  Available on MacPorts as
 "vaucanson".
@@ -3432,6 +3492,8 @@ under the starred subexpressions) group and sort the equal monomials.
 
     $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
     (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+
+----------------------------------------------------------------------
 
 # Vaucanson 2b.0 (2013-10-22)
 Release of our first beta, vaucanson-2b.0.

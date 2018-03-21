@@ -19,7 +19,7 @@ namespace vcsn
     assert(i.peek() == lbracket);
     i.ignore();
     size_t level = 1;
-    std::ostringstream o;
+    auto o = std::ostringstream{};
     int c;
     while ((c = i.get()) != -1)
       {
@@ -38,8 +38,8 @@ namespace vcsn
   bool
   equal_files(const std::string& fn1, const std::string& fn2)
   {
-    std::ifstream f1(fn1, std::ifstream::binary|std::ifstream::ate);
-    std::ifstream f2(fn2, std::ifstream::binary|std::ifstream::ate);
+    auto f1 = std::ifstream(fn1, std::ifstream::binary|std::ifstream::ate);
+    auto f2 = std::ifstream(fn2, std::ifstream::binary|std::ifstream::ate);
 
     if (f1.fail() || f2.fail())
       return false;
@@ -177,7 +177,7 @@ namespace vcsn
   std::string
   get_file_contents(const std::string& file)
   {
-    std::ifstream in(file.c_str(), std::ios::in | std::ios::binary);
+    auto in = std::ifstream(file.c_str(), std::ios::in | std::ios::binary);
     VCSN_REQUIRE(in.good(), "cannot read file: ", file, ": ", strerror(errno));
 
     std::string res;
@@ -192,7 +192,7 @@ namespace vcsn
   std::shared_ptr<std::istream>
   open_input_file(const std::string& file)
   {
-    std::shared_ptr<std::istream> res;
+    auto res = std::shared_ptr<std::istream>{};
     if (file.empty() || file == "-")
       res.reset(&std::cin, [](...){});
     else
@@ -207,7 +207,7 @@ namespace vcsn
   std::shared_ptr<std::ostream>
   open_output_file(const std::string& file)
   {
-    std::shared_ptr<std::ostream> res;
+    auto res = std::shared_ptr<std::ostream>{};
     if (file.empty() || file == "-")
       res.reset(&std::cout, [](...){});
     else

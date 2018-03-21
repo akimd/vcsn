@@ -7,6 +7,7 @@ configuration:
   # Running Python.
   python: @PYTHON@
   ipython: @IPYTHON@
+  jupyter: @JUPYTER@
 
   # Running a C++ compilation.
   ccache: @CCACHE@
@@ -17,6 +18,7 @@ configuration:
 
   # Where our files are installed.
   datadir: @DATADIR@
+  docdir: @DOCDIR@
   includedir: @INCLUDEDIR@
   libdir: @LIBDIR@
   pyexecdir: @PYEXECDIR@
