@@ -1005,8 +1005,8 @@ public:
     return weightset_t::is_one(i->second);
   }
 
-  const value_t&
-  zero() const
+  static const value_t&
+  zero()
   {
     static auto res = value_t{};
     return res;
