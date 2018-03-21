@@ -331,7 +331,7 @@ namespace vcsn
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
-        void compile(const std::string& ctx)
+        void operator()(const std::string& ctx)
         {
           printer_.header("vcsn/ctx/instantiate.hh");
           auto base = plugindir() + "contexts/" + split(ctx);
@@ -350,7 +350,8 @@ namespace vcsn
         }
 
         /// Compile, and load, a DSO which instantiates \a algos.
-        void compile(const std::set<std::pair<std::string, signature>>& algos)
+        void
+        operator()(const std::set<std::pair<std::string, signature>>& algos)
         {
           printer_.header("vcsn/misc/attributes.hh"); // ATTRIBUTE_USED
           printer_.header("vcsn/dyn/name.hh"); // ssignature
@@ -407,21 +408,35 @@ namespace vcsn
 
     void compile(const std::string& ctx)
     {
-      translation translate;
-      translate.compile(ctx);
+      try
+        {
+          auto translate = translation{};
+          translate(ctx);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e, "  while compiling context ", ctx);
+        }
     }
 
     void compile(const std::string& algo, const signature& sig)
     {
-      translation translate;
-      std::set<std::pair<std::string, signature>> algos{{algo, sig}};
+      auto algos = std::set<std::pair<std::string, signature>>{{algo, sig}};
       if (algo == "delay_automaton"
           || algo == "is_synchronized")
         {
           algos.emplace("delay_automaton", sig);
           algos.emplace("is_synchronized", sig);
         }
-      translate.compile(algos);
+      try
+        {
+          auto translate = translation{};
+          translate(algos);
+        }
+      catch (const std::runtime_error& e)
+        {
+          raise(e, "  while compiling ", algo, " for ", sig);
+        }
     }
   } // namespace dyn
 } // namespace vcsn
