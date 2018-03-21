@@ -4,6 +4,8 @@
 #include <boost/algorithm/string/erase.hpp>
 #include <boost/algorithm/string/predicate.hpp> // starts_with
 #include <boost/algorithm/string/replace.hpp> // replace_all_copy
+#include <boost/iostreams/filter/bzip2.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
 
 #include <lib/vcsn/algos/fwd.hh>
 #include <vcsn/algos/edit-automaton.hh>
@@ -193,6 +195,16 @@ namespace vcsn
       auto ctx = replace_all_copy(edit.result_context(),
                                   "law<char>", "lan<string>");
       return edit.result(ctx);
+    }
+
+    automaton
+    read_efsm_bzip2(std::istream& is, const location& loc)
+    {
+      namespace io = boost::iostreams;
+      auto&& in =io::filtering_stream<io::input>{};
+      in.push(io::bzip2_decompressor());
+      in.push(is);
+      return read_efsm(in, loc);
     }
   }
 }

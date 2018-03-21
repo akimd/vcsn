@@ -30,6 +30,7 @@ pkglib_LTLIBRARIES = $(libvcsn)
 # simplify this for us.
 lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN	\
   $(BOOST_FLYWEIGHT_CPPFLAGS) $(BOOST_FILESYSTEM_CPPFLAGS)	\
+  $(BOOST_IOSTREAMS_CPPFLAGS) 					\
   $(BOOST_SYSTEM_CPPFLAGS) $(BOOST_REGEX_CPPFLAGS)
 nodist_lib_libvcsn_la_SOURCES =                 \
   %D%/algos/algos.cc                            \
@@ -74,12 +75,14 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/xltdl.cc                             \
   %D%/misc/xltdl.hh
 
-lib_libvcsn_la_LDFLAGS =					\
-  $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\
+lib_libvcsn_la_LDFLAGS =                                        \
+  $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS)        \
+  $(BOOST_IOSTREAMS_LDFLAGS)                                    \
   $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
-lib_libvcsn_la_LIBADD =					\
-  $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS)	\
-  $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)		\
+lib_libvcsn_la_LIBADD =                                 \
+  $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS)      \
+  $(BOOST_IOSTREAMS_LIBS)                               \
+  $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)              \
   -lltdl $(RT_LIBS)                                     \
   $(YAMLCPP_LIBS)
 
