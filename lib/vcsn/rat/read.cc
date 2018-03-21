@@ -11,7 +11,7 @@ namespace vcsn
     read(const dyn::context& ctx, rat::identities ids,
          std::istream& is, const location& l)
     {
-      vcsn::rat::driver d{ctx, ids};
+      auto&& d = vcsn::rat::driver{ctx, ids};
       return d.parse(is, l);
     }
   }
