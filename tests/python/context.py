@@ -159,6 +159,9 @@ check(ctx,
 check(ctx,
       '[ab]? × [uv]? × [xyz]* → RatE[[ef]? × [gh]? → ℚ] × ℝ × ℚ', 'utf8')
 
+# Regression: Poly used in a tupleset of weightset.
+check('[a-z]* x [0-9] -> Poly[[A-Z]*] x Q',
+      '[abcdefghijklmnopqrstuvwxyz]* × [0123456789]? → Poly[[ABCDEFGHIJKLMNOPQRSTUVWXYZ]* → 𝔹] × ℚ')
 
 # Check that spaces are generously accepted.
 ctx = '''

@@ -439,11 +439,11 @@ namespace vcsn::ast
       {
         if (w == "lat")
           return tupleset_();
-        else if (w == "expressionset" || w == "seriesset")
-          return expressionset_(w);
         else if (has(labelsets_, w))
           return labelset_(w);
-        else if (has(weightsets_, w))
+        else if (has(weightsets_, w)
+                 || w == "expressionset" || w == "seriesset"
+                 || w == "polynomialset")
           return weightset_(w);
         else
           raise("invalid weightset or labelset name: ", str_quote(w));
