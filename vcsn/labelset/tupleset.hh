@@ -744,11 +744,8 @@ namespace vcsn
     static bool
     equal_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {valueset_t<I>::equal(std::get<I>(l),
-                                         std::get<I>(r))...})
-        if (!n)
-          return false;
-      return true;
+      return (valueset_t<I>::equal(std::get<I>(l), std::get<I>(r))
+              && ...);
     }
 
     template <typename LhsValue, typename RhsValue, std::size_t... I>
@@ -788,10 +785,7 @@ namespace vcsn
     static bool
     is_special_(const value_t& l, seq<I...>)
     {
-      for (auto n: {valueset_t<I>::is_special(std::get<I>(l))...})
-        if (!n)
-          return false;
-      return true;
+      return (valueset_t<I>::is_special(std::get<I>(l)) && ...);
     }
 
     template <std::size_t... I>
@@ -817,10 +811,7 @@ namespace vcsn
     bool
     is_zero_(const value_t& l, seq<I...>) const
     {
-      for (auto n: {set<I>().is_zero(std::get<I>(l))...})
-        if (!n)
-          return false;
-      return true;
+      return (set<I>().is_zero(std::get<I>(l)) && ...);
     }
 
     template <std::size_t... I>
@@ -855,20 +846,14 @@ namespace vcsn
     static bool
     is_one_(const value_t& l, seq<I...>)
     {
-      for (auto n: {valueset_t<I>::is_one(std::get<I>(l))...})
-        if (!n)
-          return false;
-      return true;
+      return (valueset_t<I>::is_one(std::get<I>(l)) && ...);
     }
 
     template <std::size_t... I>
     static bool
     show_one_(seq<I...>)
     {
-      for (auto n: {valueset_t<I>::show_one()...})
-        if (n)
-          return true;
-      return false;
+      return (valueset_t<I>::show_one() || ...);
     }
 
     template <std::size_t... I>
