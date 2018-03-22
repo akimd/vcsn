@@ -5,9 +5,9 @@
 *.tableFAdo
 *.tableGrail
 *.trs
-*bak
-*log
-*stamp
+*.bak
+*.log
+*.stamp
 *~
 .#*
 .deps
@@ -72,8 +72,7 @@
 /tests/unit/concat
 /tests/unit/transpose
 /vcsn-*/
-/vcsn/lexer.cc
+/vcsn/config.in.h
 /vcsn/misc/location.hh
 /vcsn/misc/position.hh
-/vcsn/parse-rat-exp.dir/
 \#*#
