@@ -31,6 +31,12 @@ special shortcuts `vcsn doc` opens the Read-me-first notebook, and `vcsn doc
 index` leads to Algorithms, the page that lists the existing documentation
 of algorithms (`automata.determinize`, etc.).
 
+### Compressed efsm files
+Vcsn can read efsm files compressed with bzip2 and xz.  In some extreme
+cases, the xz-compressed file can be 5% of the original file.
+
+The files for the sms2fr demo are now compressed with xz.
+
 ### vcsn score has several new options
 The command `vcsn score` benchmarks Vcsn.  Its output can be processed with
 `vcsn score-compare` to see the trends in performances between versions.

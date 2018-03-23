@@ -66,7 +66,7 @@ Documentation about Vcsn can be found in several places:
 Quick Start
 -----------
 
-Vcsn must installed to be used.  Once you installed it, here are a few
+Vcsn must be installed to be used.  Once you installed it, here are a few
 commands to help you start using it.
 
 - `vcsn python` or `vcsn ipython`
@@ -86,7 +86,11 @@ commands to help you start using it.
 - `vcsn notebook`
 
   Start a Jupyter notebook in a web browser.  Then you can run the same
-  Python commands as above.
+  Python commands as above.  Requires that you have installed IPython.
+
+- `vcsn doc`
+
+  Opens the documentation.
 
 - `vcsn --help`
 
@@ -124,7 +128,7 @@ Vcsn is a very long process, also consider `-j3`.
 #### Packages needed
 
 Vcsn was tested with the [GNU Compiler Collection (GCC)](http://gcc.gnu.org)
-versions 5, 6 and [Clang](http://clang.llvm.org) 3.5, 3.6, 3.7, 3.8, 3.9.
+versions 5, 6 and [Clang](http://clang.llvm.org) from 3.5, to 6.0.
 
 [Boost](http://www.boost.org) is a C++ library which provides many useful
 features.  You must install this library on your system.  Vcsn should
@@ -132,6 +136,7 @@ support any version after 1.49.  The following Boost components are used:
 
 - Boost.Algorithm
 - Boost.DynamicBitset
+- Boost.IOStreams
 - Boost.Filesystem
 - Boost.Flyweight
 - Boost.Heap
@@ -147,7 +152,7 @@ support any version after 1.49.  The following Boost components are used:
 To load plugins, Vcsn relies on libltdl, which is a component of the [GNU
 Libtool](http://www.gnu.org/software/libtool/) project.  Depending on your
 distribution/packaging system, you may have to install `libltdl-dev` (e.g.,
-Debian) or libtool (Mac Ports).
+Debian) or `libtool` (MacPorts).
 
 Vcsn uses the Dot format to save automaton in a human readable file. You
 should install [Graphviz](http://www.research.att.com/sw/tools/graphviz) to
@@ -191,12 +196,19 @@ Please, help us keep this list up-to-date!
 Vcsn expects to be built and to run in an UTF-8 environment.  This requires
 the `locales` package, and that en_US.UTF-8 be supported:
 
-    sudo echo "en_US.UTF-8 UTF-8" >/etc/locale.gen
+    sudo 'echo "en_US.UTF-8 UTF-8" >>/etc/locale.gen'
     sudo locale-gen
     export LANG=en_US.UTF-8   \
            LANGUAGE=en_US:en  \
            LC_ALL=en_US.UTF-8
 
+#### MacPorts
+Install these package:
+  boost +python36
+  py36-notebook
+  python36
+
+Installing the vcsn package will install all the dependencies.
 
 ### Libraries installed in non-standard directories
 
@@ -277,8 +289,8 @@ The complete GNU General Public License Notice can be found as the
 Contacts
 --------
 
-The team can be reached by mail at <vcsn@lrde.epita.fr>. Snail mail
-addresses follow.
+The team can be reached by mail at <vcsn@lrde.epita.fr>.  Snail mail
+address:
 
 - Vcsn - LRDE
 
@@ -296,8 +308,11 @@ LocalWords:  semiring monoids Vcsn's txt vcsn algos hh dyn GCC DynamicBitset
 LocalWords:  Regex Tokenizer Ccache libltdl Libtool dev libtool Graphviz gv de
 LocalWords:  Doxygen CPPFLAGS LDFLAGS preprocessor IPython instantiation Akim
 LocalWords:  Automake Autoconf Demaille Alexandre Duret Lutz Laboratoire et
-LocalWords:  Développement l'EPITA Bicêtre CEDEX rst API ipynb ispell
-LocalWords:  Sylvain american
+LocalWords:  Développement l'EPITA Bicêtre CEDEX rst API ipynb ispell md
+LocalWords:  Sylvain american Jupyter determinize doxygen namespace ipython
+LocalWords:  IOStreams Filesystem yaml cpp ccache tex graphviz libgmp
+LocalWords:  imagemagick libboost libzmq pdf svg colorama matplotlib
+LocalWords:  psutil setuptools libyaml UTF sudo autoconf automake utf
 
 Local Variables:
 coding: utf-8
