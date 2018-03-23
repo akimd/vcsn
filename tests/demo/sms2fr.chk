@@ -1,4 +1,5 @@
 #! /bin/sh
+vcsn_env
 
 demodir=tests/demo
 
@@ -19,8 +20,14 @@ comment c\' est trop bien
 difficile
 je peux pas
 EOF
-
-vcsn_env
-run 0 out.exp -vcsn python3 $srcdir/$demodir/sms2fr-tests.py < sms.in
-run 0 out.exp $demodir/sms2fr-dyn --no-prompt < sms.in
-run 0 out.exp $demodir/sms2fr-static --no-prompt < sms.in
+set -x
+case $(vcsn configuration configuration.lzma) in
+    (true)
+        run 0 out.exp -vcsn python3 $srcdir/$demodir/sms2fr-tests.py < sms.in
+        run 0 out.exp $demodir/sms2fr-dyn --no-prompt < sms.in
+        run 0 out.exp $demodir/sms2fr-static --no-prompt < sms.in
+        ;;
+    (*)
+        tap_skip "Boost does not support lzma"
+        ;;
+esac

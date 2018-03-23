@@ -29,6 +29,9 @@ configuration:
   # Verbosity level of debug messages.
   verbose: 0
 
+  # Whether supports lzma
+  lzma: @HAVE_BOOST_LZMA@
+
 dot:
   styles: !StyleList
     square:
