@@ -14,46 +14,46 @@ def check(ctx, p, output):
     p = ctx.polynomial(p)
     CHECK_EQ(output, str(p))
 
-check('lal(a), b', r'\z', r'\z')
-check('lal(a), b', r'\z+\z', r'\z')
+check('[a] -> b', r'\z', r'\z')
+check('[a] -> b', r'\z+\z', r'\z')
 
-check('lal(a), b', r'a', r'a')
-check('lal(ab), b', r'a+b+b+a', r'a + b')
+check('[a] -> b', r'a', r'a')
+check('[ab] -> b', r'a+b+b+a', r'a + b')
 
-check('lal(abcd), q', r'[abcd]',     r'a + b + c + d')
-check('lal(abcd), q', r'[dcba]',     r'a + b + c + d')
-check('lal(abcd), q', r'[abcdabcd]', r'a + b + c + d')
-check('lal(abcd), q', r'[a-d]',      r'a + b + c + d')
-check('lal(abcd), q', r'[a-bd]',     r'a + b + d')
+check('[abcd] -> q', r'[abcd]',     r'a + b + c + d')
+check('[abcd] -> q', r'[dcba]',     r'a + b + c + d')
+check('[abcd] -> q', r'[abcdabcd]', r'a + b + c + d')
+check('[abcd] -> q', r'[a-d]',      r'a + b + c + d')
+check('[abcd] -> q', r'[a-bd]',     r'a + b + d')
 
-check('lal(ab), q', r'a+b+b+a+b', r'<2>a + <3>b')
-check('lal(ab), q', r'a+b+b+<-1>a+b', r'<3>b')
+check('[ab] -> q', r'a+b+b+a+b', r'<2>a + <3>b')
+check('[ab] -> q', r'a+b+b+<-1>a+b', r'<3>b')
 
 check('law(a), b', r'\e+\e', r'\e')
 
 check('law(ab), q', r'ba+ab+bb+aa+a+b+\e+bb+aa',
       r'\e + a + b + <2>aa + ab + ba + <2>bb')
 
-check('lal(abc), expressionset<lal(xyz), q>',
+check('[abc] -> expressionset<[xyz] -> q>',
       r'a + a + <x>b + <y>b', r'<<2>\e>a + <x+y>b')
 
 # Be sure to have proper ordering on tuples with LAN.
 # For the time being, we support both | and , as separators.
-check('lat<lal(abc), lal(xyz)>, q',
+check('[abc] x [xyz] -> q',
       r'a|\e + \e|x + a|\e + a|x + \e|y',
       r'\e|x + \e|y + <2>a|\e + a|x')
-check('lat<lal(abc), lal(xyz)>, q',
+check('[abc] x [xyz] -> q',
       r'(a,\e) + (\e,x) + (a,\e) + (a, x) + (\e,y)',
       r'\e|x + \e|y + <2>a|\e + a|x')
 
 # Check that we don't ignore trailing characters.
-XFAIL(lambda: vcsn.context('lal(ab), q').polynomial('<123>a*'))
+XFAIL(lambda: vcsn.context('[ab] -> q').polynomial('<123>a*'))
 
 ## ----------------- ##
 ## LaTeX rendering.  ##
 ## ----------------- ##
 
-c = vcsn.context("lal(abc), expressionset<lal(xyz), q>")
+c = vcsn.context("[abc] -> expressionset<[xyz] -> q>")
 CHECK_EQ(r'\left\langle  \left\langle 2 \right\rangle \,\varepsilon\right\rangle a \oplus \left\langle x + y\right\rangle b',
          c.polynomial(r'a + a + <x>b + <y>b').format("latex"))
 

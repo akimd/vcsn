@@ -100,7 +100,7 @@ CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('synchrop')), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('synchropl')), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('fastsynchro')), True)
 
-b = vcsn.context('lal(ab), b')
+b = vcsn.context('[ab] -> b')
 
 for i in [3, 5, 7]:
     db = b.de_bruijn(i).determinize()

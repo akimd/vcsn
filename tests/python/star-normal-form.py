@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 
 # check INPUT [OUTPUT = INPUT]
 # ----------------------------

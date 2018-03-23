@@ -274,8 +274,8 @@ xfail('a&')
 xfail(r'\a')
 
 ctx = vcsn.context('[abc] -> q')
-xfail('(?@lal(abc), b)<2>a')
-xfail('(?@lal(abc), b')
+xfail('(?@[abc] -> b)<2>a')
+xfail('(?@[abc] -> b')
 xfail('(?@foobar)foo')
 xfail('<2>')
 xfail('a<2')
@@ -293,17 +293,17 @@ def check_format(ctx, r, text, utf8, latex):
     CHECK_EQ(utf8, e.format('utf8'))
     CHECK_EQ(latex, e.format('latex'))
 
-check_format('lal(abcd), b',
+check_format('[abcd] -> b',
              'abcd',
              'abcd',
              'abcd',
              r'a \, b \, c \, d')
 
 # Check classes.  FIXME: Redundant with check-rat.
-check_format('lal(abcdef), b',
+check_format('[abcdef] -> b',
              '[abcdef]',
              '[^]', '[^]', r'[\hat{}]')
-check_format('lal(abcdef), b',
+check_format('[abcdef] -> b',
              '[abcde]',
              '[^f]', '[^f]', r'[\hat{}f]')
 check_format('lal(a-z), b',
@@ -311,7 +311,7 @@ check_format('lal(a-z), b',
              '[a-d]', '[a-d]', r'[a\textrm{-}d]')
 
 # Check weights.
-check_format('lal(abc), expressionset<lal(def), expressionset<lal(xyz), q>>',
+check_format('[abc] -> expressionset<[def] -> expressionset<[xyz] -> q>>',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
              '<<<93>x>d>a+(<<<42>y>e>b)*',
              '⟨⟨⟨93⟩x⟩d⟩a+(⟨⟨⟨42⟩y⟩e⟩b)*',
@@ -351,12 +351,12 @@ for ctx in ['lal, q', 'law, q']:
                  'a{987}', 'a⁹⁸⁷', r'{a}^{987}'.replace('a', A))
 
 # Check that we do support digits as letters.
-check_format('lal(0123), b',
+check_format('[0123] -> b',
              '0123',
              '0123',
              '0123',
              '0 \\, 1 \\, 2 \\, 3')
-check_format('lal(0123), q',
+check_format('[0123] -> q',
              '<0123>0123',
              '<123>(0123)',
              '⟨123⟩(0123)',
@@ -369,7 +369,7 @@ def check(s1, exp):
     eff = ctx.expression(s1, 'distributive')
     CHECK_EQ(exp, eff.format('text'))
 
-ctx = vcsn.context('lal(abcd), q')
+ctx = vcsn.context('[abcd] -> q')
 check('a+b', 'a+b')
 check('(a+a)*', '(<2>a)*')
 check(r'a+\z', 'a')

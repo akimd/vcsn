@@ -14,18 +14,18 @@ def check(ctx, w, output):
     w = ctx.weight(w)
     CHECK_EQ(output, w)
 
-check('lal(a), b', '0', '0')
-check('lal(a), b', '1', '1')
-check('lal(a), z', '123', '123')
-check('lal(a), f2', '1', '1')
-check('lal(x), expressionset<lal(abc), q>', 'a*<23>bc', '<23>(a*bc)')
+check('[a] -> b', '0', '0')
+check('[a] -> b', '1', '1')
+check('[a] -> z', '123', '123')
+check('[a] -> f2', '1', '1')
+check('[x] -> expressionset<[abc] -> q>', 'a*<23>bc', '<23>(a*bc)')
 
 
 # Check that we don't ignore trailing characters.
-XFAIL(lambda: vcsn.context('lal(ab), z').weight('123a*'))
+XFAIL(lambda: vcsn.context('[ab] -> z').weight('123a*'))
 
 
-c = vcsn.context('lal(x), q')
+c = vcsn.context('[x] -> q')
 w = lambda s: c.weight(s)
 # Check +.
 CHECK_EQ(w('5'), w('2') + w('3'))
@@ -63,7 +63,7 @@ CHECK_EQ(w('799.99999'), w('850') + w('800'))
 def check(ctx, ref, params):
     CHECK_EQ(ref, ctx.random_weight(params))
 
-ctx = vcsn.context('lal(abc), z')
+ctx = vcsn.context('[abc] -> z')
 
 # Check the property "element=density".
 check(ctx, '1', '1=1')
@@ -77,11 +77,11 @@ w = ctx.random_weight('min=0,max=3')
 CHECK(re.match('^[0-3]$', str(w)))
 
 # Check some weightSet.
-ctx = vcsn.context('lal(abc), b')
+ctx = vcsn.context('[abc] -> b')
 for _ in range(3):
     w = ctx.random_weight()
     CHECK(re.match('^[0-1]$', str(w)))
-ctx = vcsn.context('lal(abc), q')
+ctx = vcsn.context('[abc] -> q')
 check(ctx, '1/3', '1/3=1')
-ctx = vcsn.context('lal(abc), r')
+ctx = vcsn.context('[abc] -> r')
 CHECK(re.match(r'[0-5].[0-9]*', str(ctx.random_weight('min=0,max=5'))))

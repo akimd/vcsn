@@ -44,13 +44,13 @@ $ -> 0
 check_aut(aut, "notebook example", 5,
           '<6>a + <5>ab + <4>abcd + <6>abbcd + <8>abbbcd', ['auto', 'eppstein'])
 
-ctx = vcsn.context('lal(abcd), z')
+ctx = vcsn.context('[abcd] -> z')
 check('[a-d]?{5}', 5, r'\e + aa + ab + ac + ad', ['auto'])
 check('<4>a+(ab)+c+<2>d', 2, 'c + ab')
 check('a+<-1>a', 2, r'\z')
 check('a+(<2>a<-10>a)', 1, '<-20>aa', ['auto'])
 
-ctx = vcsn.context('lal(abcd), q')
+ctx = vcsn.context('[abcd] -> q')
 check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 
 ctx = vcsn.context('law, nmin')

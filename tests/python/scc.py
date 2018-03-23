@@ -77,7 +77,7 @@ a = vcsn.automaton('''digraph
 }''')
 check(4, a)
 
-ctx = vcsn.context('lal(abc), b')
+ctx = vcsn.context('[abc] -> b')
 a = ctx.expression('(abc)*{5}').standard()
 check(6, a)
 

@@ -9,8 +9,8 @@ def union(*auts):
         res = res.add(a, "general")
     return res
 
-ab = vcsn.context('lal(ab), b').expression('(a+b)*').standard()
-bc = vcsn.context('lal(bc), b').expression('(b+c)*').standard()
+ab = vcsn.context('[ab] -> b').expression('(a+b)*').standard()
+bc = vcsn.context('[bc] -> b').expression('(b+c)*').standard()
 CHECK_EQ(meaut('abc.gv'), union(ab, bc))
 
 ## ------------ ##
@@ -113,8 +113,8 @@ digraph
 CHECK_EQ(exp, a + b)
 
 # Check union of contexts.
-a1 = vcsn.context('lal(a), expressionset<lal(x), b>').expression('<x>a*').standard()
-a2 = vcsn.context('lal(b), expressionset<lal(y), b>').expression('<y>b*').standard()
+a1 = vcsn.context('[a] -> expressionset<[x] -> b>').expression('<x>a*').standard()
+a2 = vcsn.context('[b] -> expressionset<[y] -> b>').expression('<y>b*').standard()
 exp = vcsn.automaton('''
 digraph
 {
@@ -161,16 +161,16 @@ def check(exp, *auts):
     CHECK_EQ(exp, str(union(*auts).expression()))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal(a), expressionset<lal(uv), b>') \
+a1 = vcsn.context('[a] -> expressionset<[uv] -> b>') \
          .expression('<u>a').derived_term().strip()
-a2 = vcsn.context('lal(b), b').expression('b*').derived_term().strip()
+a2 = vcsn.context('[b] -> b').expression('b*').derived_term().strip()
 check('<u>a+b*', a1, a2)
 check('<u>a+b*', a2, a1)
 
 # Z, Q, R.
-z = vcsn.context('lal(a), z').expression('<2>a')  .automaton()
-q = vcsn.context('lal(b), q').expression('<1/3>b').automaton()
-r = vcsn.context('lal(c), r').expression('<.4>c') .automaton()
+z = vcsn.context('[a] -> z').expression('<2>a')  .automaton()
+q = vcsn.context('[b] -> q').expression('<1/3>b').automaton()
+r = vcsn.context('[c] -> r').expression('<.4>c') .automaton()
 
 check('<2>a+<1/3>b', z, q)
 check('<2>a+<1/3>b', q, z)

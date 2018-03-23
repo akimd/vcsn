@@ -20,7 +20,7 @@ def check_accessible(input, output):
     CHECK(input.accessible().is_accessible())
 
 # Regression.
-a = vcsn.context('lal(abcd), b').expression('ab+cd').standard().sort().strip()
+a = vcsn.context('[abcd] -> b').expression('ab+cd').standard().sort().strip()
 check_accessible(a, a)
 
 # Cycle.

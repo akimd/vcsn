@@ -255,6 +255,8 @@ namespace vcsn
             o << "`\\mathit{" << l << "}\\textrm{'}";
             break;
 
+          case format::ere:
+          case format::redgrep:
           case format::sname:
           case format::text:
           case format::utf8:

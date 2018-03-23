@@ -12,7 +12,7 @@ def check_lift(exp, aut):
 ## Automata.  ##
 ## ---------- ##
 
-l4 = vcsn.context('lal(abc), b').ladybird(4)
+l4 = vcsn.context('[abc] -> b').ladybird(4)
 check_lift('''\
 context = {ε} → RatE[[abc]? → 𝔹]
 $ -> 0
@@ -33,7 +33,7 @@ $ -> 0
 ## Lift(tape...).  ##
 ## --------------- ##
 
-c = vcsn.context('lat<lal(abc), lal(def), law(ghi)>, q')
+c = vcsn.context('[abc] x [def] x [ghi]* -> q')
 a = c.expression("(a|d|gh)<2>").standard()
 
 # lift(0).
@@ -63,6 +63,6 @@ check_lift(aref, a.lift([1, 2]))
 ## ------------------ ##
 
 CHECK_EQ(r'''<abc>\e''',
-         vcsn.context('lal(abc), b').expression('abc').lift())
+         vcsn.context('[abc] -> b').expression('abc').lift())
 CHECK_EQ(r'''<<2>(abc)>\e''',
-         vcsn.context('lal(abc), z').expression('<2>abc').lift())
+         vcsn.context('[abc] -> z').expression('<2>abc').lift())

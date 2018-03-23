@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context("lal(abc), seriesset<lal(xyz), q>")
+ctx = vcsn.context("[abc] -> seriesset<[xyz] -> q>")
 
 def check_derived_term(r, exp, algo):
     print('{}: checking: {:u}.derived_term("{}")'.format(here(), r, algo))
@@ -176,7 +176,7 @@ check('a{c}{c}', 'b', r'\z{c}{c}')
 # We could easily generate an infinite derived-term automaton here.
 # However, currently we don't support a powerful enough normalization
 # of polynomials of expressions, so use a simple type of weights.
-e = vcsn.context('lal(a), q').expression('((<2>a)*+(<4>aa)*){c}')
+e = vcsn.context('[a] -> q').expression('((<2>a)*+(<4>aa)*){c}')
 check(e, 'a',    '((<2>a)*+<2>(a(<4>(aa))*)){c}')
 check(e, 'aa',   '((<2>a)*+(<4>(aa))*){c}')
 check(e, 'aaa',  '((<2>a)*+<2>(a(<4>(aa))*)){c}')
@@ -202,7 +202,7 @@ check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
 # EAT, Example 4.3.
 E1 = '(<1/6>a*+<1/3>b*)*'
 # E1 typed.
-E1t = vcsn.context('lal(ab), q').expression(E1)
+E1t = vcsn.context('[ab] -> q').expression(E1)
 check(E1t,  'a',  "<1/3>a*" + E1)
 check(E1t,  'b',  "<2/3>b*" + E1)
 check(E1t, 'aa',  "<4/9>a*" + E1)
@@ -265,7 +265,7 @@ check_bdt('<x>(<y>a)*<z>', 'ext-prod-breaking')
 ## --------------------- ##
 
 # On The Number Of Broken Derived Terms Of A Rational Expression.
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 F2 = 'a*+b*'
 E2 = "({F2})(a({F2}))".format(F2=F2)
 E2t = ctx.expression(E2)
@@ -293,7 +293,7 @@ check_br(E2t, 'bb', "b*a({})".format(F2))
 check_bdt(E2t, 'e2-dt-breaking')
 
 # Figure 3.
-fig3 = vcsn.context('lal(abcd), b').expression('a(b+c+d)')
+fig3 = vcsn.context('[abcd] -> b').expression('a(b+c+d)')
 check_dt(fig3, 'h3-dt')
 check_bdt(fig3, 'h3-dt-breaking')
 

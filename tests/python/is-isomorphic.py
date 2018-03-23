@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal(abc), z')
+z = vcsn.context('[abc] -> z')
 
 # check EXPECTED RAT1 RAT2
 # ------------------------

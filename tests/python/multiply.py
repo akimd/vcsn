@@ -46,8 +46,8 @@ auts = [auts,
         ctx.expression('a*').derived_term()]
 check_mult(auts, auts)
 
-ab = vcsn.context('lal(ab), b').expression('(a+b)*')
-bc = vcsn.context('lal(bc), b').expression('(b+c)*')
+ab = vcsn.context('[ab] -> b').expression('(a+b)*')
+bc = vcsn.context('[bc] -> b').expression('(b+c)*')
 result = vcsn.automaton('''
 digraph
 {
@@ -96,7 +96,7 @@ digraph
 ''')
 CHECK_EQ(result, ab.standard().multiply(bc.standard()))
 
-CHECK_EQ(vcsn.context('lal(abc), b').expression('[ab]*[bc]*'), ab * bc)
+CHECK_EQ(vcsn.context('[abc] -> b').expression('[ab]*[bc]*'), ab * bc)
 
 a = vcsn.automaton('''
 digraph
@@ -163,17 +163,17 @@ def check(exp, eff):
     CHECK_EQ(exp, str(eff.expression('associative')))
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal(a), expressionset<lal(uv), b>') \
+a1 = vcsn.context('[a] -> expressionset<[uv] -> b>') \
          .expression('<u>a').derived_term()
-a2 = vcsn.context('lal(b), b').expression('b*').standard()
+a2 = vcsn.context('[b] -> b').expression('b*').standard()
 check(r'<u>a(\e+bb*)', a1*a2)
 # FIXME: Why don't we get (\e+bb*)<u>a?
 check('<u>a+bb*<u>a', a2*a1)
 
 # Z, Q, R.
-z = vcsn.context('lal(a), z').expression('<2>a')  .derived_term()
-q = vcsn.context('lal(b), q').expression('<1/3>b').derived_term()
-r = vcsn.context('lal(c), r').expression('<.4>c') .derived_term()
+z = vcsn.context('[a] -> z').expression('<2>a')  .derived_term()
+q = vcsn.context('[b] -> q').expression('<1/3>b').derived_term()
+r = vcsn.context('[c] -> r').expression('<.4>c') .derived_term()
 
 check('<2>a<1/3>b', z*q)
 check('<1/3>b<2>a', q*z)
@@ -190,11 +190,11 @@ check('<0.4>c<0.333333>b', r*q)
 ## expression * expression.  ##
 ## ------------------------- ##
 
-br = vcsn.context('lal(a), expressionset<lal(uv), b>') \
+br = vcsn.context('[a] -> expressionset<[uv] -> b>') \
          .expression('<u>a')
-z = vcsn.context('lal(b), z').expression('<2>b')
-q = vcsn.context('lal(c), q').expression('<1/3>c')
-r = vcsn.context('lal(d), r').expression('<.4>d')
+z = vcsn.context('[b] -> z').expression('<2>b')
+q = vcsn.context('[c] -> q').expression('<1/3>c')
+r = vcsn.context('[d] -> r').expression('<.4>d')
 CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 
 # This is a real regression (#68): we used to interpret `<3><3>a` as

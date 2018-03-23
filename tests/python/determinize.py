@@ -51,11 +51,11 @@ def check(aut, expfile, algo="auto", deterministic=False):
 ## de bruijn/ladybird.  ##
 ## -------------------- ##
 
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 check(ctx.de_bruijn(3), 'de-bruijn-3')
 check(ctx.de_bruijn(8), 'de-bruijn-8')
 
-ctx = vcsn.context('lal(abc), b')
+ctx = vcsn.context('[abc] -> b')
 check(ctx.ladybird(4), 'ladybird-4')
 check(ctx.ladybird(8), 'ladybird-8')
 

@@ -8,7 +8,7 @@ from test import *
 
 
 # Nullable labelsets to please expansions.
-c = vcsn.context('lat<lal(abc), lal(efg), lal(xyz)>, q')
+c = vcsn.context('[abc] x [efg] x [xyz] -> q')
 
 def check(v, *p):
     for i in range(3):
@@ -39,7 +39,7 @@ check(c.label('a|e|x'),
 ## ---------- ##
 
 # We do not support properly focus automata on LAN.
-c2 = vcsn.context('lat<lal(abc), lal(efg), lal(xyz)>, q')
+c2 = vcsn.context('[abc] x [efg] x [xyz] -> q')
 t = c2.expression("(a|e|x) : (b|f|y) : (c|g|z)").automaton()
 
 def check_aut(function_name, type_):
@@ -121,7 +121,7 @@ check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
 
 # Check identities.
 check(vcsn
-      .context('lat<lal, lal, lal>, b')
+      .context('[...] x [...] x [...] -> b')
       .expression('(a{c}|e{c}|x{c}){c}'),
       'a', 'e', 'x')
 

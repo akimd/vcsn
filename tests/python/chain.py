@@ -106,7 +106,7 @@ check(a, 3, '''digraph
 ## Repeated multiply on expressions vs on automata.  ##
 ## ------------------------------------------------- ##
 
-ctx = vcsn.context('lal(ab), z')
+ctx = vcsn.context('[ab] -> z')
 r = ctx.expression('a')
 a = r.standard()
 def check(*args):

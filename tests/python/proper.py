@@ -303,7 +303,7 @@ check_fail(metext('lan-poly.3.fail.gv'))
 ## Forward vs. backward.  ##
 ## ---------------------- ##
 
-a = vcsn.context('lal(ab), b').expression('a*').thompson()
+a = vcsn.context('[ab] -> b').expression('a*').thompson()
 for algo in algos:
     for dir in ['backward', 'forward']:
         CHECK_EQ(meaut('astar-' + dir, 'gv').sort().strip(),

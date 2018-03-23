@@ -48,7 +48,7 @@ check_algo(ctx.expression('a<2>', 'none'))
 check_algo('<1/2>a*+<1/3>b*')
 
 # This used to trigger an assert.
-l_br = vcsn.context('lal(a), expressionset<lal(xy), b>')
+l_br = vcsn.context('[a] -> expressionset<[xy] -> b>')
 check(l_br.expression('<y>a(<x>a)*').automaton('derived_term'),
 '''
 digraph

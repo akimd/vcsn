@@ -8,7 +8,7 @@ from test import *
 ## ---------- ##
 
 # Standard automata.
-q = vcsn.context('lal(ab), q')
+q = vcsn.context('[ab] -> q')
 # This automaton is standard.
 r = q.expression(r'\e+[ab]b[ab]*', 'associative')
 
@@ -53,7 +53,7 @@ CHECK_EQ(q.expression(r'\z').automaton(),
 ## expression.  ##
 ## ------------ ##
 
-ctx = vcsn.context('lal(ab), expressionset<lal(xyz), q>')
+ctx = vcsn.context('[ab] -> expressionset<[xyz] -> q>')
 r = ctx.expression('<x>(<y>a)*<z>')
 CHECK_EQ(ctx.expression('<xx>(<y>a)*<z>'), 'x' * r)
 CHECK_EQ(ctx.expression('<x>(<y>a)*<zz>'), r * 'z')

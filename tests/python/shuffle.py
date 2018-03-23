@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-b = vcsn.context('lal(abcd), b')
+b = vcsn.context('[abcd] -> b')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -100,8 +100,8 @@ CHECK_EQ('''digraph
 ## ---------------------- ##
 # TAFKIT manual, Figure 3.13, right [as of 2013-10-10]
 
-pas = vcsn.context("lal(a), z").expression('a*').derived_term()
-mas = vcsn.context("lal(a), z").expression('(<-1>a)*').derived_term()
+pas = vcsn.context("[a] -> z").expression('a*').derived_term()
+mas = vcsn.context("[a] -> z").expression('(<-1>a)*').derived_term()
 CHECK_EQ('''digraph
 {
   vcsn_context = "[a]? → ℤ"
@@ -125,8 +125,8 @@ CHECK_EQ('''digraph
 ## ABC )( ab. ##
 ## ---------- ##
 
-ab = vcsn.context('lal(ab), z').expression('ab').standard()
-ABC = vcsn.context('lal(ABC), z').expression('ABC').standard()
+ab = vcsn.context('[ab] -> z').expression('ab').standard()
+ABC = vcsn.context('[ABC] -> z').expression('ABC').standard()
 ABCab = ABC.shuffle(ab)
 CHECK_EQ('''digraph
 {
@@ -192,9 +192,9 @@ abABC''', ABCab.shortest(len = 10).format('list'))
 ## --------------------- ##
 
 # RatE and B, in both directions.
-a1 = vcsn.context('lal(ab), seriesset<lal(uv), q>') \
+a1 = vcsn.context('[ab] -> seriesset<[uv] -> q>') \
          .expression('(<u>a+<v>b)*').standard()
-a2 = vcsn.context('lal(ab), b').expression('a').standard()
+a2 = vcsn.context('[ab] -> b').expression('a').standard()
 CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
          a1.shuffle(a2).shortest(4).format('text'))
 CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
@@ -205,9 +205,9 @@ CHECK_EQ('a + <<2>u>aa + <v>ab + <v>ba',
 ## Non-commutative.  ##
 ## ----------------- ##
 
-a1 = vcsn.context('lal(ab), seriesset<lal(uv), q>') \
+a1 = vcsn.context('[ab] -> seriesset<[uv] -> q>') \
          .expression('<u>a<v>b').standard()
-a2 = vcsn.context('lal(ab), seriesset<lal(xy), q>') \
+a2 = vcsn.context('[ab] -> seriesset<[xy] -> q>') \
          .expression('<x>a<y>b').standard()
 CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 <uvxy+xyuv>abab''', a1.shuffle(a2).shortest(len = 4).format('list'))
@@ -217,7 +217,7 @@ CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 ## Variadic.  ##
 ## ---------- ##
 
-ctx = vcsn.context('lal(x), seriesset<lal(abcd), q>')
+ctx = vcsn.context('[x] -> seriesset<[abcd] -> q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.expression("<{}>x".format(l)).standard()

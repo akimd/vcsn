@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-z = vcsn.context('lal(01), z')
+z = vcsn.context('[01] -> z')
 
 binary = load('lal_char_z/binary.gv')
 

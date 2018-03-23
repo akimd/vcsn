@@ -19,7 +19,7 @@ def check(aut, word, exp):
 ## law, z.  ##
 ## ------------- ##
 
-for c in ["lal(ab), z", "lal, z", "law(ab), z"]:
+for c in ["[ab] -> z", "lal, z", "law(ab), z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
     digraph
@@ -68,7 +68,7 @@ for c in ["lal(ab), z", "lal, z", "law(ab), z"]:
     check(initial_weight, 'abab',   '8')
     check(initial_weight, 'aabab', '12')
 
-for c in ["lal(abc), z", "law(abc), z"]:
+for c in ["[abc] -> z", "law(abc), z"]:
     ctx = vcsn.context(c)
     more_letters = vcsn.automaton('''
     digraph
@@ -147,7 +147,7 @@ for c in ["lal(abc), z", "law(abc), z"]:
 ## law_char_zmin.  ##
 ## --------------- ##
 
-for c in ['lal(abc), zmin', 'law(abc), zmin']:
+for c in ['[abc] -> zmin', 'law(abc), zmin']:
     ctx = vcsn.context(c)
     a = ctx.expression('a').standard()
     check(a, '',   'oo')

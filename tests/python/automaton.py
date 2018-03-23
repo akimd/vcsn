@@ -131,7 +131,7 @@ xfail(r'''digraph
 # No context defined (see the typo in vcsn_context).
 xfail(r'''digraph
 {
-  vcsn_contxt = "lal(ab), b"
+  vcsn_contxt = "[ab] -> b"
   0 -> 1 [label = a]
   1 -> F1
   I0 -> 0
@@ -303,7 +303,7 @@ $ -> 3
 
 # Make sure to check the rendering useful/useless named/nameless
 # states, weights, and spontaneous transitions.
-c = vcsn.context('lal(ab), z')
+c = vcsn.context('[ab] -> z')
 a = c.expression('<2>a+<2>b').thompson()
 CHECK_EQ('''digraph
 {
@@ -766,4 +766,4 @@ XFAIL(lambda: vcsn.automaton('''context = [abc]? → 𝔹
 
 # Convert to an invalid smaller weightset.
 XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℤ
-  0 -> 1 <3>a, b''').automaton(vcsn.context("lal(xy), b")))
+  0 -> 1 <3>a, b''').automaton(vcsn.context("[xy] -> b")))

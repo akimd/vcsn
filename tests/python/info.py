@@ -123,7 +123,7 @@ check(vcsn.context('law(ab), b')
 def check(obj, exp):
     CHECK_EQ(exp, obj.info())
 
-b = vcsn.context('lal(abc), b')
+b = vcsn.context('[abc] -> b')
 check(b.expression('abc'),
       {
           'add': 0,
@@ -174,7 +174,7 @@ check(b.expression(r'\e+bc*'),
           'zero': 0,
       })
 
-q = vcsn.context('lal(abc), q')
+q = vcsn.context('[abc] -> q')
 check(q.expression('<2>a<3>'),
       {
           'add': 0,

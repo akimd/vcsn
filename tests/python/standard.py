@@ -4,7 +4,7 @@ import re
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 
 ## --------------- ##
 ## standard(aut).  ##
@@ -69,7 +69,7 @@ def xfail(re):
 ## --- ##
 
 # B: "\z".
-check(r'(?@lal(ab), b)\z',
+check(r'(?@[ab] -> b)\z',
 '''digraph
 {
   vcsn_context = "[ab]? → 𝔹"
@@ -87,7 +87,7 @@ check(r'(?@lal(ab), b)\z',
 }''')
 
 # B: "\e".
-check(r'(?@lal(ab), b)\e',
+check(r'(?@[ab] -> b)\e',
 '''digraph
 {
   vcsn_context = "[ab]? → 𝔹"
@@ -107,7 +107,7 @@ check(r'(?@lal(ab), b)\e',
 }''')
 
 # B: "a"
-check('(?@lal(ab), b)a',
+check('(?@[ab] -> b)a',
 '''digraph
 {
   vcsn_context = "[ab]? → 𝔹"
@@ -129,7 +129,7 @@ check('(?@lal(ab), b)a',
 }''')
 
 # B: "a+b"
-check('(?@lal(ab), b)a+b',
+check('(?@[ab] -> b)a+b',
 '''digraph
 {
   vcsn_context = "[ab]? → 𝔹"
@@ -155,7 +155,7 @@ check('(?@lal(ab), b)a+b',
 }''')
 
 # B: "abc".
-check('(?@lal(abc), b)abc',
+check('(?@[abc] -> b)abc',
 '''digraph
 {
   vcsn_context = "[abc]? → 𝔹"
@@ -181,7 +181,7 @@ check('(?@lal(abc), b)abc',
 }''')
 
 # B: "ab+cd".
-check('(?@lal(abcd), b)ab+cd',
+check('(?@[abcd] -> b)ab+cd',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -211,7 +211,7 @@ check('(?@lal(abcd), b)ab+cd',
 }''')
 
 # B: "a(b+c)d".
-check('(?@lal(abcd), b)a(b+c)d',
+check('(?@[abcd] -> b)a(b+c)d',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -240,7 +240,7 @@ check('(?@lal(abcd), b)a(b+c)d',
 }''')
 
 # B: "(ab+cd+abcd)abc".
-check('(?@lal(abcd), b)(ab+cd+abcd)abc',
+check('(?@[abcd] -> b)(ab+cd+abcd)abc',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -288,7 +288,7 @@ check('(?@lal(abcd), b)(ab+cd+abcd)abc',
 ## B: Star.  ##
 ## --------- ##
 
-check(r'(?@lal(abcd), b)\z*',
+check(r'(?@[abcd] -> b)\z*',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -307,7 +307,7 @@ check(r'(?@lal(abcd), b)\z*',
   0 -> F0
 }''')
 
-check(r'(?@lal(abcd), b)\e*',
+check(r'(?@[abcd] -> b)\e*',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -326,7 +326,7 @@ check(r'(?@lal(abcd), b)\e*',
   0 -> F0
 }''')
 
-check('(?@lal(abcd), b)a*',
+check('(?@[abcd] -> b)a*',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -350,7 +350,7 @@ check('(?@lal(abcd), b)a*',
   1 -> 1 [label = "a"]
 }''')
 
-check('(?@lal(abcd), b)(a+b)*',
+check('(?@[abcd] -> b)(a+b)*',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -381,7 +381,7 @@ check('(?@lal(abcd), b)(a+b)*',
   2 -> 2 [label = "b"]
 }''')
 
-check('(?@lal(abcd), b)(ab)*',
+check('(?@[abcd] -> b)(ab)*',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -407,7 +407,7 @@ check('(?@lal(abcd), b)(ab)*',
   2 -> 1 [label = "a"]
 }''')
 
-check('(?@lal(abcd), b)a**',
+check('(?@[abcd] -> b)a**',
 '''digraph
 {
   vcsn_context = "[abcd]? → 𝔹"
@@ -437,7 +437,7 @@ check('(?@lal(abcd), b)a**',
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check(r'(?@lal(a), expressionset<lal(xyz), b>)<x>a(<y>\e+<z>a)',
+check(r'(?@[a] -> expressionset<[xyz] -> b>)<x>a(<y>\e+<z>a)',
 '''digraph
 {
   vcsn_context = "[a]? → RatE[[xyz]? → 𝔹]"
@@ -469,7 +469,7 @@ check(r'(?@lal(a), expressionset<lal(xyz), b>)<x>a(<y>\e+<z>a)',
 
 
 # Q: "<12>\e".
-check(r'(?@lal(ab), q)<12>\e',
+check(r'(?@[ab] -> q)<12>\e',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -493,7 +493,7 @@ check(r'(?@lal(ab), q)<12>\e',
 ## -------- ##
 
 # Q: "\e+a+\e"
-check(r'(?@lal(ab), q)\e+a+\e',
+check(r'(?@[ab] -> q)\e+a+\e',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -517,7 +517,7 @@ check(r'(?@lal(ab), q)\e+a+\e',
 }''')
 
 # Q: "<12>\e+<23>a+<34>b".
-check(r'(?@lal(ab), q)<12>\e+<23>a+<34>b',
+check(r'(?@[ab] -> q)<12>\e+<23>a+<34>b',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -545,7 +545,7 @@ check(r'(?@lal(ab), q)<12>\e+<23>a+<34>b',
 }''')
 
 # left weight.
-check(r'(?@lal(ab), q)<12>(\e+a+<10>b+<10>\e)',
+check(r'(?@[ab] -> q)<12>(\e+a+<10>b+<10>\e)',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -632,7 +632,7 @@ check(vcsn.Q.expression('<12>(ab)<23>', 'associative'),
 ## Q: star.  ##
 ## --------- ##
 
-check(r'(?@lal(ab), q)\z*',
+check(r'(?@[ab] -> q)\z*',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -651,9 +651,9 @@ check(r'(?@lal(ab), q)\z*',
   0 -> F0
 }''')
 
-xfail(r'(?@lal(ab), q)\e*')
+xfail(r'(?@[ab] -> q)\e*')
 
-check('(?@lal(ab), q)(<2>a)*',
+check('(?@[ab] -> q)(<2>a)*',
 '''digraph
 {
   vcsn_context = "[ab]? → ℚ"
@@ -789,13 +789,13 @@ check(vcsn.Q.expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
   2 -> 1 [label = "<15>a"]
 }''')
 
-xfail('(?@lal(ab), q)a**')
+xfail('(?@[ab] -> q)a**')
 
 ## ---------- ##
 ## QR: star.  ##
 ## ---------- ##
 
-check(r'(?@lal(abcd), expressionset<lal(efgh), q>)(<e>\e+abc)*',
+check(r'(?@[abcd] -> expressionset<[efgh] -> q>)(<e>\e+abc)*',
 '''digraph
 {
   vcsn_context = "[abcd]? → RatE[[efgh]? → ℚ]"
@@ -823,7 +823,7 @@ check(r'(?@lal(abcd), expressionset<lal(efgh), q>)(<e>\e+abc)*',
   3 -> 1 [label = "<e*>a"]
 }''')
 
-check(r'(?@lal(abcd), expressionset<lal(efgh), q>)(<e>\e+(ab)<f>)*',
+check(r'(?@[abcd] -> expressionset<[efgh] -> q>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
   vcsn_context = "[abcd]? → RatE[[efgh]? → ℚ]"

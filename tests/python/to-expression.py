@@ -39,7 +39,7 @@ check_aut(load('lal_char_zmin/slowgrow.gv'),
 ## expression.standard().expression().  ##
 ## ------------------------------------ ##
 
-ctx = vcsn.context("lal(abc), b")
+ctx = vcsn.context("[abc] -> b")
 
 # check_exp RAT [EXP-OUT = RAT]
 # -----------------------------
@@ -53,13 +53,13 @@ check_exp('a')
 check_exp('ab')
 check_exp('a*', r'\e+aa*')
 check_exp('a+b')
-check_exp('(?@lal(ab), z)<2>(ab)<3>', '<6>(ab)')
+check_exp('(?@[ab] -> z)<2>(ab)<3>', '<6>(ab)')
 check_exp('(?@law(ab), z)<2>(ab)<3>', '<6>(ab)')
 
 
-check_exp('(?@lal(abc), z)(<2>(<3>a+<5>b)<7>c)<11>', \
+check_exp('(?@[abc] -> z)(<2>(<3>a+<5>b)<7>c)<11>', \
           '<462>(ac)+<770>(bc)')
 
 # Likewise, but check the order of the products.
-check_exp('(?@lal(abc), expressionset<lal(vwxyz), b>)(<v>(<w>a+<x>b)<y>c)<z>', \
+check_exp('(?@[abc] -> expressionset<[vwxyz] -> b>)(<v>(<w>a+<x>b)<y>c)<z>', \
           '(<vw>a<y>c+<vx>b<y>c)<z>')

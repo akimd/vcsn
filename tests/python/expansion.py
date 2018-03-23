@@ -77,7 +77,7 @@ check(lao.expression(r'(<1/2>\e)*'))
 ## --------- ##
 ## Compose.  ##
 ## --------- ##
-ctx = vcsn.context('lat<lal(abcde), lal(abcde)>, q')
+ctx = vcsn.context('[abcde] x [abcde] -> q')
 def check(r1, r2, exp):
     '''Check that `@` between expansions corresponds to the expansion of
     `@` between expressions.'''

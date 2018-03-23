@@ -6,7 +6,7 @@ from test import *
 ## ---------------- ##
 ## LAN x LAN -> Q.  ##
 ## ---------------- ##
-c = vcsn.context("lat<lal(abc), lal(xyz)>, q")
+c = vcsn.context("[abc] x [xyz] -> q")
 
 # Make sure we can copy/convert a k-tape expression.
 e = c.expression('a|x')
@@ -56,7 +56,7 @@ f = vcsn.tuple(exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*'))
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
 
 # Using the operator |.
-c = vcsn.context("lat<lal(a), lal(b), lal(c)>, q")
+c = vcsn.context("[a] x [b] x [c] -> q")
 e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
 CHECK_EQ(f, e)
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)

@@ -57,7 +57,7 @@ for ls in ["lal", "law"]:
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lal(ab), lal(xy)>, b"
+  vcsn_context = "[ab] x [xy] -> b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -72,7 +72,7 @@ check('is_free', False, a)
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lal(ab), lal(xy)>, b"
+  vcsn_context = "[ab] x [xy] -> b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]
@@ -88,7 +88,7 @@ check('is_free', False, a)
 a = r'''
 digraph
 {
-  vcsn_context = "lat<lal(ab), lal(xy)>, b"
+  vcsn_context = "[ab] x [xy] -> b"
 
   I0 -> 0
   0 -> 1 [label = "(a, x)"]

@@ -7,7 +7,7 @@ from test import *
 ## transpose(automaton).  ##
 ## ---------------------- ##
 
-c = vcsn.context("lal(abc), expressionset<lal(xyz), q>")
+c = vcsn.context("[abc] -> expressionset<[xyz] -> q>")
 a = c.expression("(<xyz>abc)*").derived_term()
 CHECK_EQ('''digraph
 {
@@ -96,7 +96,7 @@ def check(r1, r2=None):
     CHECK_EQ(e2, e1.transpose())
     CHECK_EQ(e1, e2.transpose())
 
-ctx = vcsn.context('lal(abcd), b')
+ctx = vcsn.context('[abcd] -> b')
 check(r'\e')
 check(r'\z')
 check('a')

@@ -39,7 +39,7 @@ def check(re, size, *exp):
   check_shortest(re, size, *exp)
 
 
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 
 check(r'\z', 3, r'\z')
 check(r'\e', 3, r'\e')
@@ -53,7 +53,7 @@ check_enumerate('ababab', 2, r'\z')
 check_shortest('ababab', 2, 'ababab')
 
 
-ctx = vcsn.context('lal(01), q')
+ctx = vcsn.context('[01] -> q')
 check_enumerate('(0+1)*1(<2>0+<2>1)*', 3, \
       '1',
       '01', '<2>10', '<3>11', \
@@ -61,7 +61,7 @@ check_enumerate('(0+1)*1(<2>0+<2>1)*', 3, \
 
 check_shortest('(0+1)*1(<2>0+<2>1)*', 3, '1 + 01 + <2>10')
 
-ctx = vcsn.context('lal(a), q')
+ctx = vcsn.context('[a] -> q')
 check('a+<-1>a', 2, r'\z')
 
 # Wordset.
@@ -69,7 +69,7 @@ ctx = vcsn.context('law(a), q')
 check_shortest('(a+aaa)*', 7, r'\e + a + aa + <2>aaa + <3>aaaa + <4>aaaaa + <6>aaaaaa')
 
 # LAN x LAN
-ctx = vcsn.context('lat<lal(a), lal(x)>, q')
+ctx = vcsn.context('[a] x [x] -> q')
 check_shortest(r'(\e|x + a|\e)*', 9,
                r'\e|\e + \e|x + a|\e + <2>a|x + \e|xx + <3>a|xx + aa|\e + <3>aa|x + <6>aa|xx')
 check_enumerate(r'(\e|x + a|\e)*', 2,

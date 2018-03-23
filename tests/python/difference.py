@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal(abcd), b')
+ctx = vcsn.context('[abcd] -> b')
 
 # check LHS RHS EXPECTED
 # ----------------------
@@ -21,4 +21,4 @@ check('(a+b)*', '(a+b)*',        r'\z')
 
 check('a(ba)*', '(ab)*a', r'\z')
 
-check('(?@lal(ab), z)(<2>a+<3>b)*', '(a+b)*a(a+b)*', '(<3>b)*')
+check('(?@[ab] -> z)(<2>a+<3>b)*', '(a+b)*a(a+b)*', '(<3>b)*')

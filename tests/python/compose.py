@@ -14,10 +14,9 @@ def check(a1, a2, exp):
 ## Contexts.  ##
 ## ---------- ##
 
-make = vcsn.context
-c1 = make('lat<lal(abc), lal(efg), lal(xyz)>, b')
-c2 = make('lat<lal(xyz), lal(EFG), lal(ABC)>, q')
-c3 = make('lat<lal(abc), lal(efg), lal(EFG), lal(ABC)>, q')
+c1 = vcsn.context('[abc] x [efg] x [xyz] -> b')
+c2 = vcsn.context('[xyz] x [EFG] x [ABC] -> q')
+c3 = vcsn.context('[abc] x [efg] x [EFG] x [ABC] -> q')
 check(c1, c2, c3)
 
 ## -------- ##
@@ -58,8 +57,8 @@ check(c1.polynomial('a|e|x + a|e|y + a|e|\e'),
 ## Automata.  ##
 ## ---------- ##
 
-c1 = vcsn.context("lat<lal(abc),lal(xyz)>, b")
-c2 = vcsn.context("lat<lal(xyz),lal(def)>, b")
+c1 = vcsn.context("[abc] x [xyz] -> b")
+c2 = vcsn.context("[xyz] x [def] -> b")
 
 check(c1.expression("a|x").standard(),
       c2.expression("x|d").standard(),
@@ -167,8 +166,8 @@ check(c1.expression("(a|x)*").standard(),
 ## Heterogeneous contexts.  ##
 ## ------------------------ ##
 
-c_ratb = vcsn.context("lat<lal(abc),lal(xyz)>, expressionset<lal(mno), b>")
-c_q = vcsn.context("lat<lal(xyz),lal(def)>, q")
+c_ratb = vcsn.context("[abc] x [xyz] -> RatE[[mno] -> b]")
+c_q = vcsn.context("[xyz] x [def] -> q")
 check(c_ratb.expression("<o>(a|x)").standard(),
       c_q.expression("<3/2>(x|d)").standard(),
       r'''digraph
@@ -245,7 +244,7 @@ res = r'''digraph
 check(a1, a2, res)
 
 
-c_r = vcsn.context("lat<lal(abc),lal(xyz)>, r")
+c_r = vcsn.context("[abc] x [xyz] -> r")
 check(c_r.expression("<3.1>(a|x)").standard(),
       c2.expression("x|d").standard(),
       r'''digraph
@@ -285,7 +284,7 @@ CHECK_EQ(metext('result.gv'),
 
 
 # Test laziness on strict composition
-ctx = vcsn.context("lat<lal<char>, lal<char>>, b")
+ctx = vcsn.context("[...] x [...] -> b")
 fr_to_en = ctx.expression("chien|dog + chat|cat").automaton()
 en_to_es = ctx.expression("dog|perro + cat|gato").automaton()
 fr_to_es_lazy = fr_to_en.compose(en_to_es, lazy=True)

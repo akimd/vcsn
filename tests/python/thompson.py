@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-ctx = vcsn.context('lal(ab), b')
+ctx = vcsn.context('[ab] -> b')
 
 def check(re, exp):
     # We compare automata as strings, since when parsing the expected
@@ -53,7 +53,7 @@ r'''digraph
 }''')
 
 # Z: "<12>\e".
-check(r'(?@lal(a), z)<12>\e',
+check(r'(?@[a] -> z)<12>\e',
 r'''digraph
 {
   vcsn_context = "[a]? → ℤ"
@@ -79,7 +79,7 @@ r'''digraph
 ## -------- ##
 
 # Z: "\e+a+\e"
-check(r'(?@lal(ab), z)\e+a+\e',
+check(r'(?@[ab] -> z)\e+a+\e',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -146,7 +146,7 @@ r'''digraph
 }''')
 
 # left weight.
-check(r'(?@lal(ab), z)<10>(<2>\e+<3>a+<5>b)',
+check(r'(?@[ab] -> z)<10>(<2>\e+<3>a+<5>b)',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -182,7 +182,7 @@ r'''digraph
 }''')
 
 # right weight.
-check(vcsn.context('lal(ab), z')
+check(vcsn.context('[ab] -> z')
       .expression(r'(<2>\e+<3>a+<5>b)<10>', 'associative'),
 r'''digraph
 {
@@ -252,7 +252,7 @@ r'''digraph
 ## Z: star.  ##
 ## --------- ##
 
-check(r'(?@lal(ab), z)\z*',
+check(r'(?@[ab] -> z)\z*',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -273,7 +273,7 @@ r'''digraph
   1 -> F1
 }''')
 
-check(r'(?@lal(ab), b)\e*',
+check(r'(?@[ab] -> b)\e*',
 r'''digraph
 {
   vcsn_context = "[ab]? → 𝔹"
@@ -300,7 +300,7 @@ r'''digraph
   3 -> F3
 }''')
 
-check('(?@lal(ab), z)(<2>a)*',
+check('(?@[ab] -> z)(<2>a)*',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -327,7 +327,7 @@ r'''digraph
   3 -> F3
 }''')
 
-check(vcsn.context('lal(ab), z').expression('<2>a*<3>', 'associative'),
+check(vcsn.context('[ab] -> z').expression('<2>a*<3>', 'associative'),
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -354,7 +354,7 @@ r'''digraph
   3 -> F3
 }''')
 
-check('(?@lal(ab), z)(<2>a+<3>b)*',
+check('(?@[ab] -> z)(<2>a+<3>b)*',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -390,7 +390,7 @@ r'''digraph
   7 -> F7
 }''')
 
-check(vcsn.context('lal(ab), z')
+check(vcsn.context('[ab] -> z')
       .expression('<2>(<3>a+<5>b)*<7>', 'associative'),
 r'''digraph
 {
@@ -427,7 +427,7 @@ r'''digraph
   7 -> F7
 }''')
 
-check(vcsn.context('lal(ab), z')
+check(vcsn.context('[ab] -> z')
       .expression('<2>(<3>(ab)<5>)*<7>', 'associative'),
 r'''digraph
 {
@@ -459,7 +459,7 @@ r'''digraph
   5 -> F5
 }''')
 
-check('(?@lal(ab), z)a**',
+check('(?@[ab] -> z)a**',
 r'''digraph
 {
   vcsn_context = "[ab]? → ℤ"
@@ -496,7 +496,7 @@ r'''digraph
 ## ZR: star.  ##
 ## ---------- ##
 
-check(r'(?@lal(abcd), expressionset<lal(efgh), q>)(<e>\e+abc)*',
+check(r'(?@[abcd] -> expressionset<[efgh] -> q>)(<e>\e+abc)*',
 r'''digraph
 {
   vcsn_context = "[abcd]? → RatE[[efgh]? → ℚ]"
@@ -540,7 +540,7 @@ r'''digraph
   11 -> F11
 }''')
 
-check(r'(?@lal(abcd), expressionset<lal(efgh), q>)(<e>\e+ab<f>)*',
+check(r'(?@[abcd] -> expressionset<[efgh] -> q>)(<e>\e+ab<f>)*',
 r'''digraph
 {
   vcsn_context = "[abcd]? → RatE[[efgh]? → ℚ]"
@@ -582,7 +582,7 @@ r'''digraph
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check(r'(?@lal(a), expressionset<lal(xyz), q>)<x>a(<y>\e+<z>a)',
+check(r'(?@[a] -> expressionset<[xyz] -> q>)<x>a(<y>\e+<z>a)',
 r'''digraph
 {
   vcsn_context = "[a]? → RatE[[xyz]? → ℚ]"

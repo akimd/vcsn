@@ -11,20 +11,20 @@ from test import *
 def std(ctx, exp):
     return vcsn.context(ctx).expression(exp).standard()
 
-ctxbr = vcsn.context('lal(a), expressionset<lal(uv), b>')
-ctxz = vcsn.context('lal(b), z')
-ctxq = vcsn.context('lal(c), q')
-ctxr = vcsn.context('lal(d), r')
+ctxbr = vcsn.context('[a] -> expressionset<[uv] -> b>')
+ctxz = vcsn.context('[b] -> z')
+ctxq = vcsn.context('[c] -> q')
+ctxr = vcsn.context('[d] -> r')
 
-ab = std('lal(ab), b', '(a+b)*')
-bc = std('lal(bc), b', '(b+c)*')
+ab = std('[ab] -> b', '(a+b)*')
+bc = std('[bc] -> b', '(b+c)*')
 CHECK_EQ(metext('ab+bc.gv'), ab.add(bc))
 
 CHECK_EQ(metext('a1+b1.gv'), meaut('a1.gv').add(meaut('b1.gv')))
 
 # Check join of contexts.
-a = std('lal(a), expressionset<lal(x), b>', '<x>a*')
-b = std('lal(b), q', '<1/2>b*')
+a = std('[a] -> expressionset<[x] -> b>', '<x>a*')
+b = std('[b] -> q', '<1/2>b*')
 CHECK_EQ(metext('join.gv'), a.add(b))
 
 
@@ -38,8 +38,8 @@ CHECK_ISOMORPHIC(c, a + b)
 # Deterministic add.
 def check_det(lhs, rhs):
     print('check_det({}, {})'.format(lhs, rhs))
-    a = std('lal(ab), b', lhs)
-    b = std('lal(ab), b', rhs)
+    a = std('[ab] -> b', lhs)
+    b = std('[ab] -> b', rhs)
     res = a.add(b, algo='deterministic')
     CHECK(res.is_deterministic())
     CHECK_EQUIV(a.add(b), res)

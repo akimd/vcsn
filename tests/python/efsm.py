@@ -69,7 +69,7 @@ check(a, 'one.efsm')
 # Note that "sort" is critical here, otherwise the transitions
 # are not issued in the state-order, so when we read back, the
 # states numbers are different.
-a = vcsn.context('lal(ab), b').expression('ab*').thompson().sort().strip()
+a = vcsn.context('[ab] -> b').expression('ab*').thompson().sort().strip()
 check(a, 'abs.efsm')
 
 # Don't try law<char>, it does not make any sense for OpenFST.
@@ -79,12 +79,12 @@ check(a, 'str.efsm')
 
 # A transducer that looks like an acceptor when looking at the symbol
 # numbers.
-a = vcsn.context('lat<lal(abc),lal(xyz)>, b')\
+a = vcsn.context('[abc] x [xyz]')\
     .expression("(a|x+b|y+c|z)*").standard().sort().strip()
 check(a, 'a2x.efsm')
 
 # A transducer that cannot be seen as an acceptor.
-a = vcsn.context('lat<lal(a),lal(xyz)>, b')\
+a = vcsn.context('[a] x [xyz]')\
     .expression("(a|x+a|y+a|z)*").standard().sort().strip()
 check(a, 'a2xyz.efsm')
 
@@ -98,7 +98,7 @@ def compose(l, r):
     print("Compose:", l, r)
     # We need to enforce the letters, otherwise fstcompose complains
     # about incompatible symbol tables.
-    ctx = vcsn.context('lat<lal(amxy), lal(amxy)>, zmin')
+    ctx = vcsn.context('[amxy] x [amxy] -> zmin')
     l = ctx.expression(l).automaton()
     r = ctx.expression(r).automaton()
     c_vcsn = l.compose(r).strip()
@@ -132,7 +132,7 @@ if have_ofst:
 
     # Check that our infos are compatible.
     print('Info')
-    zmin = vcsn.context('lal(ab), zmin')
+    zmin = vcsn.context('[ab] -> zmin')
     a = zmin.expression('[ab]*a(<2>[ab])').automaton()
     vcsninfo = a.info()
     print("vcsninfo:\n{}\n".format(format(vcsninfo)))
@@ -150,7 +150,7 @@ if have_ofst:
     # has weights on the final states only, which exercises a bug we
     # once had.
     print("Determinize")
-    zmin = vcsn.context('lal(ab), zmin')
+    zmin = vcsn.context('[ab] -> zmin')
     a = zmin.expression('[ab]*a(<2>[ab])').automaton()
     d_vcsn = a.determinize().strip()
     d_ofst = a.fstdeterminize()

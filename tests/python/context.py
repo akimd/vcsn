@@ -21,10 +21,10 @@ lal(a)_UNKNOWN
       ^_''')
 
 # Invalid context: trailing garbage.
-XFAIL(lambda: vcsn.context("lal(a), b_z"),
+XFAIL(lambda: vcsn.context("[a] -> b_z"),
       '''expected end of input here:
-lal(a), b_z
-         ^_''')
+[a] -> b_z
+        ^_''')
 
 # Invalid context: missing weightset.
 XFAIL(lambda: vcsn.context("lal ->"),
@@ -48,21 +48,21 @@ RatE[[...]? → BU]
 ## --------------------- ##
 
 # Different types of syntactic sugar.
-for c in ['lal<char(abc)>, b', 'lal(abc), b']:
+for c in ['lal<char(abc)>, b', '[abc] -> b']:
     check(c, '[abc]? → 𝔹')
 
 for c in ['lal<char>, b', 'lal, b']:
     check(c, '[...]? → 𝔹')
 
-check('lal, b',      r'\{\ldots\}^?\to\mathbb{B}', 'latex')
-check('lal, b',      r'[...]? -> B',               'text')
-check('lal, b',      r'[...]? → 𝔹',                'utf8')
-check('lal(abc), b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
-check('lal(abc), b', r'[abc]? -> B',                'text')
-check('lal(abc), b', r'[abc]? → 𝔹',                 'utf8')
-check('lal(), b',    r'\{\}^?\to\mathbb{B}', 'latex')
-check('lal(), b',    r'[]? -> B',            'text')
-check('lal(), b',    r'[]? → 𝔹',             'utf8')
+check('[...] -> b', r'\{\ldots\}^?\to\mathbb{B}', 'latex')
+check('[...] -> b', r'[...]? -> B',               'text')
+check('[...] -> b', r'[...]? → 𝔹',                'utf8')
+check('[abc] -> b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
+check('[abc] -> b', r'[abc]? -> B',                'text')
+check('[abc] -> b', r'[abc]? → 𝔹',                 'utf8')
+check('[] -> b',    r'\{\}^?\to\mathbb{B}', 'latex')
+check('[] -> b',    r'[]? -> B',            'text')
+check('[] -> b',    r'[]? → 𝔹',             'utf8')
 
 # Check open/close.
 check('[a] -> b', '[a]? → 𝔹')
@@ -79,7 +79,7 @@ check('[...-0] -> b', '[\-0...]? → 𝔹')
 
 # letterset and different char_letters.
 check(r'lal(), b',       r'[]? → 𝔹')
-check(r'lal(ab), b',     r'[ab]? → 𝔹')
+check(r'[ab] -> b',     r'[ab]? → 𝔹')
 check(r'lal(a-kv-z), b', r'[abcdefghijkvwxyz]? → 𝔹')
 check(r'lal(-0-9), b',   r'[\-0123456789]? → 𝔹')
 check(r'lal(<>[]{}), b', r'[\<\>\[\]{}]? → 𝔹')
@@ -95,7 +95,7 @@ CHECK_EQ(r'''\x01 + \x02 + \x03 + \x04 + \x05 + \x06 + \x07 + \x08 + \x09 + \n +
          .expression('[^]')
          .shortest(len=1))
 
-check('lal(ab), q', '[ab]? → ℚ')
+check('[ab] -> q', '[ab]? → ℚ')
 
 
 ## ------------------- ##
@@ -110,7 +110,7 @@ check('wordset<string_letters>, b', 'wordset<string_letters>, b', 'sname')
 ## LabelSet: expressionset.  ##
 ## ------------------------- ##
 
-check('expressionset<lal(ab), b>, b', 'RatE[[ab]? → 𝔹] → 𝔹')
+check('expressionset<[ab] -> b>, b', 'RatE[[ab]? → 𝔹] → 𝔹')
 # expressions weighted by expressions.
 check('RatE[[ab]? → RatE[[xy]? → ℚ]] → 𝔹')
 
@@ -118,7 +118,7 @@ check('RatE[[ab]? → RatE[[xy]? → ℚ]] → 𝔹')
 ## WeightSet: polynomialset.  ##
 ## -------------------------- ##
 
-check('lal(ab), polynomialset<law(xy), q>',
+check('[ab] -> polynomialset<law(xy), q>',
       '[ab]? → Poly[[xy]* → ℚ]')
 
 
@@ -127,13 +127,13 @@ check('lal(ab), polynomialset<law(xy), q>',
 ## -------------------- ##
 
 check('[a]? × [a]? → 𝔹')
-check('lat<lal(a),lal(a)>,b', '[a]? × [a]? → 𝔹')
-check('lal(ab), lat<b, z>', '[ab]? → 𝔹 × ℤ')
+check('[a] x [a]', '[a]? × [a]? → 𝔹')
+check('[ab] -> b x z', '[ab]? → 𝔹 × ℤ')
 
 # Tuple contexts.
-c1 = vcsn.context('lal(abc), b')
-c2 = vcsn.context('lal(xyz), q')
-CHECK_EQ(vcsn.context('lat<lal(abc), lal(xyz)>, q'), c1 | c2)
+c1 = vcsn.context('[abc] -> b')
+c2 = vcsn.context('[xyz] -> q')
+CHECK_EQ(vcsn.context('[abc] x [xyz] -> q'), c1 | c2)
 
 
 ## --------------------- ##
@@ -148,8 +148,8 @@ CHECK_EQ(vcsn.context('lat<lal(abc), lal(xyz)>, q'), c1 | c2)
 check('lat<lal>, b', 'lat<letterset<char_letters>>, b', fmt='sname')
 check('lat<lat<lal(a)>>, b', 'lat<lat<letterset<char_letters(a)>>>, b', fmt='sname')
 
-ctx = '''lat<lal(ba),lal(vu), law(x-z)>,
-         lat<expressionset<lat<lal(fe), lal(hg)>, q>, r, q>'''
+ctx = '''[ba] x [vu] x [x-z]* ->
+         RatE[[fe] x [hg] -> q] x r x q'''
 check(ctx,
       'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>'
       ', lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>',
@@ -195,9 +195,9 @@ def check(c1, c2):
     CHECK_EQ(False, c2 != c2)
     CHECK_EQ(True, c1 != c2)
     CHECK_EQ(True, c2 != c1)
-check('lal(abc), b', 'lal(abcd), b')
-check('lal(abc), b', 'law(abc), b')
-check('lal(abc), b', 'lal(abc), q')
+check('[abc] -> b', '[abcd] -> b')
+check('[abc] -> b', 'law(abc), b')
+check('[abc] -> b', '[abc] -> q')
 # Regression: at some point they were considered equal, because there
 # were no difference when printed in UTF-8.  We now check the sname.
-check('lat<lal(abc)>, b', 'lal(abc), b')
+check('lat<[abc]>, b', '[abc] -> b')

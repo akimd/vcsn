@@ -9,9 +9,9 @@ from test import *
 ## Contexts.  ##
 ## ---------- ##
 
-c1 = vcsn.context('law(ab), b')
-c2 = vcsn.context('lal(xy), q')
-c3 = vcsn.context('law(abxy), q')
+c1 = vcsn.context('[ab]*')
+c2 = vcsn.context('[xy] -> q')
+c3 = vcsn.context('[abxy]* -> q')
 CHECK_EQ(c3, c1.join(c2))
 CHECK_EQ(c3, c2.join(c1))
 
@@ -30,14 +30,14 @@ def check(ctx, exp):
     else:
         CHECK_EQ(exp, r)
 
-ctx1 = 'lal(ab), lat<q, expressionset<lal(xyz), b>, z>'
+ctx1 = '[ab] -> q x RatE[[xyz]] x z'
 check(ctx1, 'a')
 check(ctx1, '<2/3,x,-3>a')
 check(ctx1, '<2/3,x+y*,-3>a')
 # Yes, once we worked properly with 3 tapes, but not 4.  So check 5.
-check('lat<lal, lal, lal, lal, lal>, q',
+check('[...] x [...] x [...] x [...] x [...] -> q',
       '1|2|3|4|5')
-check('lal(ab), lat<expressionset<lal(xyz), lat<q, q>>, lat<q, q>>',
+check('[ab] -> RatE[[xyz] -> q x q] x (q x q)',
       '<<(1,2)>x+<(2,1/3)>y*,(2,3)>a')
 
 

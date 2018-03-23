@@ -10,7 +10,7 @@ from test import *
 def check(ctx, ref, params):
     CHECK_EQ(ctx.label(ref), ctx.random_label(params))
 
-ctx = vcsn.context('lal(abc), q')
+ctx = vcsn.context('[abc] -> q')
 
 for i in range(10):
     l = ctx.random_label('\e=1')
