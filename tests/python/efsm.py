@@ -88,8 +88,8 @@ a = vcsn.context('[a] x [xyz]')\
     .expression("(a|x+a|y+a|z)*").standard().sort().strip()
 check(a, 'a2xyz.efsm')
 
-# A transducer that mixes char and string.
-a = vcsn.context('lat<lal<char>,lal<string>>, b')\
+# A transducer that mixes char and string letters.
+a = vcsn.context('[...] x lal<string> -> b')\
     .expression("(c|'child'+p|'parent')*").standard().sort().strip()
 check(a, 'char-string.efsm')
 

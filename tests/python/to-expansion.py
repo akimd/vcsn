@@ -90,7 +90,7 @@ check('a{c}{c}', r'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
 e = vcsn.context('[a] -> q').expression('((<2>a)*+(<4>aa)*){c}')
 check(e, 'a.[((<2>a)*+<2>(a(<4>(aa))*)){c}]')
 # About the same, but this time using polynomials as weights.
-ctx = vcsn.context('[a] -> polynomialset<law(x), q>')
+ctx = vcsn.context('[a] -> polynomialset<[x]* -> q>')
 check(ctx.expression('((<x>a)*+(<xx>aa)*){c}'),       'a.[(<x>(<x>a)*+<xx>(a(<xx>aa)*)){c}]')
 check(ctx.expression('((<<2>x>a)*+(<<4>xx>aa)*){c}'), 'a.[(<<2>x>(<<2>x>a)*+<<4>xx>(a(<<4>xx>aa)*)){c}]')
 
@@ -300,7 +300,7 @@ check('(<x>a)*(<y>b)* & (<z>ab)*',
 ## tupleset.  ##
 ## ---------- ##
 
-c = vcsn.context("lat<law(abc), law(xyz)>, expressionset<[XYZ] -> q>")
+c = vcsn.context("lat<[abc]*, law(xyz)>, expressionset<[XYZ] -> q>")
 check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
@@ -321,7 +321,7 @@ check('a|x',
       r'a|x.[\e]')
 
 # Check the tupling of expansions: d(e|f) = d(e) | d(f).
-c = vcsn.context('lal<char>, q')
+c = vcsn.context('[...], q')
 def check(e1, e2):
     e1 = c.expression(e1)
     e2 = c.expression(e2)

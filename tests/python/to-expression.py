@@ -54,7 +54,7 @@ check_exp('ab')
 check_exp('a*', r'\e+aa*')
 check_exp('a+b')
 check_exp('(?@[ab] -> z)<2>(ab)<3>', '<6>(ab)')
-check_exp('(?@law(ab), z)<2>(ab)<3>', '<6>(ab)')
+check_exp('(?@[ab]* -> z)<2>(ab)<3>', '<6>(ab)')
 
 
 check_exp('(?@[abc] -> z)(<2>(<3>a+<5>b)<7>c)<11>', \

@@ -129,6 +129,6 @@ CHECK_ISOMORPHIC(a.minimize('moore'), a)
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 
 ## Check minimization idempotency in the non-lal case as well.
-a = vcsn.context('law(ab), b').expression('ab').standard()
+a = vcsn.context('[ab]* -> b').expression('ab').standard()
 CHECK_ISOMORPHIC(a.minimize('signature'), a)
 CHECK_ISOMORPHIC(a.minimize('weighted'), a)

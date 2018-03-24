@@ -48,10 +48,9 @@ RatE[[...]? → BU]
 ## --------------------- ##
 
 # Different types of syntactic sugar.
-for c in ['lal<char(abc)>, b', '[abc] -> b']:
-    check(c, '[abc]? → 𝔹')
+check('[abc] -> b', '[abc]? → 𝔹')
 
-for c in ['lal<char>, b', 'lal, b']:
+for c in ['[...] -> b', 'lal, b']:
     check(c, '[...]? → 𝔹')
 
 check('[...] -> b', r'\{\ldots\}^?\to\mathbb{B}', 'latex')
@@ -118,7 +117,7 @@ check('RatE[[ab]? → RatE[[xy]? → ℚ]] → 𝔹')
 ## WeightSet: polynomialset.  ##
 ## -------------------------- ##
 
-check('[ab] -> polynomialset<law(xy), q>',
+check('[ab] -> polynomialset<[xy]* -> q>',
       '[ab]? → Poly[[xy]* → ℚ]')
 
 
@@ -196,7 +195,7 @@ def check(c1, c2):
     CHECK_EQ(True, c1 != c2)
     CHECK_EQ(True, c2 != c1)
 check('[abc] -> b', '[abcd] -> b')
-check('[abc] -> b', 'law(abc), b')
+check('[abc] -> b', '[abc]* -> b')
 check('[abc] -> b', '[abc] -> q')
 # Regression: at some point they were considered equal, because there
 # were no difference when printed in UTF-8.  We now check the sname.

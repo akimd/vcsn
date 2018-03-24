@@ -65,7 +65,7 @@ ctx = vcsn.context('[a] -> q')
 check('a+<-1>a', 2, r'\z')
 
 # Wordset.
-ctx = vcsn.context('law(a), q')
+ctx = vcsn.context('[a]* -> q')
 check_shortest('(a+aaa)*', 7, r'\e + a + aa + <2>aaa + <3>aaaa + <4>aaaaa + <6>aaaaaa')
 
 # LAN x LAN

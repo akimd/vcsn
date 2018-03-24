@@ -106,7 +106,7 @@ for lhs in exprs:
 
 
 # Working in Z, not Q, to check GCD.
-z = vcsn.context('law(abcd), z')
+z = vcsn.context('[abcd]* -> z')
 
 ## ----------------------------- ##
 ## div(expression, expression).  ##

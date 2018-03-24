@@ -69,7 +69,7 @@ XFAIL(lambda: e.constant_term(),
   while computing constant-term of: <x>a{\}<x>a''')
 
 # tuple.
-ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('0',  ' (<2>a)|(<3>x)',  'derivation')
 check('0', r' (<2>a)|(<3>\e)', 'derivation')
 check('0', r'(<2>\e)|(<3>x)',  'derivation')

@@ -752,17 +752,17 @@ CHECK_EQ(vcsn.automaton('''context = [...]* → ℤ
   $ -> 0
   0 -> 1 a, b
   1 -> 1 c
-  1 -> $''').automaton(vcsn.context("law(abc), z")))
+  1 -> $''').automaton(vcsn.context("[abc]* -> z")))
 
 # Convert an automaton to a smaller, valid, alphabet.
 CHECK_EQ(vcsn.automaton('''context = [abc]* → ℤ
   0 -> 1 a, b'''),
          vcsn.automaton('''context = [a-z]? → 𝔹
-  0 -> 1 a, b''').automaton(vcsn.context("law(abc), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("[abc]* -> z")))
 
 # Convert an automaton to a smaller, invalid, alphabet.
 XFAIL(lambda: vcsn.automaton('''context = [abc]? → 𝔹
-  0 -> 1 a, b''').automaton(vcsn.context("law(xy), z")))
+  0 -> 1 a, b''').automaton(vcsn.context("[xy]* -> z")))
 
 # Convert to an invalid smaller weightset.
 XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℤ

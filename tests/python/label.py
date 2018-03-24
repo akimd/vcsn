@@ -36,7 +36,7 @@ check('law, b',  'ab',    'ab',     r'\mathit{ab}')
 check('law, b', '[#]{}', '\[#\]{}', r'\mathit{[\#]\{\}}')
 
 # Trailing characters.
-XFAIL(lambda: vcsn.context('law(ab), b').label('ab*'),
+XFAIL(lambda: vcsn.context('[ab]* -> b').label('ab*'),
       '''[ab]: invalid letter: *
   while reading label: "ab*"''')
 

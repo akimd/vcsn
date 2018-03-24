@@ -302,10 +302,10 @@ check_bdt(fig3, 'h3-dt-breaking')
 ## Tuples.  ##
 ## -------- ##
 
-ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('ab|xy', 'a|x', 'b|y')
 
-ctx = vcsn.context('lat<lal<char>, lal<char>>, q')
+ctx = vcsn.context('[...] x [...] -> q')
 check('ab|xy', 'a|x', 'b|y')
 check('ab|xy', r'a|\e', r'\z')
 check('a*|x*', 'a|x', 'a*|x*')

@@ -19,7 +19,7 @@ def check(aut, word, exp):
 ## law, z.  ##
 ## ------------- ##
 
-for c in ["[ab] -> z", "lal, z", "law(ab), z"]:
+for c in ["[ab] -> z", "lal, z", "[ab]* -> z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
     digraph
@@ -68,7 +68,7 @@ for c in ["[ab] -> z", "lal, z", "law(ab), z"]:
     check(initial_weight, 'abab',   '8')
     check(initial_weight, 'aabab', '12')
 
-for c in ["[abc] -> z", "law(abc), z"]:
+for c in ["[abc] -> z", "[abc]* -> z"]:
     ctx = vcsn.context(c)
     more_letters = vcsn.automaton('''
     digraph
@@ -147,7 +147,7 @@ for c in ["[abc] -> z", "law(abc), z"]:
 ## law_char_zmin.  ##
 ## --------------- ##
 
-for c in ['[abc] -> zmin', 'law(abc), zmin']:
+for c in ['[abc] -> zmin', '[abc]* -> zmin']:
     ctx = vcsn.context(c)
     a = ctx.expression('a').standard()
     check(a, '',   'oo')
@@ -186,7 +186,7 @@ for c in ['[abc] -> zmin', 'law(abc), zmin']:
 ## law, z.  ##
 ## ------------- ##
 
-ctx = vcsn.context('law(abcdef), z')
+ctx = vcsn.context('[abcdef]* -> z')
 a = ctx.expression('<2>(ab(<3>cd)*(ef))<5>', 'associative').automaton()
 check(a, 'abef', '10')
 check(a, 'abcdef', '30')
@@ -197,7 +197,7 @@ check(a, 'abcef', '0')
 check(a, 'abc', '0')
 check(a, 'abcd', '0')
 
-ctx = vcsn.context('law(abcdef), q')
+ctx = vcsn.context('[abcdef]* -> q')
 a_epsilon = vcsn.automaton('''
 digraph
 {

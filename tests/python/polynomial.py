@@ -29,9 +29,9 @@ check('[abcd] -> q', r'[a-bd]',     r'a + b + d')
 check('[ab] -> q', r'a+b+b+a+b', r'<2>a + <3>b')
 check('[ab] -> q', r'a+b+b+<-1>a+b', r'<3>b')
 
-check('law(a), b', r'\e+\e', r'\e')
+check('[a]* -> b', r'\e+\e', r'\e')
 
-check('law(ab), q', r'ba+ab+bb+aa+a+b+\e+bb+aa',
+check('[ab]* -> q', r'ba+ab+bb+aa+a+b+\e+bb+aa',
       r'\e + a + b + <2>aa + ab + ba + <2>bb')
 
 check('[abc] -> expressionset<[xyz] -> q>',

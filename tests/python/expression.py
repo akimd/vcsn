@@ -318,7 +318,7 @@ check_format('[abc] -> expressionset<[def] -> expressionset<[xyz] -> q>>',
              r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
-check_format('law(abc), q',
+check_format('[abc]* -> q',
              '(abc)a(bc)',
              '(abc)a(bc)',
              '(abc)a(bc)',
@@ -378,7 +378,7 @@ check('(<5>a)(b)(c*)', '<5>(abc*)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
 
-ctx = vcsn.context('law(abcd), q')
+ctx = vcsn.context('[abcd]* -> q')
 check('(a<5>)b', '<5>(ab)')
 check('a+b(c+<2>d)', 'a+bc+<2>(bd)')
 check('a*+b(c+<2>d)', 'a*+bc+<2>(bd)')

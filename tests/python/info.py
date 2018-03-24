@@ -80,7 +80,7 @@ check(vcsn.context('lal(a-z), q')
       })
 
 # Test what happens with "N/A".
-check(vcsn.context('law(ab), b')
+check(vcsn.context('[ab]* -> b')
       .expression('a(a+b)*').standard(),
       {
           'is ambiguous': 'N/A',
