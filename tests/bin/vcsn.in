@@ -8,11 +8,10 @@ export abs_builddir='@abs_top_builddir@'
 # Where the instantiated contexts are generated and compiled.
 export VCSN_PLUGINDIR=$abs_builddir/lib/plugins
 
-# Use the shipped files, not those installed.
+# Use the local files, not those installed.
 export VCSN_DATADIR=${VCSN_DATADIR-$abs_srcdir/share/vcsn}
 export VCSN_DATA_PATH=${VCSN_DATA_PATH-$VCSN_DATADIR:$abs_builddir/share/vcsn}
-
-# Use the built files, not those installed.
+export VCSN_DOCDIR=${VCSN_DOCDIR-$abs_srcdir/doc}
 export VCSN_LIBEXECDIR=${VCSN_LIBEXECDIR-$abs_srcdir/libexec:$abs_builddir/libexec}
 
 # Let bin/vcsn know what path it should use.
