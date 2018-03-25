@@ -268,7 +268,7 @@ namespace vcsn
              auto r = std::dynamic_pointer_cast<const atom_t>(rhs)->value();
              const auto& ls = *rs_.labelset();
              // Require strictly increasing order.
-             return ls.less(l, r) || ls.equal(l, r);
+             return ls.compare(l, r) <= 0;
            });
       }
 
