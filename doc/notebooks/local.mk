@@ -32,7 +32,7 @@ dist_notebooks_DATA =                           \
   %D%/Stackoverflow.ipynb                       \
   %D%/Tools.ipynb                               \
   %D%/Transducers.ipynb                         \
-  %D%/Trouble-Shooting.ipynb                    \
+  %D%/Troubleshooting.ipynb                     \
   %D%/automaton.Operators.ipynb                 \
   %D%/automaton.accessible.ipynb                \
   %D%/automaton.add.ipynb                       \
