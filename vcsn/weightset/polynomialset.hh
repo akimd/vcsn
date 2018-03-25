@@ -1426,7 +1426,7 @@ public:
   ///
   /// \param v       the polynomial
   /// \param out     the output stream
-  /// \param fmt     the format: "text" or "latex"
+  /// \param fmt     the format
   /// \param sep     the separator between monomials
   std::ostream&
   print(const value_t& v, std::ostream& out = std::cout,
@@ -1570,7 +1570,9 @@ private:
          format fmt = {},
          const std::string& sep = " + ") const
   {
-    // No classes if not at least 3 elements.
+    // No classes if printed as a polynomial (sep == " + " rather than
+    // as a list of labels, sep == ", "), and if not at least 3
+    // elements.
     if (sep == " + " || v.size() <= 2)
       return print_without_classes_(v, out, fmt, sep);
     else

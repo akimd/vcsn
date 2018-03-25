@@ -171,6 +171,7 @@ namespace vcsn::rat
       else
         print_add_(v);
     }
+
     using tuple_t = typename super_t::tuple_t;
 
     template <typename Dummy = void>
@@ -230,11 +231,11 @@ namespace vcsn::rat
     /// Whether \a v is an atom whose label is not a letter.
     ///
     /// Used to decide when to issue parens via precedence ("letter"
-    /// and "word" have different precedence).  Actually, this routine
-    /// checks whether this node is a self-delimited atom.  Letters
-    /// are of course self-delimited, so we don't add parens to "a" in
-    /// "a*".  Tuples printed as labels are not, so we need to add
-    /// parens to "a|x" in "(a|x)*".
+    /// and "word" have different precedences).  Actually, this
+    /// routine checks whether this node is a self-delimited atom.
+    /// Letters are of course self-delimited, so we don't add parens
+    /// to "a" in "a*".  Tuples printed as labels are not, so we need
+    /// to add parens to "a|x" in "(a|x)*".
     ///
     /// Note that 1-tape tuple are self-delimited (well, if what
     /// they contain is self-delimited).  But then visually there is

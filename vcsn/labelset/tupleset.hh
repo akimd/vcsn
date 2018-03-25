@@ -387,10 +387,13 @@ namespace vcsn
       return show_one_(v, indices);
     }
 
+    /// Whether can be printed as a member of a character class.
     bool
     is_letter(const value_t&) const
     {
-      // FIXME: why???  Is this for the printer of expressions?
+      // FIXME: why???  Is this for the printer of expressions?  As a
+      // result, we never print a label class for multitape
+      // expression.
       return false;
     }
 
