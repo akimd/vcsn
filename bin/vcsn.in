@@ -226,6 +226,9 @@ case $1 in
   (ipython) shift; exec "$IPYTHON" "$@";;
   (python*|ipython*|jupyter*) exec "$@";;
 
+  (*.ipynb) exec vcsn-notebook "$@";;
+  (*.py)    exec "$PYTHON" "$@";;
+
   (*)
       if echo "$1" | grep -E "$(commands_pattern)" >/dev/null; then
           exec vcsn-tools "$@"

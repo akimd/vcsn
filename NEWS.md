@@ -105,7 +105,15 @@ can be seen from the Python interface.  For example:
     In [5]: a.info('is deterministic')
     Out[5]: False
 
-# Vcsn 2.7 (To be released)
+----------------------------------------------------------------------
+
+# Vcsn 2.7 (2018-03-25)
+
+We are happy to announce the release of Vcsn 2.7.  This is mostly a bug fix
+release, with improvements in the documentation, based on user feedback.
+Most of our efforts are currently devoted to Vcsn 3.0.
+
+For more information see the detailed news below.
 
 ## New features
 ### Improved compatibility between single- and multitape expressions
@@ -171,8 +179,8 @@ Option `-s`/`--sort` sorts the benchmarks before running them.
 Several errors were fixed.  The page `expression.compose.ipynb` is new.
 
 ### Examples of C++
-The directories `tests/demo` and `tests/benchmarks` contain more example of
-how to use Vcsn as a C++ library.
+The directories `tests/demo` and `tests/benchmarks` contain more examples
+using the Vcsn C++ library.
 
 ## Bug fixes
 ### Incorrect order for 8bit characters
