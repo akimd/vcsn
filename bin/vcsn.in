@@ -1,5 +1,7 @@
 #! /bin/sh
 
+set -e
+
 fatal ()
 {
   local i
@@ -15,9 +17,6 @@ config ()
   # Call `vcsn-tools`, not `vcsn`, as `vcsn` is this very script...
   exec vcsn-tools configuration "configuration.$1"
 }
-
-export PYTHON=$(config python)
-export IPYTHON=$(config ipython)
 
 # _Append_ VCSN_PYTHONDIR, not prepend, so that the user can still
 # override this path via $PYTHONPATH.  Note in particular that the
@@ -73,10 +72,13 @@ fi
 PATH=$VCSN_PATH
 export PATH
 
+export PYTHON=$(config python)
+export IPYTHON=$(config ipython)
+
 # The Tools commands.
 commands ()
 {
-  vcsn-tools --commands
+  exec vcsn-tools --commands
 }
 
 # The Tools commands as a grep pattern.
