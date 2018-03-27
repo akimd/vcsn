@@ -19,3 +19,6 @@ Portfile: $(srcdir)/%D%/vcsn.macports
 $(srcdir)/%D%/vcsn.macports:
 	$(AM_V_GEN) curl 'https://raw.githubusercontent.com/macports/macports-ports/master/devel/vcsn/Portfile' >$@.tmp
 	$(AM_V_at) $(move_if_change) $@.tmp $@
+
+.PHONY: update-ports
+update-ports: $(srcdir)/%D%/vcsn.macports
