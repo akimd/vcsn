@@ -81,3 +81,13 @@ deb: dist
 	tar Jcvf vcsn_$(VERSION)$(GITPATCH).orig.tar.xz \
 	         vcsn-$(VERSION)$(GITPATCH)
 	cd vcsn-$(VERSION)$(GITPATCH) && debuild $(DEBUILDFLAGS) -us -uc
+
+## --------- ##
+## release.  ##
+## --------- ##
+
+.PHONY: release
+release: NEWS.mw update-ports
+	$(srcdir)/build-aux/bin/make-release \
+	  --release=$(VERSION) \
+	  --srcdir=$(srcdir)
