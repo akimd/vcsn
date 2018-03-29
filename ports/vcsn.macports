@@ -6,7 +6,6 @@ PortGroup           active_variants 1.1
 
 name                vcsn
 version             2.7
-revision            0
 categories          devel
 platforms           darwin
 maintainers         lrde.epita.fr:akim openmaintainer
@@ -23,9 +22,9 @@ master_sites        http://www.lrde.epita.fr/dload/vcsn/${version}/
 
 use_xz              yes
 
-checksums           rmd160  95e4b7dd04847632e64bf3295702517fb5e695cd \
-                    sha256  2156d80a740a10174110d88876c11c9e3904cfd6f2fac018be5948444e4ca6b3 \
-                    size    14834996
+checksums           rmd160  597f0ab44ad09bca405db33e2d48d3ac31d2ac9b \
+                    sha256  95623ced01a312f60bb754ced6e9d143884e8f3063774ce6dba114147fd59618 \
+                    size    14835124
 
 # python3.x is required - force dependencies to use it as well
 set python_version  36
