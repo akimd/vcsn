@@ -72,7 +72,7 @@ check_wordset_make(const std::string& range)
 
   // Skip the empty word (\x00), and the special letter (\xff).
   std::string n = "wordset<char_letters(" + range + ")>";
-  std::istringstream is{n};
+  auto is = std::istringstream{n};
   auto ls = LabelSet::make(is);
 
   // Check the labelset name: '\\' is the only escaped character.
@@ -87,7 +87,7 @@ check_wordset_make(const std::string& range)
     for (int i = 1; i < 255; ++i)
       all += char(i);
 
-    std::ostringstream o;
+    auto o = std::ostringstream{};
     for (int i = 1; i < 255; ++i)
       o << "\\x" << std::hex << std::setw(2) << std::setfill('0') << i;
     std::cerr << "Test: " << o.str() << '\n';
@@ -104,8 +104,8 @@ check_wordset()
   unsigned nerrs = 0;
   using labelset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = labelset_t::genset_t;
-  genset_t gs{'a', 'b', 'c'};
-  labelset_t ls{gs};
+  const auto gs = genset_t{'a', 'b', 'c'};
+  const auto ls = labelset_t{gs};
 
   ASSERT_EQ(ls.is_valid(conv(ls, "a")), true);
   ASSERT_EQ(ls.is_one(conv(ls, "a")), false);
@@ -128,19 +128,19 @@ check_tupleset()
   unsigned nerrs = 0;
   using wordset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = wordset_t::genset_t;
-  genset_t gs1{'a', 'b', 'c'};
-  wordset_t ls1{gs1};
-  genset_t gs2{'x', 'y', 'z'};
-  wordset_t ls2{gs2};
+  const auto gs1 = genset_t{'a', 'b', 'c'};
+  const auto ls1 = wordset_t{gs1};
+  const auto gs2 = genset_t{'x', 'y', 'z'};
+  const auto ls2 = wordset_t{gs2};
 
   using wwset_t = vcsn::tupleset<wordset_t, wordset_t>;
   using ww_t = wwset_t::value_t;
-  wwset_t wwset{ls1, ls2};
+  const auto wwset = wwset_t{ls1, ls2};
 
   using letterset_t = vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
   using wlset_t = vcsn::tupleset<wordset_t, letterset_t>;
   using wl_t = wlset_t::value_t;
-  wlset_t wlset{ls1, letterset_t{gs2}};
+  const auto wlset = wlset_t{ls1, letterset_t{gs2}};
 
   // sname.
   ASSERT_EQ(wwset_t::sname(),
@@ -169,13 +169,13 @@ check_tupleset()
   {
     std::string n
       = "lat<wordset<char_letters(ABC)>, wordset<char_letters(XYZ)>>";
-    std::istringstream is(n);
+    auto is = std::istringstream{n};
     ASSERT_EQ(set_name(wwset_t::make(is)), n);
   }
   {
     std::string n
       = "lat<wordset<char_letters(ABC)>, letterset<char_letters(XYZ)>>";
-    std::istringstream is(n);
+    auto is = std::istringstream{n};
     ASSERT_EQ(set_name(wlset_t::make(is)), n);
   }
 
@@ -274,14 +274,14 @@ static unsigned check_generators()
   using labelset1_t = letterset<alphabet_t>;
 
   // Create the labelsets.
-  auto ls1 = labelset1_t{{'a', 'b', 'c'}};
-  auto ls2 = labelset1_t{{'x', 'y'}};
+  const auto ls1 = labelset1_t{{'a', 'b', 'c'}};
+  const auto ls2 = labelset1_t{{'x', 'y'}};
 
   // Labelset (double-tape).
   using labelset_t = tupleset<labelset1_t, labelset1_t>;
 
   // Create the double-tape labelset.
-  auto ls = labelset_t{ls1, ls1};
+  const auto ls = labelset_t{ls1, ls1};
 
   std::cerr << "Working on: ";
   ls.print_set(std::cerr) << '\n';
@@ -289,8 +289,8 @@ static unsigned check_generators()
   // Specify the syntax of printing labels.
   auto fmt = format{}.for_labels();
 
-  auto res = [&]{
-    std::ostringstream o;
+  const auto res = [&]{
+    auto o = std::ostringstream{};
     const char* sep = "";
     for (auto&& g: ls.generators())
       {
