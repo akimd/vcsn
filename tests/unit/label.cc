@@ -277,11 +277,8 @@ static unsigned check_generators()
   const auto ls1 = labelset1_t{{'a', 'b', 'c'}};
   const auto ls2 = labelset1_t{{'x', 'y'}};
 
-  // Labelset (double-tape).
-  using labelset_t = tupleset<labelset1_t, labelset1_t>;
-
   // Create the double-tape labelset.
-  const auto ls = labelset_t{ls1, ls1};
+  const auto ls = make_tupleset(ls1, ls2);
 
   std::cerr << "Working on: ";
   ls.print_set(std::cerr) << '\n';
@@ -301,8 +298,7 @@ static unsigned check_generators()
     return o.str();
   }();
 
-  ASSERT_EQ("\\e|a, \\e|b, \\e|c, a|\\e, a|a, a|b, a|c, "
-            "b|\\e, b|a, b|b, b|c, c|\\e, c|a, c|b, c|c",
+  ASSERT_EQ("\\e|x, \\e|y, a|\\e, a|x, a|y, b|\\e, b|x, b|y, c|\\e, c|x, c|y",
             res);
 
   return nerrs;
