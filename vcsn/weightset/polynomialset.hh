@@ -698,12 +698,12 @@ public:
   /// We could try to have ab, a => a in the future.
   value_t lgcd(const value_t& lhs, const value_t& rhs) const
   {
-    using std::begin;
-    using std::end;
+    using std::cbegin;
+    using std::cend;
     auto res = value_t{};
     // For each monomial, look for the matching GCD of the weight.
-    auto i = begin(lhs), i_end = end(lhs);
-    auto j = begin(rhs), j_end = end(rhs);
+    auto i = cbegin(lhs), i_end = cend(lhs);
+    auto j = cbegin(rhs), j_end = cend(rhs);
     for (;
          i != i_end && j != j_end
            && labelset()->equal(i->first, j->first);
@@ -1493,9 +1493,6 @@ private:
                       format fmt,
                       const std::string& sep) const
   {
-    using std::begin;
-    using std::end;
-
     // We can use a vector, as we know that the labels are already
     // sorted, and random access iteration will be handy below.
     using labels_t = std::vector<label_t>;
