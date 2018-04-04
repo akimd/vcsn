@@ -558,11 +558,16 @@ namespace vcsn
     BUILTIN_UNREACHABLE();
   }
 
+  /// An expression equivalent to an automaton.
+  ///
+  /// \param aut   the automaton
+  /// \param ids   the identities of the outgoing expression
+  /// \param algo  the heuristic
   template <Automaton Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
   to_expression(const Aut& aut, vcsn::rat::identities ids,
-                to_expression_heuristic_t algo)
+                to_expression_heuristic_t algo = to_expression_heuristic_t::best)
   {
     if (algo == to_expression_heuristic_t::best)
       {
@@ -588,10 +593,15 @@ namespace vcsn
       }
   }
 
+  /// An expression equivalent to an automaton.
+  ///
+  /// \param aut   the automaton
+  /// \param ids   the identities of the outgoing expression
+  /// \param algo  the heuristic name
   template <Automaton Aut,
             typename ExpSet = expressionset<context_t_of<Aut>>>
   typename ExpSet::value_t
-  to_expression(const Aut& a, vcsn::rat::identities ids,
+  to_expression(const Aut& aut, vcsn::rat::identities ids,
                 const std::string& algo)
   {
     static const auto map = getarg<to_expression_heuristic_t>
@@ -605,7 +615,7 @@ namespace vcsn
           {"naive",         to_expression_heuristic_t::naive}
         }
       };
-    return to_expression<Aut, ExpSet>(a, ids, map[algo]);
+    return to_expression<Aut, ExpSet>(aut, ids, map[algo]);
   }
 
   /*----------------------------.
