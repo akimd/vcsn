@@ -22,10 +22,8 @@
 
 #include <vcsn/core/rat/project.hh>
 
-namespace vcsn
+namespace vcsn::rat
 {
-  namespace rat
-  {
   /// A typed expression set.
   /// \tparam Context  the LabelSet and WeightSet types.
   template <typename Context>
@@ -494,8 +492,10 @@ namespace vcsn
     /// The set of rewriting rules to apply.
     const identities_t ids_;
   };
-  } // rat::
+}
 
+namespace vcsn
+{
   namespace detail
   {
     /// Conversion to a wordset: identity.
