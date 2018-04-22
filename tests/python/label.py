@@ -18,22 +18,22 @@ def check(ctx, l, output, latex = None):
 
 
 # letterset.
-check('lal, b', 'a',   'a')
-check('lal, b', '#',   '#', r'\#')
-check('lal, b', '[', r'\[', '[')
-check('lal, b', '{',   '{', r'\{')
-check('lal, b', '$',   '$', r'\$')
+check('[...] -> B', 'a',   'a')
+check('[...] -> B', '#',   '#', r'\#')
+check('[...] -> B', '[', r'\[', '[')
+check('[...] -> B', '{',   '{', r'\{')
+check('[...] -> B', '$',   '$', r'\$')
 # This is not a label, it's a word.
-XFAIL(lambda: vcsn.context('lal, b').label('ab'),
+XFAIL(lambda: vcsn.context('[...] -> B').label('ab'),
       '''unexpected trailing characters: "b"
   while reading label: "ab"''')
-CHECK_EQ(vcsn.context('law, b').label('ab'),
-         vcsn.context('law, b').word('ab'))
+CHECK_EQ(vcsn.context('[...]* -> B').label('ab'),
+         vcsn.context('[...]* -> B').word('ab'))
 
 # wordset.
-check('law, b',   'a',     'a',      r'\mathit{a}')
-check('law, b',  'ab',    'ab',     r'\mathit{ab}')
-check('law, b', '[#]{}', '\[#\]{}', r'\mathit{[\#]\{\}}')
+check('[...]* -> B',   'a',     'a',      r'\mathit{a}')
+check('[...]* -> B',  'ab',    'ab',     r'\mathit{ab}')
+check('[...]* -> B', '[#]{}', '\[#\]{}', r'\mathit{[\#]\{\}}')
 
 # Trailing characters.
 XFAIL(lambda: vcsn.context('[ab]* -> b').label('ab*'),

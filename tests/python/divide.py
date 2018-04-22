@@ -55,13 +55,13 @@ def check(l, r, resl, resr=None):
     check_fun('rdivide', resr, r, l)
 
 # Boolean.  Very important, as we have two different implementations.
-ctx = 'lal, b'
+ctx = '[...] -> B'
 check('abc', 'abcc+abcd', 'c+d', '\z')
 check('abcd+bbcd', 'a+b', '\z', 'bcd')
 
 
 # Weighted.
-ctx = 'lal, q'
+ctx = '[...] -> Q'
 # Addition
 check('<2>a', '<6>(a+b)', r'<12>\e')
 # Concatenation

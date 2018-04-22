@@ -85,28 +85,28 @@ check(metext('lan-log.in.daut'), metext('lan-log.out.daut'))
 
 
 ## ------------- ##
-## law, b.  ##
+## [...]* -> B.  ##
 ## ------------- ##
 
 check(metext('law-b.in.gv'), metext('law-b.out.gv'))
 
 
 ## ------------------------------------------------- ##
-## lal, z: invalid \e-cycle (weight is not 0).  ##
+## [...] -> Z: invalid \e-cycle (weight is not 0).  ##
 ## ------------------------------------------------- ##
 
 check_fail(metext('lan-z.fail.gv'))
 
 
 ## ------------- ##
-## lal, z.  ##
+## [...] -> Z.  ##
 ## ------------- ##
 
 check(metext('lan-z.in.gv'), metext('lan-z.out.gv'))
 
 
 ## ---------------------------------- ##
-## law, zmin: invalid \e-cycle.  ##
+## [...]* -> Zmin: invalid \e-cycle.  ##
 ## ---------------------------------- ##
 
 check_fail(r'''digraph
@@ -137,7 +137,7 @@ check_fail(r'''digraph
 
 
 ## ---------------------------- ##
-## lal, qr: a long cycle.  ##
+## [...] -> Qr: a long cycle.  ##
 ## ---------------------------- ##
 
 # FIXME(ap): with distance, weights are equivalent but not the same
@@ -146,7 +146,7 @@ check(metext('lan-qr.in.gv'), metext('lan-qr.out.gv'),
 
 
 ## ----------------------------------------- ##
-## lal, qr: remove now-useless states.  ##
+## [...] -> Qr: remove now-useless states.  ##
 ## ----------------------------------------- ##
 
 # Check that we remove states that _end_ without incoming transitions,
@@ -203,7 +203,7 @@ check(r'''digraph
 
 
 ## ------------- ##
-## lal, b.  ##
+## [...] -> B.  ##
 ## ------------- ##
 
 check(metext('lan-b.in.gv'), metext('lan-b.out.gv'))
@@ -291,7 +291,7 @@ check(r'''digraph
 
 
 ## ------------------------- ##
-## lal, polynomial<law, q>.  ##
+## lal, polynomial<[...]* -> Q>.  ##
 ## ------------------------- ##
 
 check(metext('lan-poly.1.in.gv'), metext('lan-poly.1.out.gv'))

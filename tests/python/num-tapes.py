@@ -10,6 +10,6 @@ def check(n, ctx):
     print(c)
     CHECK_EQ(n, c.num_tapes())
 
-check(0, 'lal, b')
+check(0, '[...] -> B')
 check(1, 'lat<lal>, b')
 check(2, '[...] x [...] -> b')

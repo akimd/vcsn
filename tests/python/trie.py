@@ -66,7 +66,7 @@ def check(algo, ctx, polynomial, exp):
 
 
 check('trie',
-      'law, q',
+      '[...]* -> Q',
       r'<2>\e+<3>a+<4>b+<5>d+<6>abc+<7>abcd+<8>abdc',
       r'''context = [abcd]? → ℚ
 $ -> 0
@@ -88,7 +88,7 @@ $ -> 0
 
 
 check('cotrie',
-      'law, q',
+      '[...]* -> Q',
       r'<2>\e+<3>a+<4>b+<5>cba+<6>dcba+<7>cdba',
       r'''context = [abcd]? → ℚ
 $ -> 0 <2>
@@ -155,7 +155,7 @@ $ -> 0
 
 
 # Check that weird input is properly accepted.
-t = vcsn.context('lal, q').trie('''
+t = vcsn.context('[...] -> Q').trie('''
 he's
 <2>t
 {}

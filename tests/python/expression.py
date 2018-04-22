@@ -325,9 +325,9 @@ check_format('[abc]* -> q',
              r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Exponents.
-for ctx in ['lal, q', 'law, q']:
+for ctx in ['[...] -> Q', '[...]* -> Q']:
     # In wordset, for LaTeX, we use \mathit.
-    A = '\mathit{a}' if ctx == 'law, q' else 'a'
+    A = '\mathit{a}' if ctx == '[...]* -> Q' else 'a'
     check_format(ctx,
                  'a{2}',
                  'aa', 'aa', r'a \, a'.replace('a', A))
@@ -397,7 +397,7 @@ def check(exp, dot, identities=['trivial', 'associative']):
             ref = metext(fname)
             CHECK_EQ(ref, e.dot(type == 'physical'))
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 check('(<2>[abc])*a([abc]<3>){3}',
       'de-bruijn')
 check('\e{2}+\z{2}+a{2}',

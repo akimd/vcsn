@@ -858,7 +858,7 @@ def qexp(e, gens=None):
     if gens:
         c = vcsn.context('lal({}), q'.format(gens))
     else:
-        c = vcsn.context('lal, q')
+        c = vcsn.context('[...] -> Q')
     return exp(e, c)
 
 def q2(e):
@@ -898,7 +898,7 @@ check(qexp('<4>a*bcd {/} <2>bcd'), file='rdivide-1')
 
 # Tuple.
 def tuple(*exps):
-    return vcsn.tuple(*[vcsn.context('lal, q').expression(e)
+    return vcsn.tuple(*[vcsn.context('[...] -> Q').expression(e)
                         for e in exps])
 check(tuple('abc', 'xyz'), file='tuple-1')
 check(tuple('abc', 'xy'),  file='tuple-2')

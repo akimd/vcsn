@@ -29,7 +29,7 @@ XFAIL(lambda: a.eliminate_state())
 # was labeled by one, and another labeled by special.  That's two
 # transitions (<\e>\e, and <aa*>$) instead of a unique one
 # (<\e+aa*>$), which is visible in the dot output.
-a = vcsn.context('lal, b').expression('aa*').standard().lift()
+a = vcsn.context('[...] -> B').expression('aa*').standard().lift()
 CHECK_EQ(r'''context = {ε} → RatE[[a]? → 𝔹]
 $ -> 0
 0 -> 1 <a>

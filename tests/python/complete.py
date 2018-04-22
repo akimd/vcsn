@@ -37,7 +37,7 @@ $ -> 0
 ''')
 
 # An automaton with an open context.
-check(vcsn.b.expression('a').standard(), '''
+check(vcsn.B.expression('a').standard(), '''
 context = [a]? → 𝔹
   $ -> 0
   0 -> 1 a

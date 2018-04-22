@@ -3,7 +3,7 @@
 import vcsn
 from test import *
 
-c = vcsn.context('lal, q')
+c = vcsn.context('[...] -> Q')
 
 def check(e, w):
     e = c.expression(e)

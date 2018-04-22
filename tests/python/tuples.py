@@ -45,7 +45,7 @@ check('[ab] -> RatE[[xyz] -> q x q] x (q x q)',
 ## tuple(automaton).  ##
 ## ------------------ ##
 
-ind = lambda e: vcsn.context('lal, q').expression(e).inductive()
+ind = lambda e: vcsn.context('[...] -> Q').expression(e).inductive()
 a1 = ind('<2>[ab]')
 a2 = ind('x')
 CHECK_EQ('''context = [ab]? × [x]? → ℚ

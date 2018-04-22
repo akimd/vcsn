@@ -27,10 +27,10 @@ XFAIL(lambda: vcsn.context("[a] -> b_z"),
         ^_''')
 
 # Invalid context: missing weightset.
-XFAIL(lambda: vcsn.context("lal ->"),
+XFAIL(lambda: vcsn.context("[] ->"),
       '''expected weightset here:
-lal ->
-      ^_''')
+[] ->
+     ^_''')
 
 # Errors on several lines.
 XFAIL(lambda: vcsn.context("RatE[[...]? → BU]"),
@@ -49,9 +49,7 @@ RatE[[...]? → BU]
 
 # Different types of syntactic sugar.
 check('[abc] -> b', '[abc]? → 𝔹')
-
-for c in ['[...] -> b', 'lal, b']:
-    check(c, '[...]? → 𝔹')
+check('[...] -> B', '[...]? → 𝔹')
 
 check('[...] -> b', r'\{\ldots\}^?\to\mathbb{B}', 'latex')
 check('[...] -> b', r'[...]? -> B',               'text')
@@ -77,13 +75,12 @@ check('[...-0] -> b', '[\-0...]? → 𝔹')
 
 
 # letterset and different char_letters.
-check(r'lal(), b',       r'[]? → 𝔹')
-check(r'[ab] -> b',     r'[ab]? → 𝔹')
-check(r'lal(a-kv-z), b', r'[abcdefghijkvwxyz]? → 𝔹')
-check(r'lal(-0-9), b',   r'[\-0123456789]? → 𝔹')
-check(r'lal(<>[]{}), b', r'[\<\>\[\]{}]? → 𝔹')
-check(r'lal(\\\-\)), b', r'[)\-\\]? → 𝔹')
-check(r'lal(\--\-), b',  r'[\-]? → 𝔹')
+check(r'[ab] -> b',       r'[ab]? → 𝔹')
+check(r'[a-kv-z] -> b',   r'[abcdefghijkvwxyz]? → 𝔹')
+check(r'[-0-9] -> b',     r'[\-0123456789]? → 𝔹')
+check(r'[<>\[\]{}] -> b', r'[\<\>\[\]{}]? → 𝔹')
+check(r'[\\\-\)] -> b',   r'[)\-\\]? → 𝔹')
+check(r'[\--\-] -> b',    r'[\-]? → 𝔹')
 
 # Check that we cover all the possible chars.  Unfortunately as this
 # is not valid UTF-8, Python will refuse to display it.  Using
@@ -144,8 +141,8 @@ CHECK_EQ(vcsn.context('[abc] x [xyz] -> q'), c1 | c2)
 #
 # Cannot check with external syntax, as `lat<lal>` and `lal` are
 # displayed the same way.
-check('lat<lal>, b', 'lat<letterset<char_letters>>, b', fmt='sname')
-check('lat<lat<lal(a)>>, b', 'lat<lat<letterset<char_letters(a)>>>, b', fmt='sname')
+# check('lat<lal>, b', 'lat<letterset<char_letters>>, b', fmt='sname')
+# check('lat<lat<lal(a)>>, b', 'lat<lat<letterset<char_letters(a)>>>, b', fmt='sname')
 
 ctx = '''[ba] x [vu] x [x-z]* ->
          RatE[[fe] x [hg] -> q] x r x q'''

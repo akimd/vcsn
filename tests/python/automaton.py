@@ -267,7 +267,7 @@ vcsn.automaton(r'''digraph "a graph
   /* a
      multiline
      comment.  */
-  "lal(), b"
+  "[], b"
   graph [a = "graph attribute",]
   edge [a = "edge attribute";]
   node [a = "node attribute"]
@@ -483,7 +483,7 @@ CHECK_EQ('''digraph
   I0 -> 0
   0 -> F0
 }''',
-         vcsn.context('lal, b').expression(r'\z{c}').derived_term().dot())
+         vcsn.context('[...] -> B').expression(r'\z{c}').derived_term().dot())
 
 ## ------------- ##
 ## dot: simple.  ##
@@ -515,7 +515,7 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
 
 
 # Check state names in TikZ.
-a = vcsn.context('lal, b').expression(r'\e+a').derived_term()
+a = vcsn.context('[...] -> B').expression(r'\e+a').derived_term()
 exp = metext('derived-term.tex')
 CHECK_EQ(exp, a.format('tikz'))
 
@@ -525,7 +525,7 @@ CHECK_EQ(exp, a.format('tikz'))
 ## ------ ##
 
 # Check the case of a lazy automaton.
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 a = ctx.expression('a*+(<2>a)*').derived_term(deterministic=True, lazy=True)
 a('aaa')
 
@@ -742,7 +742,7 @@ for fn in glob.glob(os.path.join(medir, '*.grail')):
 ## Conversion.  ##
 ## ------------ ##
 
-# Convert an automaton from lal, b to law, z.
+# Convert an automaton from [...] -> B to [...]* -> Z.
 CHECK_EQ(vcsn.automaton('''context = [...]* → ℤ
   $ -> 0
   0 -> 1 a, b

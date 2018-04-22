@@ -47,5 +47,5 @@ fail(r'a{\}b')
 fail('a*{T}')
 
 # We don't support weighted expressions.
-fail('(?@lal, z)<2>a*')
-fail('(?@lal, z)a*<2>')
+fail('(?@[...] -> Z)<2>a*')
+fail('(?@[...] -> Z)a*<2>')

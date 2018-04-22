@@ -51,7 +51,7 @@ CHECK_EQ(r'''digraph
 ## ---------------------- ##
 
 # Using tuple.
-exp = lambda e: vcsn.context("lal, q").expression(e)
+exp = lambda e: vcsn.context("[...] -> Q").expression(e)
 f = vcsn.tuple(exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*'))
 CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
 

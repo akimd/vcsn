@@ -39,7 +39,7 @@ def check(input, exp):
     check_algo(input)
 
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 
 check_algo('a')
 check_algo('ab')

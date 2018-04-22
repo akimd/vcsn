@@ -31,7 +31,7 @@ def check_mult(lhs, rhs):
             CHECK(std.is_standard(), std, " is standard")
         CHECK_EQUIV(gen, std)
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 auts = [ctx.expression('a').standard(),
         ctx.expression('ab').standard(),
         ctx.expression('a+b').standard(),
@@ -39,7 +39,7 @@ auts = [ctx.expression('a').standard(),
 check_mult(auts, [1, 3, (-1, 5), (2, 4), (2, -1)])
 
 # We want the determinization to terminate.
-ctx = vcsn.context('lal, b')
+ctx = vcsn.context('[...] -> B')
 auts = [auts,
         ctx.expression('a(ba)*').automaton('derived_term'),
         ctx.expression('a+b').derived_term(breaking=True),
@@ -201,21 +201,21 @@ CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
 # `<27>a` because `3 * 3` in Z was intrepreted as `3 ** 3`, because `w
 # * n` is interpreted as repeated multiplication, `w ** n` when n is
 # an int.  Which collides with binary multiplication in Z.
-zexp = vcsn.context('lal, z').expression
+zexp = vcsn.context('[...] -> Z').expression
 CHECK_EQ(zexp('<9>a'), zexp('<3><3>a'))
 
 ## --------------- ##
 ## label * label.  ##
 ## --------------- ##
 
-l = vcsn.context('law, b').label
+l = vcsn.context('[...]* -> B').label
 CHECK_EQ(l('abc'),
          l('ab') * l(r'\e') * l('c'))
 CHECK_EQ(l('\e'),
          l('ab') ** 0)
 CHECK_EQ(l('ababab'),
          l('ab') ** 3)
-c = vcsn.context('lal, q')
+c = vcsn.context('[...] -> Q')
 c2 = c|c
 CHECK_EQ(c2.word('abc|aBc'),
          c.word('a') * c2.word('b|B') * c.word('c'))
@@ -224,7 +224,7 @@ CHECK_EQ(c2.word('abc|aBc'),
 ## polynomial * polynomial.  ##
 ## ------------------------- ##
 
-pol = vcsn.context('law, z').polynomial
+pol = vcsn.context('[...]* -> Z').polynomial
 CHECK_EQ(pol('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
          pol(r'\e + <2>a + <3>b') * pol(r'\e') * pol('c + <5>d'))
 
@@ -233,10 +233,10 @@ CHECK_EQ(pol('c + <5>d + <2>ac + <10>ad + <3>bc + <15>bd'),
 ## weight * weight.  ##
 ## ----------------- ##
 
-w = vcsn.context('lal, seriesset<lal, q>').weight
+w = vcsn.context('[...] -> seriesset<[...] -> Q>').weight
 CHECK_EQ(w('<4>aa+<6>ab+<6>ba+<9>bb'),
          w('<2>a+<3>b') * w('<2>a+<3>b'))
 # See the comment above about #68.
-w = vcsn.context('lal, z').weight
+w = vcsn.context('[...] -> Z').weight
 CHECK_EQ(w('9'), w('3') * w('3'))
 # More * and ** tests in tests/python/weight.py.

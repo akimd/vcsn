@@ -35,7 +35,7 @@ k_check('<1>a+<2>b', '<1>a+<2>b', 2)
 k_check('<1>b+<1>a+<1>c', '<1>a+<1>b', 2)
 k_check('<1>b+<1>a+<1>c', '\z', 0)
 
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 aut = ctx.expression(r'\z').standard()
 for algo in algos:
     XFAIL(lambda: aut.lightest_automaton(1, algo),

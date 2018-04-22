@@ -15,11 +15,11 @@ def check(aut, word, exp):
     CHECK_EQ(exp, aut.evaluate(ctx.word_context().polynomial(word)))
 
 ## ------------- ##
-## lal, z.  ##
-## law, z.  ##
+## [...] -> Z.   ##
+## [...]* -> Z.  ##
 ## ------------- ##
 
-for c in ["[ab] -> z", "lal, z", "[ab]* -> z"]:
+for c in ["[ab] -> z", "[ab]* -> z"]:
     ctx = vcsn.context(c)
     simple = vcsn.automaton('''
     digraph
@@ -142,10 +142,10 @@ for c in ["[abc] -> z", "[abc]* -> z"]:
     check(cmplex, 'aabab', '36')
 
 
-## --------------- ##
-## lal_char_zmin.  ##
-## law_char_zmin.  ##
-## --------------- ##
+## ---------------- ##
+## [...] -> Zmin.   ##
+## [...]* -> Zmin.  ##
+## ---------------- ##
 
 for c in ['[abc] -> zmin', '[abc]* -> zmin']:
     ctx = vcsn.context(c)
@@ -183,7 +183,7 @@ for c in ['[abc] -> zmin', '[abc]* -> zmin']:
 
 
 ## ------------- ##
-## law, z.  ##
+## [...]* -> Z.  ##
 ## ------------- ##
 
 ctx = vcsn.context('[abcdef]* -> z')
@@ -231,9 +231,9 @@ check(a_epsilon, 'abcef', '0')
 check(a_epsilon, 'abc', '0')
 check(a_epsilon, 'abcd', '0')
 
-## -------------------- ##
+## ---------------------- ##
 ## [...] x [...] -> zmin  ##
-## -------------------- ##
+## ---------------------- ##
 
 ctx = vcsn.context('[...] x [...] -> zmin')
 e = ctx.expression(r'(<0>(a|a+b|b))* (<1>[^]|\e + <1>\e|[^] + <2>(a|[^a]+b|[^b])){*}')
@@ -245,7 +245,7 @@ check(a, "aaa|ab", '3')
 
 
 # Labels are expressions.
-ctx = vcsn.context('expressionset<lal, b>, b')
+ctx = vcsn.context('expressionset<[...] -> B>, b')
 e = ctx.expression('a')
 a = e.automaton()
 XFAIL(lambda: a('a'),
@@ -260,10 +260,10 @@ def check(aut, poly, exp):
     CHECK_EQ(exp, aut.evaluate(ctx.polynomial(poly)))
 
 ##---------------##
-## law, z.  ##
+## [...]* -> Z.  ##
 ##---------------##
 
-ctx = vcsn.context('law, z')
+ctx = vcsn.context('[...]* -> Z')
 a = ctx.expression('<2>(ab(<3>cd)*(ef))<5>', 'associative').automaton()
 
 check(a, "<2>abcdcdef+abcdef", '210')

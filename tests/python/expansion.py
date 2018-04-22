@@ -20,7 +20,7 @@ def check_aut(e):
 ## ----- ##
 ## Add.  ##
 ## ----- ##
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 def check(r1, r2, exp):
     e1 = expr(r1)
     e2 = expr(r2)
@@ -62,8 +62,8 @@ check('abab')
 check('a*')
 check('(<1/2>a)*')
 
-# Also check with lal, b.
-lal = vcsn.context('lal, b')
+# Also check with [...] -> B.
+lal = vcsn.context('[...] -> B')
 check(lal.expression('abc'))
 check(lal.expression(r'\z'))
 
@@ -109,7 +109,7 @@ check(r'(a|c)(b|\e)', 'c|d', r'a|d.[b|\e]')
 ## ------------- ##
 ## Conjunction.  ##
 ## ------------- ##
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 def check(r1, r2, exp):
     '''Check that `&` between expansions corresponds to the expansion of
     `&` between expressions.'''
@@ -133,7 +133,7 @@ check('ab', 'ac', '<0>')
 ## --------- ##
 ## Division. ##
 ## --------- ##
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 def check(e1, e2, exp):
     e1 = expr(e1)
     e2 = expr(e2)
@@ -168,7 +168,7 @@ XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
 ## ------- ##
 ## Tuple.  ##
 ## ------- ##
-ctx = vcsn.context('lal, q')
+ctx = vcsn.context('[...] -> Q')
 def check(r1, r2):
     '''Check that `|` between expansions corresponds to the expansion of
     `|` between expressions.'''
