@@ -48,32 +48,20 @@ check_translate_context()
   `-------------------*/
 
   // lal.  No gens, open.
-  CHECK("lal, b",          "letterset<char_letters>, b");
-  CHECK("lal<char>, b",    "letterset<char_letters>, b");
   CHECK("[...], b",        "letterset<char_letters>, b");
 
   // lal, with gens, closes.
-  CHECK("lal(), b",        "letterset<char_letters()>, b");
   CHECK("[] -> b",         "letterset<char_letters()>, b");
   CHECK("<char>[a], b",    "letterset<char_letters(a)>, b");
-  CHECK("lal<char(a)>, b", "letterset<char_letters(a)>, b");
-  CHECK("lal(a), b",       "letterset<char_letters(a)>, b");
   CHECK("[a]-> b",         "letterset<char_letters(a)>, b");
   CHECK("[a]?-> b",        "letterset<char_letters(a)>, b");
 
   // [...] and escapes.
   CHECK("[\\[\\]()]-> b",  "letterset<char_letters(\\[\\]\\(\\))>, b");
 
-  // lal(...) and escapes.
-  CHECK("lal(\\)), b",     "letterset<char_letters(\\))>, b");
-  CHECK("lal(\\\\), b",    "letterset<char_letters(\\\\)>, b");
-  CHECK("lal([]{}\\(\\\\\\)), b", "letterset<char_letters([]{}\\(\\\\\\))>, b");
-
-  CHECK("lal<string>, b",  "letterset<string_letters>, b");
+  CHECK("<string>, b",  "letterset<string_letters>, b");
 
   // No weightset: defaults to B.
-  CHECK("lal",          "letterset<char_letters>, b");
-  CHECK("lal<char>",    "letterset<char_letters>, b");
   CHECK("[...]",        "letterset<char_letters>, b");
   CHECK("[a]",          "letterset<char_letters(a)>, b");
 
@@ -93,19 +81,19 @@ check_translate_context()
   `-----------------*/
 
   // Expressionset as a weightset.
-  CHECK("lao, RatE[[x] -> b]",
+  CHECK("{ε}, RatE[[x] -> b]",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
-  CHECK("lao, RatE [  [x] -> b  ]",
+  CHECK("{ε}, RatE [  [x] -> b  ]",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
-  CHECK("lao, expressionset<[x] -> b>",
+  CHECK("{ε}, expressionset<[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
-  CHECK("lao, expressionset  <  [x] -> b  >",
+  CHECK("{ε}, expressionset  <  [x] -> b  >",
         "oneset, expressionset<letterset<char_letters(x)>, b>");
-  CHECK("lao, expressionset<[x] -> b>(series)",
+  CHECK("{ε}, expressionset<[x] -> b>(series)",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
-  CHECK("lao, seriesset<[x] -> b>",
+  CHECK("{ε}, seriesset<[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
-  CHECK("lao, seriesset <[x] -> b>",
+  CHECK("{ε}, seriesset <[x] -> b>",
         "oneset, expressionset<letterset<char_letters(x)>, b>(series)");
 
 
@@ -114,17 +102,15 @@ check_translate_context()
   `-----------------*/
 
   // Polynomialset as a weightset.
-  CHECK("lao, Poly[[x] -> b]",
+  CHECK("{ε}, Poly[[x] -> b]",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
-  CHECK("lao, Poly [[x] -> b]",
+  CHECK("{ε}, Poly [[x] -> b]",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
-  CHECK("lao, polynomialset<[x] -> b>",
+  CHECK("{ε}, polynomialset<[x] -> b>",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
-  CHECK("lao, polynomialset <[x] -> b>",
+  CHECK("{ε}, polynomialset <[x] -> b>",
         "oneset, polynomialset<letterset<char_letters(x)>, b>");
 
-  CHECK("law, zmin",     "wordset<char_letters>, zmin");
-  CHECK("law(a), zmin",  "wordset<char_letters(a)>, zmin");
   CHECK("[a-z]*-> zmin", "wordset<char_letters(a-z)>, zmin");
 
 
@@ -132,23 +118,11 @@ check_translate_context()
   | Cartesian products.   |
   `----------------------*/
 
-  CHECK("lat<[a], [b], [c]> -> f2",
-        "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
-  CHECK("lat < [a], [b], [c] > -> f2",
-        "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
   CHECK("[a] | [b] | [c] -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
   CHECK("[a] x [b] x [c] -> f2",
         "lat<letterset<char_letters(a)>, letterset<char_letters(b)>, letterset<char_letters(c)>>, f2");
 
-  CHECK("lal x lal -> B",
-        "lat<letterset<char_letters>, letterset<char_letters>>, b")
-  CHECK("lal<string> x lal<char> -> B",
-        "lat<letterset<string_letters>, letterset<char_letters>>, b")
-  CHECK("[a] -> lat<nmin, zmin, rmin>",
-        "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
-  CHECK("[a] -> lat < nmin , zmin , rmin >",
-        "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
   CHECK("[a] -> nmin x zmin x rmin",
         "letterset<char_letters(a)>, lat<nmin, zmin, rmin>");
 

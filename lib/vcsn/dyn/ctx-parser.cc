@@ -160,7 +160,7 @@ namespace vcsn::dyn::parser
   const auto append = [](auto& ctx) {
     auto& val = _val(ctx);
     auto c = _attr(ctx);
-    if (c == '(' || c == ')')
+   if (c == '(' || c == ')')
       val += '\\';
     val += c;
   };
@@ -207,21 +207,17 @@ namespace vcsn::dyn::parser
     | lit("{ε}")
     ;
 
-  // lal
-  // [a], [a]?, <char>[a], <char>[a]?, <char>, <char>?
+  // [a], [a]?, <char>[a], <char>[a]?
   const auto letterset_def
-    = lexeme[lit("lal") >> !alnum] >> typed_gens
     // Accept `[a]?` to facilitate transition: we print `lal(a), b`
     // as `[a]?  → 𝔹`.
-    | letter_type >> -gens >> -lit('?') >> !char_('*')
+    = letter_type >> -gens >> -lit('?') >> !char_('*')
     | attr("char"s) >> gens >> -lit('?') >> !char_('*')
     ;
 
-  // law
   // [a]*, <char>[a]*
   const auto wordset_def
-    = lexeme[lit("law") >> !alnum] >> typed_gens
-    | letter_type >> -gens >> lit('*')
+    = letter_type >> -gens >> lit('*')
     | attr("char"s) >> gens >> lit('*')
     ;
 
@@ -231,7 +227,6 @@ namespace vcsn::dyn::parser
     | wordset
     | expressionset
     | polynomialset
-    | lit("lat") > lit('<') > (labelset % ',') > lit('>')
     | lit('(') >> labelset > lit(')')
     ;
 
@@ -249,7 +244,6 @@ namespace vcsn::dyn::parser
     lexeme[literal_weighsets >> !alnum]
     | expressionset
     | polynomialset
-    | lit("lat") > lit('<') > (weightset % ',') > lit('>')
     | lit('(') >> weightset > lit(')')
     ;
 
