@@ -45,7 +45,7 @@ CHECK_EQ(w('1/2'),    w('1/2') ** (2, -1))
 
 # Check log addition
 
-w = lambda s: vcsn.context('lal, log').weight(s)
+w = lambda s: vcsn.context('[...] -> log').weight(s)
 CHECK_EQ(w('-0.693147'), w('0') + w('0'))
 CHECK_EQ(w('1.30685'), w('2') + w('2'))
 CHECK_EQ(w('1.95141'), w('2') + w('5'))

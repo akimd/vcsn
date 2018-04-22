@@ -69,7 +69,7 @@ CHECK_EQ('''digraph
 # Expression:  a*(a+b)
 #
 
-aut = vcsn.b.expression('a*(a+b)').thompson()
+aut = vcsn.B.expression('a*(a+b)').thompson()
 lazy = aut.proper(lazy=True)
 
 CHECK_EQ('''digraph

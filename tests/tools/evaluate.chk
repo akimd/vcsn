@@ -10,34 +10,24 @@ check ()
   run 0 "$expected" -vcsn evaluate $@
 }
 
-cat >simple.gv <<EOF
-digraph
-{
-  vcsn_context = "lal(ab), z"
-  rankdir = LR
-  node [shape = circle]
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F1
-  }
-  0 -> 0 [label = "a, b"]
-  0 -> 1 [label = "<2>a"]
-  1 -> 1 [label = "a, b"]
-  1 -> F1
-  I0 -> 0
-}
+cat >simple.daut <<EOF
+context = [ab] -> Z
+$ -> 0
+0 -> 0 a, b
+0 -> 1 <2>a
+1 -> 1 a, b
+1 -> $
 EOF
 
-check 4 - -L aab <simple.gv
-check 4 -A - -L aab <simple.gv
-check 4 -Af - -L aab <simple.gv
-check 4 -f simple.gv -L aab
+check 4 -     -L aab <simple.daut
+check 4 -A -  -L aab <simple.daut
+check 4 -Af - -L aab <simple.daut
+check 4 -f simple.daut -L aab
 
 
 run 0 2 -/bin/sh -c "vcsn thompson -Ee -ab |
                      vcsn proper |
-                     vcsn lweight -C 'lal, q' -W 2 -A - |
+                     vcsn lweight -C '[...] -> Q' -W 2 -A - |
                      vcsn evaluate -L -e-ab"
 
 run 1 - -"vcsn evaluate" </dev/null

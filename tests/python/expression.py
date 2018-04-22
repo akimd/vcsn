@@ -306,7 +306,7 @@ check_format('[abcdef] -> b',
 check_format('[abcdef] -> b',
              '[abcde]',
              '[^f]', '[^f]', r'[\hat{}f]')
-check_format('lal(a-z), b',
+check_format('[a-z] -> b',
              '[abcd]',
              '[a-d]', '[a-d]', r'[a\textrm{-}d]')
 

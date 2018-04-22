@@ -31,30 +31,30 @@ struct sms2fr_impl
     // The sms automaton is the automaton accepting the original text
     // message, changed to this format: '[#my#text#message#]'.  Partial
     // identity for future composition.
-    auto s = "\\[#" + boost::replace_all_copy(sms, " ", "#") +  "#\\]";
-    auto sms_exp = vcsn::dyn::make_expression(ctx, s);
-    auto sms_aut = vcsn::dyn::to_automaton(sms_exp);
-    auto aut_p = vcsn::dyn::partial_identity(sms_aut);
+    const auto s = "\\[#" + boost::replace_all_copy(sms, " ", "#") +  "#\\]";
+    const auto sms_exp = vcsn::dyn::make_expression(ctx, s);
+    const auto sms_aut = vcsn::dyn::to_automaton(sms_exp);
+    const auto aut_p = vcsn::dyn::partial_identity(sms_aut);
 
     // First composition with the graphemic automaton.
-    auto aut_g =
+    const auto aut_g =
       vcsn::dyn::strip
       (vcsn::dyn::coaccessible
        (vcsn::dyn::compose(aut_p, grap)));
 
     // Second composition with the syntactic automaton.
-    auto aut_s =
+    const auto aut_s =
       vcsn::dyn::strip
       (vcsn::dyn::coaccessible
        (vcsn::dyn::compose(aut_g, synt)));
 
     // Prepare automaton for lightest.
-    auto aut_s_out = vcsn::dyn::project(aut_s, 1);
-    auto aut_s_proper = vcsn::dyn::proper(aut_s_out);
+    const auto aut_s_out = vcsn::dyn::project(aut_s, 1);
+    const auto aut_s_proper = vcsn::dyn::proper(aut_s_out);
 
     // Retrieve the path more likely (automaton is weighted) to correspond
     // to the translation in actual french. Then print it.
-    auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
+    const auto lightest = vcsn::dyn::lightest(aut_s_proper, 1);
     return format(lightest);
   }
 
@@ -62,9 +62,9 @@ struct sms2fr_impl
   /// back to normal text: "[#la#phrase#]" -> "la phrase".
   std::string format(const vcsn::dyn::polynomial& lightest) const
   {
-    auto str = vcsn::dyn::format(lightest);
-    auto begin = str.find('#');
-    auto end = str.rfind('#');
+    const auto str = vcsn::dyn::format(lightest);
+    const auto begin = str.find('#');
+    const auto end = str.rfind('#');
     using boost::algorithm::replace_all_copy;
     return replace_all_copy(str.substr(begin + 1, end - begin - 1), "#", " ");
   }
