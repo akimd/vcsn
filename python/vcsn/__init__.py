@@ -51,10 +51,9 @@ except (ImportError, NameError):
     pass
 
 # Predefined contexts for casual users.
-B = context('lal, b')
-Z = context('lal, z')
-Q = context('lal, q')
-b = B
+B = context('[...] -> B')
+Z = context('[...] -> Z')
+Q = context('[...] -> Q')
 
 # Cause an error to get back algorithms list.
 try:
