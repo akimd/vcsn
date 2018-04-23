@@ -49,7 +49,7 @@ struct sms2fr_impl
   using automaton_t = vcsn::mutable_automaton<context_t>;
   using state_t = vcsn::state_t_of<automaton_t>;
 
-  // Context of the syntactical automaton. lal, rmin
+  // Context of the syntactical automaton. [...] -> rmin
   using snd_context_t = vcsn::context<letterset_t, vcsn::rmin>;
   using snd_automaton_t = vcsn::mutable_automaton<snd_context_t>;
 

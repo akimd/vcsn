@@ -19,7 +19,7 @@ def check_aut(aut, re, num, exp, tests = []):
 def check(re, num, exp, tests = []):
   check_aut(ctx.expression(re, 'none').standard(), re, num, exp, tests)
 
-ctx = vcsn.context('lal, nmin')
+ctx = vcsn.context('[...] -> nmin')
 check(r'\z', 3, r'\z', k_algos)
 check(r'\e', 3, r'<0>\e', k_algos)
 check('a+b', 2, '<0>a + <0>b', k_algos)
@@ -56,7 +56,7 @@ check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 ctx = vcsn.context('law, nmin')
 check('<1>aaaa+<2>b', 1, '<1>aaaa')
 
-ctx = vcsn.context('lal, rmin')
+ctx = vcsn.context('[...] -> rmin')
 check(r'\z', 3, r'\z')
 check(r'\e', 3, r'<0>\e')
 check('a+b', 2, '<0>a + <0>b')
