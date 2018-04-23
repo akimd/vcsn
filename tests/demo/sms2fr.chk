@@ -20,7 +20,7 @@ comment c\' est trop bien
 difficile
 je peux pas
 EOF
-set -x
+
 case $(vcsn configuration configuration.lzma) in
     (true)
         run 0 out.exp -vcsn python3 $srcdir/$demodir/sms2fr-tests.py < sms.in
