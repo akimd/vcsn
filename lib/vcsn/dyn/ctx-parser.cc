@@ -237,7 +237,7 @@ namespace vcsn::dyn::parser
 
   // Cartesian product.
   const auto x_def
-    = lit("×") | lit('x');
+    = lit("×") | lit("|") | lit('x');
 
   // One or more labelsets.
   const auto labelset_def
