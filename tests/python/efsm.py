@@ -62,7 +62,7 @@ for f in ["lal-char-zmin", "lat-zmin", "ascii-to-one"]:
     check(meaut(f, 'gv'), f + '.efsm')
 
 # Check the case of an automaton without any transition.
-a = vcsn.context('lal(), b').expression(r'\e').standard()
+a = vcsn.context('[] -> B').expression(r'\e').standard()
 check(a, 'one.efsm')
 
 # Check the support of spontaneous transitions.

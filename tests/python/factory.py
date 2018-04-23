@@ -41,7 +41,7 @@ check_de_bruijn(meaut('de-bruijn-3.gv'),
 ## div/quotkbaseb.  ##
 ## ---------------- ##
 
-b = vcsn.context('lal(0-9), b')
+b = vcsn.context('[0-9] -> B')
 
 XFAIL(lambda: b.divkbaseb(0, 2), "divkbaseb: divisor cannot be 0")
 XFAIL(lambda: b.divkbaseb(2, 0), "divkbaseb: base (0) must be at least 2")
@@ -134,7 +134,7 @@ CHECK_EQ(meaut('levenshtein.gv'), nmin.levenshtein())
 ## ------------------ ##
 
 # Expect a clique.
-c1 = vcsn.context('lal(), b').random_automaton(4, 1, 4, 4)
+c1 = vcsn.context('[] -> B').random_automaton(4, 1, 4, 4)
 c2 = meaut('clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
@@ -176,7 +176,7 @@ XFAIL(lambda: vcsn.context('[a] -> b').random_automaton(2, max_labels=3),
       "the number of generators")
 
 # Check that max_labels is honored.
-ctx = vcsn.context('lal(a-z), b')
+ctx = vcsn.context('[a-z] -> B')
 a = ctx.random_automaton(num_states=10, max_labels=5, density=1)
 labels = a.labels()
 print("random_automaton: {:d}".format(a))
@@ -249,7 +249,7 @@ def check_operators(e, ops):
     CHECK_EQ(ops, ks)
 
 # A random expression without any operator is an error.
-XFAIL(lambda: randexp('lal(a-z), b', 'l=0'))
+XFAIL(lambda: randexp('[a-z] -> B', 'l=0'))
 
 # Check that operators are present only if the user has specified them.
 exp = randexp('[a] -> b',

@@ -28,7 +28,7 @@ def trie(algo, *args, **kwargs):
     else:
         raise RuntimeError('invalid algo: ', algo)
 
-def check(algo, ctx, polynomial, exp):
+def check(algo: str, ctx: str, polynomial: str, exp: str):
     print(algo, ctx, polynomial)
 
     # Starting from a polynomial.
@@ -41,7 +41,8 @@ def check(algo, ctx, polynomial, exp):
     if algo == 'trie':
         CHECK_EQ(True, a.info('is deterministic'))
 
-    if ctx.startswith('lal'):
+    # FIXME: context.info/context.is_free could be useful, instead of looking at the sname.
+    if c.format('sname').startswith('letterset'):
         CHECK(a.is_deterministic() if algo == 'trie' else a.is_codeterministic())
     CHECK_EQ(p, a.shortest(100))
 
@@ -112,7 +113,7 @@ $ -> 7 <6>
 ## ---------------- ##
 
 check('trie',
-      'lat<law, law>, q',
+      '[...]* x [...]* -> Q',
       '<1>one|un + <2>two|deux + <3>three|trois  + <4>four|quatre'
       + ' + <14>forteen|quatorze + <40>forty|quarante',
       r'''context = [efhnortuwy]? × [adeinoqrstuxz]? → ℚ

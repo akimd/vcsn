@@ -856,7 +856,7 @@ def exp(e, ctx):
 
 def qexp(e, gens=None):
     if gens:
-        c = vcsn.context('lal({}), q'.format(gens))
+        c = vcsn.context('[{}] -> Q'.format(gens))
     else:
         c = vcsn.context('[...] -> Q')
     return exp(e, c)
