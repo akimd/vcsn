@@ -129,11 +129,11 @@ class ContextText:
                 ctx = self.ipython.shell.user_ns[self.name]
                 text = ctx.format('sname')
             else:
-                text = 'lal, b'
+                text = '[...] -> B'
                 ctx = vcsn.context(text)
         else:
             # An unnamed context (i.e., used in the d3 widget).
-            ctx = vcsn.context('lal, b')
+            ctx = vcsn.context('[...] -> B')
 
         toLatex = lambda txt: vcsn.context(txt)._repr_latex_()
         self.widget = TextLatexWidget('Context:', text, toLatex)
@@ -218,7 +218,7 @@ class AutomatonText:
             text = aut.format(self.format)
         else:
             # Use a prebuilt context.
-            c = 'lal, b'
+            c = '[...] -> B'
             ctx = vcsn.context(c)
             aut = ctx.expression(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
@@ -335,7 +335,7 @@ class ExpressionText:
         else:
             text = r'\e'
             identities = 'linear'
-            cont = 'lal, b'
+            cont = '[...] -> B'
 
         ctx = vcsn.context(cont)
         exp = ctx.expression(text, identities)

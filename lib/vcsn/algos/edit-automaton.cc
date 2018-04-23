@@ -30,8 +30,8 @@ namespace vcsn
       switch (l)
         {
         case labelset_type::empty: return {};
-        case labelset_type::lal: return "lal<char>";
-        case labelset_type::law: return "law<char>";
+        case labelset_type::lal: return "[...]";
+        case labelset_type::law: return "[...]*";
         }
       BUILTIN_UNREACHABLE();
     }
@@ -149,8 +149,8 @@ namespace vcsn
                   ? labelset_type::lal
                   : input_type_);
     if (output_type_ != labelset_type::empty)
-      res = "lat<" + res + "," + to_string(output_type_) + '>';
-    res += ", ";
+      res += "|" + to_string(output_type_);
+    res += " -> ";
     switch (weightset_type_)
       {
       case weightset_type::logarithmic:

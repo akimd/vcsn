@@ -133,7 +133,7 @@ namespace vcsn
 
       vcsn::automaton_editor* make_editor(std::string ctx)
       {
-        auto c = vcsn::dyn::make_context(ctx.empty() ? "lal, b" : ctx);
+        auto c = vcsn::dyn::make_context(ctx.empty() ? "[...] -> B" : ctx);
         auto res = vcsn::dyn::make_automaton_editor(c);
         res->set_separator(',');
         res->add_pre(pre);
