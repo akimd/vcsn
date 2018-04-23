@@ -23,7 +23,14 @@ def _info_to_dict(info):
     Convert Booleans into bool, and likewise for integers.
     '''
     res = {}
-    for l in info.splitlines():
+    # Since Python 3.7, dictionaries are guaranteed to preserve the
+    # order.  So let's use a nice one.
+    #
+    # We used to rely on IPython displaying dictionaries in order in
+    # our test-suite (doc/notebooks), but with Python 3.7, IPython no
+    # longer sorts the dictionaries.  Sorting here although makes it
+    # easier for our tests.
+    for l in sorted(info.splitlines()):
         k, v = l.split(':', 1)
         v = v.strip()
 
