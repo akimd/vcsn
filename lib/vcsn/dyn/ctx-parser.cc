@@ -52,6 +52,8 @@ namespace vcsn::dyn::parser
 
 namespace vcsn::dyn::parser
 {
+  using namespace std::literals;
+
   using x3::eps;
   using x3::lit;
   using x3::attr;
@@ -126,9 +128,9 @@ namespace vcsn::dyn::parser
   x3::rule<weightset_basic_class, ast::weightset> const
       weightset_basic = "weightset_basic";
 
-  // An identifier must be separated from other alnum
   namespace
   {
+    // An identifier must be separated from other alnum
     auto ident(const std::string& id)
     {
       // Declared as a `lexeme` so that we don't skip spaces.  Otherwise
@@ -184,7 +186,7 @@ namespace vcsn::dyn::parser
 
   // generators in parens, or nothing.
   const auto gens_parens
-  = as<std::string>[lit('(') >> lexeme[*gen_paren] >> lit(')')]
+    = as<std::string>[lit('(') >> lexeme[*gen_paren] >> lit(')')]
     ;
 
   // <char>
@@ -195,11 +197,9 @@ namespace vcsn::dyn::parser
     | attr(std::string{"char"}) >> -gens_parens
     ;
 
-  // <char>
-  // eps
+  // <char> | <string>
   const auto letter_type
     = lit("<") >> (string("char") | string("string")) >> lit('>')
-    | attr(std::string{"char"})
     ;
 
   const auto oneset_def
@@ -208,19 +208,21 @@ namespace vcsn::dyn::parser
     ;
 
   // lal
-  // [a], [a]?, <char>[a], <char>[a]?
+  // [a], [a]?, <char>[a], <char>[a]?, <char>, <char>?
   const auto letterset_def
     = lexeme[lit("lal") >> !alnum] >> typed_gens
     // Accept `[a]?` to facilitate transition: we print `lal(a), b`
     // as `[a]?  → 𝔹`.
-    | letter_type >> gens >> -lit('?') >> !char_('*')
-   ;
+    | letter_type >> -gens >> -lit('?') >> !char_('*')
+    | attr("char"s) >> gens >> -lit('?') >> !char_('*')
+    ;
 
   // law
   // [a]*, <char>[a]*
   const auto wordset_def
     = lexeme[lit("law") >> !alnum] >> typed_gens
-    | letter_type >> gens >> lit('*')
+    | letter_type >> -gens >> lit('*')
+    | attr("char"s) >> gens >> lit('*')
     ;
 
   const auto labelset_basic_def

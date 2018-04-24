@@ -77,6 +77,15 @@ check_translate_context()
   CHECK("[...]",        "letterset<char_letters>, b");
   CHECK("[a]",          "letterset<char_letters(a)>, b");
 
+  // Wordset.
+  CHECK("[a-z]*",       "wordset<char_letters(a-z)>, b");
+  CHECK("[a-z...]*",    "wordset<char_letters(a-z...)>, b");
+  CHECK("[...]*",       "wordset<char_letters>, b");
+  CHECK("[]*",          "wordset<char_letters()>, b");
+  CHECK("<char>[abc]*", "wordset<char_letters(abc)>, b");
+  CHECK("<char>*",      "wordset<char_letters>, b");
+  CHECK("<string>*",    "wordset<string_letters>, b");
+
 
 
   /*-----------------.
