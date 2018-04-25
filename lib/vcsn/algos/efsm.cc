@@ -195,7 +195,7 @@ namespace vcsn
 
       // We don't want to read it as a `[...]*` automaton, as for
       // OpenFST, these "words" are unbreakable.  The proper
-      // interpretation is lal<string>.
+      // interpretation is <string>.
       using boost::algorithm::replace_all_copy;
       auto ctx = replace_all_copy(edit.result_context(),
                                   "[...]*", "<string>");

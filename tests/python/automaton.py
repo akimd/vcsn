@@ -489,7 +489,7 @@ CHECK_EQ('''digraph
 ## dot: simple.  ##
 ## ------------- ##
 
-ctx = vcsn.context('lal<string>, b')
+ctx = vcsn.context('<string>, b')
 e = ctx.expression("'🍺':'🍾':'☕️':'🍷' & [^]*'🍺'[^]*'☕️'[^]* & ([^]*'🍷''🍾'[^]*){c}")
 CHECK_EQ(metext('drinks-simple.gv'),
          e.automaton().minimize().dot('simple'))

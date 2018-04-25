@@ -69,11 +69,11 @@ check(a, 'one.efsm')
 # Note that "sort" is critical here, otherwise the transitions
 # are not issued in the state-order, so when we read back, the
 # states numbers are different.
-a = vcsn.context('[ab] -> b').expression('ab*').thompson().sort().strip()
+a = vcsn.context('[ab] -> B').expression('ab*').thompson().sort().strip()
 check(a, 'abs.efsm')
 
 # Don't try law<char>, it does not make any sense for OpenFST.
-a = vcsn.context('lal<string>, b')\
+a = vcsn.context('<string> -> B')\
     .expression("'grand'*('child'+'parent')").thompson().sort().strip()
 check(a, 'str.efsm')
 
@@ -89,7 +89,7 @@ a = vcsn.context('[a] x [xyz]')\
 check(a, 'a2xyz.efsm')
 
 # A transducer that mixes char and string letters.
-a = vcsn.context('[...] x lal<string> -> b')\
+a = vcsn.context('[...] x <string> -> b')\
     .expression("(c|'child'+p|'parent')*").standard().sort().strip()
 check(a, 'char-string.efsm')
 
