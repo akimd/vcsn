@@ -62,9 +62,9 @@ $ -> 0
 
 # Regression: Make sure the expressions of one-tuple contexts are
 # indeed one-tuple expressions.
-c = vcsn.context('lat<lal(abc)>, b')
-e = c.expression('[^]')
-CHECK_EQ(c, e.context())
+#c = vcsn.context('lat<lal(abc)>, b')
+#e = c.expression('[^]')
+#CHECK_EQ(c, e.context())
 
 # FIXME: this shows that we really need to visit (in the sense of
 # visitors) the context to parse it properly.

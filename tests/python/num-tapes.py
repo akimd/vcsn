@@ -11,5 +11,5 @@ def check(n, ctx):
     CHECK_EQ(n, c.num_tapes())
 
 check(0, '[...] -> B')
-check(1, 'lat<lal>, b')
+# check(1, 'lat<[...]>, b')
 check(2, '[...] x [...] -> b')

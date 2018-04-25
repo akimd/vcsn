@@ -181,6 +181,3 @@ def check(c1, c2):
 check('[abc] -> b', '[abcd] -> b')
 check('[abc] -> b', '[abc]* -> b')
 check('[abc] -> b', '[abc] -> q')
-# Regression: at some point they were considered equal, because there
-# were no difference when printed in UTF-8.  We now check the sname.
-check('lat<[abc]>, b', '[abc] -> b')
