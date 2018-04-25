@@ -1,4 +1,4 @@
-context = lal, log
+context = [...] -> Log
 $ -> 0
 0 -> 0 <.5>\e
 0 -> $

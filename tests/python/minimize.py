@@ -75,7 +75,7 @@ all_states_final = vcsn.context('[a] -> b').expression('a*').standard()
 check('moore', all_states_final, all_states_final.minimize('signature'))
 
 ## Minimize an intricate automaton into a linear one.
-a = vcsn.context('lal(a-k), b') \
+a = vcsn.context('[a-k] -> B') \
         .expression('[a-k]{10}') \
         .standard()
 exp = metext('intricate.exp.gv')
@@ -102,7 +102,7 @@ xfail('signature',  a)
 check('weighted',   a, exp)
 
 ## Non-lal automata.
-a = vcsn.context('law(a-c), b').expression('abc(bc)*+acb(bc)*').standard()
+a = vcsn.context('[a-c]* -> B').expression('abc(bc)*+acb(bc)*').standard()
 exp = metext('nonlal.exp.gv')
 check('signature', a, exp)
 check('weighted',  a, exp)

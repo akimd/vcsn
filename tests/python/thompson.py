@@ -32,7 +32,7 @@ xfail(r'(ab){T}')
 ## --- ##
 
 # Z: "\z".
-check(r'(?@lal(), z)\z',
+check(r'(?@[] -> Z)\z',
 r'''digraph
 {
   vcsn_context = "[]? → ℤ"

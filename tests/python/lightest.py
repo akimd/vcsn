@@ -53,7 +53,7 @@ check('a+(<2>a<-10>a)', 1, '<-20>aa', ['auto'])
 ctx = vcsn.context('[abcd] -> q')
 check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
 
-ctx = vcsn.context('law, nmin')
+ctx = vcsn.context('[...]* -> Nmin')
 check('<1>aaaa+<2>b', 1, '<1>aaaa')
 
 ctx = vcsn.context('[...] -> rmin')

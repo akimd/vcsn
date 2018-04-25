@@ -276,7 +276,7 @@ CHECK_EQ(r'a⊙[a⊕⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
 ## On wordset.  ##
 ## ------------ ##
 
-c = vcsn.context("law(a-z), expressionset<[xyz] -> q>")
+c = vcsn.context("[a-z]* -> RatE[[xyz] -> Q]")
 
 # Transposition is the most risky one, as we must not forget to
 # transpose the labels in the expansion.
@@ -300,13 +300,13 @@ check('(<x>a)*(<y>b)* & (<z>ab)*',
 ## tupleset.  ##
 ## ---------- ##
 
-c = vcsn.context("lat<[abc]*, law(xyz)>, expressionset<[XYZ] -> q>")
+c = vcsn.context("[abc]* | [xyz]* -> RatE[[XYZ] -> q]")
 check('(abc|xyz) & (a|xy)*(bc|z)*',
       'a|xy.[bc|z&(a|xy)*(bc|z)*]')
 check('(<X>abc|xyz) & (<Y>a|xy)*(<Z>bc|z)*',
       'a|xy.[<XY>bc|z&(<Y>a|xy)*(<Z>(bc)|z)*]')
 
-c = vcsn.context("lat<lal<char(abc)>, lal<char(xyz)>>, q")
+c = vcsn.context("[abc] | [xyz] -> Q")
 check(r'\e|\e',
       '<1>')
 check('a|x',
@@ -314,7 +314,7 @@ check('a|x',
 check('a*|x*',
       r'<1> + \e|x.[\e|x*] + a|\e.[a*|\e] + a|x.[a*|x*]')
 
-c = vcsn.context("lat<lal<char(abc)>, lal<char(xyz)>>, q")
+c = vcsn.context("[abc] | [xyz] -> Q")
 check(r'\e|\e',
       '<1>')
 check('a|x',

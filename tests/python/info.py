@@ -13,7 +13,7 @@ def check(obj, exp):
 
 # Check that ':', which is used as a separator by info, is also
 # properly treated as a letter.
-check(vcsn.context('lal(:a-z), q')
+check(vcsn.context('[:a-z] -> Q')
       .expression(r"a+a\:").standard(),
       {
           'is ambiguous': False,
@@ -46,7 +46,7 @@ check(vcsn.context('lal(:a-z), q')
           'type': 'mutable_automaton<letterset<char_letters(:abcdefghijklmnopqrstuvwxyz)>, q>',
       })
 
-check(vcsn.context('lal(a-z), q')
+check(vcsn.context('[a-z] -> Q')
       .expression("<1>a+(<2>b<3>*<4>)<5>").standard(),
       {
           'is ambiguous': False,
