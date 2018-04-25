@@ -80,10 +80,14 @@ if ipython:
     print("Checking IPython")
     for t in tests:
         print("running {} {}".format(ipython, mefile(t, 'ipy')))
+        # Depending on the version IPython doesn't fail and prints on stdout,
         # so not try..except, redirection to stdout nor warning removal here.
         # However the warnings will still appear on stderr, so redirect to devnull.
-        output = subprocess.check_output([ipython, mefile(t, 'ipy')],
-                                         stderr=subprocess.DEVNULL)
+        try:
+            output = subprocess.check_output([ipython, mefile(t, 'ipy')],
+                                             stderr=subprocess.DEVNULL)
+        except Exception as e:
+            output = e.output
         output = output.decode('utf-8')
         ## Clean up absolute paths (possibly ~/src/...).
         output = re.sub('~?/.*?([^/\n]+/[^/\n]+) in', r'\1 in', output)
