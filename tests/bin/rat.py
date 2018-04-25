@@ -7,7 +7,7 @@ from test import *
 import vcsn
 
 # The name of the current context.
-context = 'lal(abcd), b'
+context = '[abcd]? → b'
 # The current context.
 ctx = vcsn.context(context)
 # Whether expressions or series.
@@ -15,15 +15,15 @@ identities = "associative"
 
 # Compute the name of the context.
 contexts = {
-    'b': "law(a-h), b",
-    'br': "law(a-h), expressionset<law(i-n), b>",
-    'brr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), b>>",
-    'q': "law(a-h), q",
-    'qr': "law(a-h), expressionset<law(i-n), q>",
-    'qrr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), q>>",
-    'z': "law(a-h), z",
-    'zr': "law(a-h), expressionset<law(i-n), z>",
-    'zrr': "law(a-h), expressionset<law(i-n), expressionset<law(w-z), z>>",
+    'b': "[a-h]* -> b",
+    'br': "[a-h]* -> expressionset<[i-n]* -> b>",
+    'brr': "[a-h]* -> expressionset<[i-n]* -> expressionset<[w-z]* -> b>>",
+    'q': "[a-h]* -> q",
+    'qr': "[a-h]* -> expressionset<[i-n]* -> q>",
+    'qrr': "[a-h]* -> expressionset<[i-n]* -> expressionset<[w-z]* -> q>>",
+    'z': "[a-h]* -> z",
+    'zr': "[a-h]* -> expressionset<[i-n]* -> z>",
+    'zrr': "[a-h]* -> expressionset<[i-n]* -> expressionset<[w-z]* -> z>>",
 }
 
 
@@ -68,14 +68,14 @@ def check_rat_exp(fname):
         if m is not None:
             labels = m.group(1)
             print('# %labels:', labels)
+            prev = context
             if labels == "letters":
-                context = context.replace(
-                    'word', 'letter').replace('law', 'lal')
+                context = re.sub(r'(\[.*?\])\*', r'\1', context)
             elif labels == "words":
-                context = context.replace(
-                    'letter', 'word').replace('lal', 'law')
+                context = re.sub(r'(\[.*?\])([^\*])', r'\1*\2', context)
             else:
-                context = labels + ", " + context.split(',', 2)[1]
+                context = labels + " -> " + context.split('->', 2)[1]
+            print("# context: from {} to {}".format(prev, context))
             context_update()
             continue
 
@@ -83,7 +83,7 @@ def check_rat_exp(fname):
         if m is not None:
             weights = m.group(1)
             print('# %weights:', weights)
-            context = context.split(',', 2)[0] + ", " + weights
+            context = context.split(',', 2)[0] + " → " + weights
             context_update()
             continue
 

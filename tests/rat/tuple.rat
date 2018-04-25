@@ -1,6 +1,6 @@
 # We add useless letters (0-9) so that when printing [abcd], we
 # display [a-d], not [^].
-%context: lat<lal(abcd0-9), lal(efgh0-9)>, q
+%context: [abcd0-9] | [efgh0-9] -> Q
 \z|\z  => \z
 
 # Beware of 'b|\e'.
@@ -31,7 +31,7 @@ a|0  @ \e|e  => \z
 \e    @ 0|\e  => \z
 
 
-%context: lat<lal(abcd0-9), lal(efgh0-9), lal(ijkl0-9)>, q
+%context: [abcd0-9] | [efgh0-9] | [ijkl0-9] -> Q
 
 %identities: associative
 \z|\z|\z => \z
