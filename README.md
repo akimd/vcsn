@@ -203,12 +203,20 @@ the `locales` package, and that en_US.UTF-8 be supported:
            LC_ALL=en_US.UTF-8
 
 #### MacPorts
-Install these package:
-  boost +python36
-  py36-notebook
-  python36
+First install these packages:
 
-Installing the vcsn package will install all the dependencies.
+    sudo port install  boost +python36  py36-notebook  python36
+
+Make sure that Boost is configured to be used with Python 3.6:
+
+    $ port variant boost | grep -F +
+    [+]no_single: Disable building single-threaded libraries
+    [+]no_static: Disable building static libraries
+    (+)python36: Build Boost.Python for Python 3.6
+
+Then install Vcsn.
+
+    sudo port install vcsn
 
 ### Libraries installed in non-standard directories
 
