@@ -8,6 +8,7 @@
 # update-test --builddir=_build tests/python/*.py tests/python/determinize.dir/*
 
 import argparse
+import os
 import re
 
 
@@ -15,10 +16,17 @@ def getargs():
     p = argparse.ArgumentParser(description='Update test cases.')
     opt = p.add_argument
     opt('tests', metavar='test', nargs='+', type=str, default=None,
-        help='a test file to update')
+        help='test files to update')
     opt('--builddir', metavar='DIR', type=str, default='.',
         help='look for the logs in DIR')
-    opt('--log', metavar='FILE', nargs="+", type=str, default=[],
+    opt('-d', '--diffs', action='store_true',
+        help='''also parse the diffs.  By default diffs are not
+        read, only the "Expected" and "Effective" sections of the log
+        files are parsed, because often the context of the diffs are
+        too coarse, and the subsitution is too eager.  But on occasions,
+        for instance to process notebooks, diffs are better suited.
+        ''')
+    opt('-l', '--log', metavar='FILE', nargs="+", type=str, default=[],
         help='consider DIR/FILE')
     opt('-v', '--verbose', action='store_true',
         help='Be verbose')
@@ -35,6 +43,7 @@ def log(*args_):
 
 def contents(file):
     '''The contents of a file.'''
+    log(file)
     f = open(file)
     return f.read()
 
@@ -65,9 +74,6 @@ def diff_to_re(match):
 def exp_eff_to_re(match):
     fr = ''
     to = ''
-    # For some reason, with python-2.7 on OS X, I raise an
-    # exception.TypeError when I use (keepends = True) instead of
-    # (True)!!!
     for l in match.group(1).splitlines(True):
         fr += l[1:]
     # Drop the final \n.
@@ -80,27 +86,26 @@ def exp_eff_to_re(match):
 
 
 def update(test, logfile):
-    logfile = args.builddir + '/' + logfile
-    try:
-        l = contents(logfile)
+    logfile = os.path.join(args.builddir, logfile)
+    if os.path.isfile(logfile):
         log("LOG: ", logfile)
+        l = contents(logfile)
         global subst  # pylint: disable=global-statement
         subst = dict()
         re.sub(r'Expected (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n'
                + 'Effective (?:out.*?|error)::\n\n((?:^\t.*\n)+)\n',
                exp_eff_to_re, l, flags=re.MULTILINE)
-#    re.sub(r'((?:^\t[-+ ].*\n)+)',
-#           diff_to_re, l, flags = re.MULTILINE)
-        if subst != dict():
+        if args.diffs:
+            re.sub(r'((?:^\t[-+ ].*\n)+)',
+                   diff_to_re, l, flags = re.MULTILINE)
+        if subst:
             # Turn "subst{frm} -> to" into a large RE.
             frm = '|'.join([re.escape(x) for x in subst])
             log("FROM:", frm)
             test = re.sub("(" + frm + ")",
                           lambda m: subst[m.group(1)],
                           test, flags=re.MULTILINE)
-        return test
-    except IOError:
-        return test
+    return test
 
 for t in args.tests:
     log("FILE:", t)

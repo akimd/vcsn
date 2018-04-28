@@ -1,2 +1,6 @@
-# Check thabt we detect incorrect outputs.
-abb => ab
+# Check that we detect incorrect outputs.        -*- shell-script -*-
+#
+# Use some patterns that is unlikely to be found in other tests, so
+# that we can use update-test easily.
+
+abbbbbbbbbbbbbbbbbbbbbb => ab
