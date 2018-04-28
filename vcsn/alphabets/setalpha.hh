@@ -19,6 +19,8 @@
 
 namespace vcsn
 {
+  using namespace std::literals;
+
   /// Whether \a e is member of \a s.
   template <typename Key, typename Compare, typename Allocator>
   ATTRIBUTE_PURE
@@ -357,12 +359,35 @@ namespace vcsn
 
         case format::text:
         case format::utf8:
-          o << '[';
-          for (const auto l: *this)
-            this->print(l, o, fmt);
-          if (open_ && fmt.show_open())
-            o << "...";
-          o << ']';
+          // This is very ugly, but will be refactored when I have a
+          // clearer idea of how to do this nicely.
+          if (sname() == "string_letters"s)
+            {
+              o << "<string>";
+              if (! empty() || !open_)
+                {
+                  o << "{";
+                  const char *sep = "";
+                  for (const auto l: *this)
+                    {
+                      o << sep;
+                      this->print(l, o, fmt);
+                      sep = ", ";
+                    }
+                  if (open_ && fmt.show_open())
+                    o << sep << "...";
+                  o << "}";
+                }
+            }
+          else
+            {
+              o << '[';
+              for (const auto l: *this)
+                this->print(l, o, fmt);
+              if (open_ && fmt.show_open())
+                o << "...";
+              o << ']';
+            }
           break;
 
         case format::ere:

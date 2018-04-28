@@ -98,8 +98,12 @@ check('[ab] -> q', '[ab]? → ℚ')
 ## LabelSet: wordset.  ##
 ## ------------------- ##
 
-# FIXME: we don't print string_letters in UTF-8.
+check('<string>', 'letterset<string_letters>, b', 'sname')
+check('<string>', '<string>? → 𝔹', 'utf8')
+check('<string>', '<string>? -> B', 'text')
 check('wordset<string_letters>, b', 'wordset<string_letters>, b', 'sname')
+check('<string>*, b', 'wordset<string_letters>, b', 'sname')
+check('<string>*', '<string>* -> B', 'text')
 
 
 ## ------------------------- ##

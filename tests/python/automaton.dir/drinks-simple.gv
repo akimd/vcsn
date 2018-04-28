@@ -1,6 +1,6 @@
 digraph
 {
-  vcsn_context = "['☕️''🍷''🍺''🍾']? → 𝔹"
+  vcsn_context = "<string>{'☕️', '🍷', '🍺', '🍾'}? → 𝔹"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
