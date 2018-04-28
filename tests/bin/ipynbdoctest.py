@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 import argparse
+import json
 import os
-import pprint
 import re
 import subprocess
 import sys
@@ -203,7 +203,7 @@ def canonical_dict(dict, ignores):
 
     if 'data' in dict:
         for k in dict['data']:
-            dict['data'][k] = canonicalize(dict['data'][k], k, ignores)
+            dict['data'][k] = canonicalize(dict['data'][k], k, ignores).splitlines(True)
         # FIXME: Probably not the best way to deal with this, but right know
         # I want the test skip to be green again
         if 'text/plain' in dict['data']:
@@ -235,11 +235,24 @@ def check_outputs(ref, test, ignores):
                 SKIP('widgets are used')
                 return
 
-    # There can be several outputs.  For instance wnen the cell both
+    # There can be several outputs.  For instance when the cell both
     # prints a result (goes to "stdout") and displays an automaton
     # (goes to "data").
-    exp = pprint.pformat([canonical_dict(d, ignores) for d in ref],  width=132)
-    eff = pprint.pformat([canonical_dict(d, ignores) for d in test], width=132)
+    #
+    # Also IPython saves the actual outputs not a strings, but as
+    # arrays of strings that represent the lines.  That makes it much
+    # more readable.
+    #
+    # Finally, put all this into a {'cells':[ {'outputs': [LINES]} ] },
+    # to imitate the format used by Jupyter: this will enable that we
+    # use update-test to upgrade notebooks after the test suite ran.
+    def pretty(ds):
+        return json.dumps({'cells':[{'outputs':[canonical_dict(d, ignores) for d in ds]}]},
+                          indent=1,
+                          sort_keys=True,
+                          ensure_ascii=False)
+    exp = pretty(ref)
+    eff = pretty(test)
 
     if exp == eff:
         log('check_outputs', 'pass', level=2)
