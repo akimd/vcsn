@@ -5,14 +5,18 @@ import re
 import vcsn
 from test import *
 
-def check(ctx, exp=None, fmt="utf8"):
+def check(ctx, utf8=None, **kwargs):
     c = vcsn.context(ctx)
-    if exp is None:
-        exp = ctx
-    CHECK_EQ(exp, c.format(fmt))
-    # Round-trip.
-    if fmt in ['utf8', 'sname', 'text']:
-        CHECK_EQ(c, vcsn.context(exp))
+    if not kwargs and not utf8:
+        kwargs['utf8'] = ctx
+    elif utf8:
+        kwargs['utf8'] = utf8
+    for fmt, exp in kwargs.items():
+        print("format: {}".format(fmt))
+        CHECK_EQ(exp, c.format(fmt))
+        # Round-trip.
+        if fmt in ['utf8', 'sname', 'text']:
+            CHECK_EQ(c, vcsn.context(exp))
 
 # Invalid context: invalid weightset.
 XFAIL(lambda: vcsn.context("[a]_UNKNOWN"),
@@ -47,19 +51,18 @@ RatE[[...]? → BU]
 ## LabelSet: letterset.  ##
 ## --------------------- ##
 
-# Different types of syntactic sugar.
-check('[abc] -> b', '[abc]? → 𝔹')
-check('[...] -> B', '[...]? → 𝔹')
-
-check('[...] -> b', r'\{\ldots\}^?\to\mathbb{B}', 'latex')
-check('[...] -> b', r'[...]? -> B',               'text')
-check('[...] -> b', r'[...]? → 𝔹',                'utf8')
-check('[abc] -> b', r'\{a, b, c\}^?\to\mathbb{B}', 'latex')
-check('[abc] -> b', r'[abc]? -> B',                'text')
-check('[abc] -> b', r'[abc]? → 𝔹',                 'utf8')
-check('[] -> b',    r'\{\}^?\to\mathbb{B}', 'latex')
-check('[] -> b',    r'[]? -> B',            'text')
-check('[] -> b',    r'[]? → 𝔹',             'utf8')
+check('[...] -> b',
+      latex=r'\{\ldots\}^?\to\mathbb{B}',
+      text=r'[...]? -> B',
+      utf8=r'[...]? → 𝔹')
+check('[abc] -> b',
+      latex=r'\{a, b, c\}^?\to\mathbb{B}',
+      text=r'[abc]? -> B',
+      utf8=r'[abc]? → 𝔹')
+check('[] -> b',
+      latex=r'\{\}^?\to\mathbb{B}',
+      text=r'[]? -> B',
+      utf8=r'[]? → 𝔹')
 
 # Check open/close.
 check('[a] -> b', '[a]? → 𝔹')
@@ -98,12 +101,16 @@ check('[ab] -> q', '[ab]? → ℚ')
 ## LabelSet: wordset.  ##
 ## ------------------- ##
 
-check('<string>', 'letterset<string_letters>, b', 'sname')
-check('<string>', '<string>? → 𝔹', 'utf8')
-check('<string>', '<string>? -> B', 'text')
-check('wordset<string_letters>, b', 'wordset<string_letters>, b', 'sname')
-check('<string>*, b', 'wordset<string_letters>, b', 'sname')
-check('<string>*', '<string>* -> B', 'text')
+check('<string>',
+      sname='letterset<string_letters>, b',
+      utf8='<string>? → 𝔹',
+      text='<string>? -> B')
+check('wordset<string_letters>, b',
+      sname='wordset<string_letters>, b')
+check('<string>*',
+      sname='wordset<string_letters>, b',
+      utf8='<string>* → 𝔹',
+      text='<string>* -> B')
 
 
 ## ------------------------- ##
@@ -151,13 +158,10 @@ CHECK_EQ(vcsn.context('[abc] x [xyz] -> q'), c1 | c2)
 ctx = '''[ba] x [vu] x [x-z]* ->
          RatE[[fe] x [hg] -> q] x r x q'''
 check(ctx,
-      'lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>'
+      sname='lat<letterset<char_letters(ab)>, letterset<char_letters(uv)>, wordset<char_letters(xyz)>>'
       ', lat<expressionset<lat<letterset<char_letters(ef)>, letterset<char_letters(gh)>>, q>, r, q>',
-      'sname')
-check(ctx,
-      '[ab]? x [uv]? x [xyz]* -> RatE[[ef]? x [gh]? -> Q] x R x Q', 'text')
-check(ctx,
-      '[ab]? × [uv]? × [xyz]* → RatE[[ef]? × [gh]? → ℚ] × ℝ × ℚ', 'utf8')
+      text='[ab]? x [uv]? x [xyz]* -> RatE[[ef]? x [gh]? -> Q] x R x Q',
+      utf8='[ab]? × [uv]? × [xyz]* → RatE[[ef]? × [gh]? → ℚ] × ℝ × ℚ')
 
 # Regression: Poly used in a tupleset of weightset.
 check('[a-z]* x [0-9] -> Poly[[A-Z]*] x Q',
