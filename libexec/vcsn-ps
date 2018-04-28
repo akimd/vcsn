@@ -47,12 +47,12 @@ def user_proc(proc):
     # The cmdline is something like
     # ['/opt/local/Library/Frameworks/Python.framework/Versions/3.5/'
     # 'Resources/Python.app/Contents/MacOS/Python',
-    # '/Users/akim/src/lrde/2/tests/bin/ipynbdoctest.py', '--tap',
+    # '/Users/akim/src/lrde/2/tests/bin/ipynbdoctest', '--tap',
     # '/Users/akim/src/lrde/2/doc/notebooks/Spell-checker.ipynb'].
     # There are three lines for each notebook, the two others are the
     # shell running tap-driver.sh.  So keep only the line without
     # tap-driver.
-    m = search(r'ipynbdoctest.py --tap (?:.*?/)?([^/]*\.ipynb)', cmd)
+    m = search(r'ipynbdoctest --tap (?:.*?/)?([^/]*\.ipynb)', cmd)
     if m and 'tap-driver.sh' not in cmd:
         title, message = 'CHECK', m.group(1)
         print_proc(title, message, proc)
