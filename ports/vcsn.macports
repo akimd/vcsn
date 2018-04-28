@@ -22,9 +22,9 @@ master_sites        http://www.lrde.epita.fr/dload/vcsn/${version}/
 
 use_xz              yes
 
-checksums           rmd160  03e4df4ef1c421a394fd3e340a910cc13f214b58 \
-                    sha256  4ead51f021d913b7d11b8a9afefa926877724729469d517626b5112abb98f2b0 \
-                    size    14837632
+checksums           rmd160  bfa67e399a25473a2c449905c19464f4167dc2cf \
+                    sha256  1fe0afa7a52d211143ef0f15632b777d1137706d66a2accb004447c33b53d1c2 \
+                    size    14837372
 
 # python3.x is required - force dependencies to use it as well
 set python_version  36
