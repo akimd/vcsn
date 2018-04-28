@@ -67,7 +67,7 @@ namespace vcsn
         return l;
       else
         {
-          word_t res;
+          auto res = word_t{};
           res.reserve(l.size() + 1);
           res.insert(end(res), begin(l), end(l));
           res.insert(end(res), r);
@@ -82,7 +82,7 @@ namespace vcsn
         return r;
       else
         {
-          word_t res;
+          auto res = word_t{};
           res.reserve(1 + r.size());
           res.insert(end(res), l);
           res.insert(end(res), begin(r), end(r));
@@ -99,7 +99,7 @@ namespace vcsn
         return l;
       else
         {
-          word_t res;
+          auto res = word_t{};
           res.reserve(l.size() + r.size());
           res.insert(end(res), begin(l), end(l));
           res.insert(end(res), begin(r), end(r));
@@ -116,7 +116,7 @@ namespace vcsn
     /// Remove first and last characters, that must be "special".
     word_t undelimit(const word_t& w) const
     {
-      size_t s = w.size();
+      const auto s = w.size();
       assert(2 <= s);
       assert(w[0] == special_letter());
       assert(w[s-1] == special_letter());
@@ -138,8 +138,7 @@ namespace vcsn
     word_t
     transpose(const word_t& w) const
     {
-      // C++11 lacks std::rbegin/rend...
-      return {w.rbegin(), w.rend()};
+      return {rbegin(w), rend(w)};
     }
 
     letter_t
@@ -214,10 +213,10 @@ namespace vcsn
     /// Either a single char, or a "letter" enclosed in single-quotes.
     static letter_t get_letter(std::istream& i, bool quoted = true)
     {
-      std::string res;
+      auto res = std::string{};
       if (quoted)
         {
-          int c = i.peek();
+          auto c = i.peek();
           if (c == '\'')
             {
               i.ignore();

@@ -326,7 +326,7 @@ namespace vcsn
           {
             o << "\\{";
             const char *sep = "";
-            for (auto l: *this)
+            for (const auto l: *this)
               {
                 o << sep;
                 if (! this->is_letter(l))
@@ -347,7 +347,7 @@ namespace vcsn
           if (!empty() || !open_)
             {
               o << '(';
-              for (auto l: *this)
+              for (const auto l: *this)
                 this->print(l, o, fmt);
               if (open_ && fmt.show_open())
                 o << "...";
@@ -358,7 +358,7 @@ namespace vcsn
         case format::text:
         case format::utf8:
           o << '[';
-          for (auto l: *this)
+          for (const auto l: *this)
             this->print(l, o, fmt);
           if (open_ && fmt.show_open())
             o << "...";
