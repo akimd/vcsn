@@ -216,7 +216,7 @@ check-doc:
 EXTRA_DIST += %D%/check-notebooks
 
 # Check input/output in the notebooks.
-IPYNBDOCTEST = $(srcdir)/tests/bin/ipynbdoctest.py
+IPYNBDOCTEST = $(srcdir)/tests/bin/ipynbdoctest
 vcsn_python += $(IPYNBDOCTEST)
 TEST_EXTENSIONS += .ipynb
 IPYNB_LOG_DRIVER = $(TAP_DRIVER)
