@@ -286,43 +286,42 @@ xfail('a<2')
 ## -------- ##
 
 # FIXME: This should be part of check-rat.
-def check_format(ctx, r, text, utf8, latex):
+def check_format(ctx, r, **kwargs):
     ctx = vcsn.context(ctx)
     e = ctx.expression(r)
-    CHECK_EQ(text, e.format('text'))
-    CHECK_EQ(utf8, e.format('utf8'))
-    CHECK_EQ(latex, e.format('latex'))
+    for fmt, exp in kwargs.items():
+        CHECK_EQ(exp, e.format(fmt))
 
 check_format('[abcd] -> b',
              'abcd',
-             'abcd',
-             'abcd',
-             r'a \, b \, c \, d')
+             text='abcd',
+             utf8='abcd',
+             latex=r'a \, b \, c \, d')
 
 # Check classes.  FIXME: Redundant with check-rat.
 check_format('[abcdef] -> b',
              '[abcdef]',
-             '[^]', '[^]', r'[\hat{}]')
+             text='[^]', utf8='[^]', latex=r'[\hat{}]')
 check_format('[abcdef] -> b',
              '[abcde]',
-             '[^f]', '[^f]', r'[\hat{}f]')
+             text='[^f]', utf8='[^f]', latex=r'[\hat{}f]')
 check_format('[a-z] -> b',
              '[abcd]',
-             '[a-d]', '[a-d]', r'[a\textrm{-}d]')
+             text='[a-d]', utf8='[a-d]', latex=r'[a\textrm{-}d]')
 
 # Check weights.
-check_format('[abc] -> expressionset<[def] -> expressionset<[xyz] -> q>>',
+check_format('[abc] -> RatE[[def] -> RatE[[xyz] -> q]]',
              '<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*',
-             '<<<93>x>d>a+(<<<42>y>e>b)*',
-             '⟨⟨⟨93⟩x⟩d⟩a+(⟨⟨⟨42⟩y⟩e⟩b)*',
-             r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
+             text='<<<93>x>d>a+(<<<42>y>e>b)*',
+             utf8='⟨⟨⟨93⟩x⟩d⟩a+(⟨⟨⟨42⟩y⟩e⟩b)*',
+             latex=r' \left\langle  \left\langle  \left\langle 93 \right\rangle \,x \right\rangle \,d \right\rangle \,a + \left( \left\langle  \left\langle  \left\langle 42 \right\rangle \,y \right\rangle \,e \right\rangle \,b\right)^{*}')
 
 # Words are in \mathit to get correct inter-letter spacing.
 check_format('[abc]* -> q',
              '(abc)a(bc)',
-             '(abc)a(bc)',
-             '(abc)a(bc)',
-             r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
+             text='(abc)a(bc)',
+             utf8='(abc)a(bc)',
+             latex=r'\left(\mathit{abc}\right) \, \mathit{a} \, \left(\mathit{bc}\right)')
 
 # Exponents.
 for ctx in ['[...] -> Q', '[...]* -> Q']:
@@ -330,37 +329,37 @@ for ctx in ['[...] -> Q', '[...]* -> Q']:
     A = '\mathit{a}' if ctx == '[...]* -> Q' else 'a'
     check_format(ctx,
                  'a{2}',
-                 'aa', 'aa', r'a \, a'.replace('a', A))
+                 text='aa', utf8='aa', latex=r'a \, a'.replace('a', A))
     check_format(ctx,
                  'a{3}',
-                 'aaa', 'a³', r'{a}^{3}'.replace('a', A))
+                 text='aaa', utf8='a³', latex=r'{a}^{3}'.replace('a', A))
     check_format(ctx,
                  'a{4}',
-                 'aaaa', 'a⁴', r'{a}^{4}'.replace('a', A))
+                 text='aaaa', utf8='a⁴', latex=r'{a}^{4}'.replace('a', A))
     check_format(ctx,
                  'a{5}',
-                 'a{5}', 'a⁵', r'{a}^{5}'.replace('a', A))
+                 text='a{5}', utf8='a⁵', latex=r'{a}^{5}'.replace('a', A))
     check_format(ctx,
                  'a{10}',
-                 'a{10}', 'a¹⁰', r'{a}^{10}'.replace('a', A))
+                 text='a{10}', utf8='a¹⁰', latex=r'{a}^{10}'.replace('a', A))
     check_format(ctx,
                  'a{100}',
-                 'a{100}', 'a¹⁰⁰', r'{a}^{100}'.replace('a', A))
+                 text='a{100}', utf8='a¹⁰⁰', latex=r'{a}^{100}'.replace('a', A))
     check_format(ctx,
                  'a{987}',
-                 'a{987}', 'a⁹⁸⁷', r'{a}^{987}'.replace('a', A))
+                 text='a{987}', utf8='a⁹⁸⁷', latex=r'{a}^{987}'.replace('a', A))
 
 # Check that we do support digits as letters.
 check_format('[0123] -> b',
              '0123',
-             '0123',
-             '0123',
-             '0 \\, 1 \\, 2 \\, 3')
+             text='0123',
+             utf8='0123',
+             latex='0 \\, 1 \\, 2 \\, 3')
 check_format('[0123] -> q',
              '<0123>0123',
-             '<123>(0123)',
-             '⟨123⟩(0123)',
-             r' \left\langle 123 \right\rangle \,\left(0 \, 1 \, 2 \, 3\right)')
+             text='<123>(0123)',
+             utf8='⟨123⟩(0123)',
+             latex=r' \left\langle 123 \right\rangle \,\left(0 \, 1 \, 2 \, 3\right)')
 
 ## ------------------------- ##
 ## Distributive identities.  ##
