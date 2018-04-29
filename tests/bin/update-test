@@ -30,6 +30,10 @@ def getargs():
         help='consider DIR/FILE')
     opt('-v', '--verbose', action='store_true',
         help='Be verbose')
+    opt('-t', '--threshold', metavar='LEN', type=int, default=5,
+        help='''discard patterns that are smaller than this length.
+        This is a protection against changes such as s/a/b/g if some
+        expected output moved from a to b.  Does not apply to --diff.''')
     return p.parse_args()
 
 args = getargs()
@@ -78,11 +82,12 @@ def exp_eff_to_re(match):
         fr += l[1:]
     # Drop the final \n.
     fr = fr[:-1]
-    for l in match.group(2).splitlines(True):
-        to += l[1:]
-    to = to[:-1]
-    subst[fr] = to
-    log("SUBST: {} -> {}".format(fr, to))
+    if args.threshold <= len(fr):
+        for l in match.group(2).splitlines(True):
+            to += l[1:]
+        to = to[:-1]
+        subst[fr] = to
+        log("SUBST: {} -> {}".format(fr, to))
 
 
 def update(test, logfile):
