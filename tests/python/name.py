@@ -6,8 +6,8 @@ from test import *
 e = vcsn.B.expression('(?<E>[ab]*)(?<A>a*)(?<F>[ab]){2}')
 
 def check(input, **exp):
-    for format, value in exp.items():
-        CHECK_EQ(value, input.format(format))
+    for fmt, value in exp.items():
+        CHECK_EQ(value, input.format(fmt))
 
 check(e,
       text='EAF{2}',
@@ -16,7 +16,7 @@ check(e,
 
 check(e.expansion(),
       text='a.[F + AF{2} + EAF{2}] + b.[F + EAF{2}]',
-      utf8='a⊙[F⊕AF²⊕EAF²] ⊕ b⊙[F⊕EAF²]',
+      utf8='a⊙[F ⊕ AF² ⊕ EAF²] ⊕ b⊙[F ⊕ EAF²]',
       latex=(r'a \odot \left[\mathsf{F} \oplus \mathsf{A} \, {\mathsf{F}}^{2} \oplus \mathsf{E} \, \mathsf{A} \, {\mathsf{F}}^{2}\right]'
              r' \oplus b \odot \left[\mathsf{F} \oplus \mathsf{E} \, \mathsf{A} \, {\mathsf{F}}^{2}\right]'))
 

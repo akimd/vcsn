@@ -15,7 +15,7 @@ class expansion:
     __matmul__ = expansion.compose
     __mul__ = _rweight
     __or__ = lambda l, r: expansion._tuple([l, r])
-    __repr__ = lambda self: self.format('text')
+    __repr__ = lambda self: self.format('utf8')
     __rmul__ = _lweight
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

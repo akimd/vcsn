@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import vcsn
 from test import *
@@ -53,7 +54,7 @@ def check(re, s, exp, breaking=False):
     if not isinstance(re, vcsn.expression):
         re = ctx.expression(re)
     eff = re.derivation(s, breaking)
-    print("∂/∂{}({:u}) = {:u}".format(s, re, eff))
+    print(f"Check: ∂/∂{s}({re:u}) = {eff:u}")
     CHECK_EQ(exp, eff)
     # Check that the breaking derivation is exactly the breaking of
     # the regular derivation.
@@ -68,7 +69,7 @@ def check(re, s, exp, breaking=False):
 
 # Check that by default, derivation is non-breaking.  The difference
 # is thin: we expect a polynomial with a single expression "a+b", not a
-# polynomial of two expressions: "a + b".
+# polynomial of two expressions: "a ⊕ b".
 CHECK_EQ('a+b',
          ctx.expression('a(a+b)').derivation('a'))
 
@@ -82,54 +83,54 @@ CHECK_EQ('b+a',
 ## ---------------------------- ##
 
 # Zero, one.
-check(   r'\z', 'a', r'\z')
-check(   r'\e', 'a', r'\z')
-check(r'<x>\e', 'a', r'\z')
+check(   r'\z', 'a', '∅')
+check(   r'\e', 'a', '∅')
+check(r'<x>\e', 'a', '∅')
 
 # Letters.
-check(   'a', 'a', r'\e')
-check(   'a', 'b', r'\z')
-check('<x>a', 'a', r'<x>\e')
-check('<x>a', 'b', r'\z')
+check(   'a', 'a', r'ε')
+check(   'a', 'b', '∅')
+check('<x>a', 'a', r'⟨x⟩ε')
+check('<x>a', 'b', '∅')
 
 # Sum.
-check('<x>a+<y>b', 'a', r'<x>\e')
-check('<x>a+<y>b', 'b', r'<y>\e')
-check('<x>a+<y>a', 'a', r'<x+y>\e')
+check('<x>a+<y>b', 'a', r'⟨x⟩ε')
+check('<x>a+<y>b', 'b', r'⟨y⟩ε')
+check('<x>a+<y>a', 'a', r'⟨x+y⟩ε')
 
 # Prod.
 check('ab', 'a', 'b')
-check('ab', 'b', r'\z')
-check('(<x>a).(<y>a).(<z>a)', 'a', '<x><y>a<z>a')
+check('ab', 'b', '∅')
+check('(<x>a).(<y>a).(<z>a)', 'a', '⟨x⟩⟨y⟩a⟨z⟩a')
 
 # Conjunction.
-check('<x>a&<y>a&<z>a', 'a', r'<xyz>\e')
-check('<x>a&<y>a&<z>a', 'b', r'\z')
+check('<x>a&<y>a&<z>a', 'a', r'⟨xyz⟩ε')
+check('<x>a&<y>a&<z>a', 'b', '∅')
 
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'a', r'\z')
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'b', '<yz>(<x>a+<y>b)*&(<z>b+<x>c)*')
-check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'c', r'\z')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'a', '∅')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'b', '⟨yz⟩(⟨x⟩a+⟨y⟩b)*&(⟨z⟩b+⟨x⟩c)*')
+check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'c', '∅')
 
 # Shuffle.
-check('<x>a:<y>a:<z>a', 'a', r'<x>\e:<y>a:<z>a + <y><x>a:\e:<z>a + <z><x>a:<y>a:\e')
-check('<x>a:<y>b:<z>c', 'a', r'<x>\e:<y>b:<z>c')
-check('<x>a:<y>b:<z>c', 'b', r'<y><x>a:\e:<z>c')
-check('<x>a:<y>b:<z>c', 'c', r'<z><x>a:<y>b:\e')
+check('<x>a:<y>a:<z>a', 'a', r'⟨x⟩ε:⟨y⟩a:⟨z⟩a ⊕ ⟨y⟩⟨x⟩a:ε:⟨z⟩a ⊕ ⟨z⟩⟨x⟩a:⟨y⟩a:ε')
+check('<x>a:<y>b:<z>c', 'a', r'⟨x⟩ε:⟨y⟩b:⟨z⟩c')
+check('<x>a:<y>b:<z>c', 'b', r'⟨y⟩⟨x⟩a:ε:⟨z⟩c')
+check('<x>a:<y>b:<z>c', 'c', r'⟨z⟩⟨x⟩a:⟨y⟩b:ε')
 
 check('(<x>a<y>b)*:(<x>a<x>c)*',
-      'a', '<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*')
-check('(<x>a<y>b)*:(<x>a<x>c)*', 'b', r'\z')
-check('(<x>a<y>b)*:(<x>a<x>c)*', 'c', r'\z')
+      'a', '⟨x⟩(⟨x⟩a⟨y⟩b)*:⟨x⟩c(⟨x⟩a⟨x⟩c)* ⊕ ⟨x⟩⟨y⟩b(⟨x⟩a⟨y⟩b)*:(⟨x⟩a⟨x⟩c)*')
+check('(<x>a<y>b)*:(<x>a<x>c)*', 'b', '∅')
+check('(<x>a<y>b)*:(<x>a<x>c)*', 'c', '∅')
 
 # Star.
 check('a*', 'a', 'a*')
-check('a*', 'b', r'\z')
-check('(<x>a)*', 'a', '<x>(<x>a)*')
-check('(<x>a)*', 'b', r'\z')
-check('<x>a*',   'a', '<x>a*')
-check('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
-check('(<x>a)*<y>', 'a', '<x>(<x>a)*<y>')
-check('(<x>a)*<y>', 'aa', '<xx>(<x>a)*<y>')
+check('a*', 'b', '∅')
+check('(<x>a)*', 'a', '⟨x⟩(⟨x⟩a)*')
+check('(<x>a)*', 'b', '∅')
+check('<x>a*',   'a', '⟨x⟩a*')
+check('<x>(<y>a)*', 'a', '⟨xy⟩(⟨y⟩a)*')
+check('(<x>a)*<y>', 'a', '⟨x⟩(⟨x⟩a)*⟨y⟩')
+check('(<x>a)*<y>', 'aa', '⟨xx⟩(⟨x⟩a)*⟨y⟩')
 
 XFAIL(lambda: vcsn.Q.expression('a**').derivation('a'),
       r'''Q: value is not starrable: 1
@@ -148,51 +149,51 @@ XFAIL(lambda: vcsn.Q.expression('a**').derived_term('derivation'),
 
 
 # Complement.
-check(r'\z{c}', 'a', r'\z{c}')
-check(r'\e{c}', 'a', r'\z{c}')
+check(r'\z{c}', 'a', r'∅ᶜ')
+check(r'\e{c}', 'a', r'∅ᶜ')
 
-check('a{c}', 'a', r'\e{c}')
-check('a{c}', 'b', r'\z{c}')
+check('a{c}', 'a', r'εᶜ')
+check('a{c}', 'b', r'∅ᶜ')
 
-check('(a+b){c}', 'a', r'\e{c}')
-check('(a+b){c}', 'c', r'\z{c}')
+check('(a+b){c}', 'a', r'εᶜ')
+check('(a+b){c}', 'c', r'∅ᶜ')
 
-check('(a.b){c}', 'a', 'b{c}')
-check('(a.b){c}', 'b', r'\z{c}')
+check('(a.b){c}', 'a', 'bᶜ')
+check('(a.b){c}', 'b', r'∅ᶜ')
 
-check('(a:b){c}', 'a', r'(\e:b){c}')
-check('(a:b){c}', 'b', r'(a:\e){c}')
-check('(a:b){c}', 'c', r'\z{c}')
+check('(a:b){c}', 'a', r'(ε:b)ᶜ')
+check('(a:b){c}', 'b', r'(a:ε)ᶜ')
+check('(a:b){c}', 'c', r'∅ᶜ')
 
-check('(a*&a*){c}', 'a', '(a*&a*){c}')
-check('(a*&a*){c}', 'b', r'\z{c}')
+check('(a*&a*)ᶜ', 'a', '(a*&a*)ᶜ')
+check('(a*&a*)ᶜ', 'b', r'∅ᶜ')
 
-check('(<x>(<y>a)*<z>){c}', 'a', '(<y>a)*{c}')
-check('(<x>(<y>a)*<z>){c}', 'b', r'\z{c}')
+check('(<x>(<y>a)*<z>){c}', 'a', '(⟨y⟩a)*ᶜ')
+check('(<x>(<y>a)*<z>){c}', 'b', r'∅ᶜ')
 
-check('a{c}{c}', 'a', r'\e{c}{c}')
-check('a{c}{c}', 'b', r'\z{c}{c}')
+check('a{c}{c}', 'a', r'εᶜᶜ')
+check('a{c}{c}', 'b', r'∅ᶜᶜ')
 
 # We could easily generate an infinite derived-term automaton here.
 # However, currently we don't support a powerful enough normalization
 # of polynomials of expressions, so use a simple type of weights.
 e = vcsn.context('[a] -> q').expression('((<2>a)*+(<4>aa)*){c}')
-check(e, 'a',    '((<2>a)*+<2>(a(<4>(aa))*)){c}')
-check(e, 'aa',   '((<2>a)*+(<4>(aa))*){c}')
-check(e, 'aaa',  '((<2>a)*+<2>(a(<4>(aa))*)){c}')
-check(e, 'aaaa', '((<2>a)*+(<4>(aa))*){c}')
+check(e, 'a',    '((⟨2⟩a)*+⟨2⟩(a(⟨4⟩(aa))*))ᶜ')
+check(e, 'aa',   '((⟨2⟩a)*+(⟨4⟩(aa))*)ᶜ')
+check(e, 'aaa',  '((⟨2⟩a)*+⟨2⟩(a(⟨4⟩(aa))*))ᶜ')
+check(e, 'aaaa', '((⟨2⟩a)*+(⟨4⟩(aa))*)ᶜ')
 
 
 ## ------------------------------- ##
 ## Derive wrt to several letters.  ##
 ## ------------------------------- ##
 
-check('(<x>a)*', 'aa',   '<xx>(<x>a)*')
-check('(<x>a)*', 'aaaa', '<xxxx>(<x>a)*')
-check('(<x>a)*', 'aaab', r'\z')
+check('(<x>a)*', 'aa',   '⟨xx⟩(⟨x⟩a)*')
+check('(<x>a)*', 'aaaa', '⟨x⁴⟩(⟨x⟩a)*')
+check('(<x>a)*', 'aaab', '∅')
 
-check('(<x>a)*(<y>b)*', 'aa',   '<xx>(<x>a)*(<y>b)*')
-check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
+check('(<x>a)*(<y>b)*', 'aa',   '⟨xx⟩(⟨x⟩a)*(⟨y⟩b)*')
+check('(<x>a)*(<y>b)*', 'aabb', '⟨xxyy⟩(⟨y⟩b)*')
 
 
 ## -------------------- ##
@@ -200,15 +201,15 @@ check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
 ## -------------------- ##
 
 # EAT, Example 4.3.
-E1 = '(<1/6>a*+<1/3>b*)*'
+E1 = '(⟨1/6⟩a*+⟨1/3⟩b*)*'
 # E1 typed.
 E1t = vcsn.context('[ab] -> q').expression(E1)
-check(E1t,  'a',  "<1/3>a*" + E1)
-check(E1t,  'b',  "<2/3>b*" + E1)
-check(E1t, 'aa',  "<4/9>a*" + E1)
-check(E1t, 'ab',  "<2/9>b*" + E1)
-check(E1t, 'ba',  "<2/9>a*" + E1)
-check(E1t, 'bb', "<10/9>b*" + E1)
+check(E1t,  'a',  "⟨1/3⟩a*" + E1)
+check(E1t,  'b',  "⟨2/3⟩b*" + E1)
+check(E1t, 'aa',  "⟨4/9⟩a*" + E1)
+check(E1t, 'ab',  "⟨2/9⟩b*" + E1)
+check(E1t, 'ba',  "⟨2/9⟩a*" + E1)
+check(E1t, 'bb', "⟨10/9⟩b*" + E1)
 
 check_dt(E1t, 'e1-dt')
 
@@ -226,36 +227,36 @@ def check_br(re, letter, exp):
 ## ---------------------------- ##
 
 # Zero, one.
-check_br(   r'\z', 'a', r'\z')
-check_br(   r'\e', 'a', r'\z')
-check_br(r'<x>\e', 'a', r'\z')
+check_br(   r'\z', 'a', '∅')
+check_br(   r'\e', 'a', '∅')
+check_br(r'<x>\e', 'a', '∅')
 
 # Letters.
-check_br(   'a', 'a', r'\e')
-check_br(   'a', 'b', r'\z')
-check_br('<x>a', 'a', r'<x>\e')
-check_br('<x>a', 'b', r'\z')
+check_br(   'a', 'a', r'ε')
+check_br(   'a', 'b', '∅')
+check_br('<x>a', 'a', r'⟨x⟩ε')
+check_br('<x>a', 'b', '∅')
 
 # Sum.
-check_br('<x>a+<y>b', 'a', r'<x>\e')
-check_br('<x>a+<y>b', 'b', r'<y>\e')
-check_br('<x>a+<y>a', 'a', r'<x+y>\e')
+check_br('<x>a+<y>b', 'a', r'⟨x⟩ε')
+check_br('<x>a+<y>b', 'b', r'⟨y⟩ε')
+check_br('<x>a+<y>a', 'a', r'⟨x+y⟩ε')
 
 # Prod.
 check_br('ab', 'a', 'b')
-check_br('ab', 'b', r'\z')
-check_br('(<x>a)(<y>a)(<z>a)', 'a', '<xy>a<z>a')
+check_br('ab', 'b', '∅')
+check_br('(<x>a)(<y>a)(<z>a)', 'a', '⟨xy⟩a⟨z⟩a')
 
 # Exterior products.
-check_br('(<x>ab)<y>', 'a', '<xy>b')
+check_br('(<x>ab)<y>', 'a', '⟨xy⟩b')
 
 # Star.
 check_br('a*', 'a', 'a*')
-check_br('a*', 'b', r'\z')
-check_br('(<x>a)*', 'a', '<x>(<x>a)*')
-check_br('(<x>a)*', 'b', r'\z')
-check_br('<x>a*',   'a', '<x>a*')
-check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
+check_br('a*', 'b', '∅')
+check_br('(<x>a)*', 'a', '⟨x⟩(⟨x⟩a)*')
+check_br('(<x>a)*', 'b', '∅')
+check_br('<x>a*',   'a', '⟨x⟩a*')
+check_br('<x>(<y>a)*', 'a', '⟨xy⟩(⟨y⟩a)*')
 
 # Check the right-exterior product.
 check_bdt('<x>(<y>a)*<z>', 'ext-prod-breaking')
@@ -269,11 +270,11 @@ ctx = vcsn.context('[ab] -> b')
 F2 = 'a*+b*'
 E2 = "({F2})(a({F2}))".format(F2=F2)
 E2t = ctx.expression(E2)
-check(E2t, 'a', "{F2} + a*a({F2})".format(F2=F2))
+check(E2t, 'a', "{F2} ⊕ a*a({F2})".format(F2=F2))
 check(E2t, 'b', "b*a({})".format(F2))
 
 # Example 2.
-check(E2t, 'aa', "a* + a*+b* + a*a({})".format(F2))
+check(E2t, 'aa', "a* ⊕ a*+b* ⊕ a*a({})".format(F2))
 check(E2t, 'ab', 'b*')
 check(E2t, 'ba', F2)
 check(E2t, 'bb', "b*a({})".format(F2))
@@ -282,18 +283,18 @@ check(E2t, 'bb', "b*a({})".format(F2))
 check_dt(E2t, 'e2-dt')
 
 # Example 5.
-check_br(E2t,  'a', "a* + b* + a*a({})".format(F2))
+check_br(E2t,  'a', "a* ⊕ b* ⊕ a*a({})".format(F2))
 check_br(E2t,  'b', "b*a({})".format(F2))
-check_br(E2t, 'aa', "a* + b* + a*a({})".format(F2))
+check_br(E2t, 'aa', "a* ⊕ b* ⊕ a*a({})".format(F2))
 check_br(E2t, 'ab', 'b*')
-check_br(E2t, 'ba', "a* + b*")
+check_br(E2t, 'ba', "a* ⊕ b*")
 check_br(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 6.
 check_bdt(E2t, 'e2-dt-breaking')
 
 # Figure 3.
-fig3 = vcsn.context('[abcd] -> b').expression('a(b+c+d)')
+fig3 = vcsn.context('[abcd] -> B').expression('a(b+c+d)')
 check_dt(fig3, 'h3-dt')
 check_bdt(fig3, 'h3-dt-breaking')
 
@@ -302,14 +303,15 @@ check_bdt(fig3, 'h3-dt-breaking')
 ## Tuples.  ##
 ## -------- ##
 
-ctx = vcsn.context('[...] x [...] -> q')
+ctx = vcsn.context('[...] x [...] -> Q')
 check('ab|xy', 'a|x', 'b|y')
 
-ctx = vcsn.context('[...] x [...] -> q')
+ctx = vcsn.context('[...] x [...] -> Q')
 check('ab|xy', 'a|x', 'b|y')
-check('ab|xy', r'a|\e', r'\z')
+check('ab|xy', r'a|ε', '∅')
 check('a*|x*', 'a|x', 'a*|x*')
 
+ctx = vcsn.context('[...] x [...] -> Q')
 exp = ctx.expression
 e = exp('(a{+}|x + b{+}|y)*')
 f = exp(r'a*|\e') * e

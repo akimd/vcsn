@@ -24,7 +24,7 @@ CHECK_EQ(e.standard(), e.derived_term().strip())
 
 e = c.expression('[ab]|x')
 CHECK_EQ('(a+b)|x', e)
-CHECK_EQ(r'''a|x.[\e] + b|x.[\e]''', e.expansion())
+CHECK_EQ(r'''a|x⊙[ε] ⊕ b|x⊙[ε]''', e.expansion())
 CHECK_EQ(r'''digraph
 {
   vcsn_context = "[abc]? × [xyz]? → ℚ"
@@ -53,14 +53,14 @@ CHECK_EQ(r'''digraph
 # Using tuple.
 exp = lambda e: vcsn.context("[...] -> Q").expression(e)
 f = vcsn.tuple(exp('(<2>a)*'), exp('(<3>b)*'), exp('(<5>c)*'))
-CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', f)
+CHECK_EQ('''(⟨2⟩a)*|(⟨3⟩b)*|(⟨5⟩c)*''', f)
 
 # Using the operator |.
 c = vcsn.context("[a] x [b] x [c] -> q")
-e = c.expression('(<2>a)*|(<3>b)*|(<5>c)*')
+e = c.expression('(⟨2⟩a)*|(⟨3⟩b)*|(⟨5⟩c)*')
 CHECK_EQ(f, e)
-CHECK_EQ('''(<2>a)*|(<3>b)*|(<5>c)*''', e)
-CHECK_EQ(r'''<1> + \e|\e|c.[<5>\e|\e|(<5>c)*] + \e|b|\e.[<3>\e|(<3>b)*|\e] + \e|b|c.[<15>\e|(<3>b)*|(<5>c)*] + a|\e|\e.[<2>(<2>a)*|\e|\e] + a|\e|c.[<10>(<2>a)*|\e|(<5>c)*] + a|b|\e.[<6>(<2>a)*|(<3>b)*|\e] + a|b|c.[<30>(<2>a)*|(<3>b)*|(<5>c)*]''', e.expansion())
+CHECK_EQ('''(⟨2⟩a)*|(⟨3⟩b)*|(⟨5⟩c)*''', e)
+CHECK_EQ(r'''⟨1⟩ ⊕ ε|ε|c⊙[⟨5⟩ε|ε|(⟨5⟩c)*] ⊕ ε|b|ε⊙[⟨3⟩ε|(⟨3⟩b)*|ε] ⊕ ε|b|c⊙[⟨15⟩ε|(⟨3⟩b)*|(⟨5⟩c)*] ⊕ a|ε|ε⊙[⟨2⟩(⟨2⟩a)*|ε|ε] ⊕ a|ε|c⊙[⟨10⟩(⟨2⟩a)*|ε|(⟨5⟩c)*] ⊕ a|b|ε⊙[⟨6⟩(⟨2⟩a)*|(⟨3⟩b)*|ε] ⊕ a|b|c⊙[⟨30⟩(⟨2⟩a)*|(⟨3⟩b)*|(⟨5⟩c)*]''', e.expansion())
 CHECK_EQ(r'''\left\langle 1\right\rangle  \oplus \varepsilon|\varepsilon|c \odot \left[\left\langle 5\right\rangle  \left. \varepsilon \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus \varepsilon|b|\varepsilon \odot \left[\left\langle 3\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus \varepsilon|b|c \odot \left[\left\langle 15\right\rangle  \left. \varepsilon \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|\varepsilon|\varepsilon \odot \left[\left\langle 2\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \varepsilon \right. \right] \oplus a|\varepsilon|c \odot \left[\left\langle 10\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \varepsilon \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right] \oplus a|b|\varepsilon \odot \left[\left\langle 6\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \varepsilon \right. \right] \oplus a|b|c \odot \left[\left\langle 30\right\rangle  \left. \left( \left\langle 2 \right\rangle \,a\right)^{*} \middle| \left( \left\langle 3 \right\rangle \,b\right)^{*} \middle| \left( \left\langle 5 \right\rangle \,c\right)^{*} \right. \right]''', e.expansion().format('latex'))
 CHECK_EQ(r'''digraph
 {

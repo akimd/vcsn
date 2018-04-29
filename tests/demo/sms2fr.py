@@ -11,5 +11,5 @@ def sms_to_fr(sms, grap, synt):
     aut_g = sms_aut.compose(grap).coaccessible().strip()
     # Second composition with syntactic automaton.
     aut_s = aut_g.compose(synt).coaccessible().strip().project(1).proper()
-    # Retrieve the path more likely to correspond to french translation.
-    return str(aut_s.lightest())
+    # Retrieve the path more likely to correspond to French translation.
+    return aut_s.lightest().format('text')

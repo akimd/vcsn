@@ -14,7 +14,7 @@ def check(re, exp):
         re = c.expression(re)
     eff = re.expansion()
     print("d: {:u} => {:u}".format(re, eff));
-    CHECK_EQ(exp, str(eff))
+    CHECK_EQ(exp, eff.format('text'))
     # Make sure we terminate.
     aut = re.automaton("expansion")
     # Check that if derived_term can do it, then it's the same
@@ -171,7 +171,7 @@ check('(ab{/}ab)c&c', r'\e.[(a{\}a){T}c&c]')
 E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
 E1t="(?@[ab] -> q)"+E1
-check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
+check(E1t, '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 
 
 ############################################
@@ -268,7 +268,7 @@ x = c.expression(r'aa+<x>abc+<y>bc').expansion()
 CHECK_EQ(r'a \odot \left[a \oplus \left\langle x\right\rangle b \, c\right] \oplus b \odot \left[\left\langle y\right\rangle c\right]',
          x.format("latex"))
 
-CHECK_EQ(r'a⊙[a⊕⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
+CHECK_EQ(r'a⊙[a ⊕ ⟨x⟩bc] ⊕ b⊙[⟨y⟩c]',
          x.format("utf8"))
 
 

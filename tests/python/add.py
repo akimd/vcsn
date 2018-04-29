@@ -56,7 +56,7 @@ br = ctxbr.expression('<u>a')
 z = ctxz.expression('<2>b')
 q = ctxq.expression('<1/3>c')
 r = ctxr.expression('<.4>d')
-CHECK_EQ(r'<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', br + z + q + r)
+CHECK_EQ(r'⟨u⟩a+⟨⟨2⟩ε⟩b+⟨⟨0.333333⟩ε⟩c+⟨⟨0.4⟩ε⟩d', br + z + q + r)
 
 
 ## ------------------------- ##
@@ -67,7 +67,7 @@ br = ctxbr.polynomial('<u>a')
 z = ctxz.polynomial('<2>b')
 q = ctxq.polynomial('<1/3>c')
 r = ctxr.polynomial('<.4>d')
-CHECK_EQ(r'<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', br + z + q + r)
+CHECK_EQ(r'⟨u⟩a ⊕ ⟨⟨2⟩ε⟩b ⊕ ⟨⟨0.333333⟩ε⟩c ⊕ ⟨⟨0.4⟩ε⟩d', br + z + q + r)
 
 
 ## ----------------- ##

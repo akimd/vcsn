@@ -148,4 +148,4 @@ check_reduce(a, '''digraph
 # Make sure decorated automata work properly.
 q = vcsn.context('[abc] -> q')
 r = q.expression('<2>aa+<3>ab')
-CHECK_EQ('<2>a(a+<3/2>b)', r.derived_term().reduce().expression('associative'))
+CHECK_EQ('⟨2⟩a(a+⟨3/2⟩b)', r.derived_term().reduce().expression('associative'))

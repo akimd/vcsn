@@ -164,21 +164,21 @@ def check(exp, *auts):
 a1 = vcsn.context('[a] -> expressionset<[uv] -> b>') \
          .expression('<u>a').derived_term().strip()
 a2 = vcsn.context('[b] -> b').expression('b*').derived_term().strip()
-check('<u>a+b*', a1, a2)
-check('<u>a+b*', a2, a1)
+check('⟨u⟩a+b*', a1, a2)
+check('⟨u⟩a+b*', a2, a1)
 
 # Z, Q, R.
 z = vcsn.context('[a] -> z').expression('<2>a')  .automaton()
 q = vcsn.context('[b] -> q').expression('<1/3>b').automaton()
 r = vcsn.context('[c] -> r').expression('<.4>c') .automaton()
 
-check('<2>a+<1/3>b', z, q)
-check('<2>a+<1/3>b', q, z)
-check('<4>a+<1/3>b', z, q, z)
-check('<2>a+<2/3>b', z, q, q)
+check('⟨2⟩a+⟨1/3⟩b', z, q)
+check('⟨2⟩a+⟨1/3⟩b', q, z)
+check('⟨4⟩a+⟨1/3⟩b', z, q, z)
+check('⟨2⟩a+⟨2/3⟩b', z, q, q)
 
-check('<2>a+<0.4>c', z, r)
-check('<2>a+<0.4>c', r, z)
+check('⟨2⟩a+⟨0.4⟩c', z, r)
+check('⟨2⟩a+⟨0.4⟩c', r, z)
 
-check('<0.333333>b+<0.4>c', q, r)
-check('<0.333333>b+<0.4>c', r, q)
+check('⟨0.333333⟩b+⟨0.4⟩c', q, r)
+check('⟨0.333333⟩b+⟨0.4⟩c', r, q)

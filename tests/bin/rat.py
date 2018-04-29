@@ -52,8 +52,10 @@ def expr(e):
 def pp(re):
     '''Parse and pretty-print.  If it fails, prepend "! " to the error
     message and return it as result.  Strip the "try -h" line.'''
-    return str(expr(re))
-
+    res = expr(re)
+    if not isinstance(res, str):
+        res = res.format('text')
+    return res
 
 def check_rat_exp(fname):
     file = open(fname, 'r', encoding='utf-8')
@@ -122,7 +124,7 @@ def check_rat_exp(fname):
                 l = expr(l)
                 r = expr(r)
                 if isinstance(l, str):
-                    r = str(r)
+                    r = r.format('text')
                 CHECK_EQ(r, l, loc)
             else:
                 CHECK_EQ(r, pp(l), loc)

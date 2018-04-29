@@ -28,15 +28,15 @@ def check(r1, r2, exp):
     CHECK_EQ(exp, (e1 + e2).expansion())
     check_aut(e1+e2)
 
-check('a', '<-1>a', '<0>')
-check('a', 'a', 'a.[<2>\e]')
+check('a', '<-1>a', '⟨0⟩')
+check('a', 'a', 'a⊙[⟨2⟩ε]')
 
-check('ab', 'cd', 'a.[b] + c.[d]')
-check('a', 'bcd', 'a.[\e] + b.[cd]')
-check('abab', 'bbbb', 'a.[bab] + b.[bbb]')
-check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', '<2> + a.[<1/2>(<1/2>a)* + <1/2>(<1/2>a)*(<1/3>b)*] + b.[<1/3>(<1/3>b)*]')
-check('a', r'\e', '<1> + a.[\e]')
-check('a', r'\z', 'a.[\e]')
+check('ab', 'cd', 'a⊙[b] ⊕ c⊙[d]')
+check('a', 'bcd', 'a⊙[ε] ⊕ b⊙[cd]')
+check('abab', 'bbbb', 'a⊙[bab] ⊕ b⊙[b³]')
+check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*', '⟨2⟩ ⊕ a⊙[⟨1/2⟩(⟨1/2⟩a)* ⊕ ⟨1/2⟩(⟨1/2⟩a)*(⟨1/3⟩b)*] ⊕ b⊙[⟨1/3⟩(⟨1/3⟩b)*]')
+check('a', r'\e', '⟨1⟩ ⊕ a⊙[ε]')
+check('a', r'\z', 'a⊙[ε]')
 
 
 ## ------------ ##
@@ -90,19 +90,15 @@ def check(r1, r2, exp):
     CHECK_EQ(exp, e.expansion())
     check_aut(e)
 
-check('a|a', 'a|a', 'a|a.[\e]')
-check('a|b', 'b|c', 'a|c.[\e]')
+check('a|a', 'a|a', 'a|a⊙[ε]')
+check('a|b', 'b|c', 'a|c⊙[ε]')
 check('a*|b*', 'b*|c*',
-      '<1>'
-      ' + \e|\e.[\e|b*@b*|\e]'
-      ' + \e|c.[\e@\e|c* + \e|b*@b*|c* + (\e|b)(\e|b*)@\e|c*]'
-      ' + a|\e.[a*|\e@\e + a*|b*@b*|\e + a*|\e@(b|\e)(b*|\e)]'
-      ' + a|c.[a*|\e@\e|c* + a*|b*@b*|c* + a*|\e@(b|\e)(b*|c*) + (\e|b)(a*|b*)@\e|c*]')
-check(r'a|\e', r'\e|b', 'a|b.[\e]')
-check(r'(a|\e)(b|c)', 'c|a', 'a|a.[b|\e]')
-check('a|b', r'(\e|a)(b|c)', 'a|a.[\e|c]')
-check(r'(a|c)+(b|\e)', r'(c|d)(\e|e)', 'a|d.[\e|e] + b|d.[\e@(c|\e)(\e|e)]')
-check(r'(a|c)(b|\e)', 'c|d', r'a|d.[b|\e]')
+      '⟨1⟩ ⊕ ε|ε⊙[ε|b*@b*|ε] ⊕ ε|c⊙[ε@ε|c* ⊕ ε|b*@b*|c* ⊕ (ε|b)(ε|b*)@ε|c*] ⊕ a|ε⊙[a*|ε@ε ⊕ a*|b*@b*|ε ⊕ a*|ε@(b|ε)(b*|ε)] ⊕ a|c⊙[a*|ε@ε|c* ⊕ a*|b*@b*|c* ⊕ a*|ε@(b|ε)(b*|c*) ⊕ (ε|b)(a*|b*)@ε|c*]')
+check(r'a|\e', r'\e|b', 'a|b⊙[ε]')
+check(r'(a|\e)(b|c)', 'c|a', 'a|a⊙[b|ε]')
+check('a|b', r'(\e|a)(b|c)', 'a|a⊙[ε|c]')
+check(r'(a|c)+(b|\e)', r'(c|d)(\e|e)', 'a|d⊙[ε|e] ⊕ b|d⊙[ε@(c|ε)(ε|e)]')
+check(r'(a|c)(b|\e)', 'c|d', r'a|d⊙[b|ε]')
 
 
 
@@ -119,15 +115,15 @@ def check(r1, r2, exp):
     CHECK_EQ(exp, (e1&e2).expansion())
     check_aut(e1&e2)
 
-check('ab', 'cd', '<0>')
-check('(ab)*', 'a*b*', '<1> + a.[b(ab)*&a*b*]')
+check('ab', 'cd', '⟨0⟩')
+check('(ab)*', 'a*b*', '⟨1⟩ ⊕ a⊙[b(ab)*&a*b*]')
 check('(<1/2>a)*', '(<1/2>a)*(<1/3>b)*',
-      r'<1> + a.[<1/4>(<1/2>a)*&(<1/2>a)*(<1/3>b)*]')
-check('a', r'\e', '<0>')
-check('a', r'\z', '<0>')
+      r'⟨1⟩ ⊕ a⊙[⟨1/4⟩(⟨1/2⟩a)*&(⟨1/2⟩a)*(⟨1/3⟩b)*]')
+check('a', r'\e', '⟨0⟩')
+check('a', r'\z', '⟨0⟩')
 
 # Check that ab&ac = 0, not a.[0].
-check('ab', 'ac', '<0>')
+check('ab', 'ac', '⟨0⟩')
 
 
 ## --------- ##
@@ -142,17 +138,17 @@ def check(e1, e2, exp):
     CHECK_EQ(exp, e1.expansion().ldivide(e2.expansion()))
     check_aut(e)
 
-check(r'a', r'ab', r'\e.[b]')
-check(r'a*{\}a', r'\e', r'\e.[a{\}\e + (a*{\}\e){\}\e]')
-check(r'a{\}ab', r'bc', r'\e.[b{\}bc]')
+check(r'a', r'ab', r'ε⊙[b]')
+check(r'a*{\}a', r'\e', r'ε⊙[a{\}ε ⊕ (a*{\}ε){\}ε]')
+check(r'a{\}ab', r'bc', r'ε⊙[b{\}bc]')
 
 
 ## ----- ##
 ## Mul.  ##
 ## ----- ##
-CHECK_EQ(r'a.[\e(b(cd))]', ctx.expression('a(b(cd))', 'none').expansion())
-CHECK_EQ(r'a.[((\eb)c)d]', ctx.expression('((ab)c)d', 'none').expansion())
-CHECK_EQ(r'a.[(\eb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
+CHECK_EQ(r'a⊙[ε(b(cd))]', ctx.expression('a(b(cd))', 'none').expansion())
+CHECK_EQ(r'a⊙[((εb)c)d]', ctx.expression('((ab)c)d', 'none').expansion())
+CHECK_EQ(r'a⊙[(εb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
 
 
 ## ------ ##
@@ -207,5 +203,5 @@ check('abcd', 2, 'a.[<2>bcd]')
 check('a*', 10, '<10> + a.[<10>a*]')
 check('[ab]{3}', 4, 'a.[<4>[ab]{2}] + b.[<4>[ab]{2}]')
 check('a*+b*+c+c*', 3, 'toto')
-check('a', 1, 'a.[\e]')
-check('a', 0, '<0>')
+check('a', 1, 'a⊙[ε]')
+check('a', 0, '⟨0⟩')

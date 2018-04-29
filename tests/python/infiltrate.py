@@ -14,7 +14,7 @@ set_medir(srcdir + '/tests/python/conjunction.dir')
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
 a1 = z.expression('a*a').automaton()
-CHECK_EQ('(<3>a)*(a+<4>(aa*a))', str(a1.infiltrate(a1).expression()))
+CHECK_EQ('(⟨3⟩a)*(a+⟨4⟩(aa*a))', str(a1.infiltrate(a1).expression()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
@@ -167,9 +167,9 @@ CHECK_EQ('''digraph
 ab = vcsn.context('[ab] -> seriesset<[uv] -> q>') \
     .expression('(<u>a+<v>b)*').standard()
 a = vcsn.context('[ab] -> b').expression('a').standard()
-CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+CHECK_EQ(r'⟨ε+u⟩a ⊕ ⟨⟨2⟩u+⟨2⟩(uu)⟩aa ⊕ ⟨v+uv⟩ab ⊕ ⟨v+vu⟩ba',
          str(ab.infiltrate(a).shortest(4)))
-CHECK_EQ(r'<\e+u>a + <<2>u+<2>(uu)>aa + <v+uv>ab + <v+vu>ba',
+CHECK_EQ(r'⟨ε+u⟩a ⊕ ⟨⟨2⟩u+⟨2⟩(uu)⟩aa ⊕ ⟨v+uv⟩ab ⊕ ⟨v+vu⟩ba',
          str(a.infiltrate(ab).shortest(4)))
 
 
@@ -181,7 +181,7 @@ uavb = vcsn.context('[ab] -> seriesset<[uv] -> q>') \
     .expression('<u>a<v>b').standard()
 xayb = vcsn.context('[ab] -> seriesset<[xy] -> q>') \
     .expression('<x>a<y>b').standard()
-CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
+CHECK_EQ('⟨uxvy⟩ab ⊕ ⟨uxvy+xuvy⟩aab ⊕ ⟨uxvy+uxyv⟩abb ⊕ ⟨uxvy+uxyv+xuvy+xuyv⟩aabb ⊕ ⟨uvxy+xyuv⟩abab',
          str(uavb.infiltrate(xayb).shortest(len = 4)))
 
 

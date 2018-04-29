@@ -115,8 +115,8 @@ check_aut('project',
 
 # Check that we do obey the identities.
 check(c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y'),
-      '<9>a*',
-      'e+<3>f',
+      '⟨9⟩a*',
+      'e+⟨3⟩f',
       'x+y+xy')
 
 # Check identities.
@@ -127,9 +127,9 @@ check(vcsn
 
 e = c.expression('<2>(ab|ef|xyz)<3>', 'associative')
 check(e,
-      '<2>(ab)<3>',
-      '<2>(ef)<3>',
-      '<2>(xyz)<3>')
+      '⟨2⟩(ab)⟨3⟩',
+      '⟨2⟩(ef)⟨3⟩',
+      '⟨2⟩(xyz)⟨3⟩')
 CHECK_EQ('associative', e.project(0).identities())
 
 # Composition does not make any sense, but it's not `project` that
@@ -140,7 +140,7 @@ for op in ['&', ':', '&:', r'{\}', '@']:
           'e*{op}e*'.format(op=op),
           'x*{op}x*'.format(op=op))
 check(c.expression('(a*|e*|x*){2}'),
-      'a*{2}', 'e*{2}', 'x*{2}')
+      'a*²', 'e*²', 'x*²')
 
 
 ## ------------- ##
@@ -148,9 +148,9 @@ check(c.expression('(a*|e*|x*){2}'),
 ## ------------- ##
 
 check(c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y'),
-      '<9>a',
-      '<2>e + <7>f',
-      '<5>x + <4>y')
+      '⟨9⟩a',
+      '⟨2⟩e ⊕ ⟨7⟩f',
+      '⟨5⟩x ⊕ ⟨4⟩y')
 
 
 ## ------------ ##
@@ -162,6 +162,6 @@ check(c.polynomial('<2>a|e|x + <3>a|f|x + <4>a|f|y'),
 # gives `<2>a`.
 e = c.expression('<2>a*|[ef]|xy + <3>a*|f|x + <4>a*|f|y')
 check(e.expansion(),
-      '<11> + a.[<11>a*]',
-      r'e.[<4>\e] + f.[<18>\e]',
-      r'x.[<6>\e + <8>y] + y.[<8>\e]')
+      '⟨11⟩ ⊕ a⊙[⟨11⟩a*]',
+      'e⊙[⟨4⟩ε] ⊕ f⊙[⟨18⟩ε]',
+      'x⊙[⟨6⟩ε ⊕ ⟨8⟩y] ⊕ y⊙[⟨8⟩ε]')

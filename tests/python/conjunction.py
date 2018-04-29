@@ -205,24 +205,24 @@ def check(exp, aut):
 # RatE and B, in both directions.
 a1 = std('[ab] -> seriesset<[uv] -> q>', '(<u>a+<v>b)*')
 a2 = std('[ab] -> b', 'a{+}')
-check(r'<u>a(\e+<u>a(<u>a)*)', a1 & a2)
-check(r'<u>a(\e+<u>a(<u>a)*)', a2 & a1)
+check(r'⟨u⟩a(ε+⟨u⟩a(⟨u⟩a)*)', a1 & a2)
+check(r'⟨u⟩a(ε+⟨u⟩a(⟨u⟩a)*)', a2 & a1)
 
 # Z, Q, R.
-z = dt('[ab] -> z', '(<2>a+<3>b)*')
-q = dt('[ab] -> q', '(<1/2>a+<1/3>b)*')
+z = dt('[ab] -> z', '(⟨2⟩a+⟨3⟩b)*')
+q = dt('[ab] -> q', '(⟨1/2⟩a+⟨1/3⟩b)*')
 r = dt('[ab] -> r', '(<.2>a+<.3>b)*')
 
 check('(a+b)*', z & q)
 check('(a+b)*', q & z)
-check('(<2>a+<3>b)*', z & q & z)
-check('(<1/2>a+<1/3>b)*', z & q & q)
+check('(⟨2⟩a+⟨3⟩b)*', z & q & z)
+check('(⟨1/2⟩a+⟨1/3⟩b)*', z & q & q)
 
-check('(<0.4>a+<0.9>b)*', z & r)
-check('(<0.4>a+<0.9>b)*', r & z)
+check('(⟨0.4⟩a+⟨0.9⟩b)*', z & r)
+check('(⟨0.4⟩a+⟨0.9⟩b)*', r & z)
 
-check('(<0.1>a+<0.1>b)*', q & r)
-check('(<0.1>a+<0.1>b)*', r & q)
+check('(⟨0.1⟩a+⟨0.1⟩b)*', q & r)
+check('(⟨0.1⟩a+⟨0.1⟩b)*', r & q)
 
 
 ## ----------------- ##
@@ -237,10 +237,10 @@ a2 = std('[ab] -> seriesset<[xy] -> q>',
 def check_enumerate(exp, aut):
     CHECK_EQ(exp, aut.strip().shortest(len=4))
 
-check_enumerate('<uxvy>ab', a1 & a2)
-check_enumerate(r'\z', a1.transpose() & a2)
-check_enumerate(r'\z', a1 & a2.transpose())
-check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
+check_enumerate('⟨uxvy⟩ab', a1 & a2)
+check_enumerate(r'∅', a1.transpose() & a2)
+check_enumerate(r'∅', a1 & a2.transpose())
+check_enumerate('⟨vyux⟩ba', a1.transpose() & a2.transpose())
 
 
 ## ---------- ##
@@ -285,7 +285,7 @@ ctx = vcsn.context('[x] -> seriesset<[abcd] -> q>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = std(ctx, '<{}>x'.format(l))
-check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
+check_enumerate('⟨abcd⟩x', a['a'] & a['b'] & a['c'] & a['d'])
 
 
 ## ------------------------- ##
@@ -293,13 +293,13 @@ check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 ## ------------------------- ##
 
 # Add stars (<u>a*, not <u>a) to avoid that the trivial identities
-# (a&b -> \z) fire and yield a global \z.
+# (a&b -> ∅) fire and yield a global ∅.
 qr = vcsn.context('[a] -> seriesset<[uv] -> q>') \
          .expression('<u>a*')
 z = vcsn.context('[b] -> z').expression('<2>b*')
 q = vcsn.context('[c] -> q').expression('<1/3>c*')
 r = vcsn.context('[d] -> r').expression('<.4>d*')
-CHECK_EQ(r'<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', qr & z & q & r)
+CHECK_EQ(r'⟨u⟩a*&⟨⟨2⟩ε⟩b*&⟨⟨0.333333⟩ε⟩c*&⟨⟨0.4⟩ε⟩d*', qr & z & q & r)
 
 ## ------------------------- ##
 ## polynomial & polynomial.  ##
@@ -309,25 +309,25 @@ poly = vcsn.context('[abc] -> q').polynomial
 a = poly('<2>a+<3>b')
 b = poly('<2>b+<3>c')
 c = poly('<3>c')
-CHECK_EQ('<4>a + <9>b', a & a)
-CHECK_EQ('<6>b', a & b)
-CHECK_EQ('<6>b', b & a)
-CHECK_EQ(r'\z', a & c)
-CHECK_EQ('<9>c', b & c)
+CHECK_EQ('⟨4⟩a ⊕ ⟨9⟩b', a & a)
+CHECK_EQ('⟨6⟩b', a & b)
+CHECK_EQ('⟨6⟩b', b & a)
+CHECK_EQ(r'∅', a & c)
+CHECK_EQ('⟨9⟩c', b & c)
 
 poly = vcsn.context('[...] -> Q').polynomial
 a = poly(r'<2>\e')
 b = poly(r'<2>a+<3>\e')
 c = poly('<2>a+<3>c')
-CHECK_EQ(r'<4>\e', a & a)
-CHECK_EQ(r'\z', a & c)
-CHECK_EQ(r'<6>\e', a & b)
-CHECK_EQ('<4>a', b & c)
+CHECK_EQ(r'⟨4⟩ε', a & a)
+CHECK_EQ(r'∅', a & c)
+CHECK_EQ(r'⟨6⟩ε', a & b)
+CHECK_EQ('⟨4⟩a', b & c)
 
 poly = vcsn.context('[...]* -> Q').polynomial
 a = poly('<1>aa')
 b = poly('<2>ab')
-CHECK_EQ(r'\z', a & b)
+CHECK_EQ(r'∅', a & b)
 CHECK_EQ('aa', a & a)
 
 ## ----------------- ##

@@ -30,6 +30,8 @@
 
 namespace vcsn::detail
 {
+  using namespace std::literals;
+
   /*-----------------.
   | label_is_zero.   |
   `-----------------*/
@@ -1440,8 +1442,8 @@ public:
       {
         const auto s =
           (sep == " + "
-           ? (fmt == format::latex ? std::string{" \\oplus "}
-              : fmt == format::utf8 ? std::string{"⊕"}
+           ? (fmt == format::latex ? " \\oplus "s
+              : fmt == format::utf8 ? " ⊕ "s
               : sep)
            : sep);
         print_(v, out, fmt, s);
@@ -1569,7 +1571,7 @@ private:
     // No classes if printed as a polynomial (sep == " + " rather than
     // as a list of labels, sep == ", "), and if not at least 3
     // elements.
-    if (sep == " + " || v.size() <= 2)
+    if (sep == " + " || sep == " ⊕ " || v.size() <= 2)
       return print_without_classes_(v, out, fmt, sep);
     else
       return print_with_classes_(v, out, fmt, sep);

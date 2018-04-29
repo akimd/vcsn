@@ -32,13 +32,13 @@ def check(ctx, exp):
 
 ctx1 = '[ab] -> q x RatE[[xyz]] x z'
 check(ctx1, 'a')
-check(ctx1, '<2/3,x,-3>a')
-check(ctx1, '<2/3,x+y*,-3>a')
+check(ctx1, '⟨2/3,x,-3⟩a')
+check(ctx1, '⟨2/3,x+y*,-3⟩a')
 # Yes, once we worked properly with 3 tapes, but not 4.  So check 5.
 check('[...] x [...] x [...] x [...] x [...] -> q',
       '1|2|3|4|5')
 check('[ab] -> RatE[[xyz] -> q x q] x (q x q)',
-      '<<(1,2)>x+<(2,1/3)>y*,(2,3)>a')
+      '⟨⟨(1,2)⟩x+⟨(2,1/3)⟩y*,(2,3)⟩a')
 
 
 ## ------------------ ##

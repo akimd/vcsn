@@ -17,8 +17,8 @@ def check(lhs, rhs, exp):
 
 check('(a+b)*', 'b*',            'b*a(a+b)*')
 check('(a+b)*', '(a+b)*b(a+b)*', 'a*')
-check('(a+b)*', '(a+b)*',        r'\z')
+check('(a+b)*', '(a+b)*',        r'∅')
 
-check('a(ba)*', '(ab)*a', r'\z')
+check('a(ba)*', '(ab)*a', r'∅')
 
-check('(?@[ab] -> z)(<2>a+<3>b)*', '(a+b)*a(a+b)*', '(<3>b)*')
+check('(?@[ab] -> z)(<2>a+<3>b)*', '(a+b)*a(a+b)*', '(⟨3⟩b)*')

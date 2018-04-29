@@ -14,7 +14,7 @@ def check_aut(aut, exp, algo = "auto"):
     CHECK_EQ(exp, aut.expression(algo = algo))
 
 # Check the associativity of the product.
-check_aut(meaut('a.gv'), '<x>a(<y>b)*<z>c')
+check_aut(meaut('a.gv'), '⟨x⟩a(⟨y⟩b)*⟨z⟩c')
 
 check_aut(load('lal_char_b/a1.gv'), '(a+b)*ab(a+b)*')
 check_aut(load('lal_char_b/b1.gv'), '(a+b)*a(a+b)*')
@@ -22,16 +22,16 @@ check_aut(load('lal_char_b/evena.gv'), 'b*a(b+ab*a)*')
 check_aut(load('lal_char_b/oddb.gv'), 'a*b(a+ba*b)*')
 
 check_aut(load('lal_char_z/b1.gv'), '(a+b)*a(a+b)*')
-check_aut(load('lal_char_z/binary.gv'), '(0+1)*1(<2>0+<2>1)*')
-check_aut(load('lal_char_z/c1.gv'), '(a+b)*b(<2>a+<2>b)*')
-check_aut(load('lal_char_z/d1.gv'), '(a+b)*(a+<-1>b)(a+b)*')
+check_aut(load('lal_char_z/binary.gv'), '(0+1)*1(⟨2⟩0+⟨2⟩1)*')
+check_aut(load('lal_char_z/c1.gv'), '(a+b)*b(⟨2⟩a+⟨2⟩b)*')
+check_aut(load('lal_char_z/d1.gv'), '(a+b)*(a+⟨-1⟩b)(a+b)*')
 
-check_aut(load('lal_char_zmin/minab.gv'), '(a+<1>b)*+(<1>a+b)*')
-check_aut(load('lal_char_zmin/minblocka.gv'), '(a+b)*b(<1>a)*b(a+b)*')
+check_aut(load('lal_char_zmin/minab.gv'), '(a+⟨1⟩b)*+(⟨1⟩a+b)*')
+check_aut(load('lal_char_zmin/minblocka.gv'), '(a+b)*b(⟨1⟩a)*b(a+b)*')
 check_aut(load('lal_char_zmin/slowgrow.gv'),
-          '(a+b)*b(<1>a+<1>(ba*a))*ba*')
+          '(a+b)*b(⟨1⟩a+⟨1⟩(ba*a))*ba*')
 check_aut(load('lal_char_zmin/slowgrow.gv'),
-          '(a+b)*b(<1>a)*b(a+<1>(a(<1>a)*b))*',
+          '(a+b)*b(⟨1⟩a)*b(a+⟨1⟩(a(⟨1⟩a)*b))*',
           'naive')
 
 
@@ -51,15 +51,15 @@ def check_exp(rat, exp = None):
 
 check_exp('a')
 check_exp('ab')
-check_exp('a*', r'\e+aa*')
+check_exp('a*', r'ε+aa*')
 check_exp('a+b')
-check_exp('(?@[ab] -> z)<2>(ab)<3>', '<6>(ab)')
-check_exp('(?@[ab]* -> z)<2>(ab)<3>', '<6>(ab)')
+check_exp('(?@[ab] -> z)<2>(ab)<3>', '⟨6⟩(ab)')
+check_exp('(?@[ab]* -> z)<2>(ab)<3>', '⟨6⟩(ab)')
 
 
 check_exp('(?@[abc] -> z)(<2>(<3>a+<5>b)<7>c)<11>', \
-          '<462>(ac)+<770>(bc)')
+          '⟨462⟩(ac)+⟨770⟩(bc)')
 
 # Likewise, but check the order of the products.
 check_exp('(?@[abc] -> expressionset<[vwxyz] -> b>)(<v>(<w>a+<x>b)<y>c)<z>', \
-          '(<vw>a<y>c+<vx>b<y>c)<z>')
+          '(⟨vw⟩a⟨y⟩c+⟨vx⟩b⟨y⟩c)⟨z⟩')

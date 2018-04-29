@@ -62,7 +62,7 @@ check_lift(aref, a.lift([1, 2]))
 ## lift(expression).  ##
 ## ------------------ ##
 
-CHECK_EQ(r'''<abc>\e''',
+CHECK_EQ(r'''⟨abc⟩ε''',
          vcsn.context('[abc] -> b').expression('abc').lift())
-CHECK_EQ(r'''<<2>(abc)>\e''',
+CHECK_EQ(r'''⟨⟨2⟩(abc)⟩ε''',
          vcsn.context('[abc] -> z').expression('<2>abc').lift())

@@ -15,7 +15,7 @@ def subset(aut1, aut2):
     return (aut1 % aut2).is_useless()
 
 def list_shortest(aut, n):
-    l = str(aut.shortest(n)).split(' + ')
+    l = aut.shortest(n).format('text').split(' + ')
     return [w for w in l if w != r'\\e']
 
 

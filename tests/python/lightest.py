@@ -20,12 +20,12 @@ def check(re, num, exp, tests = []):
   check_aut(ctx.expression(re, 'none').standard(), re, num, exp, tests)
 
 ctx = vcsn.context('[...] -> nmin')
-check(r'\z', 3, r'\z', k_algos)
-check(r'\e', 3, r'<0>\e', k_algos)
-check('a+b', 2, '<0>a + <0>b', k_algos)
-check('ababab', 10, '<0>ababab', k_algos)
-check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb', ['auto', 'eppstein'])
-check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c', k_algos)
+check(r'\z', 3, r'∅', k_algos)
+check(r'\e', 3, r'⟨0⟩ε', k_algos)
+check('a+b', 2, '⟨0⟩a ⊕ ⟨0⟩b', k_algos)
+check('ababab', 10, '⟨0⟩ababab', k_algos)
+check('(<1>a+<1>b)*', 7, r'⟨0⟩ε ⊕ ⟨1⟩a ⊕ ⟨1⟩b ⊕ ⟨2⟩aa ⊕ ⟨2⟩ab ⊕ ⟨2⟩ba ⊕ ⟨2⟩bb', ['auto', 'eppstein'])
+check('<4>a+(<1>a<1>b)+⟨1⟩c+<2>d', 1, '⟨1⟩c', k_algos)
 
 aut = vcsn.automaton('''
 context = [...]? → ℕmin
@@ -42,27 +42,27 @@ $ -> 0
 ''')
 
 check_aut(aut, "notebook example", 5,
-          '<6>a + <5>ab + <4>abcd + <6>abbcd + <8>abbbcd', ['auto', 'eppstein'])
+          '⟨6⟩a ⊕ ⟨5⟩ab ⊕ ⟨4⟩abcd ⊕ ⟨6⟩abbcd ⊕ ⟨8⟩abbbcd', ['auto', 'eppstein'])
 
 ctx = vcsn.context('[abcd] -> z')
-check('[a-d]?{5}', 5, r'\e + aa + ab + ac + ad', ['auto'])
-check('<4>a+(ab)+c+<2>d', 2, 'c + ab')
-check('a+<-1>a', 2, r'\z')
-check('a+(<2>a<-10>a)', 1, '<-20>aa', ['auto'])
+check('[a-d]?{5}', 5, r'ε ⊕ aa ⊕ ab ⊕ ac ⊕ ad', ['auto'])
+check('<4>a+(ab)+c+<2>d', 2, 'c ⊕ ab')
+check('a+<-1>a', 2, '∅')
+check('a+(<2>a<-10>a)', 1, '⟨-20⟩aa', ['auto'])
 
 ctx = vcsn.context('[abcd] -> q')
-check('a+(<2>a<1/10>a)', 1, '<1/5>aa', ['auto'])
+check('a+(<2>a<1/10>a)', 1, '⟨1/5⟩aa', ['auto'])
 
 ctx = vcsn.context('[...]* -> Nmin')
-check('<1>aaaa+<2>b', 1, '<1>aaaa')
+check('<1>aaaa+<2>b', 1, '⟨1⟩aaaa')
 
 ctx = vcsn.context('[...] -> rmin')
-check(r'\z', 3, r'\z')
-check(r'\e', 3, r'<0>\e')
-check('a+b', 2, '<0>a + <0>b')
-check('ababab', 10, '<0>ababab')
-check('(<1>a+<1>b)*', 7, r'<0>\e + <1>a + <1>b + <2>aa + <2>ab + <2>ba + <2>bb', ['auto', 'eppstein'])
-check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '<1>c')
+check(r'\z', 3, '∅')
+check(r'\e', 3, r'⟨0⟩ε')
+check('a+b', 2, '⟨0⟩a ⊕ ⟨0⟩b')
+check('ababab', 10, '⟨0⟩ababab')
+check('(<1>a+<1>b)*', 7, r'⟨0⟩ε ⊕ ⟨1⟩a ⊕ ⟨1⟩b ⊕ ⟨2⟩aa ⊕ ⟨2⟩ab ⊕ ⟨2⟩ba ⊕ ⟨2⟩bb', ['auto', 'eppstein'])
+check('<4>a+(<1>a<1>b)+<1>c+<2>d', 1, '⟨1⟩c')
 
 zero = ctx.expression(r'\z').standard()
 for algo in algos:

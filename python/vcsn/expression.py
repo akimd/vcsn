@@ -25,9 +25,9 @@ class expression:
     __mul__ = _rweight
     __or__ = lambda l, r: expression._tuple([l, r])
     __pow__ = multiply
-    __repr__ = lambda self: self.format('text')
+    __repr__ = lambda self: self.format('utf8')
     __rmul__ = _lweight
-    __str__ = lambda self: self.format('text')
+    __str__ = lambda self: self.format('utf8')
     __truediv__ = expression.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

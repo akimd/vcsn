@@ -166,25 +166,25 @@ def check(exp, eff):
 a1 = vcsn.context('[a] -> expressionset<[uv] -> b>') \
          .expression('<u>a').derived_term()
 a2 = vcsn.context('[b] -> b').expression('b*').standard()
-check(r'<u>a(\e+bb*)', a1*a2)
+check(r'⟨u⟩a(ε+bb*)', a1*a2)
 # FIXME: Why don't we get (\e+bb*)<u>a?
-check('<u>a+bb*<u>a', a2*a1)
+check('⟨u⟩a+bb*⟨u⟩a', a2*a1)
 
 # Z, Q, R.
 z = vcsn.context('[a] -> z').expression('<2>a')  .derived_term()
 q = vcsn.context('[b] -> q').expression('<1/3>b').derived_term()
 r = vcsn.context('[c] -> r').expression('<.4>c') .derived_term()
 
-check('<2>a<1/3>b', z*q)
-check('<1/3>b<2>a', q*z)
-check('<2>a<1/3>b<2>a', z*q*z)
-check('<2>a(<1/3>b){2}', z*q*q)
+check('⟨2⟩a⟨1/3⟩b', z*q)
+check('⟨1/3⟩b⟨2⟩a', q*z)
+check('⟨2⟩a⟨1/3⟩b⟨2⟩a', z*q*z)
+check('⟨2⟩a(⟨1/3⟩b)²', z*q*q)
 
-check('<2>a<0.4>c', z*r)
-check('<0.4>c<2>a', r*z)
+check('⟨2⟩a⟨0.4⟩c', z*r)
+check('⟨0.4⟩c⟨2⟩a', r*z)
 
-check('<0.333333>b<0.4>c', q*r)
-check('<0.4>c<0.333333>b', r*q)
+check('⟨0.333333⟩b⟨0.4⟩c', q*r)
+check('⟨0.4⟩c⟨0.333333⟩b', r*q)
 
 ## ------------------------- ##
 ## expression * expression.  ##
@@ -195,7 +195,7 @@ br = vcsn.context('[a] -> expressionset<[uv] -> b>') \
 z = vcsn.context('[b] -> z').expression('<2>b')
 q = vcsn.context('[c] -> q').expression('<1/3>c')
 r = vcsn.context('[d] -> r').expression('<.4>d')
-CHECK_EQ(r'<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))
+CHECK_EQ(r'⟨u⟩a⟨⟨2⟩ε⟩b⟨⟨0.333333⟩ε⟩c⟨⟨0.4⟩ε⟩d', str(br * z * q * r))
 
 # This is a real regression (#68): we used to interpret `<3><3>a` as
 # `<27>a` because `3 * 3` in Z was intrepreted as `3 ** 3`, because `w

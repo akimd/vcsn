@@ -28,7 +28,7 @@ def check(e, exp = None, ere = None, redgrep = None):
     if redgrep is None:
         redgrep = ere
     e = ctx.expression(e, format='ere')
-    CHECK_EQ(exp, e)
+    CHECK_EQ(exp, e.format('text'))
     CHECK_EQ(ere, e.format('ere'))
     CHECK_EQ(redgrep, e.format('redgrep'))
 def xfail(e, err, fmt=['ere']):
@@ -116,13 +116,13 @@ qexp = q.expression
 
 e = qexp('a+b+<1/2>a', 'none')
 check(e, q, 'none', e)
-check(e, q, 'linear', '<3/2>a+b')
-check(e, '[...]* -> q', 'none', '(a+b)+<1/2>a')
-check(e, '[...] -> r', 'none', '(a+b)+<0.5>a')
-check(e, '[...]*, r', 'linear', '<1.5>a+b')
+check(e, q, 'linear', '⟨3/2⟩a+b')
+check(e, '[...]* -> q', 'none', '(a+b)+⟨1/2⟩a')
+check(e, '[...] -> r', 'none', '(a+b)+⟨0.5⟩a')
+check(e, '[...]*, r', 'linear', '⟨1.5⟩a+b')
 
-check(qexp(r'\z*', 'none'), q, 'none', r'\z*')
-check(qexp(r'\z*', 'none'), q, 'linear', r'\e')
+check(qexp(r'\z*', 'none'), q, 'none', r'∅*')
+check(qexp(r'\z*', 'none'), q, 'linear', r'ε')
 
 check(qexp(r'\z'))
 check(qexp(r'\e'))
