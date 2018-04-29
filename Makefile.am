@@ -33,8 +33,10 @@ include share/local.mk
 include tests/local.mk
 include vcsn/local.mk
 
-EXTRA_DIST += COPYING.txt NEWS.md TODO.txt README.md      \
-  build-aux/bin/coverage build-aux/bin/fuse-switch        \
+EXTRA_DIST +=						\
+  AUTHORS.md COPYING.txt NEWS.md TODO.txt README.md	\
+  build-aux/bin/coverage				\
+  build-aux/bin/fuse-switch				\
   build-aux/bin/move-if-change
 
 move_if_change = $(srcdir)/build-aux/bin/move-if-change --color --verbose
