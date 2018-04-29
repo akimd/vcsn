@@ -12,12 +12,14 @@
 ## The Vcsn Group consists of people listed in the `AUTHORS' file.
 
 %C%_TESTS =                                     \
+  %D%/diagnose.chk                              \
   %D%/evaluate.chk                              \
   %D%/help.chk
 
 dist_TESTS += $(%C%_TESTS)
 
 $(%C%_TESTS:.chk=.log): libexec/vcsn-tools
+%D%/diagnose.log: libexec/vcsn-diagnose
 
 .PHONY: check-tools
 check-tools:

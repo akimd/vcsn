@@ -98,6 +98,7 @@ COMMAND can be:
 
 - notebook: run Vcsn as an IPython Notebook.
 - python, ipython: run Python/IPython.
+- diagnose: check that Vcsn is properly installed.
 - doc: open the documentation.
 - gdb: run gdb with a type pretty-printer.
 
@@ -215,7 +216,11 @@ case $1 in
 
   (config)
       shift
-      config "$@";;
+      exec config "$@";;
+
+  (check|diagnose|doctor)
+      shift
+      exec vcsn-diagnose "$@";;
 
   (doc)
       shift

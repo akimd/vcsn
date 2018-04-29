@@ -1,0 +1,23 @@
+#! /bin/sh
+
+
+run 0 stdout -vcsn diagnose </dev/null
+sed -E                                          \
+    -e 's,(.*PASS[^:]*: [^:]*): .*,\1: ...,'    \
+    <stdout >output
+
+run 0 - -cat output <<EOF
+[0;32mPASS[0m: which vcsn: ...
+[0;32mPASS[0m: vcsn version: ...
+[0;32mPASS[0m: vcsn cat -Ee a
+[0;32mPASS[0m: vcsn cat -C "lal(abc), zmin" -Ee a
+[0;32mPASS[0m: vcsn python --version: ...
+[0;32mPASS[0m: vcsn python -c 'import sys; print(sys.version_info)': ...
+[0;32mPASS[0m: vcsn python -c 'import vcsn; print(vcsn.B.expression("ab"))'
+[0;32mPASS[0m: vcsn python -c 'import vcsn; print(vcsn.context("lal, zmin"))'
+[0;32mPASS[0m: vcsn ipython --version: ...
+[0;32mPASS[0m: vcsn ipython -c 'import sys; print(sys.version_info)': ...
+[0;32mPASS[0m: vcsn ipython -c 'import vcsn; print(vcsn.B.expression("ab"))'
+[0;32mPASS[0m: vcsn ipython -c 'import vcsn; print(vcsn.context("lal, zmin"))'
+All seems well
+EOF
