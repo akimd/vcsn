@@ -11,7 +11,7 @@ class label:
     __matmul__ = label.compose
     __mul__ = label.multiply
     __pow__ = label.multiply
-    __repr__ = lambda self: self.format('text')
+    __repr__ = lambda self: self.format('utf8')
     __truediv__ = label.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

@@ -63,20 +63,20 @@ check('abcd+bbcd', 'a+b', '\z', 'bcd')
 # Weighted.
 ctx = '[...] -> Q'
 # Addition
-check('<2>a', '<6>(a+b)', r'<12>\e')
+check('<2>a', '<6>(a+b)', r'<12>ε')
 # Concatenation
 check('<2>a', '<6>ab', '<12>b', '\z')
 check('<2>b', '<6>ab', '\z', '<12>a')
 # Star
 check('<2>a', '<6>a*', '<12>a*')
 # Epsilon cycles
-check('(<1/2>a)*', 'a*', r'(<1/2>\e)*a*')
+check('(<1/2>a)*', 'a*', r'(<1/2>ε)*a*')
 print('misc')
 # Empty result
 check('ab', '<2>a', r'\z')
 # Misc
-check('<2>a+<3>b', '<6>a*b', r'<12>a*b+<18>\e', r'<18>a*')
-check('<2>a+<3>b', '<6>ab*', r'<12>b*', r'<12>\e+<18>ab*')
+check('<2>a+<3>b', '<6>a*b', r'<12>a*b+<18>ε', r'<18>a*')
+check('<2>a+<3>b', '<6>ab*', r'<12>b*', r'<12>ε+<18>ab*')
 check('a+b', '(a+b)c', '<2>c', '\z')
 
 CHECK_EQ(metext('ldiv.gv'), aut('a+b').ldivide(aut('a*b*')))
@@ -96,7 +96,7 @@ def check(l, r):
         else:
             SKIP('invalid expression', divide_exp)
 
-exprs = [r'\z', r'<2>\e', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
+exprs = [r'\z', r'<2>ε', '<3>(a+<4>b)*<5>c', '(<6>a*b+<7>ac)*',
         '<8>(a*b+c)*bba+a(b(c+<9>d)*+a)']
 exprs = [exp(e) for e in exprs]
 for lhs in exprs:
@@ -120,11 +120,11 @@ def check(l, r):
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l) / make(r))
     CHECK_EQ(make('({}){{/}}({})'.format(l, r)), make(l).rdivide(make(r)))
 
-check(r'\e', 'a')
-check(r'\e', '<2>a')
-check(r'<2>\e', '<2>a')
-check(r'\e', 'a+b')
-check(r'\e', 'a+<2>b')
+check(r'ε', 'a')
+check(r'ε', '<2>a')
+check(r'<2>ε', '<2>a')
+check(r'ε', 'a+b')
+check(r'ε', 'a+<2>b')
 check(r'c+d', 'ab')
 check(r'<2>c+<3>d', 'ab')
 check(r'<2>c+<3>d', '<2>ab')
@@ -136,18 +136,18 @@ check(r'<2>c+<3>d', '<2>ab')
 def check(fun, l, r, res):
     CHECK_EQ(res, divide(fun, label(l), label(r)))
 
-check('ldivide', 'a', 'ab', 'b')
+check('ldivide', 'a',   'ab',     'b')
 check('ldivide', 'aba', 'abaaba', 'aba')
 check('ldivide', r'\e', 'abaaba', 'abaaba')
-check('ldivide', r'\e', r'\e', r'\e')
+check('ldivide', r'\e', r'\e',    r'ε')
 
 XFAIL(lambda: label('b').ldivide(label('ab')),
       'ldivide: invalid arguments: b, ab')
 
-check('rdivide', 'ba', 'a', 'b')
+check('rdivide', 'ba',     'a',   'b')
 check('rdivide', 'abaaba', 'aba', 'aba')
 check('rdivide', 'abaaba', r'\e', 'abaaba')
-check('rdivide', r'\e', r'\e', r'\e')
+check('rdivide', r'\e',    r'\e', r'ε')
 
 XFAIL(lambda: label('a').rdivide(label('ab')),
       'rdivide: invalid arguments: a, ab')
