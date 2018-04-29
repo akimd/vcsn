@@ -18,7 +18,7 @@ check('[a] -> b', '0', '0')
 check('[a] -> b', '1', '1')
 check('[a] -> z', '123', '123')
 check('[a] -> f2', '1', '1')
-check('[x] -> expressionset<[abc] -> q>', 'a*<23>bc', '<23>(a*bc)')
+check('[x] -> expressionset<[abc] -> q>', 'a*<23>bc', '⟨23⟩(a*bc)')
 
 
 # Check that we don't ignore trailing characters.
