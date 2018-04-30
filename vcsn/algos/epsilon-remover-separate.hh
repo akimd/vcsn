@@ -62,8 +62,8 @@ namespace vcsn
         , p2d_(states_size(aut),
                aut_dirty_t::element_type::null_state())
       {
-        auto dirty_ctx = dirty_ctx_t{{}, ws_};
-        auto proper_ctx = make_proper_context(aut->context());
+        const auto dirty_ctx = dirty_ctx_t{{}, ws_};
+        const auto proper_ctx = make_proper_context(aut->context());
         aut_dirty_ = make_shared_ptr<aut_dirty_t>(dirty_ctx);
         aut_proper_ = make_shared_ptr<aut_proper_t>(proper_ctx);
 
@@ -90,7 +90,7 @@ namespace vcsn
         const auto& porigins = pcopier.state_map();
         for (const auto& dp : dorigins)
           {
-            auto pp = porigins.find(dp.first);
+            const auto pp = porigins.find(dp.first);
             assert(pp != porigins.end());
             d2p_[dp.second] = pp->second;
             p2d_[pp->second] = dp.second;
@@ -436,10 +436,14 @@ namespace vcsn
       /// Whether to prune states that become inaccessible.
       bool prune_;
 
-      std::vector<state_proper_t> d2p_; // dirty states -> proper states
-      std::vector<state_dirty_t> p2d_; // proper states -> dirty states
+      /// dirty states -> proper states.
+      std::vector<state_proper_t> d2p_;
+      /// proper states -> dirty states.
+      std::vector<state_dirty_t> p2d_;
     };
 
+    /// Spontaneous transition removal when the labelset has no one
+    /// (poor guy!).
     template <Automaton Aut>
     class epsilon_remover_separate<Aut, false>
     {
