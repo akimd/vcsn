@@ -1256,7 +1256,7 @@ namespace vcsn
     boost::optional<label_t>
     conv_label(std::istream& i, bool weighted, const char sep = '+') const
     {
-      int peek = i.peek();
+      const auto peek = i.peek();
       assert(peek != '[');
       if (peek == '\\')
         {
@@ -1296,7 +1296,7 @@ namespace vcsn
         }
       else
         {
-          auto pos = i.tellg();
+          const auto pos = i.tellg();
           res = labelset()->conv(i);
           // In law_char, when reading the monomial `a|b` (yes, `|` is
           // not escaped), we looped for ever: the `a` was read by
@@ -1363,9 +1363,8 @@ namespace vcsn
 
     /// Read a polynomial from a stream.
     ///
-    /// Somewhat more general than a mere inverse of `print`,
-    /// in particular `a+a` is properly understood as `<2>a` in `lal,
-    /// z`.
+    /// More general than a mere inverse of `print`, in particular
+    /// `a+a` is properly understood as `<2>a` in `lal, z`.
     ///
     /// \param i    the stream to parse.
     /// \param sep  the separator between monomials.
@@ -1381,8 +1380,8 @@ namespace vcsn
         {
           // Possibly a weight in braces.
           SKIP_SPACES();
-          bool weighted = i.peek() == langle;
-          weight_t w = conv_weight(i);
+          const bool weighted = i.peek() == langle;
+          const weight_t w = conv_weight(i);
 
           SKIP_SPACES();
           // Possibly, a label.

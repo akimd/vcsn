@@ -87,7 +87,7 @@ namespace vcsn
 
       aut_proper_t operator()()
       {
-        auto proper_ctx = make_proper_context(aut_->context());
+        const auto proper_ctx = make_proper_context(aut_->context());
         auto res = make_shared_ptr<aut_proper_t>(proper_ctx);
 
         in_situ_remover();
@@ -193,15 +193,15 @@ namespace vcsn
       {
         // Iterate on a copy, as we remove these transitions in the
         // loop.
-        auto transitions = make_vector(in(aut_, s, empty_word_));
+        const auto transitions = make_vector(in(aut_, s, empty_word_));
         // The star of the weight of the loop on 's' (1 if no loop).
         weight_t star = ws_.one();
         using state_weight_t = std::pair<state_t, weight_t>;
-        std::vector<state_weight_t> closure;
+        auto closure = std::vector<state_weight_t>{};
         for (auto t : transitions)
           {
-            weight_t weight = aut_->weight_of(t);
-            state_t src = aut_->src_of(t);
+            const weight_t weight = aut_->weight_of(t);
+            const state_t src = aut_->src_of(t);
             if (src == s)  //loop
               star = ws_.star(weight);
             else
@@ -229,11 +229,11 @@ namespace vcsn
             // "Blowing": For each transition (or terminal arrow)
             // outgoing from (s), the weight is multiplied by
             // (star).
-            weight_t blow = ws_.mul(star, aut_->weight_of(t));
+            const weight_t blow = ws_.mul(star, aut_->weight_of(t));
             aut_->set_weight(t, blow);
 
-            label_t label = aut_->label_of(t);
-            state_t dst = aut_->dst_of(t);
+            const label_t label = aut_->label_of(t);
+            const state_t dst = aut_->dst_of(t);
             for (auto pair: closure)
               {
                 state_t src = pair.first;

@@ -162,8 +162,8 @@ namespace vcsn
     void
     add_entry(string_t src, string_t dst, string_t entry) override final
     {
-      auto s = state_(src);
-      auto d = state_(dst);
+      const auto s = state_(src);
+      const auto d = state_(dst);
       require(s != res_->pre() || d != res_->post(),
               "edit_automaton: invalid transition from pre to post: ",
               src, " -> ", dst, " (", entry, ")");
