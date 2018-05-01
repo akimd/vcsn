@@ -14,6 +14,7 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/misc/symbol.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/static-if.hh>
 #include <vcsn/misc/stream.hh>
 #include <vcsn/weightset/polynomialset.hh>
 
@@ -193,8 +194,26 @@ namespace vcsn
           auto p = emap_.emplace(entry, entry_t{});
           if (p.second)
             p.first->second = conv(ps_, entry, sep_);
-          for (auto e: p.first->second)
-            res_->add_transition(s, d, label_of(e), weight_of(e));
+          for (auto m: p.first->second)
+            {
+              detail::static_if<labelset_t::has_one()>
+                ([&](const auto& ls)
+                 {
+                   res_->add_transition
+                     (s, d,
+                      ls.is_special(label_of(m)) ? ls.one() : label_of(m),
+                      weight_of(m));
+                 },
+                 [&](const auto& ls)
+                 {
+                   VCSN_REQUIRE(!ls.is_special(label_of(m)),
+                                "edit_automaton: invalid entry: ",
+                                entry.get());
+                   res_->add_transition(s, d,
+                                        label_of(m), weight_of(m));
+                 })
+                (ls);
+            }
         }
     }
 

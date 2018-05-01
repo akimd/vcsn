@@ -6,14 +6,12 @@ digraph
   {
     node [shape = point, width = 0]
     I0
-    F1
+    F0
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
     0
-    1
   }
   I0 -> 0 [label = "<3>"]
-  0 -> 1 [label = "<5>"]
-  1 -> F1 [label = "<154>"]
+  0 -> F0 [label = "<770>"]
 }
