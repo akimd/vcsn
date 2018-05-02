@@ -167,6 +167,7 @@ namespace vcsn
       require(s != res_->pre() || d != res_->post(),
               "edit_automaton: invalid transition from pre to post: ",
               src, " -> ", dst, " (", entry, ")");
+      const auto& ls = *res_->labelset();
       if (s == res_->pre() || d == res_->post())
         {
           if (entry.get().empty())
@@ -175,18 +176,16 @@ namespace vcsn
             {
               using std::begin;
               // Adding a pre/post transition: be sure that it's only
-              // a weight.  Entries see the special label as an empty
-              // one.
-              auto e = conv(ps_, entry, sep_);
-              auto i = begin(e);
-              VCSN_REQUIRE(e.size() == 1
-                           && (res_->labelset()->is_special(label_of(*i))
-                               || res_->labelset()->is_one(label_of(*i))),
+              // a weight.
+              const auto p = conv(ps_, entry, sep_);
+              const auto m = *begin(p);
+              VCSN_REQUIRE(p.size() == 1
+                           && ls.is_special(label_of(m)),
                            "edit_automaton: invalid ",
                            s == res_->pre() ? "initial" : "final",
                            " entry: ", entry.get());
               res_->add_transition(s, d,
-                                   res_->prepost_label(), weight_of(*i));
+                                   res_->prepost_label(), weight_of(m));
             }
         }
       else
