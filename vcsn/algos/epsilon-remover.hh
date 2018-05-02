@@ -18,7 +18,7 @@
 #include <vcsn/misc/vector.hh> // make_vector
 #include <vcsn/misc/fibonacci_heap.hh>
 
-#define STATS
+#undef STATS
 
 namespace vcsn
 {

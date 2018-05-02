@@ -16,7 +16,7 @@
 #include <vcsn/misc/epsilon-profile.hh>
 #include <vcsn/misc/fibonacci_heap.hh>
 
-#define STATS
+#undef STATS
 
 namespace vcsn
 {
