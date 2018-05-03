@@ -92,6 +92,10 @@ commands to help you start using it.
 
   Opens the documentation.
 
+- `vcsn diagnose`
+
+  Checks that Vcsn is installed properly, and generates diagnostics.
+
 - `vcsn --help`
 
   List the available commands.
