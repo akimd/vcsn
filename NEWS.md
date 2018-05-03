@@ -9,6 +9,10 @@ the internal API may also be documented.
 
 # Vcsn 2.8 (2018-05-08)
 
+We are happy to announce the release of Vcsn 2.8, a bug fix release.
+
+For more information see the detailed news below.
+
 ## New Features
 ### vcsn diagnose: check that Vcsn is properly installed
 This tool runs a few commands to check that Vcsn works properly.  It
