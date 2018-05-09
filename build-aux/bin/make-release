@@ -1,0 +1,67 @@
+#! /usr/bin/env python
+
+import argparse
+import hashlib
+import os
+import re
+
+def hash_file(fname, algo = 'sha256'):
+    BLOCKSIZE = 65536
+    h = hashlib.new(algo)
+    with open(fname, 'rb') as f:
+        buf = f.read(BLOCKSIZE)
+        while buf:
+            h.update(buf)
+            buf = f.read(BLOCKSIZE)
+    return h.hexdigest()
+
+def fsize_b(f):
+    return os.path.getsize(f)
+
+def fsize_mib(f):
+    return int(fsize_b(f) / 1024 / 1024)
+
+def getargs():
+    p = argparse.ArgumentParser(description='Bench some algorithms.')
+    opt = p.add_argument
+    opt('--srcdir', metavar='DIR',
+        help='location of the top source directory')
+    opt('--release', metavar='VERS',
+        help='version of this release (e.g., 2.7)')
+    res = p.parse_args()
+    res.bz2 = 'vcsn-{}.tar.bz2'.format(res.release)
+    res.xz  = 'vcsn-{}.tar.xz' .format(res.release)
+    res.bz2_h = hash_file(res.bz2)
+    res.xz_h  = hash_file(res.xz)
+    res.bz2_s = fsize_mib(res.bz2)
+    res.xz_s  = fsize_mib(res.xz)
+    return res
+
+def print_wikimedia(args):
+    # pylint: disable=line-too-long
+    print ('''\
+== Downloads ==
+
+* Tarballs (sources to compile):
+** [{{{{SERVER}}}}/dload/vcsn/{release}/{bz2} {bz2}] ({bz2_s}MiB) (SHA256: {bz2_h})
+** [{{{{SERVER}}}}/dload/vcsn/{release}/{xz} {xz}] ({xz_s}MiB) (SHA256: {xz_h})'''.format_map(vars(args)))
+
+
+def update_macports(args):
+    portfile = f"{args.srcdir}/ports/vcsn.macports"
+    with open(portfile) as f:
+        port = f.read()
+    port = re.sub(r'\b(rmd160\s+)[0-9a-f]+', r'\g<1>' + hash_file(args.xz, "rmd160"),
+                  port)
+    port = re.sub(r'\b(sha256\s+)[0-9a-f]+', r'\g<1>' + hash_file(args.xz),
+                  port)
+    port = re.sub(r'\b(size\s+)[0-9]+', r'\g<1>' + str(fsize_b(args.xz)),
+                  port)
+    port = re.sub(r'\b(version\s+)[\d.]+', r'\g<1>' + args.release,
+                  port)
+    with open(portfile, 'w') as f:
+        f.write(port)
+
+args = getargs()
+print_wikimedia(args)
+update_macports(args)

@@ -69,7 +69,7 @@ def check_fail(i, algs=algos):
 ## lao, r: check the computation of star.  ##
 ## --------------------------------------- ##
 
-check(metext('lao-r.in.gv'), metext('lao-r.out.gv'))
+check(metext('lao-r.in.daut'), metext('lao-r.out.gv'))
 
 ## -------------------------------------------- ##
 ## lal, r: check the computation of star.  ##
@@ -296,7 +296,7 @@ check(r'''digraph
 
 check(metext('lan-poly.1.in.gv'), metext('lan-poly.1.out.gv'))
 check_fail(metext('lan-poly.2.fail.gv'))
-check_fail(metext('lan-poly.3.fail.gv'))
+check_fail(metext('lan-poly.3.fail.daut'))
 
 
 ## ---------------------- ##

@@ -22,6 +22,7 @@ python_scripts =                                \
 
 dist_pkglibexec_SCRIPTS =                       \
   $(python_scripts)                             \
+  %D%/vcsn-diagnose                             \
   %D%/vcsn-gdb                                  \
   %D%/vcsn-notebook
 

@@ -13,7 +13,8 @@
     - cd build
     - ../configure CPPFLAGS="$CPPFLAGS" CC="$CC" CXX="$CXX" CXXFLAGS="$CXXFLAGS"
     - make
-    - make check
+    - if [[ $CHECK == "installcheck" ]]; then make install; fi
+    - make "$CHECK"
     - ccache -s
   artifacts:
     when: always
@@ -30,6 +31,7 @@ archlinux:gcc:speed:
     CC: gcc
     CXX: g++
     CXXFLAGS: -O3
+    CHECK: check
 
 archlinux:clang:debug:
   <<: *vcsn_template
@@ -37,6 +39,7 @@ archlinux:clang:debug:
   variables:
     CC: clang
     CXX: clang++
+    CHECK: installcheck
 
 debian:gcc:debug:
   <<: *vcsn_template
@@ -44,6 +47,7 @@ debian:gcc:debug:
   variables:
     CC: gcc
     CXX: g++
+    CHECK: check
 
 debian:clang:speed:
   <<: *vcsn_template
@@ -53,3 +57,4 @@ debian:clang:speed:
     CC: clang
     CXX: clang++
     CXXFLAGS: -O3
+    CHECK: installcheck

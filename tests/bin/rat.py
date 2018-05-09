@@ -3,8 +3,11 @@
 import os
 import re
 import sys
-from test import *
 import vcsn
+
+# Pylint makes the difference between local and global packages.
+# Unfortunately "vcsn" is local in check and global in installcheck.
+from test import * # pylint: disable=wrong-import-order
 
 # The name of the current context.
 context = '[abcd]? → b'

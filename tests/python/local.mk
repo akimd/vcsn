@@ -298,7 +298,7 @@ EXTRA_DIST +=                                           \
   %D%/proper.dir/lan-poly.1.in.gv                       \
   %D%/proper.dir/lan-poly.1.out.gv                      \
   %D%/proper.dir/lan-poly.2.fail.gv                     \
-  %D%/proper.dir/lan-poly.3.fail.gv                     \
+  %D%/proper.dir/lan-poly.3.fail.daut                   \
   %D%/proper.dir/lan-qr.in.gv                           \
   %D%/proper.dir/lan-qr.out.gv                          \
   %D%/proper.dir/lan-r.in.gv                            \
@@ -306,7 +306,7 @@ EXTRA_DIST +=                                           \
   %D%/proper.dir/lan-z.fail.gv                          \
   %D%/proper.dir/lan-z.in.gv                            \
   %D%/proper.dir/lan-z.out.gv                           \
-  %D%/proper.dir/lao-r.in.gv                            \
+  %D%/proper.dir/lao-r.in.daut                          \
   %D%/proper.dir/lao-r.out.gv                           \
   %D%/proper.dir/law-b.in.gv                            \
   %D%/proper.dir/law-b.out.gv                           \

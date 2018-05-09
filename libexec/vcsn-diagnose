@@ -1,0 +1,127 @@
+#! /bin/bash
+
+# Don't run under /bin/sh, on Debian Sid it's a very poor version of
+# dash that behaves incorrectly with local (`local a=$1` IFS-splits $1
+# and complains about additional arguments), that does not support
+# arithmetics, and `$'...'` strings.
+#
+# We could fight for portability.  Or do interesting things in our
+# lives.
+
+set -e
+
+red=$'\e[0;31m'
+gre=$'\e[0;32m'
+std=$'\e[0m'
+
+# Prefer `/tmp` rather than `-t xxx`, as it ends in the very longuish
+# `/var/folders/...` on macOS.
+tmp=$(mktemp -d "/tmp/$(basename "$0").XXXX")
+ls $tmp
+
+exec 3>$tmp/diagnose.log
+
+# Goes to the log file.
+log ()
+{
+    printf >&3 "%s\n" "$@"
+}
+
+# Goes to the stdout and the log file.
+output ()
+{
+    log "$@"
+    printf "%s\n" "$@"
+}
+
+
+fail ()
+{
+    local msg="${red}FAIL${std}: $1"
+    shift
+    output "$msg" "${@}"
+    ((++nfail))
+}
+
+
+pass ()
+{
+    local msg="${gre}PASS${std}: $1"
+    shift
+    output "$msg" "${@}"
+    ((++npass))
+}
+
+
+# check COMMAND EXPECTED-OUTPUT
+#
+# Check that something works.
+check ()
+{
+    local cmd=$1
+    local exp=$2
+    local out
+    out=$(eval "$cmd" |
+              # Remove window title escape sequence that IPython adds
+              # to its output.
+              sed -e $'s/\033]0;[^\a]*\a//')
+    if [[ $out = "$exp" ]]; then
+        pass "$cmd"
+    else
+        fail "invalid result" "      cmd: $cmd" " expected: $exp" "effective: $out"
+    fi
+}
+
+
+# info COMMAND
+#
+# Log some information.  Information is available in $info_result.
+info ()
+{
+    local cmd=$1
+    if info_result=$(eval "${cmd}"); then
+        pass "$cmd: $info_result"
+    else
+        fail "$cmd"
+    fi
+}
+
+
+check_tools ()
+{
+    check 'vcsn cat -Ee a' 'a'
+    # Force a context instantiation.
+    check 'vcsn cat -C "[abc] -> Zmin" -Ee a' 'a'
+}
+
+
+check_python ()
+{
+    local python=$1
+    info "vcsn $python --version"
+    # Check this is Python 3.
+    info "vcsn $python -c 'import sys; print(sys.version_info)'"
+    check "vcsn $python -c 'import vcsn; print(vcsn.B.expression(\"ab\"))'" \
+          "ab"
+    check "vcsn $python -c 'import vcsn; print(vcsn.context(\"[...] -> Zmin\"))'" \
+          "[...]? -> Zmin"
+}
+
+
+# Main.
+info "command -v vcsn"
+info "vcsn version"
+check_tools
+check_python python
+check_python ipython
+
+if (( nfail == 0 )); then
+    output "All seems well"
+else
+    output "$nfail tests failed, please send $tmp.tar.bz2 to vcsn-bugs@lrde.epita.fr"
+fi
+
+cd "$(dirname "$tmp")" && tar cfj "$tmp.tar.bz2" "$(basename "$tmp")"
+rm -rf "$tmp"
+
+(( nfail == 0 ))

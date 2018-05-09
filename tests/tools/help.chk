@@ -5,7 +5,7 @@ vcsn="$builddir/tests/bin/vcsn"
 
 check ()
 {
-  run 0 - tests/bin/vcsn $@
+  run 0 - tests/bin/vcsn "$@"
 }
 
 # Make sure it works when there are underscores in the function name.

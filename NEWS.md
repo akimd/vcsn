@@ -107,6 +107,46 @@ can be seen from the Python interface.  For example:
 
 ----------------------------------------------------------------------
 
+# Vcsn 2.8 (2018-05-08)
+
+We are happy to announce the release of Vcsn 2.8, a bug fix release.
+
+For more information see the detailed news below.
+
+## New Features
+### vcsn diagnose: check that Vcsn is properly installed
+This tool runs a few commands to check that Vcsn works properly.  It
+generates diagnostics that help the Vcsn team understand problems on the
+user side.
+
+## Bug Fixes
+### Spontaneous transitions in literal automata
+In literal automata, transitions without explicit label were accepted but
+misinterpreted.  For instance in this automaton in Daut:
+
+    context = lao, q
+    $ 0 <2>
+    0 1 <3>
+    1 $ <4>
+
+the pre- and post-transitions have no label, but are weighted (by 2 and 4).
+The inner transition between states 0 and 1 should be labeled with `\e` (and
+be weighted by 3).  Unfortunately the user was expected to make the `\e`
+explicit:
+
+    context = lao, q
+    $ 0 <2>
+    0 1 <3>\e
+    1 $ <4>
+
+otherwise unexpected results would be yielded (for instance the first
+automaton was considered proper).
+
+Now, missing labels are interpreted as the empty word, and both
+specifications above denote the same automaton.
+
+----------------------------------------------------------------------
+
 # Vcsn 2.7 (2018-03-25)
 
 We are happy to announce the release of Vcsn 2.7.  This is mostly a bug fix
@@ -5756,11 +5796,11 @@ LocalWords:  expressionsets involutivity hopcroft starrable Gillard Boillod
 LocalWords:  Thibaud Michaud executables ldiv ldivide lweight rdiv rdivide
 LocalWords:  rweight bd quotkbaseb abcac SVG demangle gdb Vcsn's boxart baz
 LocalWords:  dijkstra acca FAdo's Sarasvati Moutoucomarapoulé Younes param
-LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners
+LocalWords:  Khoudli unabbreviated cerny lgcd ARGS qux quuux wrt Vcsners ef
 LocalWords:  SMS libyaml cpp Sms François Yvon ipynb ipython Qunused Harald
 LocalWords:  cxxflags Eppstein eppstein Soudière Schilly SageMathCloud prog
 LocalWords:  abcdefghijklmnopqrstuvwxyz macOS rpath Doxygen doxygen Tupling
-LocalWords:  tupleset dir dbf CoCalc ints xfe
+LocalWords:  tupleset dir dbf CoCalc ints xfe bzip sms dcae
 
 Local Variables:
 coding: utf-8

@@ -62,14 +62,20 @@ AC_DEFUN([VCSN_PROG_NBCONVERT],
 AC_CACHE_CHECK([for IPython for Python 3],
                [vcsn_cv_ipython],
                [_VCSN_PROG_IPYTHON([vcsn_cv_ipython], [$1])])
-AC_SUBST([IPYTHON], [$vcsn_cv_ipython])
+case $vcsn_cv_ipython in
+  (''|no) AC_SUBST([IPYTHON], []);;
+  (*)     AC_SUBST([IPYTHON], [$vcsn_cv_ipython]);;
+esac
 
 VCSN_ARG_PROGS([jupyter], [the Jupyter environment])
 
 AC_CACHE_CHECK([for Jupyter nbconvert],
                [vcsn_cv_nbconvert],
                [_VCSN_PROG_NBCONVERT([vcsn_cv_nbconvert], [$1])])
-AC_SUBST([NBCONVERT], [$vcsn_cv_nbconvert])
+case $vcsn_cv_nbconvert in
+  (''|no) AC_SUBST([NBCONVERT], []);;
+  (*)     AC_SUBST([NBCONVERT], [$vcsn_cv_nbconvert]);;
+esac
 AM_CONDITIONAL([HAVE_NBCONVERT], [test x"$NBCONVERT" != xno])
 ])
 

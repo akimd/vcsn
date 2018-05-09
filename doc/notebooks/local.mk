@@ -235,9 +235,12 @@ nodist_TESTS += $(%C%_TESTS)
 
 .PHONY: check-nb
 check-nb:
-# Depend on check-TESTS, not 'check', because the latter depends on
-# "all", which compiles Tools etc.  Leave "check" for simple users.
-# Here, we know that our dependencies are right, so use check-TESTS.
+## Make sure the documentation is ready.
+	grep -q '"# Welcome to $(PACKAGE_NAME) $(PACKAGE_VERSION)\\n",' \
+	  '$(srcdir)/%D%/!Read-me-first.ipynb'
+# Call check-TESTS, not 'check', because the latter depends on "all",
+# which compiles Tools etc.  Leave "check" for end users.  Here, we
+# know that our dependencies are right.
 	@$(MAKE) $(AM_MAKEFLAGS) check-TESTS TESTS='$(%C%_TESTS)'
 
 

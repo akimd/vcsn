@@ -83,3 +83,17 @@ deb: dist
 	tar Jcvf vcsn_$(VERSION)$(GITPATCH).orig.tar.xz \
 	         vcsn-$(VERSION)$(GITPATCH)
 	cd vcsn-$(VERSION)$(GITPATCH) && debuild $(DEBUILDFLAGS) -us -uc
+
+## --------- ##
+## release.  ##
+## --------- ##
+
+.PHONY: release
+release: NEWS.mw update-ports upload-doc
+	ssh doc@perso mkdir -p /var/www/dload/vcsn/$(VERSION)
+	scp $(distdir).tar.{bz2,xz} doc@perso:/var/www/dload/vcsn/$(VERSION)
+	ssh doc@perso rm /var/www/dload/vcsn/latest
+	ssh doc@perso ln -sf $(VERSION) /var/www/dload/vcsn/latest
+	$(srcdir)/build-aux/bin/make-release \
+	  --release=$(VERSION) \
+	  --srcdir=$(srcdir)

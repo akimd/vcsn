@@ -5,7 +5,7 @@ PortGroup           cxx11 1.0
 PortGroup           active_variants 1.1
 
 name                vcsn
-version             2.6
+version             2.8
 categories          devel
 platforms           darwin
 maintainers         lrde.epita.fr:akim openmaintainer
@@ -22,9 +22,9 @@ master_sites        http://www.lrde.epita.fr/dload/vcsn/${version}/
 
 use_xz              yes
 
-checksums           rmd160  3b3441215f81736733ff130e94976bada40b3a68 \
-                    sha256  87bcfc6f722f6f39613b7f2a8b7de95d682e32d33c08edcebf6790129cb6dff5 \
-                    size    15189660
+checksums           rmd160  03e4df4ef1c421a394fd3e340a910cc13f214b58 \
+                    sha256  4ead51f021d913b7d11b8a9afefa926877724729469d517626b5112abb98f2b0 \
+                    size    14837632
 
 # python3.x is required - force dependencies to use it as well
 set python_version  36
