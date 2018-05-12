@@ -185,6 +185,7 @@ TC_CXX_WARNINGS(
    [-Wmissing-declarations],
    [-Wno-parentheses],
    [-Wnoexcept],
+   [-Wnull-dereference],
    [-Woverloaded-virtual],
    [-Wpointer-arith],
    [-Wno-maybe-uninitialized],
