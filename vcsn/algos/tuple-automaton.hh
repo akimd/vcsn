@@ -206,7 +206,7 @@ namespace vcsn
       template <typename Auts, size_t... I>
       automaton
       tuple_(const std::vector<automaton>& as,
-             vcsn::detail::index_sequence<I...>)
+             std::index_sequence<I...>)
       {
         return tuple(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
@@ -217,7 +217,7 @@ namespace vcsn
       tuple(const std::vector<automaton>& as)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+          = std::make_index_sequence<std::tuple_size<Auts>::value>{};
         return tuple_<Auts>(as, indices);
       }
     }

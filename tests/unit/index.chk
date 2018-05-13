@@ -1,0 +1,5 @@
+#! /bin/sh
+
+run 0 - tests/unit/index <<EOF
+101112
+EOF

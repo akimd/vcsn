@@ -635,7 +635,7 @@ namespace vcsn
       template <typename Auts, size_t... I>
       automaton
       conjunction_(const std::vector<automaton>& as, bool lazy,
-                   vcsn::detail::index_sequence<I...>)
+                   std::index_sequence<I...>)
       {
         if (lazy)
           return conjunction_lazy(as[I]->as<std::tuple_element_t<I, Auts>>()...);
@@ -649,7 +649,7 @@ namespace vcsn
       conjunction(const std::vector<automaton>& as, bool lazy)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+          = std::make_index_sequence<std::tuple_size<Auts>::value>{};
         return conjunction_<Auts>(as, lazy, indices);
       }
     }
@@ -781,7 +781,7 @@ namespace vcsn
       template <typename Auts, size_t... I>
       automaton
       shuffle_(const std::vector<automaton>& as,
-               vcsn::detail::index_sequence<I...>)
+               std::index_sequence<I...>)
       {
         return vcsn::shuffle(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
@@ -792,7 +792,7 @@ namespace vcsn
       shuffle(const std::vector<automaton>& as)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+          = std::make_index_sequence<std::tuple_size<Auts>::value>{};
         return shuffle_<Auts>(as, indices);
       }
     }
@@ -834,7 +834,7 @@ namespace vcsn
       template <typename Auts, size_t... I>
       automaton
       infiltrate_(const std::vector<automaton>& as,
-                    vcsn::detail::index_sequence<I...>)
+                    std::index_sequence<I...>)
       {
         return vcsn::infiltrate(as[I]->as<std::tuple_element_t<I, Auts>>()...);
       }
@@ -845,7 +845,7 @@ namespace vcsn
       infiltrate(const std::vector<automaton>& as)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<Auts>::value>{};
+          = std::make_index_sequence<std::tuple_size<Auts>::value>{};
         return infiltrate_<Auts>(as, indices);
       }
     }

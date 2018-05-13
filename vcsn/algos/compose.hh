@@ -100,7 +100,7 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
     public:
 
@@ -210,8 +210,8 @@ namespace vcsn
       {
         constexpr auto lsize = hidden_l_labelset_t::size();
         constexpr auto rsize = hidden_r_labelset_t::size();
-        return make_labelset_(ll, make_index_sequence<lsize>{},
-                              rl, make_index_sequence<rsize>{});
+        return make_labelset_(ll, std::make_index_sequence<lsize>{},
+                              rl, std::make_index_sequence<rsize>{});
       }
 
       template <std::size_t... I1, std::size_t... I2>

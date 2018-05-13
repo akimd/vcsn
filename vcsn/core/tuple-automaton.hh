@@ -126,10 +126,10 @@ namespace vcsn
       // FIXME: protected:
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
       /// The list of automaton indices as a static list.
-      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+      using indices_t = std::make_index_sequence<sizeof...(Auts)>;
       static constexpr indices_t indices{};
 
       /// The sname of the sub automata.

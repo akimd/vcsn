@@ -22,6 +22,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/distance                                  \
   %D%/dyn                                       \
   %D%/function_property                         \
+  %D%/index                                     \
   %D%/label                                     \
   %D%/length                                    \
   %D%/polynomialset                             \
@@ -43,6 +44,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_distance_LDADD            = $(unit_ldadd)
 %C%_dyn_LDADD                 = $(unit_ldadd)
 %C%_function_property_LDADD   = $(unit_ldadd)
+%C%_index_LDADD               = $(unit_ldadd)
 %C%_label_LDADD               = $(unit_ldadd)
 %C%_length_LDADD              = $(unit_ldadd)
 %C%_polynomialset_LDADD       = $(unit_ldadd)
@@ -59,6 +61,7 @@ unit_TESTS +=                                   \
   %D%/cross.chk                                 \
   %D%/dyn.chk                                   \
   %D%/function_property.chk                     \
+  %D%/index.chk                                 \
   %D%/ipython.chk                               \
   %D%/label.chk                                 \
   %D%/length.chk                                \
@@ -97,6 +100,7 @@ EXTRA_DIST +=                                   \
 %D%/distance.log:          %D%/distance
 %D%/dyn.log:               %D%/dyn
 %D%/function_property.log: %D%/function_property
+%D%/index.log:             %D%/index
 %D%/ipython.log:           $(vcsn_python)
 %D%/label.log:             %D%/label
 %D%/length.log:            %D%/length

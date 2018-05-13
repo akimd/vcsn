@@ -168,7 +168,7 @@ namespace vcsn
 
         /// Product of the constant-terms of all tapes.
         template <size_t... I>
-        weight_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        weight_t work_(const tuple_t& v, std::index_sequence<I...>)
         {
           return visitor_.ws_.mul(work_<I>(v)...);
         }

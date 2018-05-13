@@ -34,7 +34,7 @@ namespace vcsn
       template <typename Contexts, size_t... I>
       context
       tuple_(const std::vector<context>& cs,
-             vcsn::detail::index_sequence<I...>)
+             std::index_sequence<I...>)
       {
         return tuple_context(cs[I]->template as<std::tuple_element_t<I, Contexts>>()
                              ...);
@@ -46,7 +46,7 @@ namespace vcsn
       tuple_context(const std::vector<context>& cs)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<Contexts>{}>{};
+          = std::make_index_sequence<std::tuple_size<Contexts>{}>{};
         return tuple_<Contexts>(cs, indices);
       }
     }
@@ -102,7 +102,7 @@ namespace vcsn
       template <typename ExpansionSets, size_t... I>
       expansion
       tuple_(const std::vector<expansion>& es,
-             vcsn::detail::index_sequence<I...>)
+             std::index_sequence<I...>)
       {
         auto xs
           = vcsn::tuple_expansionset
@@ -123,7 +123,7 @@ namespace vcsn
       tuple_expansion(const std::vector<expansion>& es)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<ExpansionSets>{}>{};
+          = std::make_index_sequence<std::tuple_size<ExpansionSets>{}>{};
         return tuple_<ExpansionSets>(es, indices);
       }
     }
@@ -141,7 +141,7 @@ namespace vcsn
       template <typename ExpSets, size_t... I>
       expression
       tuple_(const std::vector<expression>& es,
-             vcsn::detail::index_sequence<I...>)
+             std::index_sequence<I...>)
       {
         auto rs
           = vcsn::tuple_expressionset
@@ -160,7 +160,7 @@ namespace vcsn
       tuple_expression(const std::vector<expression>& es)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<ExpSets>{}>{};
+          = std::make_index_sequence<std::tuple_size<ExpSets>{}>{};
         return tuple_<ExpSets>(es, indices);
       }
     }
@@ -193,7 +193,7 @@ namespace vcsn
       template <typename PolynomialSet, size_t... I>
       polynomial
       tuple_(const std::vector<polynomial>& polys,
-             vcsn::detail::index_sequence<I...>)
+             std::index_sequence<I...>)
       {
         auto ps
           = vcsn::tuple_polynomialset
@@ -212,7 +212,7 @@ namespace vcsn
       tuple_polynomial(const std::vector<polynomial>& ps)
       {
         auto indices
-          = vcsn::detail::make_index_sequence<std::tuple_size<PolynomialSets>{}>{};
+          = std::make_index_sequence<std::tuple_size<PolynomialSets>{}>{};
         return tuple_<PolynomialSets>(ps, indices);
       }
     }

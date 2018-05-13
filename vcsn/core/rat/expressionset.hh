@@ -359,7 +359,7 @@ namespace vcsn::rat
     struct as_tupleset_impl;
 
     template <size_t... I>
-    struct as_tupleset_impl<detail::index_sequence<I...>>
+    struct as_tupleset_impl<std::index_sequence<I...>>
     {
       /// If we are multitape, our type as a tupleset.
       using type = tupleset<project_t<I, context_t>...>;
@@ -373,7 +373,7 @@ namespace vcsn::rat
     /// If we are multitape, our type as a tupleset.
     template <typename Ctx = context_t>
     using as_tupleset_t
-      = typename as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::type;
+      = typename as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t>::type;
 
     /// If we are multitape, ourself as a tupleset.
     ///
@@ -383,7 +383,7 @@ namespace vcsn::rat
     auto as_tupleset() const
       -> std::enable_if_t<Ctx::is_lat, as_tupleset_t<Ctx>>
     {
-      return as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t::type>::value(self());
+      return as_tupleset_impl<typename labelset_t_of<Ctx>::indices_t>::value(self());
     }
 
   private:
@@ -458,7 +458,7 @@ namespace vcsn::rat
 
       /// Are all the components on I... labels?
       template <size_t... I>
-      static bool is_label_(const tuple_t& v, detail::index_sequence<I...>)
+      static bool is_label_(const tuple_t& v, std::index_sequence<I...>)
       {
         for (auto b: {(std::get<I>(v.sub())->type() == type_t::atom
                        || std::get<I>(v.sub())->type() == type_t::one)...})
@@ -468,7 +468,7 @@ namespace vcsn::rat
       }
 
       template <size_t... I>
-      label_t as_label_(const tuple_t& v, detail::index_sequence<I...>) const
+      label_t as_label_(const tuple_t& v, std::index_sequence<I...>) const
       {
         return label_t{as_label_<I>(v)...};
       }

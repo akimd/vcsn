@@ -42,11 +42,11 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
       static constexpr size_t number_of_tapes = labelset_t_of<Aut>::size();
 
-      using index_t = detail::make_index_sequence<number_of_tapes>;
+      using index_t = std::make_index_sequence<number_of_tapes>;
 
       static constexpr index_t indices = {};
 
@@ -185,7 +185,7 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
 
       synchronize_checker(const automaton_t& aut)

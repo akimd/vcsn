@@ -76,7 +76,7 @@ namespace vcsn::rat
 
       /// Sum of sizes for all tapes.
       template <size_t... I>
-      size_t size_(const tuple_t& v, detail::index_sequence<I...>)
+      size_t size_(const tuple_t& v, std::index_sequence<I...>)
       {
         auto res = size_t{0};
         using swallow = int[];

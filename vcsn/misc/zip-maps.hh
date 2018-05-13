@@ -21,10 +21,10 @@ namespace vcsn
 
     /// Type of index sequences.
     template <std::size_t... I>
-    using seq = vcsn::detail::index_sequence<I...>;
+    using seq = std::index_sequence<I...>;
 
     /// Index sequence for our maps.
-    using indices_t = vcsn::detail::make_index_sequence<sizeof...(Maps)>;
+    using indices_t = std::make_index_sequence<sizeof...(Maps)>;
 
     zipped_maps(Maps... maps)
       : maps_(maps...)

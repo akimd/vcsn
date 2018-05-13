@@ -26,7 +26,7 @@ namespace vcsn
     struct hidden_label_type;
 
     template <Automaton Aut, std::size_t... I>
-    struct hidden_label_type<Aut, index_sequence<I...>>
+    struct hidden_label_type<Aut, std::index_sequence<I...>>
     {
       using ls_t = labelset_t_of<Aut>;
       using type = tupleset<typename ls_t::template valueset_t<I>...>;
@@ -98,8 +98,8 @@ namespace vcsn
       /// Indices of the remaining tapes.
       using hidden_indices_t
         = concat_sequence
-          <make_index_range_t<0, Tape>,
-           make_index_range_t<Tape + 1, std::tuple_size<full_label_t>::value>>;
+          <make_index_range<0, Tape>,
+           make_index_range<Tape + 1, std::tuple_size<full_label_t>::value>>;
 
       // All tapes except the exposed one.
       using res_labelset_t
@@ -181,7 +181,8 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      res_label_t hidden_label_of_(transition_t t, index_sequence<I...>) const
+      res_label_t
+      hidden_label_of_(transition_t t, std::index_sequence<I...>) const
       {
         full_label_t l = aut_->label_of(t);
         return std::make_tuple(std::get<I>(l)...);
@@ -189,14 +190,14 @@ namespace vcsn
 
       template <typename L, std::size_t... I>
       res_label_t
-      hidden_one_(index_sequence<I...>) const
+      hidden_one_(std::index_sequence<I...>) const
       {
         full_label_t l = aut_->labelset()->one();
         return std::make_tuple(std::get<I>(l)...);
       }
 
       template <std::size_t... I>
-      res_labelset_t res_labelset_(index_sequence<I...>) const
+      res_labelset_t res_labelset_(std::index_sequence<I...>) const
       {
         return res_labelset_t{std::get<I>(aut_->labelset()->sets())...};
       }

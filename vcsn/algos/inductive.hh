@@ -110,7 +110,7 @@ namespace vcsn
 
         /// Sum of sizes for all tapes.
         template <size_t... I>
-        auto tape_(const tuple_t& v, detail::index_sequence<I...>)
+        auto tape_(const tuple_t& v, std::index_sequence<I...>)
         {
           return visitor_.as_.tuple(tape_<I>(v)...);
         }

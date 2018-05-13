@@ -647,7 +647,7 @@ namespace vcsn::rat
       /// Denormalize on all these tapes.
       template <size_t... Tape>
       auto denormalize(std::tuple<const Expansions&...>& es,
-                       detail::index_sequence<Tape...>) const
+                       std::index_sequence<Tape...>) const
         -> std::tuple<typename project_t<Tape>::polys_t...>
       {
         using res_t = std::tuple<typename project_t<Tape>::polys_t...>;
@@ -659,7 +659,7 @@ namespace vcsn::rat
       {
         auto t = std::tuple<const Expansions&...>{es...};
         constexpr auto indices
-          = detail::make_index_sequence<sizeof...(Expansions)>{};
+          = std::make_index_sequence<sizeof...(Expansions)>{};
         return denormalize(t, indices);
       }
 

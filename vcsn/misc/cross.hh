@@ -22,13 +22,13 @@ namespace vcsn
 
     /// Type of index sequences.
     template <std::size_t... I>
-    using seq = vcsn::detail::index_sequence<I...>;
+    using seq = std::index_sequence<I...>;
 
     /// Number of sequences.
     static constexpr size_t size = sizeof...(Sequences);
 
     /// Index sequence for our sequences.
-    using indices_t = vcsn::detail::make_index_sequence<sizeof...(Sequences)>;
+    using indices_t = std::make_index_sequence<sizeof...(Sequences)>;
 
     /// The type of the underlying sequences, without reference.
     template <typename Seq>

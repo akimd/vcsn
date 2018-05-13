@@ -163,7 +163,7 @@ namespace vcsn::rat
 
       /// Info all the tapes.
       template <size_t... I>
-      void info_(const tuple_t& v, detail::index_sequence<I...>)
+      void info_(const tuple_t& v, std::index_sequence<I...>)
       {
         using swallow = int[];
         (void) swallow

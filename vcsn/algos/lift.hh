@@ -67,7 +67,7 @@ namespace vcsn
 
     /// Lift all the label tapes to the weights.
     template <typename Context>
-    struct lifter_impl<Context, vcsn::detail::index_sequence<>>
+    struct lifter_impl<Context, std::index_sequence<>>
     {
       /// Input context.
       using in_context_t = Context;
@@ -103,7 +103,7 @@ namespace vcsn
     template <typename... LabelSets, typename WeightSet,
               size_t... Tapes>
     struct lifter_impl<context<tupleset<LabelSets...>, WeightSet>,
-                       vcsn::detail::index_sequence<Tapes...>,
+                       std::index_sequence<Tapes...>,
                        std::enable_if_t<(0 < sizeof...(Tapes))>>
     {
       /// Input labelset.
@@ -113,7 +113,7 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
       /// Set of tapes
       template <typename S, typename L>
@@ -133,8 +133,7 @@ namespace vcsn
       };
 
       /// Index of all input tapes.
-      using index_t
-        = typename detail::make_index_sequence<in_labelset_t::size()>::type;
+      using index_t = std::make_index_sequence<in_labelset_t::size()>;
 
       static constexpr size_t number_of_tapes = in_labelset_t::size();
 
@@ -220,7 +219,7 @@ namespace vcsn
 
     /// A traits to lift the Tapes of the labels to the weights.
     template <typename Ctx, size_t... Tapes>
-    using lifter_t = lifter_impl<Ctx, detail::index_sequence<Tapes...>>;
+    using lifter_t = lifter_impl<Ctx, std::index_sequence<Tapes...>>;
 
     template <Automaton Aut, size_t... Tapes>
     using lifted_automaton_t =

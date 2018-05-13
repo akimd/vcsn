@@ -188,12 +188,12 @@ namespace vcsn::rat
     struct values_t_impl;
 
     template <size_t... I>
-    struct values_t_impl<detail::index_sequence<I...>>
+    struct values_t_impl<std::index_sequence<I...>>
     {
       using type = std::tuple<value_t_of<I>...>;
     };
     using indices_t = typename labelset_t_of<context_t>::indices_t;
-    using values_t = typename values_t_impl<typename indices_t::type>::type;
+    using values_t = typename values_t_impl<indices_t>::type;
 
     template <typename... Args>
     tuple(Args&&... args)

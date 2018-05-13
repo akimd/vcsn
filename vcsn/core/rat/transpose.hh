@@ -192,7 +192,7 @@ namespace vcsn
 
         /// Copy all the tapes.
         template <size_t... I>
-        auto work_(const tuple_t& v, detail::index_sequence<I...>)
+        auto work_(const tuple_t& v, std::index_sequence<I...>)
         {
           return self_.rs_.tuple(work_<I>(v)...);
         }

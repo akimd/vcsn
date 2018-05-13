@@ -206,7 +206,7 @@ namespace vcsn::rat
 
       /// Print all the tapes.
       template <size_t... I>
-      void print_(const tuple_t& v, detail::index_sequence<I...>)
+      void print_(const tuple_t& v, std::index_sequence<I...>)
       {
         using swallow = int[];
         (void) swallow

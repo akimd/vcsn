@@ -72,10 +72,10 @@ namespace vcsn
   {
   public:
     using valuesets_t = std::tuple<ValueSets...>;
-    using indices_t = make_index_sequence<sizeof...(ValueSets)>;
+    using indices_t = std::make_index_sequence<sizeof...(ValueSets)>;
     static constexpr indices_t indices{};
     template <std::size_t... I>
-    using seq = index_sequence<I...>;
+    using seq = std::index_sequence<I...>;
 
     /// The Ith valueset type.
     template <std::size_t I>
@@ -1251,10 +1251,10 @@ namespace vcsn
   template <typename... LabelSets>
   struct letterized_traits<tupleset<LabelSets...>>
   {
-    using indices_t = make_index_sequence<sizeof...(LabelSets)>;
+    using indices_t = std::make_index_sequence<sizeof...(LabelSets)>;
 
     template <std::size_t... I>
-    using seq = index_sequence<I...>;
+    using seq = std::index_sequence<I...>;
 
     template <size_t I>
     using letterized_traits_t =
@@ -1291,14 +1291,14 @@ namespace vcsn
     using type = tupleset<law_t<LabelSets>...>;
 
     template <std::size_t... I>
-    static type value(const labelset_t& ls, index_sequence<I...>)
+    static type value(const labelset_t& ls, std::index_sequence<I...>)
     {
       return {make_wordset(ls.template set<I>())...};
     }
 
     static type value(const labelset_t& ls)
     {
-      return value(ls, make_index_sequence<sizeof...(LabelSets)>{});
+      return value(ls, std::make_index_sequence<sizeof...(LabelSets)>{});
     }
   };
 
@@ -1315,7 +1315,7 @@ namespace vcsn
 
     template <std::size_t... I>
     static type join(const vs1_t& lhs, const vs2_t& rhs,
-                     index_sequence<I...>)
+                     std::index_sequence<I...>)
     {
       return {::vcsn::join(lhs.template set<I>(), rhs.template set<I>())...};
     }
@@ -1324,7 +1324,7 @@ namespace vcsn
     static type join(const vs1_t& lhs, const vs2_t& rhs)
     {
       return join(lhs, rhs,
-                  make_index_sequence<sizeof...(VS1)>{});
+                  std::make_index_sequence<sizeof...(VS1)>{});
     }
   };
 
@@ -1339,7 +1339,7 @@ namespace vcsn
 
     template <std::size_t... I>
     static type join(const vs1_t& lhs, const vs2_t& rhs,
-                     index_sequence<I...>)
+                     std::index_sequence<I...>)
     {
       return {::vcsn::join(lhs.template set<I>(), rhs)...};
     }
@@ -1348,7 +1348,7 @@ namespace vcsn
     static type join(const vs1_t& lhs, const vs2_t& rhs)
     {
       return join(lhs, rhs,
-                  make_index_sequence<sizeof...(VS1)>{});
+                  std::make_index_sequence<sizeof...(VS1)>{});
     }
   };
 
@@ -1432,7 +1432,7 @@ namespace vcsn
   random_label_(const tupleset<LabelSet...>& ls,
                 const std::string& spec,
                 RandomGenerator& gen,
-                detail::index_sequence<I...>)
+                std::index_sequence<I...>)
   {
     // No need to check for the emptiness here: it will be checked in
     // each sub-labelset.

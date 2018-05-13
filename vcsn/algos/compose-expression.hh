@@ -18,8 +18,8 @@ namespace vcsn
     auto
     compose_labelset_impl(const tupleset<LS1...>& ls1,
                           const tupleset<LS2...>& ls2,
-                          detail::index_sequence<I1...>,
-                          detail::index_sequence<I2...>)
+                          std::index_sequence<I1...>,
+                          std::index_sequence<I2...>)
     {
       return make_tupleset(ls1.template set<I1>()...,
                            ls2.template set<I2>()...);

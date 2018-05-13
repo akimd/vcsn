@@ -105,7 +105,7 @@ namespace vcsn
 
         /// Info all the tapes.
         template <size_t... I>
-        auto tapes_(const tuple_t& v, detail::index_sequence<I...>)
+        auto tapes_(const tuple_t& v, std::index_sequence<I...>)
         {
           return std::max({tape_<I>(v)...});
         }

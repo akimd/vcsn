@@ -245,7 +245,7 @@ namespace vcsn
 
         /// Tuple of derivations of all the tapes.
         template <size_t... I>
-        polynomial_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        polynomial_t work_(const tuple_t& v, std::index_sequence<I...>)
         {
           return visitor_.ps_.tuple(work_<I>(v)...);
         }

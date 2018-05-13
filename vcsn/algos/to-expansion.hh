@@ -395,7 +395,7 @@ namespace vcsn
       struct visit_tuple
       {
         template <size_t... I>
-        expansion_t work_(const tuple_t& v, detail::index_sequence<I...>)
+        expansion_t work_(const tuple_t& v, std::index_sequence<I...>)
         {
           return
             visitor_

@@ -43,9 +43,9 @@ namespace vcsn
 
       /// A static list of integers.
       template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
+      using seq = std::index_sequence<I...>;
 
-      using delay_index_t = detail::make_index_sequence<number_of_tapes - 1>;
+      using delay_index_t = std::make_index_sequence<number_of_tapes - 1>;
 
       /// The delay associated with each state
       using delay_t = std::array<int, number_of_tapes - 1>;
