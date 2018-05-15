@@ -94,6 +94,13 @@ release: NEWS.mw update-ports upload-doc
 	scp $(distdir).tar.{bz2,xz} doc@perso:/var/www/dload/vcsn/$(VERSION)
 	ssh doc@perso rm /var/www/dload/vcsn/latest
 	ssh doc@perso ln -sf $(VERSION) /var/www/dload/vcsn/latest
+	$(MAKE) $(AM_MAKEFLAGS) release.txt
+
+# Update the MacPorts file, and generate the Mediawiki snippet for downloads.
+.PHONY: release.txt
+release.txt:
 	$(srcdir)/build-aux/bin/make-release \
 	  --release=$(VERSION) \
-	  --srcdir=$(srcdir)
+	  --srcdir=$(srcdir) >$@.tmp
+	mv $@.tmp $@
+	cat $@
