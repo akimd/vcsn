@@ -249,7 +249,7 @@ ctx = vcsn.context('expressionset<[...] -> B>, b')
 e = ctx.expression('a')
 a = e.automaton()
 XFAIL(lambda: a('a'),
-      'evaluate: unsupported labelset: RatE[[a...]? -> B]')
+      'evaluate: unsupported labelset: RatE[[a...]? → 𝔹]')
 
 
 ## check AUTOMATON POLYNOMIAL EXP

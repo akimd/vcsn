@@ -33,7 +33,7 @@ namespace vcsn LIBVCSN_API
         /// Print as rich UTF-8 text, escaped.
         utf8,
         /// By default, print for text.
-        default_ = text,
+        default_ = utf8,
       };
 
     format(format_t f = default_)

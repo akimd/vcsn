@@ -32,10 +32,13 @@ namespace vcsn
       using super_t::os_;
       using super_t::ps_;
 
-      using super_t::super_t;
-
 
     public:
+      daut_impl(const automaton_t& aut, std::ostream& out, format fmt = {})
+        : super_t(aut, out)
+        , format_(fmt)
+      {}
+
       /// Print the automaton on the stream.
       std::ostream& operator()()
       {
@@ -57,16 +60,16 @@ namespace vcsn
       {
         os_ << '\n';
         if (src == aut_->pre())
-            os_ << '$';
+          os_ << '$';
         else
           aut_->print_state(src, os_);
         os_ << " -> ";
         if (dst == aut_->post())
-            os_ << '$';
+          os_ << '$';
         else
           aut_->print_state(dst, os_);
 
-        auto e = to_string(ps_, entry, format{}, ", ");
+        auto e = to_string(ps_, entry, format_, ", ");
         if (!e.empty())
           os_ << ' ' << e;
       }
@@ -84,11 +87,14 @@ namespace vcsn
                 // Bypass weight_of(set), because we know that the weight is
                 // nonzero, and that there is only one weight per letter.
                 ps_.new_weight(dsts[aut_->dst_of(t)],
-                                 aut_->label_of(t), aut_->weight_of(t));
+                               aut_->label_of(t), aut_->weight_of(t));
               for (const auto& p: dsts)
                 print_transitions_(src, p.first, p.second);
             }
       }
+
+      /// Format for labels and weights.
+      format format_ = {};
     };
   }
 
@@ -96,12 +102,12 @@ namespace vcsn
   ///
   /// \param aut     the automaton to print.
   /// \param out     the output stream.
+  /// \param fmt     how to format the automaton.
   template <Automaton Aut>
   std::ostream&
-  daut(const Aut& aut, std::ostream& out = std::cout)
+  daut(const Aut& aut, std::ostream& out = std::cout, format fmt = {})
   {
-    // Cannot use auto here.
-    detail::daut_impl<Aut> daut{aut, out};
+    auto daut = detail::daut_impl<Aut>{aut, out, fmt};
     return daut();
   }
 }

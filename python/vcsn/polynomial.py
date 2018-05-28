@@ -13,7 +13,7 @@ class polynomial:
     __matmul__ = polynomial.compose
     __mul__ = _rweight
     __or__ = lambda l, r: polynomial._tuple([l, r])
-    __repr__ = lambda self: self.format('utf8')
+    __repr__ = lambda self: self.format()
     __rmul__ = _lweight
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

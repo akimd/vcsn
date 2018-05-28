@@ -16,7 +16,7 @@ class context:
     __matmul__ = context.compose
     __or__ = lambda l, r: context._tuple([l, r])
     __plus__ = context.join
-    __repr__ = lambda self: self.format('utf8')
+    __repr__ = lambda self: self.format()
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
     def __format__(self, spec):

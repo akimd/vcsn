@@ -52,7 +52,7 @@ check('xy', '<x>a*&:<y>b*')
 check(r'\e', '(<x>a)*')
 check('x*', r'(<x>\e)*')
 XFAIL(lambda: vcsn.Q.expression('a**').constant_term(),
-      r'''Q: value is not starrable: 1
+      r'''ℚ: value is not starrable: 1
   while computing constant-term of: a**''')
 
 # complement.
@@ -65,8 +65,8 @@ check('zyx', r'(<xyz>\e){T}')
 # ldivide
 e = ctx.expression(r'<x>a{\}<x>a')
 XFAIL(lambda: e.constant_term(),
-      r'''constant_term: operator ldivide not supported: <x>a{\}<x>a
-  while computing constant-term of: <x>a{\}<x>a''')
+      r'''constant_term: operator ldivide not supported: ⟨x⟩a{\}⟨x⟩a
+  while computing constant-term of: ⟨x⟩a{\}⟨x⟩a''')
 
 # tuple.
 ctx = vcsn.context('[...] x [...] -> q')
@@ -78,5 +78,5 @@ check('6', r'(<2>\e)|(<3>\e)', 'derivation')
 # compose
 e = ctx.expression(r'\e|a @ a|\e', 'none')
 XFAIL(lambda: e.constant_term(),
-      r'''operator compose not supported: \e|a@a|\e
-  while computing constant-term of: \e|a@a|\e''')
+      r'''constant_term: operator compose not supported: ε|a@a|ε
+  while computing constant-term of: ε|a@a|ε''')

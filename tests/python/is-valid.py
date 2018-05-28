@@ -37,5 +37,5 @@ XFAIL(lambda: e.is_valid(),
 
 e = vcsn.context('[...] x [...] -> q').expression(r'ab|\e @ \e|cd')
 XFAIL(lambda: e.is_valid(),
-      r'''is_valid: operator compose not supported: ab|\e@\e|cd
-  while computing constant-term of: ab|\e@\e|cd''')
+      r'''is_valid: operator compose not supported: ab|ε@ε|cd
+  while computing constant-term of: ab|ε@ε|cd''')

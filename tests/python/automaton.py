@@ -108,7 +108,7 @@ xfail(r'''digraph
   1 -> F1
   I0 -> 0
 }
-''', r'''4.10-23: Poly[[a]? -> B]: unexpected trailing characters: "a"
+''', r'''4.10-23: Poly[[a]? → 𝔹]: unexpected trailing characters: "a"
   while reading: "aa"
   0 -> 1 [label = "aa"]
          ^^^^^^^^^^^^^^
@@ -618,7 +618,7 @@ CHECK_EQ(r'''digraph
 XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <a>
 0 -> $ <1/2>'''),
-      '''2.1-10: Q: invalid numerator: "a"
+      '''2.1-10: ℚ: invalid numerator: "a"
   while reading: "a"
   while reading: "<a>"
 $ -> 0 <a>
@@ -628,7 +628,7 @@ $ -> 0 <a>
 XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <1/2>
 0 -> $ <a>'''),
-      '''3.1-10: Q: invalid numerator: "a"
+      '''3.1-10: ℚ: invalid numerator: "a"
   while reading: "a"
   while reading: "<a>"
 0 -> $ <a>
@@ -639,7 +639,7 @@ XFAIL(lambda: vcsn.automaton('''context = [abc]? → ℚ
 $ -> 0 <1/2>
 0 -> 1 <2/a>a
 1 -> $ <2>'''),
-      '''3.1-13: Q: invalid denominator: "a"
+      '''3.1-13: ℚ: invalid denominator: "a"
   while reading: "2/a"
   while reading: "<2/a>a"
 0 -> 1 <2/a>a

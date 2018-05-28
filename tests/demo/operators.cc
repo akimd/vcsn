@@ -56,15 +56,15 @@ namespace
 
     // Create an expression, and pretty-print it.
     auto e1 = make_expression(ctx, "<2>a");
-    ASSERT(format(e1) == "<2>a");
+    ASSERT(format(e1) == "⟨2⟩a");
     auto e2 = make_expression(ctx, "<3>b");
 
-    ASSERT(format(e1 + e2) == "<2>a+<3>b");
-    ASSERT(format(e1 * e2) == "<6>(ab)");
+    ASSERT(format(e1 + e2) == "⟨2⟩a+⟨3⟩b");
+    ASSERT(format(e1 * e2) == "⟨6⟩(ab)");
 
     // e * -1 denotes e to the -1, that is e*.
     auto e = ((e1 + e2) * -1) * e1 * (e1 + e2);
-    ASSERT(format(e) == "<2>((<2>a+<3>b)*a(<2>a+<3>b))");
+    ASSERT(format(e) == "⟨2⟩((⟨2⟩a+⟨3⟩b)*a(⟨2⟩a+⟨3⟩b))");
   }
   // expressions: end
 

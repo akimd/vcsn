@@ -39,4 +39,4 @@ ctx = vcsn.context('[...] -> Q')
 aut = ctx.expression(r'\z').standard()
 for algo in algos:
     XFAIL(lambda: aut.lightest_automaton(1, algo),
-          'lightest-automaton: Q is not a tropical weightset')
+          'lightest-automaton: ℚ is not a tropical weightset')

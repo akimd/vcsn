@@ -22,20 +22,15 @@ namespace vcsn
     REGISTRY_DEFINE(print_expansion);
 
     std::ostream&
-    print(const dyn::expansion& w, std::ostream& out,
+    print(const expansion& w, std::ostream& out,
           const std::string& format)
     {
       if (format == "null")
         {}
-      else if (format == "latex" || format == "utf8")
+      else if (format == "latex" || format == "text" || format == "utf8")
         detail::print_expansion_registry().call(w, out, format);
-      else if (format == "text" || format == "default" || format == "")
-        {
-          // FIXME: problem with rvalue if we pass '"text"s'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_expansion_registry().call(w, out, format);
-        }
+      else if (format == "default" || format == "")
+        print(w, out, "utf8");
       else
         raise("invalid output format for expansion: ", str_escape(format));
       return out;
@@ -56,16 +51,14 @@ namespace vcsn
         {}
       else if (format == "dot"
                || format == "dot,logical" || format == "dot,physical"
-               || format == "latex" || format == "utf8")
+               || format == "ere"
+               || format == "redgrep"
+               || format == "latex"
+               || format == "text"
+               || format == "utf8")
         detail::print_expression_registry().call(exp, out, format);
-      else if (format == "default" || format == "ere"
-               || format == "redgrep" || format == "text")
-        {
-          // FIXME: problem with rvalue if we pass '"text"s'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string fmt = format;
-          detail::print_expression_registry().call(exp, out, fmt);
-        }
+      else if (format == "default")
+        return print(exp, out, "utf8");
       else
         raise("invalid output format for expression: ", str_escape(format));
       return out;
@@ -79,19 +72,14 @@ namespace vcsn
     REGISTRY_DEFINE(print_label);
 
     std::ostream&
-    print(const dyn::label& w, std::ostream& out, const std::string& format)
+    print(const label& w, std::ostream& out, const std::string& format)
     {
       if (format == "null")
         {}
-      else if (format == "latex" || format == "utf8")
+      else if (format == "latex" || format == "text" || format == "utf8")
         detail::print_label_registry().call(w, out, format);
-      else if (format == "text" || format == "default" || format == "")
-        {
-          // FIXME: problem with rvalue if we pass '"text"s'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_label_registry().call(w, out, format);
-        }
+      else if (format == "default" || format == "")
+        return print(w, out, "utf8");
       else
         raise("invalid output format for label: ", str_escape(format));
       return out;
@@ -111,15 +99,10 @@ namespace vcsn
         detail::list_polynomial_registry().call(p, out);
       else if (format == "null")
         {}
-      else if (format == "latex" || format == "utf8")
+      else if (format == "latex" || format == "text" || format == "utf8")
         detail::print_polynomial_registry().call(p, out, format);
-      else if (format == "text" || format == "default" || format == "")
-        {
-          // FIXME: problem with rvalue if we pass '"text"s'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_polynomial_registry().call(p, out, format);
-        }
+      else if (format == "default" || format == "")
+        return print(p, out, "utf8");
       else
         raise("invalid output format for polynomial: ", str_escape(format));
       return out;
@@ -133,19 +116,14 @@ namespace vcsn
     REGISTRY_DEFINE(print_weight);
 
     std::ostream&
-    print(const dyn::weight& w, std::ostream& out, const std::string& format)
+    print(const weight& w, std::ostream& out, const std::string& format)
     {
       if (format == "null")
         {}
-      else if (format == "latex" || format == "utf8")
+      else if (format == "latex" || format == "text" || format == "utf8")
         detail::print_weight_registry().call(w, out, format);
-      else if (format == "text" || format == "default" || format == "")
-        {
-          // FIXME: problem with rvalue if we pass '"text"s'.
-          // FIXME: We _need_ the const, see name.hh.
-          const std::string format = "text";
-          detail::print_weight_registry().call(w, out, format);
-        }
+      else if (format == "default" || format == "")
+        return print(w, out, "utf8");
       else
         raise("invalid output format for weight: ", str_escape(format));
       return out;

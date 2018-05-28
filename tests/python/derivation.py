@@ -133,17 +133,17 @@ check('(<x>a)*<y>', 'a', '⟨x⟩(⟨x⟩a)*⟨y⟩')
 check('(<x>a)*<y>', 'aa', '⟨xx⟩(⟨x⟩a)*⟨y⟩')
 
 XFAIL(lambda: vcsn.Q.expression('a**').derivation('a'),
-      r'''Q: value is not starrable: 1
+      r'''ℚ: value is not starrable: 1
   while computing derivative of: a**
                 with respect to: a''')
 
 XFAIL(lambda: vcsn.Q.expression('a**').derived_term(),
-      r'''Q: value is not starrable: 1
+      r'''ℚ: value is not starrable: 1
   while computing expansion of: a**
   while computing derived-term of: a**''')
 
 XFAIL(lambda: vcsn.Q.expression('a**').derived_term('derivation'),
-      r'''Q: value is not starrable: 1
+      r'''ℚ: value is not starrable: 1
   while computing constant-term of: a**
   while computing derived-term of: a**''')
 

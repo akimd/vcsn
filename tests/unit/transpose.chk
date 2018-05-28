@@ -17,10 +17,10 @@ digraph
     1 [color = DimGray]
     2 [color = DimGray]
   }
-  I0 -> 0 [label = "<wxyz>", color = DimGray]
-  I2 -> 2 [label = "<wxyz>", color = DimGray]
-  0 -> 0 [label = "<wx>cd", color = DimGray]
-  0 -> 1 [label = "<wxyz>cd", color = DimGray]
+  I0 -> 0 [label = "⟨wxyz⟩", color = DimGray]
+  I2 -> 2 [label = "⟨wxyz⟩", color = DimGray]
+  0 -> 0 [label = "⟨wx⟩cd", color = DimGray]
+  0 -> 1 [label = "⟨wxyz⟩cd", color = DimGray]
   1 -> 2 [label = "cd", color = DimGray]
 }
 digraph
@@ -39,10 +39,10 @@ digraph
     1 [color = DimGray]
     2 [color = DimGray]
   }
-  0 -> F0 [label = "<zyxw>", color = DimGray]
-  0 -> 0 [label = "<xw>dc", color = DimGray]
-  1 -> 0 [label = "<zyxw>dc", color = DimGray]
-  2 -> F2 [label = "<zyxw>", color = DimGray]
+  0 -> F0 [label = "⟨zyxw⟩", color = DimGray]
+  0 -> 0 [label = "⟨xw⟩dc", color = DimGray]
+  1 -> 0 [label = "⟨zyxw⟩dc", color = DimGray]
+  2 -> F2 [label = "⟨zyxw⟩", color = DimGray]
   2 -> 1 [label = "dc", color = DimGray]
 }
 digraph
@@ -60,9 +60,9 @@ digraph
     0
     1
   }
-  I0 -> 0 [label = "<wxyz>"]
-  0 -> 0 [label = "<wx>cd"]
-  0 -> 1 [label = "<xxyy>cd"]
+  I0 -> 0 [label = "⟨wxyz⟩"]
+  0 -> 0 [label = "⟨wx⟩cd"]
+  0 -> 1 [label = "⟨xxyy⟩cd"]
   1 -> F1
 }
 EOF

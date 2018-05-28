@@ -18,12 +18,12 @@ digraph
     2 [color = DimGray]
   }
   I0 -> 0
-  0 -> 0 [label = "<42>"]
-  0 -> 1 [label = "<51>"]
+  0 -> 0 [label = "⟨42⟩"]
+  0 -> 1 [label = "⟨51⟩"]
   0 -> 2 [color = DimGray]
-  1 -> F1 [label = "<10>"]
+  1 -> F1 [label = "⟨10⟩"]
   1 -> 0
-  1 -> 2 [label = "<3>", color = DimGray]
+  1 -> 2 [label = "⟨3⟩", color = DimGray]
 }
 Leaving s1
   2: 0 -- <51> --> 1
@@ -52,11 +52,11 @@ digraph
     2 [color = DimGray]
   }
   I0 -> 0
-  0 -> 1 [label = "<51>"]
+  0 -> 1 [label = "⟨51⟩"]
   0 -> 2 [color = DimGray]
-  1 -> F1 [label = "<10>"]
+  1 -> F1 [label = "⟨10⟩"]
   1 -> 0
-  1 -> 2 [label = "<3>", color = DimGray]
+  1 -> 2 [label = "⟨3⟩", color = DimGray]
 }
 digraph
 {
@@ -72,8 +72,8 @@ digraph
     1 [color = DimGray]
     2 [color = DimGray]
   }
-  1 -> F1 [label = "<10>", color = DimGray]
-  1 -> 2 [label = "<3>", color = DimGray]
+  1 -> F1 [label = "⟨10⟩", color = DimGray]
+  1 -> 2 [label = "⟨3⟩", color = DimGray]
 }
 digraph
 {
@@ -89,7 +89,7 @@ digraph
     1 [color = DimGray]
     2 [color = DimGray]
   }
-  1 -> F1 [label = "<10>", color = DimGray]
+  1 -> F1 [label = "⟨10⟩", color = DimGray]
 }
 EOF
 run 0 out.exp tests/unit/aut_lao_z

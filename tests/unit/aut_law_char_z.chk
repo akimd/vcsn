@@ -18,10 +18,10 @@ digraph
     2
   }
   I0 -> 0
-  0 -> 1 [label = "<42>ca"]
-  1 -> F1 [label = "<10>"]
+  0 -> 1 [label = "⟨42⟩ca"]
+  1 -> F1 [label = "⟨10⟩"]
   1 -> 0 [label = "ba"]
   1 -> 2 [label = "a"]
-  2 -> 1 [label = "<2>\\e"]
+  2 -> 1 [label = "⟨2⟩ε"]
 }
 EOF

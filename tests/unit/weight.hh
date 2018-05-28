@@ -32,8 +32,8 @@ bool check_common(const WeightSet& ws)
   ASSERT_VS_EQ(ws, ws.mul(o, o), o);
 
   // conv, format.
-  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, z)), z);
-  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, o)), o);
+  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, z, vcsn::format{"text"})), z);
+  ASSERT_VS_EQ(ws, conv(ws, to_string(ws, o, vcsn::format{"text"})), o);
 
   return nerrs;
 }

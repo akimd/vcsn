@@ -162,7 +162,7 @@ class automaton:
     __pow__ = multiply
     __repr__ = lambda self: self.type()
     __rmul__ = _lweight
-    __str__ = lambda self: self.format('dot')
+    __str__ = lambda self: self.format('default')
     __sub__ = automaton.difference
     __truediv__ = automaton.rdivide
     _repr_svg_ = lambda self: self.SVG()

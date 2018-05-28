@@ -329,7 +329,7 @@ class ExpressionText:
                 raise TypeError(
                         '`{}` exists but is not an expression'.format(name))
             exp = self.ipython.shell.user_ns[self.name]
-            text = exp.format('utf8')
+            text = exp.format()
             identities = exp.identities()
             cont = exp.context().format('sname')
         else:

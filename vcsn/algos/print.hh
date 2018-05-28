@@ -87,13 +87,19 @@ namespace vcsn
         "automaton output format",
         {
           {"debug",        [](const Aut& a, std::ostream& o){ a->print(o); }},
-          {"daut",         [](const Aut& a, std::ostream& o){ daut(a, o); }},
-          {"dot",          [](const Aut& a, std::ostream& o){ dot(a, o); }},
+          {"daut",         "daut,text"},
+          {"daut,text",    [](const Aut& a, std::ostream& o)
+                              { daut(a, o, vcsn::format{"text"}); }},
+          {"daut,utf8",    [](const Aut& a, std::ostream& o)
+                              { daut(a, o, vcsn::format{"utf8"}); }},
+          {"dot",          "dot,text"},
           {"default",      "dot"},
           {"dot,latex",    [](const Aut& a, std::ostream& o)
                               { dot(a, o, vcsn::format{"latex"}); }},
           {"dot,mathjax",  [](const Aut& a, std::ostream& o)
                               { dot(a, o, vcsn::format{"latex"}, true); }},
+          {"dot,text",     [](const Aut& a, std::ostream& o)
+                              { dot(a, o, vcsn::format{"text"}); }},
           {"dot,utf8",     [](const Aut& a, std::ostream& o)
                               { dot(a, o, vcsn::format{"utf8"}); }},
           {"efsm",         [](const Aut& a, std::ostream& o){ efsm(a, o); }},

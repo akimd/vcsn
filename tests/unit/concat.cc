@@ -15,12 +15,12 @@ check_concat(const Ctx& ctx)
   auto ks = vcsn::expressionset<Ctx>(ctx);
 
 #define CHECK(Lhs, Rhs, Res)                                            \
-  ASSERT_EQ(to_string(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),     \
-            Res)
+  ASSERT_EQ(Res,                                                        \
+            to_string(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))))
 
-  CHECK("ab.a", "b", "(ab){2}");
-  CHECK("a", "b.ab", "(ab){2}");
-  CHECK("ab.a", "b.ab", "(ab){3}");
+  CHECK("ab.a", "b", "(ab)²");
+  CHECK("a", "b.ab", "(ab)²");
+  CHECK("ab.a", "b.ab", "(ab)³");
 #undef CHECK
   return nerrs;
 }

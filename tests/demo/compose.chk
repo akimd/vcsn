@@ -13,7 +13,7 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, (0, !\\e)", shape = box, style = dashed, color = DimGray]
+    0 [label = "0, (0, !ε)", shape = box, style = dashed, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
 }
@@ -29,8 +29,8 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, (0, !\\e)", shape = box]
-    1 [label = "1, (1, !\\e)", shape = box]
+    0 [label = "0, (0, !ε)", shape = box]
+    1 [label = "1, (1, !ε)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a|a"]
@@ -48,8 +48,8 @@ digraph
   }
   {
     node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, (0, !\\e)", shape = box]
-    1 [label = "1, (1, !\\e)", shape = box]
+    0 [label = "0, (0, !ε)", shape = box]
+    1 [label = "1, (1, !ε)", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a|a"]

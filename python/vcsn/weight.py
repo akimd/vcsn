@@ -10,7 +10,7 @@ class weight:
     __add__ = weight.add
     __floordiv__ = weight.ldivide
     __pow__ = weight.multiply
-    __repr__ = lambda self: self.format('utf8')
+    __repr__ = lambda self: self.format()
     __truediv__ = weight.rdivide
     _repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 

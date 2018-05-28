@@ -298,7 +298,7 @@ static unsigned check_generators()
     return o.str();
   }();
 
-  ASSERT_EQ("\\e|x, \\e|y, a|\\e, a|x, a|y, b|\\e, b|x, b|y, c|\\e, c|x, c|y",
+  ASSERT_EQ("ε|x, ε|y, a|ε, a|x, a|y, b|ε, b|x, b|y, c|ε, c|x, c|y",
             res);
 
   return nerrs;

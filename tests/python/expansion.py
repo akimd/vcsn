@@ -156,7 +156,7 @@ CHECK_EQ(r'a⊙[(εb)(cd)]', ctx.expression('(ab)(cd)', 'none').expansion())
 ## ------ ##
 
 XFAIL(lambda: vcsn.Q.expression('a**').expansion(),
-      r'''Q: value is not starrable: 1
+      r'''ℚ: value is not starrable: 1
   while computing expansion of: a**''')
 
 

@@ -2,5 +2,5 @@
 vcsn_env
 
 run 0 - tests/demo/generators <<EOF
-{ \e|a, \e|b, \e|c, a|\e, a|a, a|b, a|c, b|\e, b|a, b|b, b|c, c|\e, c|a, c|b, c|c }
+{ ε|a, ε|b, ε|c, a|ε, a|a, a|b, a|c, b|ε, b|a, b|b, b|c, c|ε, c|a, c|b, c|c }
 EOF

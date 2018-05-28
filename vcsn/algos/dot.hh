@@ -429,14 +429,13 @@ namespace vcsn
   /// \param aut     the automaton to print.
   /// \param out     the output stream.
   /// \param fmt     how to format the automaton.
-  /// \param mathjax shall it be formatted for MathJax.
+  /// \param mathjax whether to format for MathJax.
   template <Automaton Aut>
   std::ostream&
   dot(const Aut& aut, std::ostream& out = std::cout, format fmt = {},
       bool mathjax = false)
   {
-    // Cannot use auto here.
-    detail::dot_impl<Aut> dot{aut, out, fmt, mathjax};
+    auto dot = detail::dot_impl<Aut>{aut, out, fmt, mathjax};
     return dot();
   }
 }
