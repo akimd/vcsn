@@ -9,10 +9,14 @@ from test import *
 
 # check CONTEXT INPUT OUTPUT
 # --------------------------
-def check(ctx, p, output):
+def check(ctx, p, utf8=None, **kwargs):
     ctx = vcsn.context(ctx)
+    if utf8:
+        kwargs['utf8'] = utf8
     p = ctx.polynomial(p)
-    CHECK_EQ(output, str(p))
+    for fmt, exp in kwargs.items():
+        print("format: {}".format(fmt))
+        CHECK_EQ(exp, p.format(fmt))
 
 check('[a] -> b', r'\z', '∅')
 check('[a] -> b', r'\z+\z', '∅')
@@ -20,13 +24,14 @@ check('[a] -> b', r'\z+\z', '∅')
 check('[a] -> b', r'a', r'a')
 check('[ab] -> b', r'a+b+b+a', r'a ⊕ b')
 
-check('[abcd] -> q', r'[abcd]',     r'a ⊕ b ⊕ c ⊕ d')
-check('[abcd] -> q', r'[dcba]',     r'a ⊕ b ⊕ c ⊕ d')
-check('[abcd] -> q', r'[abcdabcd]', r'a ⊕ b ⊕ c ⊕ d')
-check('[abcd] -> q', r'[a-d]',      r'a ⊕ b ⊕ c ⊕ d')
-check('[abcd] -> q', r'[a-bd]',     r'a ⊕ b ⊕ d')
+for p in [r'[abcd]', r'[dcba]', r'[abcdabcd]', r'[a-d]']:
+    check('[abcd] -> q', p, text='a + b + c + d', utf8=r'a ⊕ b ⊕ c ⊕ d',
+          list='a\nb\nc\nd')
 
-check('[ab] -> q', r'a+b+b+a+b', r'⟨2⟩a ⊕ ⟨3⟩b')
+check('[abcd] -> q', r'[a-bd]', r'a ⊕ b ⊕ d')
+
+check('[ab] -> q', r'a+b+b+a+b',
+      text=r'<2>a + <3>b', utf8=r'⟨2⟩a ⊕ ⟨3⟩b', list='<2>a\n<3>b')
 check('[ab] -> q', r'a+b+b+<-1>a+b', r'⟨3⟩b')
 
 check('[a]* -> b', r'\e+\e', 'ε')

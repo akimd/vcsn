@@ -253,7 +253,9 @@ namespace vcsn
         if (!first)
           o << std::endl;
         first = false;
-        ps.print(m, o);
+        // Print the weights with <>, not UTF-8, so that we can parse
+        // the result.
+        ps.print(m, o, vcsn::format{"text"});
       }
     return o;
   }
