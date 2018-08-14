@@ -124,12 +124,12 @@ s{yystack_\[yylen - 1\]\.location}
 s/[ \t]+$//;
 '  "$file"
 
-  # Fuse the switches of the parser.
-  case $file in
-    (*.cc) $fuse_switch $file
-          # diff -uw $file.bak $file || true
-          ;;
-  esac
+#  # Fuse the switches of the parser.
+#   case $file in
+#     (*.cc) $fuse_switch $file
+#           # diff -uw $file.bak $file || true
+#           ;;
+#   esac
 }
 
 # compile_xml_file XML XSL OUT-EXT

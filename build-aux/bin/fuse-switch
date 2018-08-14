@@ -139,6 +139,8 @@ sub fuse($$)
         }
       print $out $_;
     }
+  die "still in switch"
+    if $in_switch;
   die "could not insert $pre_case"
     if $pre_case;
 }
