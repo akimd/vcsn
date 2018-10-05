@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 
-%require "3.0"
+%require "3.1"
 %language "C++"
 
 %debug
