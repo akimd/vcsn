@@ -10,6 +10,7 @@
 %locations
 %define api.namespace {vcsn::rat}
 %define api.value.type variant
+%define api.value.automove
 %define api.location.include {<vcsn/misc/location.hh>}
 %define api.token.constructor
 
@@ -210,12 +211,13 @@ input:
     // Adjust with possible needed conversions e.g., `a*` -> `(a|a)*`.
     // Avoid it if possible, it is really expensive (see `vcsn score
     // -O 'b.expression'`).
-    TRY(@$, $$ = copy($1.exp, driver_.ctx_, driver_.ids_));
+    auto src = $1;
+    TRY(@$, $$ = copy(src.exp, driver_.ctx_, driver_.ids_));
     if (0 < driver_.debug_level())
       std::cerr
-        << "converted the expression\n"
-      << "  from: " << $1.exp << " (" << context_of($1.exp) << ")\n"
-      << "    to: " << $$.exp << " (" << context_of($$.exp) << ")\n";
+        << "expression converted\n"
+        << "  from: " << src.exp << " (" << context_of(src.exp) << ")\n"
+        << "    to: " << $$.exp << " (" << context_of($$.exp) << ")\n";
     driver_.result_ = $$.exp;
     YYACCEPT;
   }
@@ -229,9 +231,9 @@ terminator.opt:
 ;
 
 add:
-  tuple           { $$ = $1; }
-| add "+" add     { $$ = dyn::add($1.exp, $3.exp); }
-| add "@" add     { $$ = dyn::compose($1.exp, $3.exp); }
+  tuple
+| add "+" add     { $$ = dyn::add(std::move($1.exp), std::move($3.exp)); }
+| add "@" add     { $$ = dyn::compose(std::move($1.exp), std::move($3.exp)); }
 ;
 
 // Deal with `|`: a* | (b+c) | \e.
@@ -239,15 +241,16 @@ add:
 tuple:
   { driver_.tape_push(); } tuple.1
   {
+    auto tuple = $2;
     driver_.tape_pop();
-    if ($2.size() == 1)
-      $$ = $2.back();
-    else if ($2.size() == driver_.tape_ctx_.size())
-      $$ = vcsn::dyn::tuple($2);
+    if (tuple.size() == 1)
+      $$ = tuple.back();
+    else if (tuple.size() == driver_.tape_ctx_.size())
+      $$ = vcsn::dyn::tuple(tuple);
     else
       throw syntax_error(@$,
                          "not enough tapes: "
-                         + std::to_string($2.size())
+                         + std::to_string(tuple.size())
                          + " expected "
                          + std::to_string(driver_.tape_ctx_.size()));
   }
@@ -279,20 +282,24 @@ exp:
 | exp weights %prec RWEIGHT   { $$ = dyn::rweight($1.exp, $2); }
 | exp exp %prec CONCAT
   {
+    auto fst = $1;
+    auto snd = $2;
     // See README.txt.
-    if (!$1.rparen && !$2.lparen)
-      $$ = dyn::concatenate($1.exp, $2.exp);
+    if (!fst.rparen && !snd.lparen)
+      $$ = dyn::concatenate(fst.exp, snd.exp);
     else
       {
-        $$.exp = dyn::multiply($1.exp, $2.exp);
-        $$.lparen = $1.lparen;
-        $$.rparen = $2.rparen;
+        $$.exp = dyn::multiply(fst.exp, snd.exp);
+        $$.lparen = fst.lparen;
+        $$.rparen = snd.rparen;
       }
   }
-| exp "*"           { TRY(@$,
-                          $$ =
-                          dyn::multiply($1.exp,
-                                        std::get<0>($2), std::get<1>($2))); }
+| exp "*"
+  { auto arity = $2;
+    TRY(@$,
+        $$ = dyn::multiply($1.exp,
+                           std::get<0>(arity), std::get<1>(arity)));
+  }
 | exp "{c}"         { $$ = dyn::complement($1.exp); }
 | "!" exp           { $$ = dyn::complement($2.exp); }
 | exp "{T}"         { $$ = dyn::transposition($1.exp); }
@@ -304,10 +311,11 @@ exp:
 | "[" "^" class "]" { $$ = driver_.make_expression(@$, $3, false); }
 | "(" add ")"
   {
+    auto lparen = $1;
     $$.exp = $2.exp;
     $$.lparen = $$.rparen = true;
-    if (!$1.get().empty())
-      $$ = dyn::name($$.exp, $1.get());
+    if (!lparen.get().empty())
+      $$ = dyn::name($$.exp, lparen.get());
   }
 ;
 
@@ -318,7 +326,7 @@ weights:
 
 class:
   %empty                      {}
-| class "letter"              { $$ = $1; $$.emplace($2, $2); }
+| class "letter"              { $$ = $1; auto l = $2; $$.emplace(l, l); }
 | class "letter" "-" "letter" { $$ = $1; $$.emplace($2, $4); }
 ;
 
