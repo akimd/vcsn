@@ -12,6 +12,7 @@
 # undef label
 #endif
 
+#if defined __clang__
 // python/vcsn_cxx.cc: In constructor
 //   'minimize::minimize(const boost::python::detail::keywords<nkeywords>&,
 //                       const char*)':
@@ -19,9 +20,7 @@
 //   locally defined but not used [-Wunused-local-typedefs]
 //
 // BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
-#pragma clang diagnostic ignored "-Wunused-local-typedefs"
-
-#if defined __clang__
+# pragma clang diagnostic ignored "-Wunused-local-typedefs"
 # if 5 <= __clang_major__
 #  pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 # endif
