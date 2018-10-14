@@ -10,6 +10,7 @@
 %locations
 %define api.namespace {vcsn::rat}
 %define api.value.type variant
+%define api.location.include {<vcsn/misc/location.hh>}
 %define api.token.constructor
 
 %code requires
