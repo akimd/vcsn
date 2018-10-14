@@ -12,6 +12,7 @@
 %define api.value.type variant
 %define api.location.type {vcsn::rat::location}
 %define api.token.constructor
+%define api.value.automove
 
 %code requires
 {
@@ -188,7 +189,7 @@ stmt_list:
 | stmt_list stmt semi.opt
   {
     // Preserve the set of states.
-    std::swap($$, $1);
+    $$ = $1;
     for (auto s: $2)
       $$.emplace_back(std::move(s));
   }
@@ -196,10 +197,10 @@ stmt_list:
 
 stmt:
   node_stmt   { $$.emplace_back(std::move($1)); }
-| edge_stmt   { std::swap($$, $1); }
+| edge_stmt
 | attr_stmt   {}
 | attr_assign {}
-| subgraph    { std::swap($$, $1); }
+| subgraph
 | error       {}
 ;
 
@@ -212,7 +213,8 @@ attr_stmt:
 attr_list:
   "[" a_list.0 "]" attr_list.opt
   {
-    std::swap($$, $2.get().empty() ? $4 : $2);
+    auto list = $2;
+    $$ = list.get().empty() ? $4 : list;
   }
 ;
 
@@ -220,7 +222,7 @@ attr_list.opt:
   // This action seems useless, but because Bison initializes $$ with $0
   // there are very surprising results...
   %empty       { $$ = ""; }
-| attr_list    { std::swap($$, $1); }
+| attr_list
 ;
 
 attr_assign:
@@ -228,10 +230,12 @@ attr_assign:
   {
     static const auto label = string_t{"label"};
     static const auto ctx = string_t{"vcsn_context"};
-    if ($var == label)
-      std::swap($$, $val);
-    else if ($var == ctx)
-      driver_.setup_(@val, $val);
+    auto var = $var;
+    auto val = $val;
+    if (var == label)
+      $$ = val;
+    else if (var == ctx)
+      driver_.setup_(@val, val);
     else
       // Beware of the default "$$ = $1;" action.
       $$ = "";
@@ -241,7 +245,8 @@ attr_assign:
 a_list.1:
   attr_assign comma.opt a_list.0
   {
-    std::swap($$, $1.get().empty() ? $3 : $1);
+    auto list = $1;
+    $$ = list.get().empty() ? $3 : std::move(list);
   }
 ;
 
@@ -258,7 +263,7 @@ semi.opt:
 a_list.0:
   %empty       {}
 | error        {}
-| a_list.1     { std::swap($$, $1); }
+| a_list.1
 ;
 
 nodes:
@@ -283,18 +288,21 @@ nodes:
 path:
   nodes[from] "->" nodes[to]
   {
+    auto to = $to;
     for (auto s1: $from)
-      for (auto s2: $to)
+      for (auto s2: to)
         $$.transitions.emplace_back(s1, s2);
-    $$.ends = $to;
+    $$.ends = std::move(to);
   }
 | path[from]  "->" nodes[to]
   {
-    std::swap($$.transitions, $from.transitions);
-    for (auto s1: $from.ends)
-      for (auto s2: $to)
+    auto to = $to;
+    auto from = $from;
+    $$.transitions = std::move(from.transitions);
+    for (auto s1: from.ends)
+      for (auto s2: to)
         $$.transitions.emplace_back(s1, s2);
-    $$.ends = $to;
+    $$.ends = std::move(to);
   }
 ;
 
@@ -309,15 +317,12 @@ edge_stmt:
 
 node_stmt:
   node_id attr_list.opt
-  {
-    std::swap($$, $1);
-  }
 ;
 
 node_id:
   ID port.opt
   {
-    std::swap($$, $1);
+    $$ = $1;
     if (driver_.has_edit_(@1))
       {
         if ($$.get()[0] == 'I')
@@ -343,13 +348,13 @@ port.opt:
 ;
 
 subgraph:
-  "subgraph" id.opt "{" stmt_list "}"  { std::swap($$, $stmt_list); }
-|                   "{" stmt_list "}"  { std::swap($$, $stmt_list); }
+  "subgraph" id.opt "{" stmt_list "}"  { $$ = $stmt_list; }
+|                   "{" stmt_list "}"  { $$ = $stmt_list; }
 ;
 
 id.opt:
   %empty       {}
-| ID           { std::swap($$, $1); }
+| ID
 ;
 %%
 
