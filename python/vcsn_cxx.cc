@@ -8,7 +8,7 @@
 // it safe: include it first, mascarading `label`.
 #if defined __APPLE__
 # define label macos_label
-# include </usr/include/sys/ucred.h>
+# include <sys/ucred.h>
 # undef label
 #endif
 
