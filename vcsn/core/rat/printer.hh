@@ -289,7 +289,7 @@ namespace vcsn
             // If in front of a row of letters, in strictly increasing
             // order, issue a class.
             auto r = letter_range(i, end);
-            if (3 < distance(r))
+            if (3 < boost::distance(r))
               {
                 // Gather the letters.
                 auto letters = std::vector<label_t>{};
