@@ -84,6 +84,16 @@ sub fuse($$)
               $in_switch = 1;
             }
         }
+      elsif (/#define YYCASE_/)
+        {
+          # If we're in a switch but see this macro, keep the switch as is
+          # altogether
+          # Usually at this point $pre_case contains the openning '{' of the
+          # switch
+          $_ = $pre_case . $_;
+          $pre_case = '';
+          $in_switch = 0;
+        }
       else
         {
           # in switch.
