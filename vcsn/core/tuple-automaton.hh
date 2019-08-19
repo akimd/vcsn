@@ -130,7 +130,11 @@ namespace vcsn
 
       /// The list of automaton indices as a static list.
       using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
-      static constexpr indices_t indices{};
+      // inlining the constexpr removes the need to declare it at
+      // namespace-scope if we want to make it odr-usable (which we do).
+      // inline constexpr are a C++17 extension (and the default behavior in
+      // C++17, so we can remove this attribute once we bump the standard).
+      static inline constexpr indices_t indices{};
 
       /// The sname of the sub automata.
       template <typename... T>
