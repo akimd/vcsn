@@ -7,6 +7,12 @@ import sys
 
 import vcsn
 
+try:
+    repatterntype = re.Pattern
+except AttributeError:
+    # Before Python 3.7
+    repatterntype = re._pattern_type
+
 ntest = 0
 npass = 0
 nfail = 0
@@ -169,7 +175,7 @@ def XFAIL(fun, exp=None):
         #   while reading automaton: efsm.dir/bad_final_weight.efsm
         eff = str(e).replace(medir + '/', '')
         if (exp is None
-            or isinstance(exp, re._pattern_type) and re.match(exp, eff)
+            or isinstance(exp, repatterntype) and re.match(exp, eff)
             or isinstance(exp, str) and exp in eff):
             PASS()
         else:
