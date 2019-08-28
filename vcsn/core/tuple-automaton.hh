@@ -285,6 +285,16 @@ namespace vcsn
       /// Worklist of state tuples.
       std::deque<std::pair<state_name_t, state_t>> todo_;
     };
+
+    // C++14: declare `indices` at namespace-scope. It is a static constexpr and
+    // C++14 needs that declaration to make it odr-usable (otherwise, some
+    // compilers give an undefined reference to it when we it's odr-used)
+    // This can be removed when compiling in C++17 because this standard
+    // introduces the concept of inline constexpr and makes all constexpr inline
+    // by default.
+    template <Automaton Aut, Automaton... Auts>
+    constexpr typename tuple_automaton_impl<Aut, Auts...>::indices_t
+                tuple_automaton_impl<Aut, Auts...>::indices;
   }
 
   /// A tuple automaton as a shared pointer.
