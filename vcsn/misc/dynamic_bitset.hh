@@ -1,5 +1,6 @@
 #pragma once
 
+# include <boost/version.hpp>
 // http://stackoverflow.com/questions/3896357/
 #define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
 #include <boost/dynamic_bitset.hpp>
@@ -10,6 +11,7 @@
 
 namespace std
 {
+#if BOOST_VERSION < 107100
   template <typename B, typename A>
   struct hash<boost::dynamic_bitset<B, A>>
   {
@@ -20,6 +22,7 @@ namespace std
       return res;
     }
   };
+#endif
 
   /// Whether \a e is in \a s.
   template <typename B, typename A, typename Key>
