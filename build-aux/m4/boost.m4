@@ -1204,6 +1204,11 @@ BOOST_DEFUN([Python],
 _BOOST_PYTHON_CONFIG([LDFLAGS],   [ldflags])
 _BOOST_PYTHON_CONFIG([LIBS],      [libs])
 m4_pattern_allow([^BOOST_PYTHON_MODULE$])dnl
+set -x
+case `$PYTHON --version` in
+  "Python 3.8"*) LDFLAGS="-lpython3.8" ;;
+esac
+set +x
 BOOST_FIND_LIBS([python], [python python3], [$1],
                 [boost/python.hpp],
                 [], [BOOST_PYTHON_MODULE(empty) {}], [], [$2])
