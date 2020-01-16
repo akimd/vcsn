@@ -84,7 +84,7 @@ EXTRA_DIST +=                                   \
 	  --location-dir=$(srcdir)/vcsn/misc	\
 	  --location-prefix=vcsn/misc --	\
 	  $< $(srcdir)/%D%/parse.cc		\
-	  -Dapi.location.file='"$(top_srcdir)/vcsn/misc/location.hh"' \
+	  -Dapi.location.file='"$(abs_top_srcdir)/vcsn/misc/location.hh"' \
 	  $(AM_BISONFLAGS) $(BISONFLAGS)
 	$(AM_V_at)mv -f $@.tmp $@
 
