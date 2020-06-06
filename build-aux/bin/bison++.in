@@ -123,13 +123,6 @@ s{yystack_\[yylen - 1\]\.location}
 # Kill trailing blanks.
 s/[ \t]+$//;
 '  "$file"
-
-  # Fuse the switches of the parser.
-  case $file in
-    (*.cc) $fuse_switch $file
-          # diff -uw $file.bak $file || true
-          ;;
-  esac
 }
 
 # compile_xml_file XML XSL OUT-EXT
@@ -223,7 +216,6 @@ if ! $BISON --version >/dev/null 2>&1; then
 fi
 
 
-fuse_switch='@abs_srcdir@/fuse-switch'
 move_if_change='@abs_srcdir@/move-if-change --color'
 verbose=false
 

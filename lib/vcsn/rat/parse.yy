@@ -122,7 +122,7 @@
   @$ = driver_.location_;
 }
 
-%printer { yyo << '"' << $$ << '"'; } <std::string> <symbol>;
+%printer { yyo << '"' << $$ << '"'; } <std::string>;
 %printer
 {
   yyo << '[';
